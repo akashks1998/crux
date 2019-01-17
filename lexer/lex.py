@@ -10,7 +10,6 @@ tokens = (
 )
 
 # RegEx for simple tokens
-t_ID        = r'\w+'
 t_PLUS      = r'\+'
 t_MINUS     = r'-'
 t_TIMES     = r'\*'
