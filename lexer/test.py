@@ -2,7 +2,8 @@ from lex import lexer
 
 stri = input()
 lexer.input(stri)
+a=8
 
-print('{:>12} {:>12} {:>12} {:>12}'.format('Type', 'Value', 'Lineno', 'Lexpos'))
+print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format('Type', 'Value', 'Lineno', 'Lexpos', amt=a))
 for tok in lexer:
-    print('{:>12} {:>12} {:>12} {:>12}'.format(tok.type, tok.value, tok.lineno, tok.lexpos))
+    print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format(tok.type, "'" + tok.value + "'", tok.lineno, tok.lexpos, amt=a))

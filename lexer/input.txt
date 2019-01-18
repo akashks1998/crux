@@ -1,5 +1,1 @@
-if (x_1==5){
-    cout<<"This is a literal";
-}else{
-    cout<<"This is also a l!teral";
-}
+e10 / e1 + 12.32.41 + 13me41 + 13*e41 + .321 + 12.34 + 12e-14 + 15.21e10 + 1e1 + 0.42

@@ -1,4 +1,9 @@
-from ply import *
+from ply import lex
+from ply import yacc
+import re
+
+#Personal Groups
+op='-+/*&|%!~^' # pattern to detect operators for separation b/n nos
 
 # Token names.
 tokens = (
@@ -69,7 +74,6 @@ tokens = (
         #Non Keywords
         'ID',
         'NUMBER',
-        '',
 
         'PLUS',
         'MINUS',
@@ -142,16 +146,23 @@ t_XOR			= r'xor'
 t_XOR_EQ		= r'xor_eq'
 
 
+
+# RegEx id
+def t_ID(t):
+    r'[a-zA-Z_]\w+'
+    return t
+
+def t_NUMBER(t):
+    #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
+    #r'(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
+    r'[ ](\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?[ ]'
+    return t
+
 # RegEx for simple tokens
 t_PLUS      = r'\+'
 t_MINUS     = r'-'
 t_TIMES     = r'\*'
 t_DIVIDE    = r'/'
-
-# RegEx id
-def t_ID(t):
-    r'\w+'
-    return t
 
 # track line no.
 def t_newline(t):
@@ -163,8 +174,9 @@ t_ignore = ' \t'
 
 # Error handling
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
+    tk = re.split('[ \t]', t.value)[0]
+    print("Illegal token '%s'" % tk)
+    t.lexer.skip(len(tk))
 
 # Build lexer
 lexer = lex.lex()
