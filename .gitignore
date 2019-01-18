@@ -1,0 +1,3 @@
+*.vscode*
+./lexer/ply/*
+*__pycache__.py*
