@@ -1,0 +1,54 @@
+<div>   
+<pre>
+
+<span style="color: #888888">// C++ program to find union of </span>
+<span style="color: #888888">// two sorted arrays </span>
+<span style="color: #557799">#include &lt;bits/stdc++.h&gt; </span>
+<span style="color: #008800; font-weight: bold">using</span> <span style="color: #008800; font-weight: bold">namespace</span> std; 
+
+<span style="color: #888888">/* Function prints union of arr1[] and arr2[] </span>
+<span style="color: #888888">m is the number of elements in arr1[] </span>
+<span style="color: #888888">n is the number of elements in arr2[] */</span>
+<span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">printUnion</span>(<span style="color: #333399; font-weight: bold">int</span> arr1[], <span style="color: #333399; font-weight: bold">int</span> arr2[], <span style="color: #333399; font-weight: bold">int</span> m, <span style="color: #333399; font-weight: bold">int</span> n) 
+{ 
+<span style="color: #333399; font-weight: bold">int</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>, j <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; 
+<span style="color: #008800; font-weight: bold">while</span> (i <span style="color: #333333">&lt;</span> m <span style="color: #333333">&amp;&amp;</span> j <span style="color: #333333">&lt;</span> n) 
+{ 
+    <span style="color: #008800; font-weight: bold">if</span> (arr1[i] <span style="color: #333333">&lt;</span> arr2[j]) 
+    cout <span style="color: #333333">&lt;&lt;</span> arr1[i<span style="color: #333333">++</span>] <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot; &quot;</span>; 
+    
+    <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (arr2[j] <span style="color: #333333">&lt;</span> arr1[i]) 
+    cout <span style="color: #333333">&lt;&lt;</span> arr2[j<span style="color: #333333">++</span>] <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot; &quot;</span>; 
+    
+    <span style="color: #008800; font-weight: bold">else</span>
+    { 
+    cout <span style="color: #333333">&lt;&lt;</span> arr2[j<span style="color: #333333">++</span>] <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot; &quot;</span>; 
+    i<span style="color: #333333">++</span>; 
+    } 
+} 
+
+<span style="color: #888888">/* Print remaining elements of the larger array */</span>
+<span style="color: #008800; font-weight: bold">while</span>(i <span style="color: #333333">&lt;</span> m) 
+    cout <span style="color: #333333">&lt;&lt;</span> arr1[i<span style="color: #333333">++</span>] <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot; &quot;</span>; 
+
+<span style="color: #008800; font-weight: bold">while</span>(j <span style="color: #333333">&lt;</span> n) 
+    cout <span style="color: #333333">&lt;&lt;</span> arr2[j<span style="color: #333333">++</span>] <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot; &quot;</span>; 
+} 
+
+<span style="color: #888888">/* Driver program to test above function */</span>
+<span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">main</span>() 
+{ 
+<span style="color: #333399; font-weight: bold">int</span> arr1[] <span style="color: #333333">=</span> {<span style="color: #0000DD; font-weight: bold">1</span>, <span style="color: #0000DD; font-weight: bold">2</span>, <span style="color: #0000DD; font-weight: bold">4</span>, <span style="color: #0000DD; font-weight: bold">5</span>, <span style="color: #0000DD; font-weight: bold">6</span>}; 
+<span style="color: #333399; font-weight: bold">int</span> arr2[] <span style="color: #333333">=</span> {<span style="color: #0000DD; font-weight: bold">2</span>, <span style="color: #0000DD; font-weight: bold">3</span>, <span style="color: #0000DD; font-weight: bold">5</span>, <span style="color: #0000DD; font-weight: bold">7</span>}; 
+    
+<span style="color: #333399; font-weight: bold">int</span> m <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">sizeof</span>(arr1)<span style="color: #333333">/</span><span style="color: #008800; font-weight: bold">sizeof</span>(arr1[<span style="color: #0000DD; font-weight: bold">0</span>]); 
+<span style="color: #333399; font-weight: bold">int</span> n <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">sizeof</span>(arr2)<span style="color: #333333">/</span><span style="color: #008800; font-weight: bold">sizeof</span>(arr2[<span style="color: #0000DD; font-weight: bold">0</span>]); 
+    
+<span style="color: #888888">// Function calling </span>
+printUnion(arr1, arr2, m, n); 
+
+<span style="color: #008800; font-weight: bold">return</span> <span style="color: #0000DD; font-weight: bold">0</span>; 
+} 
+
+</pre>
+</div>
