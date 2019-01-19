@@ -6,4 +6,5 @@ Compiler for c-- language ( a subset of c++ ) written in python with X86 assembl
  - [Akash Kumar Singh](https://github.com/akashks1998)
  - [Jenil Mewada](https://github.com/Jenil2910)
 
-
+### Tools used
+ - [PLY for Lexing and Parsing](http://www.dabeaz.com/ply/)
