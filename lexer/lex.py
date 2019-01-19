@@ -131,6 +131,9 @@ tokens = (
         'DOUBLECOLON',
         'COLON',
         'BAR',
+
+        'COMMENT',
+        'STRING',
 )
 
 
@@ -270,10 +273,20 @@ t_DOUBLECOLON = r'::'
 t_COLON = r':'
 t_BAR = r'\|'
 
+t_STRING = r'\".*\"'
+
 # track line no.
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+
+# comment
+def t_COMMENT(t):
+    r'((//)[^\n\r]*[\n\r])|(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)'
+    t.value = str(t.value)
+    t.type = 'COMMENT'
+    return t
+
 
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t'

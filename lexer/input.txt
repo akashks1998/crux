@@ -1,6 +1,6 @@
 // C++ program to find union of 
 // two sorted arrays 
-#include <bits/stdc++.h> 
+
 using namespace std; 
 
 /* Function prints union of arr1[] and arr2[] 
@@ -12,7 +12,7 @@ int i = 0, j = 0;
 while (i < m && j < n) 
 { 
     if (arr1[i] < arr2[j]) 
-    cout << arr1[i++] << " "; 
+    cout << arr1[i++] << "hello"; 
     
     else if (arr2[j] < arr1[i]) 
     cout << arr2[j++] << " "; 
