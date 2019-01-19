@@ -5,74 +5,75 @@ import re
 #Personal Groups
 op='-+/*&|%!~^' # pattern to detect operators for separation b/n nos
 
-# List of token names. 
-tokens = (
-        # Keywords
-        'AND',
-        'AND_EQ',
-        'ASM',
-        'AUTO',
-        'BITAND',
-        'BITOR',
-        'BOOL',
-        'BREAK',
-        'CASE',
-        'CATCH',
-        'CHAR',
-        'CHAR8_T',
-        'CHAR16_T',
-        'CHAR32_T',
-        'CLASS',
-        'COMPL',
-        'CONST',
-        'CONTINUE',
-        'DEFAULT',
-        'DELETE',
-        'DO',
-        'DOUBLE',
-        'ELSE',
-        'ENUM',
-        'EXTERN',
-        'FALSE',
-        'FLOAT',
-        'FOR',
-        'GOTO',
-        'IF',
-        'INLINE',
-        'INT',
-        'LONG',
-        'NAMESPACE',
-        'NEW',
-        'NOT',
-        'NOT_EQ',
-        'NULLPTR',
-        'OR',
-        'OR_EQ',
-        'PRIVATE',
-        'PROTECTED',
-        'PUBLIC',
-        'RETURN',
-        'SHORT',
-        'SIGNED',
-        'SIZEOF',
-        'STATIC',
-        'SWITCH',
-        'THIS',
-        'THROW',
-        'TRUE',
-        'TRY',
-        'TYPEDEF',
-        'UNION',
-        'UNSIGNED',
-        'VIRTUAL',
-        'VOID',
-        'VOLATILE',
-        'WHILE',
-        'XOR',
-        'XOR_EQ',
+keywords = {
+    'and':'AND',
+    'and_eq':'AND_EQ',
+    'asm':'ASM',
+    'auto':'AUTO',
+    'bitand':'BITAND',
+    'bitor':'BITOR',
+    'bool':'BOOL',
+    'break':'BREAK',
+    'case':'CASE',
+    'catch':'CATCH',
+    'char':'CHAR',
+    'char8_t':'CHAR8_T',
+    'char16_t':'CHAR16_T',
+    'char32_t':'CHAR32_T',
+    'class':'CLASS',
+    'compl':'COMPL',
+    'const':'CONST',
+    'continue':'CONTINUE',
+    'default':'DEFAULT',
+    'delete':'DELETE',
+    'do':'DO',
+    'double':'DOUBLE',
+    'else':'ELSE',
+    'enum':'ENUM',
+    'extern':'EXTERN',
+    'false':'FALSE',
+    'float':'FLOAT',
+    'for':'FOR',
+    'goto':'GOTO',
+    'if':'IF',
+    'inline':'INLINE',
+    'int':'INT',
+    'long':'LONG',
+    'namespace':'NAMESPACE',
+    'new':'NEW',
+    'not':'NOT',
+    'not_eq':'NOT_EQ',
+    'nullptr':'NULLPTR',
+    'or':'OR',
+    'or_eq':'OR_EQ',
+    'private':'PRIVATE',
+    'protected':'PROTECTED',
+    'public':'PUBLIC',
+    'return':'RETURN',
+    'short':'SHORT',
+    'signed':'SIGNED',
+    'sizeof':'SIZEOF',
+    'static':'STATIC',
+    'switch':'SWITCH',
+    'this':'THIS',
+    'throw':'THROW',
+    'true':'TRUE',
+    'try':'TRY',
+    'typedef':'TYPEDEF',
+    'union':'UNION',
+    'unsigned':'UNSIGNED',
+    'virtual':'VIRTUAL',
+    'void':'VOID',
+    'volatile':'VOLATILE',
+    'while':'WHILE',
+    'xor':'XOR',
+    'xor_eq':'XOR_EQ',
+}
 
+# List of token names. 
+tokens = [
         # id and no
-        'ID',
+        'IDENTIFIER',
         'NUMBER',
 
         # arithematic operator
@@ -119,95 +120,23 @@ tokens = (
         'DQUOTE',
 
         # Comment
-        'SLCOMMENT',
-        'LMLCOMMENT',
-        'RMLCOMMENT',
-        'LDCOMMENT',
-        'RDCOMMENT',
-
         'COMMA',
         'DOT',
         'SEMICOLON',
         'DOUBLECOLON',
         'COLON',
-        'BAR',
-
         'COMMENT',
         'STRING',
-)
+
+] + list(keywords.values())
 
 
 # Regular expression rules for simple tokens
 
-# Keywords
-t_AND			= r'and'
-t_AND_EQ		= r'and_eq'
-t_ASM			= r'asm'
-t_AUTO			= r'auto'
-t_BITAND		= r'bitand'
-t_BITOR			= r'bitor'
-t_BOOL			= r'bool'
-t_BREAK			= r'break'
-t_CASE			= r'case'
-t_CATCH			= r'catch'
-t_CHAR			= r'char'
-t_CHAR8_T		= r'char8_t'
-t_CHAR16_T		= r'char16_t'
-t_CHAR32_T		= r'char32_t'
-t_CLASS			= r'class'
-t_COMPL			= r'compl'
-t_CONST			= r'const'
-t_CONTINUE		= r'continue'
-t_DEFAULT		= r'default'
-t_DELETE		= r'delete'
-t_DO			= r'do'
-t_DOUBLE		= r'double'
-t_ELSE			= r'else'
-t_ENUM			= r'enum'
-t_EXTERN		= r'extern'
-t_FALSE			= r'false'
-t_FLOAT			= r'float'
-t_FOR			= r'for'
-t_GOTO			= r'goto'
-t_IF			= r'if'
-t_INLINE		= r'inline'
-t_INT			= r'int'
-t_LONG			= r'long'
-t_NAMESPACE		= r'namespace'
-t_NEW			= r'new'
-t_NOT			= r'not'
-t_NOT_EQ		= r'not_eq'
-t_NULLPTR		= r'nullptr'
-t_OR			= r'or'
-t_OR_EQ			= r'or_eq'
-t_PRIVATE		= r'private'
-t_PROTECTED		= r'protected'
-t_PUBLIC		= r'public'
-t_RETURN		= r'return'
-t_SHORT			= r'short'
-t_SIGNED		= r'signed'
-t_SIZEOF		= r'sizeof'
-t_STATIC		= r'static'
-t_SWITCH		= r'switch'
-t_THIS			= r'this'
-t_THROW			= r'throw'
-t_TRUE			= r'true'
-t_TRY			= r'try'
-t_TYPEDEF		= r'typedef'
-t_UNION			= r'union'
-t_UNSIGNED		= r'unsigned'
-t_VIRTUAL		= r'virtual'
-t_VOID			= r'void'
-t_VOLATILE		= r'volatile'
-t_WHILE			= r'while'
-t_XOR			= r'xor'
-t_XOR_EQ		= r'xor_eq'
-
-
-
 # RegEx id
-def t_ID(t):
+def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
+    t.type = keywords.get(t.value, 'IDENTIFIER')
     return t
 
 def t_NUMBER(t):
@@ -258,20 +187,12 @@ t_RSPAREN   = r'\]'
 t_SQUOTE    = r'\''
 t_DQUOTE    = r'\"'
 
-# Comment
-t_SLCOMMENT  = r'//'
-t_LMLCOMMENT = r'/\*'
-t_RMLCOMMENT = r'\*/'
-t_LDCOMMENT  = r'/\*\*'
-t_RDCOMMENT  = r'\*\*/'
-
-
+# Other
 t_COMMA = r','
 t_DOT = r'\.'
 t_SEMICOLON = r';'
 t_DOUBLECOLON = r'::'
 t_COLON = r':'
-t_BAR = r'\|'
 
 t_STRING = r'\".*\"'
 
@@ -325,6 +246,8 @@ if __name__ == "__main__":
         print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format(tok.type, "'" + tok.value + "'", tok.lineno, tok.lexpos, amt=a))
     """
     
+    bold_token = {}
+
     code_out = "<div><pre>\n"
     cur=1
     prev=1

@@ -1,0 +1,50 @@
+<div><pre>
+<span style="color: #557799">// C++ program to find union of 
+</span><span style="color: #557799">// two sorted arrays 
+</span>
+<span style="color: #557799">using</span> <span style="color: #557799">namespace</span> <span style="color: #557799">std</span><span style="color: #557799">;</span>
+
+<span style="color: #557799">/* Function prints union of arr1[] and arr2[] 
+m is the number of elements in arr1[] 
+n is the number of elements in arr2[] */</span>
+<span style="color: #557799">int</span> <span style="color: #557799">printUnion</span><span style="color: #557799">(</span><span style="color: #557799">int</span> <span style="color: #557799">arr1</span><span style="color: #557799">[</span><span style="color: #557799">]</span><span style="color: #557799">,</span> <span style="color: #557799">int</span> <span style="color: #557799">arr2</span><span style="color: #557799">[</span><span style="color: #557799">]</span><span style="color: #557799">,</span> <span style="color: #557799">int</span> <span style="color: #557799">m</span><span style="color: #557799">,</span> <span style="color: #557799">int</span> <span style="color: #557799">n</span><span style="color: #557799">)</span>
+<span style="color: #557799">{</span>
+<span style="color: #557799">int</span> <span style="color: #557799">i</span> <span style="color: #557799">=</span> <span style="color: #557799">0</span><span style="color: #557799">,</span> <span style="color: #557799">j</span> <span style="color: #557799">=</span> <span style="color: #557799">0</span><span style="color: #557799">;</span>
+<span style="color: #557799">while</span> <span style="color: #557799">(</span><span style="color: #557799">i</span> <span style="color: #557799"><</span> <span style="color: #557799">m</span> <span style="color: #557799">&&</span> <span style="color: #557799">j</span> <span style="color: #557799"><</span> <span style="color: #557799">n</span><span style="color: #557799">)</span>
+<span style="color: #557799">{</span>
+    <span style="color: #557799">if</span> <span style="color: #557799">(</span><span style="color: #557799">arr1</span><span style="color: #557799">[</span><span style="color: #557799">i</span><span style="color: #557799">]</span> <span style="color: #557799"><</span> <span style="color: #557799">arr2</span><span style="color: #557799">[</span><span style="color: #557799">j</span><span style="color: #557799">]</span><span style="color: #557799">)</span>
+    <span style="color: #557799">cout</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">arr1</span><span style="color: #557799">[</span><span style="color: #557799">i</span><span style="color: #557799">++</span><span style="color: #557799">]</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">"hello"</span><span style="color: #557799">;</span>
+
+    <span style="color: #557799">else</span> <span style="color: #557799">if</span> <span style="color: #557799">(</span><span style="color: #557799">arr2</span><span style="color: #557799">[</span><span style="color: #557799">j</span><span style="color: #557799">]</span> <span style="color: #557799"><</span> <span style="color: #557799">arr1</span><span style="color: #557799">[</span><span style="color: #557799">i</span><span style="color: #557799">]</span><span style="color: #557799">)</span>
+    <span style="color: #557799">cout</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">arr2</span><span style="color: #557799">[</span><span style="color: #557799">j</span><span style="color: #557799">++</span><span style="color: #557799">]</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">" "</span><span style="color: #557799">;</span>
+
+    <span style="color: #557799">else</span>
+    <span style="color: #557799">{</span>
+    <span style="color: #557799">cout</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">arr2</span><span style="color: #557799">[</span><span style="color: #557799">j</span><span style="color: #557799">++</span><span style="color: #557799">]</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">" "</span><span style="color: #557799">;</span>
+    <span style="color: #557799">i</span><span style="color: #557799">++</span><span style="color: #557799">;</span>
+    <span style="color: #557799">}</span>
+<span style="color: #557799">}</span>
+
+<span style="color: #557799">/* Print remaining elements of the larger array */</span>
+<span style="color: #557799">while</span><span style="color: #557799">(</span><span style="color: #557799">i</span> <span style="color: #557799"><</span> <span style="color: #557799">m</span><span style="color: #557799">)</span>
+    <span style="color: #557799">cout</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">arr1</span><span style="color: #557799">[</span><span style="color: #557799">i</span><span style="color: #557799">++</span><span style="color: #557799">]</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">" "</span><span style="color: #557799">;</span>
+
+<span style="color: #557799">while</span><span style="color: #557799">(</span><span style="color: #557799">j</span> <span style="color: #557799"><</span> <span style="color: #557799">n</span><span style="color: #557799">)</span>
+    <span style="color: #557799">cout</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">arr2</span><span style="color: #557799">[</span><span style="color: #557799">j</span><span style="color: #557799">++</span><span style="color: #557799">]</span> <span style="color: #557799"><</span><span style="color: #557799"><</span> <span style="color: #557799">" "</span><span style="color: #557799">;</span>
+<span style="color: #557799">}</span>
+
+<span style="color: #557799">/* Driver program to test above function */</span>
+<span style="color: #557799">int</span> <span style="color: #557799">main</span><span style="color: #557799">(</span><span style="color: #557799">)</span>
+<span style="color: #557799">{</span>
+<span style="color: #557799">int</span> <span style="color: #557799">arr1</span><span style="color: #557799">[</span><span style="color: #557799">]</span> <span style="color: #557799">=</span> <span style="color: #557799">{</span><span style="color: #557799">1</span><span style="color: #557799">,</span> <span style="color: #557799">2</span><span style="color: #557799">,</span> <span style="color: #557799">4</span><span style="color: #557799">,</span> <span style="color: #557799">5</span><span style="color: #557799">,</span> <span style="color: #557799">6</span><span style="color: #557799">}</span><span style="color: #557799">;</span>
+<span style="color: #557799">int</span> <span style="color: #557799">arr2</span><span style="color: #557799">[</span><span style="color: #557799">]</span> <span style="color: #557799">=</span> <span style="color: #557799">{</span><span style="color: #557799">2</span><span style="color: #557799">,</span> <span style="color: #557799">3</span><span style="color: #557799">,</span> <span style="color: #557799">5</span><span style="color: #557799">,</span> <span style="color: #557799">7</span><span style="color: #557799">}</span><span style="color: #557799">;</span>
+
+<span style="color: #557799">int</span> <span style="color: #557799">m</span> <span style="color: #557799">=</span> <span style="color: #557799">sizeof</span><span style="color: #557799">(</span><span style="color: #557799">arr1</span><span style="color: #557799">)</span><span style="color: #557799">/</span><span style="color: #557799">sizeof</span><span style="color: #557799">(</span><span style="color: #557799">arr1</span><span style="color: #557799">[</span><span style="color: #557799">0</span><span style="color: #557799">]</span><span style="color: #557799">)</span><span style="color: #557799">;</span>
+<span style="color: #557799">int</span> <span style="color: #557799">n</span> <span style="color: #557799">=</span> <span style="color: #557799">sizeof</span><span style="color: #557799">(</span><span style="color: #557799">arr2</span><span style="color: #557799">)</span><span style="color: #557799">/</span><span style="color: #557799">sizeof</span><span style="color: #557799">(</span><span style="color: #557799">arr2</span><span style="color: #557799">[</span><span style="color: #557799">0</span><span style="color: #557799">]</span><span style="color: #557799">)</span><span style="color: #557799">;</span>
+
+<span style="color: #557799">// Function calling 
+</span><span style="color: #557799">printUnion</span><span style="color: #557799">(</span><span style="color: #557799">arr1</span><span style="color: #557799">,</span> <span style="color: #557799">arr2</span><span style="color: #557799">,</span> <span style="color: #557799">m</span><span style="color: #557799">,</span> <span style="color: #557799">n</span><span style="color: #557799">)</span><span style="color: #557799">;</span>
+
+<span style="color: #557799">return</span> <span style="color: #557799">0</span><span style="color: #557799">;</span>
+<span style="color: #557799">}</span>
+</pre></div>
