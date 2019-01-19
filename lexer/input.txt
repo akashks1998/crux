@@ -1,5 +1,2 @@
-if (x_1==5){
-    cout<<"This is a literal";
-}else{
-    cout<<"This is also a l!teral";
-}
++ - / * | || & && % += -= *= /= &= ^ ^= ++ -- ** ~ == != > < >= <= = ( ) { } [ ]
+' " // /* */ /** **/

@@ -1,4 +1,9 @@
-import ply.lex as lex
+from ply import lex
+from ply import yacc
+import re
+
+#Personal Groups
+op='-+/*&|%!~^' # pattern to detect operators for separation b/n nos
 
 # List of token names. 
 tokens = (
@@ -66,13 +71,59 @@ tokens = (
         'XOR',
         'XOR_EQ',
 
-        #Non Keywords
+        # id and no
         'ID',
         'NUMBER',
-        'PLUS',
-        'MINUS',
-        'TIMES',
-        'DIVIDE',
+
+        # arithematic operator
+        'PLUSOP',
+        'MINUSOP',
+        'DIVOP',
+        'MULTOP',
+        'BOROP',
+        'OROP',
+        'BANDOP',
+        'ANDOP',
+        'MODOP',
+        'PLUSEQOP',
+        'MINUSEQOP',
+        'MULTEQOP',
+        'DIVEQOP',
+        'BANDEQOP',
+        'XOROP',
+        'XOREQOP',
+        'UPLUSOP',
+        'UMINUSOP',
+        'EXPOP',
+        'BNOP',
+
+        #comparison operator, =
+        'EQCOMP',
+        'NEQCOMP',
+        'GTCOMP',
+        'GTECOMP',
+        'LTCOMP',
+        'LTECOMP',
+        'EQUAL',
+
+        # Parenthesis
+        'LRPAREN',
+        'RRPAREN',
+        'LCPAREN',
+        'RCPAREN',
+        'LSPAREN',
+        'RSPAREN',
+
+        # Quotes
+        'SQUOTE',
+        'DQUOTE',
+
+        # Comment
+        'SLCOMMENT',
+        'LMLCOMMENT',
+        'RMLCOMMENT',
+        'LDCOMMENT',
+        'RDCOMMENT',
 )
 
 
@@ -143,18 +194,68 @@ t_XOR			= r'xor'
 t_XOR_EQ		= r'xor_eq'
 
 
-# RegEx for simple tokens
-t_PLUS      = r'\+'
-t_MINUS     = r'-'
-t_TIMES     = r'\*'
-t_DIVIDE    = r'/'
 
 # RegEx id
 def t_ID(t):
-    r'\w+'
+    r'[a-zA-Z_]\w+'
     return t
 
-# Define a rule so we can track line numbers
+def t_NUMBER(t):
+    #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
+    r'(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
+    return t
+
+# Arithematic Operator
+t_PLUSOP    = r'\+'
+t_MINUSOP   = r'-'
+t_DIVOP     = r'/'
+t_MULTOP    = r'\*'
+t_BOROP     = r'\|'
+t_OROP      = r'\|\|'
+t_BANDOP    = r'\&'
+t_ANDOP     = r'\&\&'
+t_MODOP     = r'\%'
+t_PLUSEQOP  = r'\+='
+t_MINUSEQOP = r'-='
+t_MULTEQOP  = r'\*='
+t_DIVEQOP   = r'/='
+t_BANDEQOP  = r'\&\='
+t_XOROP     = r'\^'
+t_XOREQOP   = r'\^='
+t_UPLUSOP   = r'\+\+'
+t_UMINUSOP  = r'--'
+t_EXPOP     = r'\*\*'
+t_BNOP      = r'\~'
+
+# Comparison Operator
+t_EQCOMP    = r'=='
+t_NEQCOMP   = r'!='
+t_GTCOMP    = r'>'
+t_GTECOMP   = r'>='
+t_LTCOMP    = r'<'
+t_LTECOMP   = r'<='
+t_EQUAL     = r'='
+
+# Parenthesis
+t_LRPAREN   = r'\('
+t_RRPAREN   = r'\)'
+t_LCPAREN   = r'\{'
+t_RCPAREN   = r'\}'
+t_LSPAREN   = r'\['
+t_RSPAREN   = r'\]'
+
+# Quotes
+t_SQUOTE    = r'\''
+t_DQUOTE    = r'\"'
+
+# Comment
+t_SLCOMMENT  = r'//'
+t_LMLCOMMENT = r'/\*'
+t_RMLCOMMENT = r'\*/'
+t_LDCOMMENT  = r'/\*\*'
+t_RDCOMMENT  = r'\*\*/'
+
+# track line no.
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -164,17 +265,30 @@ t_ignore  = ' \t'
 
 # Error handling rule
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
+    tk = re.split('[ \t]', t.value)[0]
+    print("Illegal token '%s'" % tk)
+    t.lexer.skip(len(tk))
 
 # Build the lexer
 lexer = lex.lex()
 
 if __name__ == "__main__":
-    input_code = input()
-    lexer.input(input_code)
+    lines=[]
 
-    print('{:>12} {:>12} {:>12} {:>12}'.format('Type', 'Value', 'Lineno', 'Lexpos'))
+    while(1):
+        try:
+            line=input()
+        except EOFError:
+            break
+        lines.append(line)
+
+    code = '\n'.join(lines)
+
+    lexer.input(code)
+
+    a=10
+    print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format('Type', 'Value', 'Lineno', 'Lexpos', amt=a))
     for tok in lexer:
-        print('{:>12} {:>12} {:>12} {:>12}'.format(tok.type, tok.value, tok.lineno, tok.lexpos))
+        print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format(tok.type, "'" + tok.value + "'", tok.lineno, tok.lexpos, amt=a))
+
 

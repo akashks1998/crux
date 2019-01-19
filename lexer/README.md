@@ -7,3 +7,10 @@ not_Implemented = [ 'AND', 'AND_EQ', 'ASM', 'AUTO', 'BITAND', 'BITOR', 'BOOL', '
                   'PUBLIC', 'RETURN', 'SHORT', 'SIGNED', 'SIZEOF', 'STATIC', 'SWITCH', 'THIS', 'THROW', 'TRUE', 'TRY',
                   'TYPEDEF', 'UNION', 'UNSIGNED', 'VIRTUAL', 'VOID', 'VOLATILE', 'WHILE', 'XOR', 'XOR_EQ',  ]
 ```
+## Numbers
+```
+tc = [
+      '12', '12.2', '.321', '12e-14', '12.3e+12', '0.42', '1e1'
+      'e10', '13me41', '13*14', '12.3.21'
+      ]
+```
