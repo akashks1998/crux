@@ -325,7 +325,7 @@ if __name__ == "__main__":
         print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format(tok.type, "'" + tok.value + "'", tok.lineno, tok.lexpos, amt=a))
     """
     
-    code_out = ""
+    code_out = "<div><pre>\n"
     cur=1
     prev=1
     for tok in lexer:
@@ -336,8 +336,9 @@ if __name__ == "__main__":
             code_out += "\n"*(line-prev)
             prev=line
         col = find_column(code, tok)
-        code_out = code_out + " "*(col-cur) + tok.value
+        span = "<span style=\"color: #557799\">"
+        code_out = code_out + " "*(col-cur) + span + tok.value + "</span>"
         cur=col + len(str(tok.value))
-    
+    code_out = code_out + "\n</pre></div>"
     print(code_out)
 
