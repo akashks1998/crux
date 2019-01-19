@@ -300,6 +300,10 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
+def find_column(input, token):
+    line_start = input.rfind('\n', 0, token.lexpos) + 1
+    return (token.lexpos - line_start) + 1
+
 if __name__ == "__main__":
     lines=[]
 
@@ -314,9 +318,26 @@ if __name__ == "__main__":
 
     lexer.input(code)
 
+    """
     a=10
     print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format('Type', 'Value', 'Lineno', 'Lexpos', amt=a))
     for tok in lexer:
         print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format(tok.type, "'" + tok.value + "'", tok.lineno, tok.lexpos, amt=a))
-
+    """
+    
+    code_out = ""
+    cur=1
+    prev=1
+    for tok in lexer:
+        line = tok.lineno
+        # print(line)
+        if prev != line :
+            cur=1
+            code_out += "\n"*(line-prev)
+            prev=line
+        col = find_column(code, tok)
+        code_out = code_out + " "*(col-cur) + tok.value
+        cur=col + len(str(tok.value))
+    
+    print(code_out)
 
