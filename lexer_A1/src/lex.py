@@ -122,13 +122,14 @@ tokens = [
         'SQUOTE',
         'DQUOTE',
 
-        # Comment
+        # OTHER
         'COMMA',
         'DOT',
         'SEMICOLON',
         'DOUBLECOLON',
         'COLON',
         'COMMENT',
+        'SCHAR',
         'STRING',
 ] + list(keywords.values())
 
@@ -190,13 +191,13 @@ t_SQUOTE    = r'\''
 t_DQUOTE    = r'\"'
 
 # Other
-t_COMMA = r','
-t_DOT = r'\.'
-t_SEMICOLON = r';'
-t_DOUBLECOLON = r'::'
-t_COLON = r':'
-
-t_STRING = r'\".*\"'
+t_COMMA         = r','
+t_DOT           = r'\.'
+t_SEMICOLON     = r';'
+t_DOUBLECOLON   = r'::'
+t_COLON         = r':'
+t_SCHAR          = r'\'.\''
+t_STRING        = r'\".*\"'
 
 # track line no.
 def t_newline(t):
