@@ -124,6 +124,13 @@ tokens = (
         'RMLCOMMENT',
         'LDCOMMENT',
         'RDCOMMENT',
+
+        'COMMA',
+        'DOT',
+        'SEMICOLON',
+        'DOUBLECOLON',
+        'COLON',
+        'BAR',
 )
 
 
@@ -197,7 +204,7 @@ t_XOR_EQ		= r'xor_eq'
 
 # RegEx id
 def t_ID(t):
-    r'[a-zA-Z_]\w+'
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
     return t
 
 def t_NUMBER(t):
@@ -254,6 +261,14 @@ t_LMLCOMMENT = r'/\*'
 t_RMLCOMMENT = r'\*/'
 t_LDCOMMENT  = r'/\*\*'
 t_RDCOMMENT  = r'\*\*/'
+
+
+t_COMMA = r','
+t_DOT = r'\.'
+t_SEMICOLON = r';'
+t_DOUBLECOLON = r'::'
+t_COLON = r':'
+t_BAR = r'\|'
 
 # track line no.
 def t_newline(t):
