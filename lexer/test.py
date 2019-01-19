@@ -1,8 +1,16 @@
 from lex import lexer
+a=10
+lines=[]
 
-stri = input()
+while(1):
+    try:
+        line=input()
+    except EOFError:
+        break
+    lines.append(line)
+stri = '\n'.join(lines)
+
 lexer.input(stri)
-a=8
 
 print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format('Type', 'Value', 'Lineno', 'Lexpos', amt=a))
 for tok in lexer:

@@ -71,14 +71,59 @@ tokens = (
         'XOR',
         'XOR_EQ',
 
-        #Non Keywords
+        # id and no
         'ID',
         'NUMBER',
 
-        'PLUS',
-        'MINUS',
-        'TIMES',
-        'DIVIDE',
+        # arithematic operator
+        'PLUSOP',
+        'MINUSOP',
+        'DIVOP',
+        'MULTOP',
+        'BOROP',
+        'OROP',
+        'BANDOP',
+        'ANDOP',
+        'MODOP',
+        'PLUSEQOP',
+        'MINUSEQOP',
+        'MULTEQOP',
+        'DIVEQOP',
+        'BANDEQOP',
+        'XOROP',
+        'XOREQOP',
+        'UPLUSOP',
+        'UMINUSOP',
+        'EXPOP',
+        'BNOP',
+
+        #comparison operator, =
+        'EQCOMP',
+        'NEQCOMP',
+        'GTCOMP',
+        'GTECOMP',
+        'LTCOMP',
+        'LTECOMP',
+        'EQUAL',
+
+        # Parenthesis
+        'LRPAREN',
+        'RRPAREN',
+        'LCPAREN',
+        'RCPAREN',
+        'LSPAREN',
+        'RSPAREN',
+
+        # Quotes
+        'SQUOTE',
+        'DQUOTE',
+
+        # Comment
+        'SLCOMMENT',
+        'LMLCOMMENT',
+        'RMLCOMMENT',
+        'LDCOMMENT',
+        'RDCOMMENT',
 )
 
 # Keywords
@@ -154,15 +199,58 @@ def t_ID(t):
 
 def t_NUMBER(t):
     #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
-    #r'(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
-    r'[ ](\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?[ ]'
+    r'(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
     return t
 
-# RegEx for simple tokens
-t_PLUS      = r'\+'
-t_MINUS     = r'-'
-t_TIMES     = r'\*'
-t_DIVIDE    = r'/'
+# Arithematic Operator
+t_PLUSOP    = r'\+'
+t_MINUSOP   = r'-'
+t_DIVOP     = r'/'
+t_MULTOP    = r'\*'
+t_BOROP     = r'\|'
+t_OROP      = r'\|\|'
+t_BANDOP    = r'\&'
+t_ANDOP     = r'\&\&'
+t_MODOP     = r'\%'
+t_PLUSEQOP  = r'\+='
+t_MINUSEQOP = r'-='
+t_MULTEQOP  = r'\*='
+t_DIVEQOP   = r'/='
+t_BANDEQOP  = r'\&\='
+t_XOROP     = r'\^'
+t_XOREQOP   = r'\^='
+t_UPLUSOP   = r'\+\+'
+t_UMINUSOP  = r'--'
+t_EXPOP     = r'\*\*'
+t_BNOP      = r'\~'
+
+# Comparison Operator
+t_EQCOMP    = r'=='
+t_NEQCOMP   = r'!='
+t_GTCOMP    = r'>'
+t_GTECOMP   = r'>='
+t_LTCOMP    = r'<'
+t_LTECOMP   = r'<='
+t_EQUAL     = r'='
+
+# Parenthesis
+t_LRPAREN   = r'\('
+t_RRPAREN   = r'\)'
+t_LCPAREN   = r'\{'
+t_RCPAREN   = r'\}'
+t_LSPAREN   = r'\['
+t_RSPAREN   = r'\]'
+
+# Quotes
+t_SQUOTE    = r'\''
+t_DQUOTE    = r'\"'
+
+# Comment
+t_SLCOMMENT  = r'//'
+t_LMLCOMMENT = r'/\*'
+t_RMLCOMMENT = r'\*/'
+t_LDCOMMENT  = r'/\*\*'
+t_RDCOMMENT  = r'\*\*/'
 
 # track line no.
 def t_newline(t):
