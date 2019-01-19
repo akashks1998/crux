@@ -54,6 +54,7 @@ keywords = {
     'signed':'SIGNED',
     'sizeof':'SIZEOF',
     'static':'STATIC',
+    'std' : 'STD',
     'switch':'SWITCH',
     'this':'THIS',
     'throw':'THROW',
@@ -62,6 +63,7 @@ keywords = {
     'typedef':'TYPEDEF',
     'union':'UNION',
     'unsigned':'UNSIGNED',
+    'using' : 'USING',
     'virtual':'VIRTUAL',
     'void':'VOID',
     'volatile':'VOLATILE',
@@ -226,8 +228,15 @@ def find_column(input, token):
     return (token.lexpos - line_start) + 1
 
 if __name__ == "__main__":
-    lines=[]
 
+    color_dict={}
+    with open("cfg.txt") as f:
+        for line in f:
+            (key,val) = line.split(':')
+            color_dict[str(key).strip()] = str(val).strip()
+
+
+    lines=[]
     while(1):
         try:
             line=input()
@@ -246,7 +255,7 @@ if __name__ == "__main__":
         print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format(tok.type, "'" + tok.value + "'", tok.lineno, tok.lexpos, amt=a))
     """
     
-    bold_token = {}
+    bold_token = keywords
 
     code_out = "<div><pre>\n"
     cur=1
@@ -259,7 +268,11 @@ if __name__ == "__main__":
             code_out += "\n"*(line-prev)
             prev=line
         col = find_column(code, tok)
-        span = "<span style=\"color: #557799\">"
+        bold = bold_token.get(tok.value, "")
+        if bold != "":
+            bold = "; font-weight: bold"
+        color = color_dict.get(str(tok.type), "#666666")
+        span = "<span style=\"color: " + color + bold + "\">"
         code_out = code_out + " "*(col-cur) + span + tok.value + "</span>"
         cur=col + len(str(tok.value))
     code_out = code_out + "\n</pre></div>"
