@@ -1,6 +1,6 @@
-from ply import *
+import ply.lex as lex
 
-# Token names.
+# List of token names. 
 tokens = (
         # Keywords
         'AND',
@@ -69,13 +69,14 @@ tokens = (
         #Non Keywords
         'ID',
         'NUMBER',
-        '',
-
         'PLUS',
         'MINUS',
         'TIMES',
         'DIVIDE',
 )
+
+
+# Regular expression rules for simple tokens
 
 # Keywords
 t_AND			= r'and'
@@ -153,18 +154,27 @@ def t_ID(t):
     r'\w+'
     return t
 
-# track line no.
+# Define a rule so we can track line numbers
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-# Ignore
-t_ignore = ' \t'
+# A string containing ignored characters (spaces and tabs)
+t_ignore  = ' \t'
 
-# Error handling
+# Error handling rule
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
-# Build lexer
+# Build the lexer
 lexer = lex.lex()
+
+if __name__ == "__main__":
+    input_code = input()
+    lexer.input(input_code)
+
+    print('{:>12} {:>12} {:>12} {:>12}'.format('Type', 'Value', 'Lineno', 'Lexpos'))
+    for tok in lexer:
+        print('{:>12} {:>12} {:>12} {:>12}'.format(tok.type, tok.value, tok.lineno, tok.lexpos))
+
