@@ -206,7 +206,7 @@ def t_newline(t):
 
 # comment
 def t_COMMENT(t):
-    r'((//)[^\n\r]*[\n\r])|(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)'
+    r'( (//)[^\n\r]* ) |(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)'
     t.value = str(t.value)
     t.type = 'COMMENT'
     return t
@@ -227,7 +227,7 @@ lexer = lex.lex()
 def find_column(input, token):
     line_start = input.rfind('\n', 0, token.lexpos) + 1
     return (token.lexpos - line_start) + 1
-
+    
 if __name__ == "__main__":
     if(len(sys.argv) != 4):
         print("Usage python3.7 src/lex.py --cfg=path/to/cfg path/to/input --output=/path/to/output")
@@ -255,7 +255,7 @@ if __name__ == "__main__":
         for line in f:
             lines.append(line)
     code = ''.join(lines)
-    #print(code)
+    print(code)
     lexer.input(code)
 
     meta_bgcolor = color_dict.get("META_BGCOLOR", "#121e1f")
