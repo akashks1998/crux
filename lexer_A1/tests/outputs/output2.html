@@ -1,0 +1,70 @@
+<html><body bgcolor="#0e2f44"><div><pre>
+<span style="color: #baebae">// Template code taken form GeeksForGeeks</span>
+
+<span style="color: #baebae">// C++ implementation to print the last k nodes </span>
+<span style="color: #baebae">// of linked list in reverse order </span>
+         <span style="color: #daa520"><</span><span style="color: white">bits</span><span style="color: #daa520">/</span><span style="color: white">stdc</span><span style="color: #daa520">++</span><span style="color: rgb(200,200,200)">.</span><span style="color: white">h</span><span style="color: #daa520">></span>
+<span style="color: rgb(200,200,200); font-weight: bold">using</span> <span style="color: rgb(200,200,200); font-weight: bold">namespace</span> <span style="color: rgb(200,200,200); font-weight: bold">std</span><span style="color: rgb(200,200,200)">;</span>
+
+<span style="color: #baebae">// Structure of a node </span>
+<span style="color: white">struct</span> <span style="color: white">Node</span> <span style="color: #ff4040">{</span>
+    <span style="color: #bbaaee; font-weight: bold">int</span> <span style="color: white">data</span><span style="color: rgb(200,200,200)">;</span>
+    <span style="color: white">Node</span><span style="color: #daa520">*</span> <span style="color: white">next</span><span style="color: rgb(200,200,200)">;</span>
+<span style="color: #ff4040">}</span><span style="color: rgb(200,200,200)">;</span>
+
+<span style="color: #baebae">// Function to get a new node </span>
+<span style="color: white">Node</span><span style="color: #daa520">*</span> <span style="color: white">getNode</span><span style="color: #ff4040">(</span><span style="color: #bbaaee; font-weight: bold">int</span> <span style="color: white">data</span><span style="color: #ff4040">)</span>
+<span style="color: #ff4040">{</span>
+    <span style="color: #baebae">// allocate space </span>
+    <span style="color: white">Node</span><span style="color: #daa520">*</span> <span style="color: white">newNode</span> <span style="color: #daa520">=</span> <span style="color: rgb(200,200,200); font-weight: bold">new</span> <span style="color: white">Node</span><span style="color: rgb(200,200,200)">;</span>
+
+    <span style="color: #baebae">// put in data </span>
+    <span style="color: white">newNode</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">data</span> <span style="color: #daa520">=</span> <span style="color: white">data</span><span style="color: rgb(200,200,200)">;</span>
+    <span style="color: white">newNode</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span> <span style="color: #daa520">=</span> <span style="color: white">NULL</span><span style="color: rgb(200,200,200)">;</span>
+    <span style="color: #fa8072; font-weight: bold">return</span> <span style="color: white">newNode</span><span style="color: rgb(200,200,200)">;</span>
+<span style="color: #ff4040">}</span>
+
+<span style="color: #baebae">// Function to print the last k nodes </span>
+<span style="color: #baebae">// of linked list in reverse order </span>
+<span style="color: rgb(200,200,200); font-weight: bold">void</span> <span style="color: white">printLastKRev</span><span style="color: #ff4040">(</span><span style="color: white">Node</span><span style="color: #daa520">*</span> <span style="color: white">head</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #bbaaee; font-weight: bold">int</span><span style="color: rgb(200,200,200)">&</span> <span style="color: white">count</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #bbaaee; font-weight: bold">int</span> <span style="color: white">k</span><span style="color: #ff4040">)</span>
+<span style="color: #ff4040">{</span>
+    <span style="color: #baebae">// if list is empty </span>
+    <span style="color: #85c2ba; font-weight: bold">if</span> <span style="color: #ff4040">(</span>
+        <span style="color: #fa8072; font-weight: bold">return</span><span style="color: rgb(200,200,200)">;</span>
+
+    <span style="color: #baebae">// Recursive call with the next node </span>
+    <span style="color: #baebae">// of the list </span>
+    <span style="color: white">printLastKRev</span><span style="color: #ff4040">(</span><span style="color: white">head</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span><span style="color: rgb(200,200,200)">,</span> <span style="color: white">count</span><span style="color: rgb(200,200,200)">,</span> <span style="color: white">k</span><span style="color: #ff4040">)</span><span style="color: rgb(200,200,200)">;</span>
+
+    <span style="color: #baebae">// Count variable to keep track of </span>
+    <span style="color: #baebae">// the last k nodes </span>
+    <span style="color: white">count</span><span style="color: #daa520">++</span><span style="color: rgb(200,200,200)">;</span>
+
+    <span style="color: #baebae">// Print data </span>
+    <span style="color: #85c2ba; font-weight: bold">if</span> <span style="color: #ff4040">(</span><span style="color: white">count</span> <span style="color: #daa520"><=</span> <span style="color: white">k</span><span style="color: #ff4040">)</span>
+        <span style="color: white">cout</span> <span style="color: #daa520"><</span><span style="color: #daa520"><</span> <span style="color: white">head</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">data</span> <span style="color: #daa520"><</span><span style="color: #daa520"><</span> <span style="color: #f32652">" "</span><span style="color: rgb(200,200,200)">;</span>
+<span style="color: #ff4040">}</span>
+
+<span style="color: #baebae">// Driver code </span>
+<span style="color: #bbaaee; font-weight: bold">int</span> <span style="color: white">main</span><span style="color: #ff4040">(</span><span style="color: #ff4040">)</span>
+<span style="color: #ff4040">{</span>
+    <span style="color: #baebae">/* sdfjbsjkh 
+    
+    */</span>
+
+    <span style="color: #baebae">// as</span>
+    <span style="color: white">Node</span><span style="color: #daa520">*</span> <span style="color: white">head</span> <span style="color: #daa520">=</span> <span style="color: white">getNode</span><span style="color: #ff4040">(</span><span style="color: #FFCCBC">1</span><span style="color: #ff4040">)</span><span style="color: rgb(200,200,200)">;</span>
+    <span style="color: white">head</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span> <span style="color: #daa520">=</span> <span style="color: white">getNode</span><span style="color: #ff4040">(</span><span style="color: #FFCCBC">2</span><span style="color: #ff4040">)</span><span style="color: rgb(200,200,200)">;</span>
+    <span style="color: white">head</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span> <span style="color: #daa520">=</span> <span style="color: white">getNode</span><span style="color: #ff4040">(</span><span style="color: #FFCCBC">3</span><span style="color: #ff4040">)</span><span style="color: rgb(200,200,200)">;</span>
+    <span style="color: white">head</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span> <span style="color: #daa520">=</span> <span style="color: white">getNode</span><span style="color: #ff4040">(</span><span style="color: #FFCCBC">4</span><span style="color: #ff4040">)</span><span style="color: rgb(200,200,200)">;</span>
+    <span style="color: white">head</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span><span style="color: #daa520">-</span><span style="color: #daa520">></span><span style="color: white">next</span> <span style="color: #daa520">=</span> <span style="color: white">getNode</span><span style="color: #ff4040">(</span><span style="color: #FFCCBC">5</span><span style="color: #ff4040">)</span><span style="color: rgb(200,200,200)">;</span>
+
+    <span style="color: #bbaaee; font-weight: bold">int</span> <span style="color: white">k</span> <span style="color: #daa520">=</span> <span style="color: #FFCCBC">4</span><span style="color: rgb(200,200,200)">,</span> <span style="color: white">count</span> <span style="color: #daa520">=</span> <span style="color: #FFCCBC">0</span><span style="color: rgb(200,200,200)">;</span>
+    <span style="color: white">cout</span> <span style="color: #daa520"><</span><span style="color: #daa520"><</span> <span style="color: #f32652">"HI THIS IS THE THEME #!"</span>
+
+    <span style="color: #baebae">// print the last k nodes </span>
+    <span style="color: white">printLastKRev</span><span style="color: #ff4040">(</span><span style="color: white">head</span><span style="color: rgb(200,200,200)">,</span> <span style="color: white">count</span><span style="color: rgb(200,200,200)">,</span> <span style="color: white">k</span><span style="color: #ff4040">)</span><span style="color: rgb(200,200,200)">;</span>
+
+    <span style="color: #fa8072; font-weight: bold">return</span> <span style="color: #FFCCBC">0</span><span style="color: rgb(200,200,200)">;</span>
+<span style="color: #ff4040">}</span>
+</pre></div></body></html>
