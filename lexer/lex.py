@@ -1,6 +1,7 @@
 from ply import lex
 from ply import yacc
 import re
+import sys
 
 #Personal Groups
 op='-+/*&|%!~^' # pattern to detect operators for separation b/n nos
@@ -121,15 +122,16 @@ tokens = [
         'SQUOTE',
         'DQUOTE',
 
-        # Comment
+        # OTHER
         'COMMA',
         'DOT',
         'SEMICOLON',
         'DOUBLECOLON',
         'COLON',
         'COMMENT',
+        'SCHAR',
         'STRING',
-
+        'HASHTAG'
 ] + list(keywords.values())
 
 
@@ -190,13 +192,14 @@ t_SQUOTE    = r'\''
 t_DQUOTE    = r'\"'
 
 # Other
-t_COMMA = r','
-t_DOT = r'\.'
-t_SEMICOLON = r';'
-t_DOUBLECOLON = r'::'
-t_COLON = r':'
-
-t_STRING = r'\".*\"'
+t_COMMA         = r','
+t_DOT           = r'\.'
+t_SEMICOLON     = r';'
+t_DOUBLECOLON   = r'::'
+t_COLON         = r':'
+t_SCHAR         = r'\'.\''
+t_STRING        = r'\".*\"'
+t_HASHTAG       = r'\#'
 
 # track line no.
 def t_newline(t):
@@ -205,7 +208,7 @@ def t_newline(t):
 
 # comment
 def t_COMMENT(t):
-    r'((//)[^\n\r]*[\n\r])|(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)'
+    r'( (//)[^\n\r]* ) |(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)'
     t.value = str(t.value)
     t.type = 'COMMENT'
     return t
@@ -226,43 +229,44 @@ lexer = lex.lex()
 def find_column(input, token):
     line_start = input.rfind('\n', 0, token.lexpos) + 1
     return (token.lexpos - line_start) + 1
-
+    
 if __name__ == "__main__":
+    if(len(sys.argv) != 4):
+        print("Usage python3.7 src/lex.py --cfg=path/to/cfg path/to/input --output=/path/to/output")
+        exit()
+    
+    arglist = sys.argv
+
+    for arg in arglist[1:]:
+        if arg.split('=')[0] == "--cfg" :
+            cfg_file=arg.split('=')[1]
+        elif arg.split('=')[0] == "--output" :
+            output_file=arg.split('=')[1]
+        else:
+            input_file=arg
 
     color_dict={}
-    with open("cfg.txt") as f:
+    with open(cfg_file, "r") as f:
         for line in f:
-            (key,val) = line.split(':')
-            color_dict[str(key).strip()] = str(val).strip()
-
+            if line:
+                (key,val) = line.split(':')
+                color_dict[str(key).strip()] = str(val).strip()
 
     lines=[]
-    while(1):
-        try:
-            line=input()
-        except EOFError:
-            break
-        lines.append(line)
-
-    code = '\n'.join(lines)
-
+    with open(input_file, "r") as f:
+        for line in f:
+            lines.append(line)
+    code = ''.join(lines)
+    #print(code)
     lexer.input(code)
 
-    """
-    a=10
-    print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format('Type', 'Value', 'Lineno', 'Lexpos', amt=a))
-    for tok in lexer:
-        print('{:>{amt}} {:>{amt}} {:>{amt}} {:>{amt}}'.format(tok.type, "'" + tok.value + "'", tok.lineno, tok.lexpos, amt=a))
-    """
-    
+    meta_bgcolor = color_dict.get("META_BGCOLOR", "#121e1f")
     bold_token = keywords
-
-    code_out = "<div><pre>\n"
+    code_out = "<html><body bgcolor=\"" + meta_bgcolor + "\"><div><pre>\n"
     cur=1
     prev=1
     for tok in lexer:
         line = tok.lineno
-        # print(line)
         if prev != line :
             cur=1
             code_out += "\n"*(line-prev)
@@ -271,10 +275,11 @@ if __name__ == "__main__":
         bold = bold_token.get(tok.value, "")
         if bold != "":
             bold = "; font-weight: bold"
-        color = color_dict.get(str(tok.type), "#666666")
+        color = color_dict.get(str(tok.type), "rgb(200,200,200)")
         span = "<span style=\"color: " + color + bold + "\">"
         code_out = code_out + " "*(col-cur) + span + tok.value + "</span>"
         cur=col + len(str(tok.value))
-    code_out = code_out + "\n</pre></div>"
-    print(code_out)
+    code_out = code_out + "\n</pre></div></body></html>"
 
+    with open(output_file, "w") as f:
+        f.write(code_out)

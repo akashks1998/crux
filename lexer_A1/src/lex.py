@@ -131,6 +131,7 @@ tokens = [
         'COMMENT',
         'SCHAR',
         'STRING',
+        'HASHTAG'
 ] + list(keywords.values())
 
 
@@ -196,8 +197,9 @@ t_DOT           = r'\.'
 t_SEMICOLON     = r';'
 t_DOUBLECOLON   = r'::'
 t_COLON         = r':'
-t_SCHAR          = r'\'.\''
+t_SCHAR         = r'\'.\''
 t_STRING        = r'\".*\"'
+t_HASHTAG       = r'\#'
 
 # track line no.
 def t_newline(t):
@@ -255,7 +257,7 @@ if __name__ == "__main__":
         for line in f:
             lines.append(line)
     code = ''.join(lines)
-    print(code)
+    #print(code)
     lexer.input(code)
 
     meta_bgcolor = color_dict.get("META_BGCOLOR", "#121e1f")
