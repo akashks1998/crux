@@ -131,7 +131,8 @@ tokens = [
         'COMMENT',
         'SCHAR',
         'STRING',
-        'HASHTAG'
+        'HASHTAG',
+        'NOTSYM'  
 ] + list(keywords.values())
 
 
@@ -200,6 +201,8 @@ t_COLON         = r':'
 t_SCHAR         = r'\'.\''
 t_STRING        = r'\".*\"'
 t_HASHTAG       = r'\#'
+t_NOTSYM        = r'\!'
+
 
 # track line no.
 def t_newline(t):
