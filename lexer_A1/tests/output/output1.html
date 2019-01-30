@@ -1,50 +1,107 @@
-<html><body bgcolor="#121e1f"><div><pre>
-<span style="color: grey">// C++ program to find union of 
-</span><span style="color: grey">// two sorted arrays 
-</span>
-<span style="color: rgb(200,200,200); font-weight: bold">using</span> <span style="color: rgb(200,200,200); font-weight: bold">namespace</span> <span style="color: rgb(200,200,200); font-weight: bold">std</span><span style="color: rgb(200,200,200)">;</span>
+<html><body bgcolor="#faf5eb"><div><pre>
+<span style="color: grey">// C++ program for insertion in a single linked </span>
+<span style="color: grey">// list at a specified position </span>
+<span style="color: rgb(170,170,170)">#</span><span style="color: #494344">include</span> <span style="color: #e8606a"><</span><span style="color: #494344">bits</span><span style="color: #e8606a">/</span><span style="color: #494344">stdc</span><span style="color: #e8606a">++</span><span style="color: rgb(170,170,170)">.</span><span style="color: #494344">h</span><span style="color: #e8606a">></span>
+<span style="color: blue; font-weight: bold">using</span> <span style="color: blue; font-weight: bold">namespace</span> <span style="color: blue; font-weight: bold">std</span><span style="color: rgb(170,170,170)">;</span>
 
-<span style="color: grey">/* Function prints union of arr1[] and arr2[] 
-m is the number of elements in arr1[] 
-n is the number of elements in arr2[] */</span>
-<span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">printUnion</span><span style="color: #FFFF8D">(</span><span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">arr1</span><span style="color: #FFFF8D">[</span><span style="color: #FFFF8D">]</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">arr2</span><span style="color: #FFFF8D">[</span><span style="color: #FFFF8D">]</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">m</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">n</span><span style="color: #FFFF8D">)</span>
-<span style="color: #FFFF8D">{</span>
-<span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">i</span> <span style="color: rgb(200,200,200)">=</span> <span style="color: #FFCCBC">0</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #32dbbd">j</span> <span style="color: rgb(200,200,200)">=</span> <span style="color: #FFCCBC">0</span><span style="color: rgb(200,200,200)">;</span>
-<span style="color: #2E7D32; font-weight: bold">while</span> <span style="color: #FFFF8D">(</span><span style="color: #32dbbd">i</span> <span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">m</span> <span style="color: rgb(200,200,200)">&&</span> <span style="color: #32dbbd">j</span> <span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">n</span><span style="color: #FFFF8D">)</span>
-<span style="color: #FFFF8D">{</span>
-    <span style="color: #9CCC65; font-weight: bold">if</span> <span style="color: #FFFF8D">(</span><span style="color: #32dbbd">arr1</span><span style="color: #FFFF8D">[</span><span style="color: #32dbbd">i</span><span style="color: #FFFF8D">]</span> <span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">arr2</span><span style="color: #FFFF8D">[</span><span style="color: #32dbbd">j</span><span style="color: #FFFF8D">]</span><span style="color: #FFFF8D">)</span>
-    <span style="color: #32dbbd">cout</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">arr1</span><span style="color: #FFFF8D">[</span><span style="color: #32dbbd">i</span><span style="color: rgb(200,200,200)">++</span><span style="color: #FFFF8D">]</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: rgb(200,200,200)">"hello"</span><span style="color: rgb(200,200,200)">;</span>
+<span style="color: grey">// A linked list Node </span>
+<span style="color: #494344">struct</span> <span style="color: #494344">Node</span> <span style="color: #385a7c">{</span>
+    <span style="color: #ae81ff; font-weight: bold">int</span> <span style="color: #494344">data</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">struct</span> <span style="color: #494344">Node</span><span style="color: #e8606a">*</span> <span style="color: #494344">next</span><span style="color: rgb(170,170,170)">;</span>
+<span style="color: #385a7c">}</span><span style="color: rgb(170,170,170)">;</span>
 
-    <span style="color: #9CCC65; font-weight: bold">else</span> <span style="color: #9CCC65; font-weight: bold">if</span> <span style="color: #FFFF8D">(</span><span style="color: #32dbbd">arr2</span><span style="color: #FFFF8D">[</span><span style="color: #32dbbd">j</span><span style="color: #FFFF8D">]</span> <span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">arr1</span><span style="color: #FFFF8D">[</span><span style="color: #32dbbd">i</span><span style="color: #FFFF8D">]</span><span style="color: #FFFF8D">)</span>
-    <span style="color: #32dbbd">cout</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">arr2</span><span style="color: #FFFF8D">[</span><span style="color: #32dbbd">j</span><span style="color: rgb(200,200,200)">++</span><span style="color: #FFFF8D">]</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: rgb(200,200,200)">" "</span><span style="color: rgb(200,200,200)">;</span>
+<span style="color: grey">// Size of linked list </span>
+<span style="color: #ae81ff; font-weight: bold">int</span> <span style="color: #494344">size</span> <span style="color: #e8606a">=</span> <span style="color: #2F5CBC">0</span><span style="color: rgb(170,170,170)">;</span>
 
-    <span style="color: #9CCC65; font-weight: bold">else</span>
-    <span style="color: #FFFF8D">{</span>
-    <span style="color: #32dbbd">cout</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">arr2</span><span style="color: #FFFF8D">[</span><span style="color: #32dbbd">j</span><span style="color: rgb(200,200,200)">++</span><span style="color: #FFFF8D">]</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: rgb(200,200,200)">" "</span><span style="color: rgb(200,200,200)">;</span>
-    <span style="color: #32dbbd">i</span><span style="color: rgb(200,200,200)">++</span><span style="color: rgb(200,200,200)">;</span>
-    <span style="color: #FFFF8D">}</span>
-<span style="color: #FFFF8D">}</span>
+<span style="color: grey">// function to create and return a Node </span>
+<span style="color: #494344">Node</span><span style="color: #e8606a">*</span> <span style="color: #494344">getNode</span><span style="color: #385a7c">(</span><span style="color: #ae81ff; font-weight: bold">int</span> <span style="color: #494344">data</span><span style="color: #385a7c">)</span>
+<span style="color: #385a7c">{</span>
+    <span style="color: grey">// allocating space </span>
+    <span style="color: #494344">Node</span><span style="color: #e8606a">*</span> <span style="color: #494344">newNode</span> <span style="color: #e8606a">=</span> <span style="color: blue; font-weight: bold">new</span> <span style="color: #494344">Node</span><span style="color: #385a7c">(</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
 
-<span style="color: grey">/* Print remaining elements of the larger array */</span>
-<span style="color: #2E7D32; font-weight: bold">while</span><span style="color: #FFFF8D">(</span><span style="color: #32dbbd">i</span> <span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">m</span><span style="color: #FFFF8D">)</span>
-    <span style="color: #32dbbd">cout</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">arr1</span><span style="color: #FFFF8D">[</span><span style="color: #32dbbd">i</span><span style="color: rgb(200,200,200)">++</span><span style="color: #FFFF8D">]</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: rgb(200,200,200)">" "</span><span style="color: rgb(200,200,200)">;</span>
+    <span style="color: grey">// inserting the required data </span>
+    <span style="color: #494344">newNode</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">data</span> <span style="color: #e8606a">=</span> <span style="color: #494344">data</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">newNode</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span> <span style="color: #e8606a">=</span> <span style="color: #494344">NULL</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #fa8072; font-weight: bold">return</span> <span style="color: #494344">newNode</span><span style="color: rgb(170,170,170)">;</span>
+<span style="color: #385a7c">}</span>
 
-<span style="color: #2E7D32; font-weight: bold">while</span><span style="color: #FFFF8D">(</span><span style="color: #32dbbd">j</span> <span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">n</span><span style="color: #FFFF8D">)</span>
-    <span style="color: #32dbbd">cout</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: #32dbbd">arr2</span><span style="color: #FFFF8D">[</span><span style="color: #32dbbd">j</span><span style="color: rgb(200,200,200)">++</span><span style="color: #FFFF8D">]</span> <span style="color: rgb(200,200,200)"><</span><span style="color: rgb(200,200,200)"><</span> <span style="color: rgb(200,200,200)">" "</span><span style="color: rgb(200,200,200)">;</span>
-<span style="color: #FFFF8D">}</span>
+<span style="color: grey">// function to insert a Node at required postion </span>
+<span style="color: blue; font-weight: bold">void</span> <span style="color: #494344">insertPos</span><span style="color: #385a7c">(</span><span style="color: #494344">Node</span><span style="color: rgb(170,170,170)">**</span> <span style="color: #494344">current</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #ae81ff; font-weight: bold">int</span> <span style="color: #494344">pos</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #ae81ff; font-weight: bold">int</span> <span style="color: #494344">data</span><span style="color: #385a7c">)</span>
+<span style="color: #385a7c">{</span>
+    <span style="color: grey">// This condition to check whether the </span>
+    <span style="color: grey">// postion given is valid or not. </span>
+    <span style="color: #9f5561; font-weight: bold">if</span> <span style="color: #385a7c">(</span><span style="color: #494344">pos</span> <span style="color: #e8606a"><</span> <span style="color: #2F5CBC">1</span> <span style="color: rgb(170,170,170)">||</span> <span style="color: #494344">pos</span> <span style="color: #e8606a">></span> <span style="color: #494344">size</span> <span style="color: #e8606a">+</span> <span style="color: #2F5CBC">1</span><span style="color: #385a7c">)</span>
+        <span style="color: #494344">cout</span> <span style="color: #e8606a"><</span><span style="color: #e8606a"><</span> <span style="color: #332652">"Invalid postion!"</span> <span style="color: #e8606a"><</span><span style="color: #e8606a"><</span> <span style="color: #494344">endl</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #9f5561; font-weight: bold">else</span> <span style="color: #385a7c">{</span>
 
-<span style="color: grey">/* Driver program to test above function */</span>
-<span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">main</span><span style="color: #FFFF8D">(</span><span style="color: #FFFF8D">)</span>
-<span style="color: #FFFF8D">{</span>
-<span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">arr1</span><span style="color: #FFFF8D">[</span><span style="color: #FFFF8D">]</span> <span style="color: rgb(200,200,200)">=</span> <span style="color: #FFFF8D">{</span><span style="color: #FFCCBC">1</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #FFCCBC">2</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #FFCCBC">4</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #FFCCBC">5</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #FFCCBC">6</span><span style="color: #FFFF8D">}</span><span style="color: rgb(200,200,200)">;</span>
-<span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">arr2</span><span style="color: #FFFF8D">[</span><span style="color: #FFFF8D">]</span> <span style="color: rgb(200,200,200)">=</span> <span style="color: #FFFF8D">{</span><span style="color: #FFCCBC">2</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #FFCCBC">3</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #FFCCBC">5</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #FFCCBC">7</span><span style="color: #FFFF8D">}</span><span style="color: rgb(200,200,200)">;</span>
+        <span style="color: grey">// Keep looping until the pos is zero </span>
+        <span style="color: #66d9ef; font-weight: bold">while</span> <span style="color: #385a7c">(</span><span style="color: #494344">pos</span><span style="color: #e8606a">--</span><span style="color: #385a7c">)</span> <span style="color: #385a7c">{</span>
 
-<span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">m</span> <span style="color: rgb(200,200,200)">=</span> <span style="color: #32dbbd; font-weight: bold">sizeof</span><span style="color: #FFFF8D">(</span><span style="color: #32dbbd">arr1</span><span style="color: #FFFF8D">)</span><span style="color: rgb(200,200,200)">/</span><span style="color: #32dbbd; font-weight: bold">sizeof</span><span style="color: #FFFF8D">(</span><span style="color: #32dbbd">arr1</span><span style="color: #FFFF8D">[</span><span style="color: #FFCCBC">0</span><span style="color: #FFFF8D">]</span><span style="color: #FFFF8D">)</span><span style="color: rgb(200,200,200)">;</span>
-<span style="color: #569cd6; font-weight: bold">int</span> <span style="color: #32dbbd">n</span> <span style="color: rgb(200,200,200)">=</span> <span style="color: #32dbbd; font-weight: bold">sizeof</span><span style="color: #FFFF8D">(</span><span style="color: #32dbbd">arr2</span><span style="color: #FFFF8D">)</span><span style="color: rgb(200,200,200)">/</span><span style="color: #32dbbd; font-weight: bold">sizeof</span><span style="color: #FFFF8D">(</span><span style="color: #32dbbd">arr2</span><span style="color: #FFFF8D">[</span><span style="color: #FFCCBC">0</span><span style="color: #FFFF8D">]</span><span style="color: #FFFF8D">)</span><span style="color: rgb(200,200,200)">;</span>
+            <span style="color: #9f5561; font-weight: bold">if</span> <span style="color: #385a7c">(</span><span style="color: #494344">pos</span> <span style="color: #e8606a">==</span> <span style="color: #2F5CBC">0</span><span style="color: #385a7c">)</span> <span style="color: #385a7c">{</span>
 
-<span style="color: grey">// Function calling 
-</span><span style="color: #32dbbd">printUnion</span><span style="color: #FFFF8D">(</span><span style="color: #32dbbd">arr1</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #32dbbd">arr2</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #32dbbd">m</span><span style="color: rgb(200,200,200)">,</span> <span style="color: #32dbbd">n</span><span style="color: #FFFF8D">)</span><span style="color: rgb(200,200,200)">;</span>
+                <span style="color: grey">// adding Node at required postion </span>
+                <span style="color: #494344">Node</span><span style="color: #e8606a">*</span> <span style="color: #494344">temp</span> <span style="color: #e8606a">=</span> <span style="color: #494344">getNode</span><span style="color: #385a7c">(</span><span style="color: #494344">data</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
 
-<span style="color: rgb(200,100,100); font-weight: bold">return</span> <span style="color: #FFCCBC">0</span><span style="color: rgb(200,200,200)">;</span>
-<span style="color: #FFFF8D">}</span>
+                <span style="color: grey">// Making the new Node to point to  </span>
+                <span style="color: grey">// the old Node at the same position </span>
+                <span style="color: #494344">temp</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span> <span style="color: #e8606a">=</span> <span style="color: #e8606a">*</span><span style="color: #494344">current</span><span style="color: rgb(170,170,170)">;</span>
+
+                <span style="color: grey">// Changing the pointer of the Node previous  </span>
+                <span style="color: grey">// to the old Node to point to the new Node </span>
+                <span style="color: #e8606a">*</span><span style="color: #494344">current</span> <span style="color: #e8606a">=</span> <span style="color: #494344">temp</span><span style="color: rgb(170,170,170)">;</span>
+            <span style="color: #385a7c">}</span>
+            <span style="color: #9f5561; font-weight: bold">else</span>
+              <span style="color: grey">// Assign double pointer variable to point to the  </span>
+              <span style="color: grey">// pointer pointing to the address of next Node  </span>
+              <span style="color: #494344">current</span> <span style="color: #e8606a">=</span> <span style="color: rgb(170,170,170)">&</span><span style="color: #385a7c">(</span><span style="color: #e8606a">*</span><span style="color: #494344">current</span><span style="color: #385a7c">)</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span><span style="color: rgb(170,170,170)">;</span>
+        <span style="color: #385a7c">}</span>
+        <span style="color: #494344">size</span><span style="color: #e8606a">++</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #385a7c">}</span>
+<span style="color: #385a7c">}</span>
+
+<span style="color: grey">// This function prints contents  </span>
+<span style="color: grey">// of the linked list  </span>
+<span style="color: blue; font-weight: bold">void</span> <span style="color: #494344">printList</span><span style="color: #385a7c">(</span><span style="color: #494344">struct</span> <span style="color: #494344">Node</span><span style="color: #e8606a">*</span> <span style="color: #494344">head</span><span style="color: #385a7c">)</span>
+<span style="color: #385a7c">{</span>
+    <span style="color: #66d9ef; font-weight: bold">while</span> <span style="color: #385a7c">(</span><span style="color: #494344">head</span> <span style="color: #e8606a">!=</span> <span style="color: #494344">NULL</span><span style="color: #385a7c">)</span> <span style="color: #385a7c">{</span>
+        <span style="color: #494344">cout</span> <span style="color: #e8606a"><</span><span style="color: #e8606a"><</span> <span style="color: #332652">" "</span> <span style="color: #e8606a"><</span><span style="color: #e8606a"><</span> <span style="color: #494344">head</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">data</span><span style="color: rgb(170,170,170)">;</span>
+        <span style="color: #494344">head</span> <span style="color: #e8606a">=</span> <span style="color: #494344">head</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #385a7c">}</span>
+    <span style="color: #494344">cout</span> <span style="color: #e8606a"><</span><span style="color: #e8606a"><</span> <span style="color: #494344">endl</span><span style="color: rgb(170,170,170)">;</span>
+<span style="color: #385a7c">}</span>
+
+<span style="color: grey">// Driver Code </span>
+<span style="color: #ae81ff; font-weight: bold">int</span> <span style="color: #494344">main</span><span style="color: #385a7c">(</span><span style="color: #385a7c">)</span>
+<span style="color: #385a7c">{</span>
+    <span style="color: grey">// Creating the list 3->5->8->10 </span>
+    <span style="color: #494344">Node</span><span style="color: #e8606a">*</span> <span style="color: #494344">head</span> <span style="color: #e8606a">=</span> <span style="color: #494344">NULL</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">head</span> <span style="color: #e8606a">=</span> <span style="color: #494344">getNode</span><span style="color: #385a7c">(</span><span style="color: #2F5CBC">3</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">head</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span> <span style="color: #e8606a">=</span> <span style="color: #494344">getNode</span><span style="color: #385a7c">(</span><span style="color: #2F5CBC">5</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">head</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span> <span style="color: #e8606a">=</span> <span style="color: #494344">getNode</span><span style="color: #385a7c">(</span><span style="color: #2F5CBC">8</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">head</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span><span style="color: #e8606a">-</span><span style="color: #e8606a">></span><span style="color: #494344">next</span> <span style="color: #e8606a">=</span> <span style="color: #494344">getNode</span><span style="color: #385a7c">(</span><span style="color: #2F5CBC">10</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+
+    <span style="color: #494344">size</span> <span style="color: #e8606a">=</span> <span style="color: #2F5CBC">4</span><span style="color: rgb(170,170,170)">;</span>
+
+    <span style="color: #494344">cout</span> <span style="color: #e8606a"><</span><span style="color: #e8606a"><</span> <span style="color: #332652">"Linked list before insertion: "</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">printList</span><span style="color: #385a7c">(</span><span style="color: #494344">head</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+
+    <span style="color: #ae81ff; font-weight: bold">int</span> <span style="color: #494344">data</span> <span style="color: #e8606a">=</span> <span style="color: #2F5CBC">12</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #494344">pos</span> <span style="color: #e8606a">=</span> <span style="color: #2F5CBC">3</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">insertPos</span><span style="color: #385a7c">(</span><span style="color: rgb(170,170,170)">&</span><span style="color: #494344">head</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #494344">pos</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #494344">data</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">cout</span> <span style="color: #e8606a"><</span><span style="color: #e8606a"><</span> <span style="color: #332652">"Linked list after insertion of 12 at position 3: "</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">printList</span><span style="color: #385a7c">(</span><span style="color: #494344">head</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+
+    <span style="color: grey">// front of the linked list </span>
+    <span style="color: #494344">data</span> <span style="color: #e8606a">=</span> <span style="color: #2F5CBC">1</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #494344">pos</span> <span style="color: #e8606a">=</span> <span style="color: #2F5CBC">1</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">insertPos</span><span style="color: #385a7c">(</span><span style="color: rgb(170,170,170)">&</span><span style="color: #494344">head</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #494344">pos</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #494344">data</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">cout</span> <span style="color: #e8606a"><</span><span style="color: #e8606a"><</span> <span style="color: #332652">"Linked list after insertion of 1 at position 1: "</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">printList</span><span style="color: #385a7c">(</span><span style="color: #494344">head</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+
+    <span style="color: grey">// insetion at end of the linked list </span>
+    <span style="color: #494344">data</span> <span style="color: #e8606a">=</span> <span style="color: #2F5CBC">15</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #494344">pos</span> <span style="color: #e8606a">=</span> <span style="color: #2F5CBC">7</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">insertPos</span><span style="color: #385a7c">(</span><span style="color: rgb(170,170,170)">&</span><span style="color: #494344">head</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #494344">pos</span><span style="color: rgb(170,170,170)">,</span> <span style="color: #494344">data</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">cout</span> <span style="color: #e8606a"><</span><span style="color: #e8606a"><</span> <span style="color: #332652">"Linked list after insertion of 15 at position 7: "</span><span style="color: rgb(170,170,170)">;</span>
+    <span style="color: #494344">printList</span><span style="color: #385a7c">(</span><span style="color: #494344">head</span><span style="color: #385a7c">)</span><span style="color: rgb(170,170,170)">;</span>
+
+    <span style="color: #fa8072; font-weight: bold">return</span> <span style="color: #2F5CBC">0</span><span style="color: rgb(170,170,170)">;</span>
+<span style="color: #385a7c">}</span>
 </pre></div></body></html>
