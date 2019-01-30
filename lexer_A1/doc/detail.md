@@ -16,5 +16,5 @@
 		-  Strings
 		- Function Overloading
 		- Python like **in** keyword support
-    3.   Implementation Language (**I**) is **python** and target language (**T**) is **x86-64**
+   3.   Implementation Language (**I**) is **python** and target language (**T**) is **x86-64**
 
