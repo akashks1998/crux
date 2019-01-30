@@ -7,7 +7,7 @@
 
  ### The Language 
    1.  Source language **S** for compiler is **c++**.
-    2. Some features in the language that distinguish it from vanilla “C” language:
+   2. Some features in the language that distinguish it from vanilla “C” language:
 		-  Auto Type Inference
 		- Basic Class features
 		-  Vector (c++ stl)
