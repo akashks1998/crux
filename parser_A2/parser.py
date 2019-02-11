@@ -12,7 +12,9 @@ def p_program(p):
         | STRING
     '''
     p[0] = p[1]
-
+########################### OWN ################################################
+def p_doublecolon_opt(p):
+    '''doublecolon_opt : DOUBLECOLON'''
 ################################################################################
 ############################  Expressions   ####################################
 ################################################################################
@@ -20,10 +22,10 @@ def p_program(p):
 def p_primary_expression(p):
     '''primary_expression : literal
                           | this
-                          | :: IDENTIFIER
-                          | :: operator_function_id
-                          | :: qualified_id
-                          | ( expression )
+                          | DOUBLECOLON IDENTIFIER
+                          | DOUBLECOLON operator_function_id
+                          | DOUBLECOLON qualified_id
+                          | LRPAREN  expression RRPAREN
                           | id_expression
     '''
 
@@ -35,7 +37,7 @@ def p_unqualified_id(p):
     '''unqualified_id : IDENTIFIER
                       | operator_function_id
                       | conversion_function_id
-                      | ~ class_name
+                      | BNOP class_name
                       | template_id
     '''
 
@@ -43,8 +45,8 @@ def p_qualified_id(p):
     '''qualified_id : nested_name_specifier templateopt unqualified_id'''
 
 def p_nested_name_specifier(p):
-    '''nested_name_specifier : class_or_namespace_name :: nested_name_specifieropt
-                             | class_or_namespace_name :: template nested_name_specifier
+    '''nested_name_specifier : class_or_namespace_name DOUBLECOLON nested_name_specifieropt
+                             | class_or_namespace_name DOUBLECOLON template nested_name_specifier
     '''
 
 def p_class_or_namespace_name(p):
@@ -55,23 +57,23 @@ def p_class_or_namespace_name(p):
 
 def p_postfix_expression(p):
     '''postfix_expression : primary_expression
-                          | postfix_expression [ expression ]
-                          | postfix_expression ( expression_listopt )
-                          | simple_type_specifier ( expression_listopt )
-                          | typename ::opt nested_name_specifier IDENTIFIER ( expression_listopt )
-                          | typename ::opt nested_name_specifier templateopt template_id ( expression_listopt )
-                          | postfix_expression . templateopt ::opt id_expression
-                          | postfix_expression _> templateopt ::opt id_expression
-                          | postfix_expression . pseudo_destructor_name
-                          | postfix_expression _> pseudo_destructor_name
-                          | postfix_expression ++
-                          | postfix_expression __
-                          | dynamic_cast < type_id > ( expression )
-                          | static_cast < type_id > ( expression )
-                          | reinterpret_cast < type_id > ( expression )
-                          | const_cast < type_id > ( expression )
-                          | typeid ( expression )
-                          | typeid ( type_id )
+                          | postfix_expression LSPAREN expression RSPAREN
+                          | postfix_expression LRPAREN  expression_listopt RRPAREN
+                          | simple_type_specifier LRPAREN  expression_listopt RRPAREN
+                          | typename doublecolon_opt nested_name_specifier IDENTIFIER LRPAREN  expression_listopt RRPAREN
+                          | typename doublecolon_opt nested_name_specifier templateopt template_id LRPAREN  expression_listopt RRPAREN
+                          | postfix_expression DOT  templateopt doublecolon_opt id_expression
+                          | postfix_expression ARROW templateopt doublecolon_opt id_expression
+                          | postfix_expression DOT  pseudo_destructor_name
+                          | postfix_expression ARROW pseudo_destructor_name
+                          | postfix_expression DPLUSOP
+                          | postfix_expression DMINUSOP
+                          | dynamic_cast LTCOMP type_id RTCOMP LRPAREN  expression RRPAREN
+                          | static_cast LTCOMP type_id RTCOMP LRPAREN  expression RRPAREN
+                          | reinterpret_cast LTCOMP type_id RTCOMP LRPAREN  expression RRPAREN
+                          | const_cast LTCOMP type_id RTCOMP LRPAREN  expression RRPAREN
+                          | typeid LRPAREN  expression RRPAREN
+                          | typeid LRPAREN  type_id RRPAREN
     '''
 
 
@@ -114,42 +116,41 @@ def p_template_name(p):
 ########################################################################
 #################################### Expression and Statement ##########
 
-
 def p_expression_list(p):
     '''expression_list : assignment_expression
-                       | expression_list , assignment_expression
+                       | expression_list COMMA assignment_expression
     '''
 
 
 def p_pseudo_destructor_name(p):
-    '''pseudo_destructor_name : ::opt nested_name_specifieropt type_name :: ~ type_name
-                              | ::opt nested_name_specifier template template_id :: ~ type_name
-                              | ::opt nested_name_specifieropt ~ type_name
+    '''pseudo_destructor_name : doublecolon_opt nested_name_specifieropt type_name DOUBLECOLON BNOP type_name
+                              | doublecolon_opt nested_name_specifier template template_id DOUBLECOLON BNOP type_name
+                              | doublecolon_opt nested_name_specifieropt BNOP type_name
     '''
 
 
 def p_unary_expression(p):
     '''unary_expression : postfix_expression
-                        | ++ cast_expression
-                        | -- cast_expression
+                        | DPLUSOP cast_expression
+                        | DMINUSOP cast_expression
                         | unary_operator cast_expression
                         | sizeof unary_expression
-                        | sizeof ( type_id )
+                        | sizeof LRPAREN  type_id RRPAREN
                         | new_expression
                         | delete_expression
     '''
 
 
 def p_unary_operator(p):
-    '''unary_operator : * & + _ ! ~'''
+    '''unary_operator : MULTOP BANDOP PLUSOP MINUSOP NOTSYM BNOP'''
 def p_new_expression(p):
-    '''new_expression : ::opt new new_placementopt new_type_id new_initializeropt
-                      | ::opt new new_placementopt ( type_id ) new_initializeropt
+    '''new_expression : doublecolon_opt new new_placementopt new_type_id new_initializeropt
+                      | doublecolon_opt new new_placementopt LRPAREN  type_id RRPAREN new_initializeropt
     '''
 
 
 def p_new_placement(p):
-    '''new_placement : ( expression_list )'''
+    '''new_placement : LRPAREN  expression_list RRPAREN'''
 def p_new_type_id(p):
     '''new_type_id : type_specifier_seq new_declaratoropt'''
 def p_new_declarator(p):
@@ -159,103 +160,103 @@ def p_new_declarator(p):
 
 
 def p_direct_new_declarator(p):
-    '''direct_new_declarator : [ expression ]
-                             | direct_new_declarator [ constant_expression ]
+    '''direct_new_declarator : LSPAREN expression RSPAREN
+                             | direct_new_declarator LSPAREN constant_expression RSPAREN
     '''
 
 
 def p_new_initializer(p):
-    '''new_initializer : ( expression_listopt )'''
+    '''new_initializer : LRPAREN  expression_listopt RRPAREN'''
 def p_delete_expression(p):
-    '''delete_expression : ::opt delete cast_expression
-                         | ::opt delete [ ] cast_expression
+    '''delete_expression : doublecolon_opt delete cast_expression
+                         | doublecolon_opt delete LSPAREN RSPAREN cast_expression
     '''
 
 
 def p_cast_expression(p):
     '''cast_expression : unary_expression
-                       | ( type_id ) cast_expression
+                       | LRPAREN  type_id RRPAREN cast_expression
     '''
 
 
 def p_pm_expression(p):
     '''pm_expression : cast_expression
-                     | pm_expression .* cast_expression
-                     | pm_expression _>* cast_expression
+                     | pm_expression DOTSTAR cast_expression
+                     | pm_expression ARROWSTAR cast_expression
     '''
 
 
 def p_multiplicative_expression(p):
     '''multiplicative_expression : pm_expression
-                                 | multiplicative_expression * pm_expression
-                                 | multiplicative_expression / pm_expression
-                                 | multiplicative_expression % pm_expression
+                                 | multiplicative_expression MULTOP pm_expression
+                                 | multiplicative_expression DIVOP pm_expression
+                                 | multiplicative_expression MODOP pm_expression
     '''
 
 
 def p_additive_expression(p):
     '''additive_expression : multiplicative_expression
-                           | additive_expression + multiplicative_expression
-                           | additive_expression _ multiplicative_expression
+                           | additive_expression PLUSOP multiplicative_expression
+                           | additive_expression MINUSOP multiplicative_expression
     '''
 
 
 def p_shift_expression(p):
     '''shift_expression : additive_expression
-                        | shift_expression << additive_expression
-                        | shift_expression >> additive_expression
+                        | shift_expression LSHIFT additive_expression
+                        | shift_expression RSHIFT additive_expression
     '''
 
 
 def p_relational_expression(p):
     '''relational_expression : shift_expression
-                             | relational_expression < shift_expression
-                             | relational_expression > shift_expression
-                             | relational_expression <= shift_expression
-                             | relational_expression >= shift_expression
+                             | relational_expression LTCOMP shift_expression
+                             | relational_expression RTCOMP shift_expression
+                             | relational_expression LTECOMP shift_expression
+                             | relational_expression RTECOMP shift_expression
     '''
 
 
 def p_equality_expression(p):
     '''equality_expression : relational_expression
-                           | equality_expression == relational_expression
-                           | equality_expression != relational_expression
+                           | equality_expression EQCOMP relational_expression
+                           | equality_expression NEQCOMP relational_expression
     '''
 
 
 def p_and_expression(p):
     '''and_expression : equality_expression
-                      | and_expression & equality_expression
+                      | and_expression BANDOP equality_expression
     '''
 
 
 def p_exclusive_or_expression(p):
     '''exclusive_or_expression : and_expression
-                               | exclusive_or_expression ^ and_expression
+                               | exclusive_or_expression XOROP and_expression
     '''
 
 
 def p_inclusive_or_expression(p):
     '''inclusive_or_expression : exclusive_or_expression
-                               | inclusive_or_expression | exclusive_or_expression
+                               | inclusive_or_expression BOROP exclusive_or_expression
     '''
 
 
 def p_logical_and_expression(p):
     '''logical_and_expression : inclusive_or_expression
-                              | logical_and_expression && inclusive_or_expression
+                              | logical_and_expression ANDOP inclusive_or_expression
     '''
 
 
 def p_logical_or_expression(p):
     '''logical_or_expression : logical_and_expression
-                             | logical_or_expression || logical_and_expression
+                             | logical_or_expression OROP logical_and_expression
     '''
 
 
 def p_conditional_expression(p):
     '''conditional_expression : logical_or_expression
-                              | logical_or_expression ? expression : assignment_expression
+                              | logical_or_expression QUESMARK expression COLON assignment_expression
     '''
 
 
@@ -267,12 +268,12 @@ def p_assignment_expression(p):
 
 
 def p_assignment_operator(p):
-    '''assignment_operator : = *= /= %= += _= >>= <<= &= ^= |='''
+    '''assignment_operator : NEQCOMP MULTEQOP DIVEQOP MODEQOP PLUSEQOP MINUSEQOP RSHIFTEQOP LSHIFTEQOP BANDEQOP XOREQOP BOREQOP'''
 
 
 def p_expression(p):
     '''expression : assignment_expression
-                  | expression , assignment_expression
+                  | expression COMMA assignment_expression
     '''
 
 
@@ -293,16 +294,16 @@ def p_statement(p):
 
 
 def p_labeled_statement(p):
-    '''labeled_statement : IDENTIFIER : statement
-                         | case constant_expression : statement
-                         | default : statement
+    '''labeled_statement : IDENTIFIER COLON statement
+                         | case constant_expression COLON statement
+                         | default COLON statement
     '''
 
 
 def p_expression_statement(p):
-    '''expression_statement : expressionopt ;'''
+    '''expression_statement : expressionopt SEMICOLON'''
 def p_compound_statement(p):
-    '''compound_statement : { statement_seqopt }'''
+    '''compound_statement : LCPAREN  statement_seqopt RCPAREN'''
 def p_statement_seq(p):
     '''statement_seq : statement
                      | statement_seq statement
@@ -312,22 +313,22 @@ def p_statement_seq(p):
 
 
 def p_selection_statement(p):
-    '''selection_statement : if ( condition ) statement
-                           | if ( condition ) statement else statement
-                           | switch ( condition ) statement
+    '''selection_statement : if LRPAREN  condition RRPAREN statement
+                           | if LRPAREN  condition RRPAREN statement else statement
+                           | switch LRPAREN  condition RRPAREN statement
     '''
 
 
 def p_condition(p):
     '''condition : expression
-                 | type_specifier_seq declarator = assignment_expression
+                 | type_specifier_seq declarator NEQCOMP assignment_expression
     '''
 
 
 def p_iteration_statement(p):
-    '''iteration_statement : while ( condition ) statement
-                           | do statement while ( expression ) ;
-                           | for ( for_init_statement conditionopt ; expressionopt ) statement
+    '''iteration_statement : while LRPAREN  condition RRPAREN statement
+                           | do statement while LRPAREN  expression RRPAREN SEMICOLON
+                           | for LRPAREN  for_init_statement conditionopt SEMICOLON expressionopt RRPAREN statement
     '''
 
 
@@ -338,10 +339,10 @@ def p_for_init_statement(p):
 
 
 def p_jump_statement(p):
-    '''jump_statement : break ;
-                      | continue ;
-                      | return expressionopt ;
-                      | goto IDENTIFIER ;
+    '''jump_statement : break SEMICOLON
+                      | continue SEMICOLON
+                      | return expressionopt SEMICOLON
+                      | goto IDENTIFIER SEMICOLON
     '''
 
 
@@ -374,7 +375,7 @@ def p_block_declaration(p):
 
 
 def p_simple_declaration(p):
-    '''simple_declaration : decl_specifier_seqopt init_declarator_listopt ;'''
+    '''simple_declaration : decl_specifier_seqopt init_declarator_listopt SEMICOLON'''
 def p_decl_specifier(p):
     '''decl_specifier : storage_class_specifier
                       | type_specifier
@@ -386,6 +387,8 @@ def p_decl_specifier(p):
 
 def p_decl_specifier_seq(p):
     '''decl_specifier_seq : decl_specifier_seqopt decl_specifier'''
+
+
 def p_storage_class_specifier(p):
     '''storage_class_specifier : auto
                                | register
@@ -412,8 +415,8 @@ def p_type_specifier(p):
 
 
 def p_simple_type_specifier(p):
-    '''simple_type_specifier : ::opt nested_name_specifieropt type_name
-                             | ::opt nested_name_specifier templateopt template_id
+    '''simple_type_specifier : doublecolon_opt nested_name_specifieropt type_name
+                             | doublecolon_opt nested_name_specifier templateopt template_id
                              | char
                              | wchar_t
                              | bool
@@ -436,33 +439,32 @@ def p_type_name(p):
 
 
 def p_aborated_type_specifier(p):
-    '''aborated_type_specifier : class_key ::opt nested_name_specifieropt IDENTIFIER
-                               | enum ::opt nested_name_specifieropt IDENTIFIER
-                               | typename ::opt nested_name_specifier IDENTIFIER
-                               | typename ::opt nested_name_specifier templateopt template_id
+    '''aborated_type_specifier : class_key doublecolon_opt nested_name_specifieropt IDENTIFIER
+                               | enum doublecolon_opt nested_name_specifieropt IDENTIFIER
+                               | typename doublecolon_opt nested_name_specifier IDENTIFIER
+                               | typename doublecolon_opt nested_name_specifier templateopt template_id
     '''
 
 
 def p_elaborated_type_specifier(p):
-    '''elaborated_type_specifier : class_key ::opt nested_name_specifieropt IDENTIFIER
-                                 | enum ::opt nested_name_specifieropt IDENTIFIER
-                                 | typename ::opt nested_name_specifier IDENTIFIER
-                                 | typename ::opt nested_name_specifier templateopt template_id
+    '''elaborated_type_specifier : class_key doublecolon_opt nested_name_specifieropt IDENTIFIER
+                                 | enum doublecolon_opt nested_name_specifieropt IDENTIFIER
+                                 | typename doublecolon_opt nested_name_specifier IDENTIFIER
+                                 | typename doublecolon_opt nested_name_specifier templateopt template_id
     '''
 
-
-
 def p_enum_specifier(p):
-    '''enum_specifier : enum identifieropt { enumerator_listopt }'''
+    '''enum_specifier : enum identifieropt LCPAREN  enumerator_listopt RCPAREN'''
+
 def p_enumerator_list(p):
     '''enumerator_list : enumerator_definition
-                       | enumerator_list , enumerator_definition
+                       | enumerator_list COMMA enumerator_definition
     '''
 
 
 def p_enumerator_definition(p):
     '''enumerator_definition : enumerator
-                             | enumerator = constant_expression
+                             | enumerator NEQCOMP constant_expression
     '''
 
 
@@ -481,39 +483,38 @@ def p_named_namespace_definition(p):
                                   | extension_namespace_definition
     '''
 
-
 def p_original_namespace_definition(p):
-    '''original_namespace_definition : namespace IDENTIFIER { namespace_body }'''
+    '''original_namespace_definition : namespace IDENTIFIER LCPAREN  namespace_body RCPAREN'''
 def p_extension_namespace_definition(p):
-    '''extension_namespace_definition : namespace original_namespace_name { namespace_body }'''
+    '''extension_namespace_definition : namespace original_namespace_name LCPAREN  namespace_body RCPAREN'''
 def p_unnamed_namespace_definition(p):
-    '''unnamed_namespace_definition : namespace { namespace_body }'''
+    '''unnamed_namespace_definition : namespace LCPAREN  namespace_body RCPAREN'''
 def p_namespace_body(p):
     '''namespace_body : declaration_seqopt'''
 
 def p_namespace_alias_definition(p):
-    '''namespace_alias_definition : namespace IDENTIFIER = qualified_namespace_specifier ;'''
+    '''namespace_alias_definition : namespace IDENTIFIER NEQCOMP qualified_namespace_specifier SEMICOLON'''
 def p_qualified_namespace_specifier(p):
-    '''qualified_namespace_specifier : ::opt nested_name_specifieropt namespace_name'''
+    '''qualified_namespace_specifier : doublecolon_opt nested_name_specifieropt namespace_name'''
 def p_using_declaration(p):
-    '''using_declaration : using typenameopt ::opt nested_name_specifier unqualified_id ;
-                         | using :: unqualified_id ;
+    '''using_declaration : using typenameopt doublecolon_opt nested_name_specifier unqualified_id SEMICOLON
+                         | using DOUBLECOLON unqualified_id SEMICOLON
     '''
 
 
 def p_using_directive(p):
-    '''using_directive : using namespace ::opt nested_name_specifieropt namespace_name ;'''
+    '''using_directive : using namespace doublecolon_opt nested_name_specifieropt namespace_name SEMICOLON'''
 def p_asm_definition(p):
-    '''asm_definition : asm ( string_literal ) ;'''
+    '''asm_definition : asm LRPAREN  string_literal RRPAREN SEMICOLON'''
 def p_linkage_specification(p):
-    '''linkage_specification : extern string_literal { declaration_seqopt }
+    '''linkage_specification : extern string_literal LCPAREN  declaration_seqopt RCPAREN
                              | extern string_literal declaration
     '''
 
 
 def p_init_declarator_list(p):
     '''init_declarator_list : init_declarator
-                            | init_declarator_list , init_declarator
+                            | init_declarator_list COMMA init_declarator
     '''
 
 
@@ -527,16 +528,16 @@ def p_declarator(p):
 
 def p_direct_declarator(p):
     '''direct_declarator : declarator_id
-                         | direct_declarator ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt
-                         | direct_declarator [ constant_expressionopt ]
-                         | ( declarator )
+                         | direct_declarator LRPAREN  parameter_declaration_clause RRPAREN cv_qualifier_seqopt exception_specificationopt
+                         | direct_declarator LSPAREN constant_expressionopt RSPAREN
+                         | LRPAREN  declarator RRPAREN
     '''
 
 
 def p_ptr_operator(p):
-    '''ptr_operator : * cv_qualifier_seqopt
-                    | &
-                    | ::opt nested_name_specifier * cv_qualifier_seqopt
+    '''ptr_operator : MULTOP cv_qualifier_seqopt
+                    | BAND
+                    | doublecolon_opt nested_name_specifier MULTOP cv_qualifier_seqopt
     '''
 
 
@@ -549,64 +550,34 @@ def p_cv_qualifier(p):
 
 
 def p_declarator_id(p):
-    '''declarator_id : ::opt id_expression
-                     | ::opt nested_name_specifieropt type_name
+    '''declarator_id : doublecolon_opt id_expression
+                     | doublecolon_opt nested_name_specifieropt type_name
     '''
 
 
 def p_type_id(p):
     '''type_id : type_specifier_seq abstract_declaratoropt'''
+    
 def p_type_specifier_seq(p):
     '''type_specifier_seq : type_specifier type_specifier_seqopt'''
-def p_abstract_declarator(p):
-    '''abstract_declarator : ptr_operator abstract_declaratoropt
-                           | direct_abstract_declarator
-    '''
-
 
 def p_direct_abstract_declarator(p):
-    '''direct_abstract_declarator : direct_abstract_declaratoropt ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt
-                                  | direct_abstract_declaratoropt
+    '''direct_abstract_declarator : direct_abstract_declaratoropt LRPAREN  parameter_declaration_clause RRPAREN cv_qualifier_seqopt exception_specificationopt
+                                  | direct_abstract_declaratoropt LSPAREN constant_expressionopt RSPAREN
+                                  | LRPAREN  abstract_declarator RRPAREN
     '''
-
-
-
-def p_direct_abstract_declaratoropt ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt(p):
-    '''direct_abstract_declaratoropt ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt : direct_abstract_declaratoropt [ constant_expressionopt ]
-                                                                                                                     | ( abstract_declarator )
-    '''
-
-
-def p_direct_abstract_declarator(p):
-    '''direct_abstract_declarator : direct_abstract_declaratoropt ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt
-                                  | direct_abstract_declaratoropt [ constant_expressionopt ]
-                                  | ( abstract_declarator )
-    '''
-
-
-def p_parameter_declaration_clause(p):
-    '''parameter_declaration_clause : parameter_declaration_listopt ...opt
-                                    | parameter_declaration_list , ...
-    '''
-
-
-def p_parameter_declaration_clause(p):
-    '''parameter_declaration_clause : parameter_declaration_listopt ...opt
-                                    | parameter_declaration_list , ...
-    '''
-
 
 def p_parameter_declaration_list(p):
     '''parameter_declaration_list : parameter_declaration
-                                  | parameter_declaration_list , parameter_declaration
+                                  | parameter_declaration_list COMMA parameter_declaration
     '''
 
 
 def p_parameter_declaration(p):
     '''parameter_declaration : decl_specifier_seq declarator
-                             | decl_specifier_seq declarator = assignment_expression
+                             | decl_specifier_seq declarator NEQCOMP assignment_expression
                              | decl_specifier_seq abstract_declaratoropt
-                             | decl_specifier_seq abstract_declaratoropt = assignment_expression
+                             | decl_specifier_seq abstract_declaratoropt NEQCOMP assignment_expression
     '''
 
 
@@ -621,20 +592,20 @@ def p_function_definition(p):
 def p_function_body(p):
     '''function_body : compound_statement'''
 def p_initializer(p):
-    '''initializer : = initializer_clause
-                   | ( expression_list )
+    '''initializer : NEQCOMP initializer_clause
+                   | LRPAREN  expression_list RRPAREN
     '''
 
 def p_initializer_clause(p):
     '''initializer_clause : assignment_expression
-                          | { initializer_list ,opt }
-                          | { }
+                          | LCPAREN  initializer_list COMMAopt RCPAREN
+                          | LCPAREN  RCPAREN
     '''
 
 
 def p_initializer_list(p):
     '''initializer_list : initializer_clause
-                        | initializer_list , initializer_clause
+                        | initializer_list COMMA initializer_clause
     '''
 
 

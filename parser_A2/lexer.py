@@ -3,7 +3,6 @@ import re
 import sys
 
 #Personal Groups
-op='-+/*&|%!~^' # pattern to detect operators for separation b/n nos
 
 keywords = {
     'and':'AND',
@@ -156,21 +155,27 @@ t_MINUSOP   = r'-'
 t_DIVOP     = r'/'
 t_MULTOP    = r'\*'
 t_BOROP     = r'\|'
+t_BOREQOP   = r'\|\='
 t_OROP      = r'\|\|'
 t_BANDOP    = r'\&'
 t_ANDOP     = r'\&\&'
 t_MODOP     = r'\%'
 t_PLUSEQOP  = r'\+='
+t_MODEQOP   = r'\%\='
 t_MINUSEQOP = r'-='
 t_MULTEQOP  = r'\*='
 t_DIVEQOP   = r'/='
 t_BANDEQOP  = r'\&\='
 t_XOROP     = r'\^'
 t_XOREQOP   = r'\^='
-t_UPLUSOP   = r'\+\+'
-t_UMINUSOP  = r'--'
+t_DPLUSOP   = r'\+\+'
+t_DMINUSOP  = r'--'
 t_EXPOP     = r'\*\*'
 t_BNOP      = r'\~'
+t_LSHIFT    = r'\<\<'
+t_RSHIFT    = r'\>\>'
+t_LSHIFTEQOP= r'\<\<='
+t_RSHIFTEQOP= r'\>\>='
 
 # Comparison Operator
 t_EQCOMP    = r'=='
@@ -203,7 +208,12 @@ t_SCHAR         = r'\'.\''
 t_STRING        = r'\".*\"'
 t_HASHTAG       = r'\#'
 t_NOTSYM        = r'\!'
-t_QUESMARK       = r'\?'
+t_QUESMARK      = r'\?'
+t_ARROW         = r'-\>'
+t_ARROWSTAR     = r'-\>\*'
+t_ARROWSTAR     = r'-\>\*'
+t_DOTSTAR       = r'\.\*'
+
 
 
 # track line no.
