@@ -570,3 +570,132 @@ def p_linkage_specification(p):
     '''
 
 
+def p_init_declarator_list(p):
+    '''init_declarator_list : init_declarator
+                            | init_declarator_list , init_declarator
+    '''
+
+
+def p_init_declarator(p):
+    '''init_declarator : declarator in'''
+def p_declarator(p):
+    '''declarator : direct_declarator
+                  | ptr_operator declarator
+    '''
+
+
+def p_direct_declarator(p):
+    '''direct_declarator : declarator_id
+                         | direct_declarator ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt
+                         | direct_declarator [ constant_expressionopt ]
+                         | ( declarator )
+    '''
+
+
+def p_ptr_operator(p):
+    '''ptr_operator : * cv_qualifier_seqopt
+                    | &
+                    | ::opt nested_name_specifier * cv_qualifier_seqopt
+    '''
+
+
+def p_cv_qualifier_seq(p):
+    '''cv_qualifier_seq : cv_qualifier cv_qualifier_seqopt'''
+def p_cv_qualifier(p):
+    '''cv_qualifier : const
+                    | volatile
+    '''
+
+
+def p_declarator_id(p):
+    '''declarator_id : ::opt id_expression
+                     | ::opt nested_name_specifieropt type_name
+    '''
+
+
+def p_type_id(p):
+    '''type_id : type_specifier_seq abstract_declaratoropt'''
+def p_type_specifier_seq(p):
+    '''type_specifier_seq : type_specifier type_specifier_seqopt'''
+def p_abstract_declarator(p):
+    '''abstract_declarator : ptr_operator abstract_declaratoropt
+                           | direct_abstract_declarator
+    '''
+
+
+def p_direct_abstract_declarator(p):
+    '''direct_abstract_declarator : direct_abstract_declaratoropt ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt
+                                  | direct_abstract_declaratoropt
+    '''
+
+
+
+def p_direct_abstract_declaratoropt ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt(p):
+    '''direct_abstract_declaratoropt ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt : direct_abstract_declaratoropt [ constant_expressionopt ]
+                                                                                                                     | ( abstract_declarator )
+    '''
+
+
+def p_direct_abstract_declarator(p):
+    '''direct_abstract_declarator : direct_abstract_declaratoropt ( parameter_declaration_clause ) cv_qualifier_seqopt exception_specificationopt
+                                  | direct_abstract_declaratoropt [ constant_expressionopt ]
+                                  | ( abstract_declarator )
+    '''
+
+
+def p_parameter_declaration_clause(p):
+    '''parameter_declaration_clause : parameter_declaration_listopt ...opt
+                                    | parameter_declaration_list , ...
+    '''
+
+
+def p_parameter_declaration_clause(p):
+    '''parameter_declaration_clause : parameter_declaration_listopt ...opt
+                                    | parameter_declaration_list , ...
+    '''
+
+
+def p_parameter_declaration_list(p):
+    '''parameter_declaration_list : parameter_declaration
+                                  | parameter_declaration_list , parameter_declaration
+    '''
+
+
+def p_parameter_declaration(p):
+    '''parameter_declaration : decl_specifier_seq declarator
+                             | decl_specifier_seq declarator = assignment_expression
+                             | decl_specifier_seq abstract_declaratoropt
+                             | decl_specifier_seq abstract_declaratoropt = assignment_expression
+    '''
+
+
+
+
+def p_function_definition(p):
+    '''function_definition : decl_specifier_seqopt declarator ctor_initializeropt function_body
+                           | decl_specifier_seqopt declarator function_try_block
+    '''
+
+
+def p_function_body(p):
+    '''function_body : compound_statement'''
+def p_initializer(p):
+    '''initializer : = initializer_clause
+                   | ( expression_list )
+    '''
+
+def p_initializer_clause(p):
+    '''initializer_clause : assignment_expression
+                          | { initializer_list ,opt }
+                          | { }
+    '''
+
+
+def p_initializer_list(p):
+    '''initializer_list : initializer_clause
+                        | initializer_list , initializer_clause
+    '''
+
+
+
+
