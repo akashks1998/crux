@@ -50,7 +50,6 @@ Unused terminals:
     GTCOMP
     GTECOMP
     HASHTAG
-    IDENTIFIER
     IF
     INLINE
     INT
@@ -119,6 +118,15 @@ Grammar
 Rule 0     S' -> program
 Rule 1     program -> NUMBER
 Rule 2     empty -> <empty>
+Rule 3     typedef_name -> IDENTIFIER
+Rule 4     namespace_name -> original_namespace_name
+Rule 5     namespace_name -> namespace_alias
+Rule 6     original_namespace_name -> IDENTIFIER
+Rule 7     namespace_alias -> IDENTIFIER
+Rule 8     class_name -> IDENTIFIER
+Rule 9     class_name -> template_name
+Rule 10    enum_name -> IDENTIFIER
+Rule 11    template_name -> IDENTIFIER
 
 Terminals, with rules where they appear
 
@@ -170,7 +178,7 @@ GOTO                 :
 GTCOMP               : 
 GTECOMP              : 
 HASHTAG              : 
-IDENTIFIER           : 
+IDENTIFIER           : 3 6 7 8 10 11
 IF                   : 
 INLINE               : 
 INT                  : 
@@ -238,8 +246,15 @@ error                :
 
 Nonterminals, with rules where they appear
 
+class_name           : 
 empty                : 
+enum_name            : 
+namespace_alias      : 5
+namespace_name       : 
+original_namespace_name : 4
 program              : 0
+template_name        : 9
+typedef_name         : 
 
 Parsing method: LALR
 
