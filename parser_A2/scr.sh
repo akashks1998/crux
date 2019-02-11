@@ -5,7 +5,7 @@ do
     ot=$(xclip -o)
     if [[ "$prev" !=  "$ot"  ]];
     then
-        xclip -o > grammer.txt; python3 grammer.py
+        xclip -o > grammer.txt; python3 grammer.py >> parser.py
     fi
     prev=$ot
     sleep 5

@@ -20,12 +20,10 @@ if(len(inp) == 2):
 for each in inp[2:]:
     out = out + "\n" + " " * (sp-1) + "| " +  each.strip().replace('-','_')
 
-out = out + "\n    \'\'\'\n"
-print(out)
+out = out + "\n    \'\'\'\n\n"
 
 open("grammer.txt","w").write("")
 
-open("parser.py", "a").write(out + '\n')
-
+print(out)
 
 # select unprocessed grammer and run xclip -o > grammer.txt; python3 grammer.py
