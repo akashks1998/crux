@@ -237,11 +237,7 @@ def find_column(input, token):
     return (token.lexpos - line_start) + 1
     
 if __name__ == "__main__":
-    if(len(sys.argv) != 4):
-        print("Usage python3.7 src/lex.py --cfg=path/to/cfg path/to/input --output=/path/to/output")
-        exit()
     
-    arglist = sys.argv
 
     for arg in arglist[1:]:
         if arg.split('=')[0] == "--cfg" :
