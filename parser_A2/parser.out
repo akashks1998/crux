@@ -118,6 +118,7 @@ Grammar
 
 Rule 0     S' -> program
 Rule 1     program -> NUMBER
+Rule 2     empty -> <empty>
 
 Terminals, with rules where they appear
 
@@ -237,6 +238,7 @@ error                :
 
 Nonterminals, with rules where they appear
 
+empty                : 
 program              : 0
 
 Parsing method: LALR
