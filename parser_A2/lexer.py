@@ -147,6 +147,7 @@ def t_IDENTIFIER(t):
 def t_NUMBER(t):
     #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
     r'(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
+    t.value=float(t.value)
     return t
 
 # Arithematic Operator

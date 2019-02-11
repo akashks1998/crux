@@ -20,7 +20,7 @@ def p_program(p):
 def p_primary_expression(p):
     '''primary_expression : literal
                           | this
-                          | :: identifier
+                          | :: IDENTIFIER
                           | :: operator_function_id
                           | :: qualified_id
                           | ( expression )
@@ -31,12 +31,8 @@ def p_id_expression(p):
     '''id_expression : unqualified_id
                      | qualified_id
     '''
-def p_id_expression(p):
-    '''id_expression : unqualified_id
-                     | qualified_id
-    '''
 def p_unqualified_id(p):
-    '''unqualified_id : identifier
+    '''unqualified_id : IDENTIFIER
                       | operator_function_id
                       | conversion_function_id
                       | ~ class_name
@@ -62,7 +58,7 @@ def p_postfix_expression(p):
                           | postfix_expression [ expression ]
                           | postfix_expression ( expression_listopt )
                           | simple_type_specifier ( expression_listopt )
-                          | typename ::opt nested_name_specifier identifier ( expression_listopt )
+                          | typename ::opt nested_name_specifier IDENTIFIER ( expression_listopt )
                           | typename ::opt nested_name_specifier templateopt template_id ( expression_listopt )
                           | postfix_expression . templateopt ::opt id_expression
                           | postfix_expression _> templateopt ::opt id_expression
@@ -90,7 +86,7 @@ def p_empty(p):
 def p_error(p):
     print("Syntax error in input!")
 ########################################################################
-########################## Key words #######################################
+########################## Key words ###################################
 def p_typedef_name(p):
     'typedef_name : IDENTIFIER'
     p[0]=p[1]
@@ -116,33 +112,7 @@ def p_template_name(p):
     p[0]=p[1]
 
 ########################################################################
-
-if __name__ == "__main__":
-    parser = yacc.yacc()
-    parser.error = 0
-    
-    if(len(sys.argv) != 3):
-        print("Usage python3 parser.py <debug> <mode>")
-        exit()
-    
-    arglist = sys.argv
-    debug = int(arglist[1])
-
-    if(arglist[2]== "I"):
-        while True:
-            try:
-                s = input('$ > ')
-                if(s=="end"):
-                    break
-            except EOFError:
-                break
-            if not s:
-                continue
-            result = parser.parse(s,lexer = lexer,debug=debug)
-            print(result)
-    else:
-        p = parser.parse("34",lexer = lexer,debug=debug)
-        print(p)
+#################################### Expression and Statement ##########
 
 
 def p_expression_list(p):
@@ -161,7 +131,7 @@ def p_pseudo_destructor_name(p):
 def p_unary_expression(p):
     '''unary_expression : postfix_expression
                         | ++ cast_expression
-                        | __ cast_expression
+                        | -- cast_expression
                         | unary_operator cast_expression
                         | sizeof unary_expression
                         | sizeof ( type_id )
@@ -306,17 +276,6 @@ def p_expression(p):
     '''
 
 
-def p_(p):
-    ''' : def p_def p_expression(p)(p):
-        | '''def p_expression(p) : '''expression : assignment_expression
-        | | | expression , assignment_expre
-        | | '''
-        | '''
-        | 
-        | 
-    '''
-
-
 def p_constant_expression(p):
     '''constant_expression : conditional_expression'''
 def p_statement(p):
@@ -331,14 +290,10 @@ def p_statement(p):
     '''
 
 
-def p_labeled_statement(p):
-    '''labeled_statement : identifier : statement
-                         | case constant_expression
-    '''
 
 
 def p_labeled_statement(p):
-    '''labeled_statement : identifier : statement
+    '''labeled_statement : IDENTIFIER : statement
                          | case constant_expression : statement
                          | default : statement
     '''
@@ -354,10 +309,6 @@ def p_statement_seq(p):
     '''
 
 
-def p_selection_statement(p):
-    '''selection_statement : if ( condition ) statement
-                           | if ( condition ) statement else s
-    '''
 
 
 def p_selection_statement(p):
@@ -390,7 +341,7 @@ def p_jump_statement(p):
     '''jump_statement : break ;
                       | continue ;
                       | return expressionopt ;
-                      | goto identifier ;
+                      | goto IDENTIFIER ;
     '''
 
 
@@ -451,8 +402,6 @@ def p_function_specifier(p):
     '''
 
 
-def p_typedef_name(p):
-    '''typedef_name : identifier'''
 def p_type_specifier(p):
     '''type_specifier : simple_type_specifier
                       | class_specifier
@@ -487,23 +436,22 @@ def p_type_name(p):
 
 
 def p_aborated_type_specifier(p):
-    '''aborated_type_specifier : class_key ::opt nested_name_specifieropt identifier
-                               | enum ::opt nested_name_specifieropt identifier
-                               | typename ::opt nested_name_specifier identifier
+    '''aborated_type_specifier : class_key ::opt nested_name_specifieropt IDENTIFIER
+                               | enum ::opt nested_name_specifieropt IDENTIFIER
+                               | typename ::opt nested_name_specifier IDENTIFIER
                                | typename ::opt nested_name_specifier templateopt template_id
     '''
 
 
 def p_elaborated_type_specifier(p):
-    '''elaborated_type_specifier : class_key ::opt nested_name_specifieropt identifier
-                                 | enum ::opt nested_name_specifieropt identifier
-                                 | typename ::opt nested_name_specifier identifier
+    '''elaborated_type_specifier : class_key ::opt nested_name_specifieropt IDENTIFIER
+                                 | enum ::opt nested_name_specifieropt IDENTIFIER
+                                 | typename ::opt nested_name_specifier IDENTIFIER
                                  | typename ::opt nested_name_specifier templateopt template_id
     '''
 
 
-def p_enum_name(p):
-    '''enum_name : identifier'''
+
 def p_enum_specifier(p):
     '''enum_specifier : enum identifieropt { enumerator_listopt }'''
 def p_enumerator_list(p):
@@ -519,15 +467,9 @@ def p_enumerator_definition(p):
 
 
 def p_enumerator(p):
-    '''enumerator : identifier'''
-def p_namespace_name(p):
-    '''namespace_name : original_namespace_name
-                      | namespace_alias
-    '''
+    '''enumerator : IDENTIFIER'''
 
 
-def p_original_namespace_name(p):
-    '''original_namespace_name : identifier'''
 def p_namespace_definition(p):
     '''namespace_definition : named_namespace_definition
                             | unnamed_namespace_definition
@@ -541,17 +483,16 @@ def p_named_namespace_definition(p):
 
 
 def p_original_namespace_definition(p):
-    '''original_namespace_definition : namespace identifier { namespace_body }'''
+    '''original_namespace_definition : namespace IDENTIFIER { namespace_body }'''
 def p_extension_namespace_definition(p):
     '''extension_namespace_definition : namespace original_namespace_name { namespace_body }'''
 def p_unnamed_namespace_definition(p):
     '''unnamed_namespace_definition : namespace { namespace_body }'''
 def p_namespace_body(p):
     '''namespace_body : declaration_seqopt'''
-def p_namespace_alias(p):
-    '''namespace_alias : identifier'''
+
 def p_namespace_alias_definition(p):
-    '''namespace_alias_definition : namespace identifier = qualified_namespace_specifier ;'''
+    '''namespace_alias_definition : namespace IDENTIFIER = qualified_namespace_specifier ;'''
 def p_qualified_namespace_specifier(p):
     '''qualified_namespace_specifier : ::opt nested_name_specifieropt namespace_name'''
 def p_using_declaration(p):
