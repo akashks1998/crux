@@ -132,7 +132,8 @@ tokens = [
         'SCHAR',
         'STRING',
         'HASHTAG',
-        'NOTSYM'
+        'NOTSYM',
+        'QUESMARK'  
 ] + list(keywords.values())
 
 
@@ -202,6 +203,8 @@ t_SCHAR         = r'\'.\''
 t_STRING        = r'\".*\"'
 t_HASHTAG       = r'\#'
 t_NOTSYM        = r'\!'
+t_QUESMARK       = r'\?'
+
 
 # track line no.
 def t_newline(t):
@@ -254,6 +257,8 @@ if __name__ == "__main__":
                 (key,val) = line.split(':')
                 color_dict[str(key).strip()] = str(val).strip()
 
+    
+
     lines=[]
     with open(input_file, "r") as f:
         for line in f:
@@ -277,7 +282,11 @@ if __name__ == "__main__":
         bold = bold_token.get(tok.value, "")
         if bold != "":
             bold = "; font-weight: bold"
-        color = color_dict.get(str(tok.type), "rgb(200,200,200)")
+            keyword_def= color_dict.get("KEYWORDS", "rgb(170,170,170)")
+            color = color_dict.get(str(tok.type), keyword_def)
+        else:
+            color = color_dict.get(str(tok.type), "rgb(170,170,170)")
+        
         span = "<span style=\"color: " + color + bold + "\">"
         code_out = code_out + " "*(col-cur) + span + tok.value + "</span>"
         cur=col + len(str(tok.value))

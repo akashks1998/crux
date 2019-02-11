@@ -1,2 +1,2 @@
 #!/bin/bash
-cat input.txt | python3 lex.py
+python3 ./lex.py --cfg=./cfg.txt ./input.cpp --output=./output.html
