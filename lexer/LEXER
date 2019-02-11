@@ -1,2 +1,0 @@
-#!/bin/bash
-python3 ./lex.py --cfg=./cfg.txt ./input.cpp --output=./output.html

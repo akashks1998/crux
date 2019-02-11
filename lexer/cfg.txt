@@ -1,6 +1,0 @@
-WHILE : blue
-INT : red
-COMMENT : rgb(150, 150, 150)
-IDENTIFIER : #32dbbd
-RETURN : #4000ff
-NUMBER : #b25454
