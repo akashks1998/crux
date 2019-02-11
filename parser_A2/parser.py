@@ -8,8 +8,24 @@ tokens = lexTokens
 start = 'program'
 
 def p_program(p):
-    '''program : NUMBER '''
+    '''program : NUMBER 
+        | STRING
+    '''
     p[0] = p[1]
+
+################################################################################
+############################  Expressions   ####################################
+################################################################################
+
+def p_primary_expression(p):
+    '''primary_expression :  literal
+                          |  this
+                          |  DL identifier
+                          |  DL operator_function_id
+                          |  qualified_id
+                          | (expression)
+    '''
+
 
 
 
@@ -17,6 +33,8 @@ def p_program(p):
 def p_empty(p):
     'empty :'
     pass
+
+
 
 # Error rule for syntax errors
 def p_error(p):
