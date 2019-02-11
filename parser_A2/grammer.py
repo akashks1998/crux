@@ -22,3 +22,8 @@ for each in inp[2:]:
 
 out = out + "\n    \'\'\'"
 print(out)
+
+open("grammer.txt","w").write("")
+
+
+# select unprocessed grammer and run xclip -o > grammer.txt; python3 grammer.py | xclip -sel clip

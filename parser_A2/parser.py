@@ -18,14 +18,38 @@ def p_program(p):
 ################################################################################
 
 def p_primary_expression(p):
-    '''primary_expression :  literal
-                          |  this
-                          |  DL identifier
-                          |  DL operator_function_id
-                          |  qualified_id
-                          | (expression)
+    '''primary_expression : literal
+                          | this
+                          | :: identifier
+                          | :: operator_function_id
+                          | :: qualified_id
+                          | ( expression )
+                          | id_expression
     '''
 
+def p_id_expression(p):
+    '''id_expression : unqualified_id
+                     | qualified_id
+    '''
+def p_id_expression(p):
+    '''id_expression : unqualified_id
+                     | qualified_id
+    '''
+def p_unqualified_id(p):
+    '''unqualified_id : identifier
+                      | operator_function_id
+                      | conversion_function_id
+                      | ~ class_name
+                      | template_id
+    '''
+
+def p_qualified_id(p):
+    '''qualified_id : nested_name_specifier templateopt unqualified_id'''
+
+def p_nested_name_specifier(p):
+    '''nested_name_specifier : class_or_namespace_name :: nested_name_specifieropt
+                             | class_or_namespace_name :: template nested_name_specifier
+    '''
 
 
 
