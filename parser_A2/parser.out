@@ -1,0 +1,264 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    ANDOP
+    AND_EQ
+    ASM
+    AUTO
+    BANDEQOP
+    BANDOP
+    BITAND
+    BITOR
+    BNOP
+    BOOL
+    BOROP
+    BREAK
+    CASE
+    CATCH
+    CHAR
+    CHAR16_T
+    CHAR32_T
+    CHAR8_T
+    CLASS
+    COLON
+    COMMA
+    COMMENT
+    COMPL
+    CONST
+    CONTINUE
+    DEFAULT
+    DELETE
+    DIVEQOP
+    DIVOP
+    DO
+    DOT
+    DOUBLE
+    DOUBLECOLON
+    DQUOTE
+    ELSE
+    ENUM
+    EQCOMP
+    EQUAL
+    EXPOP
+    EXTERN
+    FALSE
+    FLOAT
+    FOR
+    GOTO
+    GTCOMP
+    GTECOMP
+    HASHTAG
+    IDENTIFIER
+    IF
+    INLINE
+    INT
+    LCPAREN
+    LONG
+    LRPAREN
+    LSPAREN
+    LTCOMP
+    LTECOMP
+    MINUSEQOP
+    MINUSOP
+    MODOP
+    MULTEQOP
+    MULTOP
+    NAMESPACE
+    NEQCOMP
+    NEW
+    NOT
+    NOTSYM
+    NOT_EQ
+    NULLPTR
+    OR
+    OROP
+    OR_EQ
+    PLUSEQOP
+    PLUSOP
+    PRIVATE
+    PROTECTED
+    PUBLIC
+    QUESMARK
+    RCPAREN
+    RETURN
+    RRPAREN
+    RSPAREN
+    SCHAR
+    SEMICOLON
+    SHORT
+    SIGNED
+    SIZEOF
+    SQUOTE
+    STATIC
+    STD
+    STRING
+    SWITCH
+    THIS
+    THROW
+    TRUE
+    TRY
+    TYPEDEF
+    UMINUSOP
+    UNION
+    UNSIGNED
+    UPLUSOP
+    USING
+    VIRTUAL
+    VOID
+    VOLATILE
+    WHILE
+    XOR
+    XOREQOP
+    XOROP
+    XOR_EQ
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> NUMBER
+
+Terminals, with rules where they appear
+
+AND                  : 
+ANDOP                : 
+AND_EQ               : 
+ASM                  : 
+AUTO                 : 
+BANDEQOP             : 
+BANDOP               : 
+BITAND               : 
+BITOR                : 
+BNOP                 : 
+BOOL                 : 
+BOROP                : 
+BREAK                : 
+CASE                 : 
+CATCH                : 
+CHAR                 : 
+CHAR16_T             : 
+CHAR32_T             : 
+CHAR8_T              : 
+CLASS                : 
+COLON                : 
+COMMA                : 
+COMMENT              : 
+COMPL                : 
+CONST                : 
+CONTINUE             : 
+DEFAULT              : 
+DELETE               : 
+DIVEQOP              : 
+DIVOP                : 
+DO                   : 
+DOT                  : 
+DOUBLE               : 
+DOUBLECOLON          : 
+DQUOTE               : 
+ELSE                 : 
+ENUM                 : 
+EQCOMP               : 
+EQUAL                : 
+EXPOP                : 
+EXTERN               : 
+FALSE                : 
+FLOAT                : 
+FOR                  : 
+GOTO                 : 
+GTCOMP               : 
+GTECOMP              : 
+HASHTAG              : 
+IDENTIFIER           : 
+IF                   : 
+INLINE               : 
+INT                  : 
+LCPAREN              : 
+LONG                 : 
+LRPAREN              : 
+LSPAREN              : 
+LTCOMP               : 
+LTECOMP              : 
+MINUSEQOP            : 
+MINUSOP              : 
+MODOP                : 
+MULTEQOP             : 
+MULTOP               : 
+NAMESPACE            : 
+NEQCOMP              : 
+NEW                  : 
+NOT                  : 
+NOTSYM               : 
+NOT_EQ               : 
+NULLPTR              : 
+NUMBER               : 1
+OR                   : 
+OROP                 : 
+OR_EQ                : 
+PLUSEQOP             : 
+PLUSOP               : 
+PRIVATE              : 
+PROTECTED            : 
+PUBLIC               : 
+QUESMARK             : 
+RCPAREN              : 
+RETURN               : 
+RRPAREN              : 
+RSPAREN              : 
+SCHAR                : 
+SEMICOLON            : 
+SHORT                : 
+SIGNED               : 
+SIZEOF               : 
+SQUOTE               : 
+STATIC               : 
+STD                  : 
+STRING               : 
+SWITCH               : 
+THIS                 : 
+THROW                : 
+TRUE                 : 
+TRY                  : 
+TYPEDEF              : 
+UMINUSOP             : 
+UNION                : 
+UNSIGNED             : 
+UPLUSOP              : 
+USING                : 
+VIRTUAL              : 
+VOID                 : 
+VOLATILE             : 
+WHILE                : 
+XOR                  : 
+XOREQOP              : 
+XOROP                : 
+XOR_EQ               : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+program              : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . NUMBER
+
+    NUMBER          shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> NUMBER .
+
+    $end            reduce using rule 1 (program -> NUMBER .)
+
