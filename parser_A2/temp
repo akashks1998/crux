@@ -1,0 +1,644 @@
+
+class_name
+    identifier
+
+enum_name
+    identifier
+
+typedef_name
+    identifier
+
+# r.17.2 Expressions
+
+expression
+    assignment_expression
+    expression COMMA assignment_expression
+
+assignment_expression
+    conditional_expression
+    unary_expression  assignment_operator assignment_expression
+
+assignment_operator
+   EQUAL
+    *= 
+    /= 
+    %= 
+    += 
+    _= 
+    <<= 
+    >>= 
+    &= 
+    ^= 
+    |= 
+
+conditional_expression
+    logical_OR_expression
+    logical_OR_expression ? expression COLON conditional_expression
+
+logical_OR_expression
+    logical_AND_expression
+    logical_OR_expression || logical_AND_expression
+
+logical_AND_expression
+    inclusive_OR_expression
+    logical_AND_expression && inclusive_OR_expression
+
+inclusive_OR_expression
+    exclusive_OR_expression
+    inclusive_OR_expression | exclusive_OR_expression
+
+exclusive_OR_expression
+    AND_expression
+    exclusive_OR_expression ^ AND_expression
+
+AND_expression
+    equality_expression
+    AND_expression & equality_expression
+
+equality_expression
+    relational_expression
+    equality_expression EQCOMP relational_expression
+    equality_expression NEQCOMP relational_expression
+
+relationa1_expression
+    shift_expression
+    relational_expression <  shift_expression
+    relational_expression >  shift_expression
+    relational_expression <= shift_expression
+    relational_expression >= shift_expression
+
+shift_expression
+    additive_expression
+    shift_expression << additive_expression
+    shift_expression >> additive_expression
+
+additive_expression
+    multiplicative_expression
+    additive_expression + multiplicative_expression
+    additive_expression _ multiplicative_expression
+
+multiplicative_expression
+    pm_expression
+    multiplicative_expression * pm_expression
+    multiplicative_expression / pm_expression
+    multiplicative_expression % pm_expression
+
+pm_expression
+    cast_expression
+    pm_expression .* cast_expression
+    pm_expression _>* cast_expression
+
+cast_expression
+    unary_expression
+    LPAREN type_name  RPAREN  cast_expression
+
+unary_expression
+    posfix_expression
+    ++ unary_expression
+    __ unary_expression
+    unary_operator cast_expression
+    sizeof  unary_expression
+    sizeof LPAREN type_name  RPAREN 
+    allocation_expression
+    deallocation_expression
+
+unary_operator
+    *
+    &
+    +
+    _
+    !
+    ~
+
+allocation_expression
+    DOUBLECOLON new placement new_type_name new_initializer
+    new placement new_type_name new_initializer
+    DOUBLECOLON new new_type_name new_initializer
+    new new_type_name new_initializer
+    DOUBLECOLON new placement new_type_name
+    new placement new_type_name
+    DOUBLECOLON new new_type_name
+    new new_type_name
+    DOUBLECOLON new placement LPAREN type_name  RPAREN  new_initializer
+    new placement LPAREN type_name  RPAREN  new_initializer
+    DOUBLECOLON new LPAREN type_name  RPAREN  new_initializer
+    new LPAREN type_name  RPAREN  new_initializer
+    DOUBLECOLON new placement LPAREN type_name  RPAREN 
+    new placement LPAREN type_name  RPAREN 
+    DOUBLECOLON new LPAREN type_name  RPAREN 
+    new LPAREN type_name  RPAREN 
+
+placement
+    LPAREN expression_list  RPAREN 
+
+new_type_name
+    type_specifier_list new_declarator
+    type_specifier_list 
+
+new_declarator
+    * cv_qualifier_list new_declarator
+    * new_declarator
+    * cv_qualifier_list
+    *
+    complete_class_name DOUBLECOLON * cv_qualifier_list new_declarator
+    complete_class_name DOUBLECOLON * new_declarator
+    complete_class_name DOUBLECOLON * cv_qualifier_list
+    complete_class_name DOUBLECOLON *
+    new_declarator LSPAREN expression RSPAREN
+    LSPAREN expression RSPAREN
+
+new_initializer
+    LPAREN initializer_list  RPAREN 
+    LPAREN  RPAREN 
+
+deallocation_expression
+    DOUBLECOLON delete cast_expression
+    delete cast_expression
+    DOUBLECOLON delete LSPAREN RSPAREN cast_expression
+    delete LSPAREN RSPAREN cast_expression
+
+postfix_expression
+    primary_expression
+    postfix_expression     LSPAREN expression RSPAREN
+    postfix_expression     LPAREN expression_list  RPAREN 
+    postfix_expression     LPAREN  RPAREN 
+    simple_type_name       LPAREN expression_list  RPAREN 
+    simple_type_name       LPAREN  RPAREN 
+    postfix_expression     . name
+    postfix_expression     _> name
+    postfix_expression     ++
+    postfix_expression     __
+
+expression_list
+    assignment_expression
+    expression_list COMMA assignment_expression
+
+primary_expression
+    literal
+    this
+    DOUBLECOLON identifier
+    DOUBLECOLON operator_function_name
+    DOUBLECOLON qualified_name
+    LPAREN expression  RPAREN 
+    name
+
+name
+    identifier
+    operator_function_name
+    conversion_function_name
+    ~ class_name
+    qualified_name
+
+qualified_name
+    qualified_class_name DOUBLECOLON name
+
+literal
+    integer_constant
+    character_constant
+    floating_constant
+    string_literal
+
+# r.17.3 Declarations
+
+declaration
+    decl_specifiers declarator_list SEMICOLON
+    decl_specifiers SEMICOLON
+    declarator_list SEMICOLON
+    asm_declaration
+    function_definition
+    template_declaration
+    linkage_specification
+
+decl_specifier
+    storage_class_specifier
+    type_specifier
+    fct_specifier
+    friend
+    typedef
+
+decl_specifiers
+    decl_specifiers decl_specifier
+    decl_specifier
+
+storage_class_specifier
+    auto
+    register
+    static
+    extern
+
+fct_specifier
+    inline
+    virtual
+
+type_specifier
+    simple_type_name
+    class_specifier
+    enum_specifier
+    elaborated_type_specifier
+    const
+    volatile
+
+simple_type_name
+    complete_class_name
+    qualified_type_name
+    char
+    short
+    int
+    long
+    signed
+    unsigned
+    float
+    double
+    void
+
+elaborated_type_specifier
+    class_key identifier
+    class_key class_name
+    enum enum_name
+
+class_key
+    class
+    struct
+    union
+
+qualified_type_name
+    typedef_name
+    class_name DOUBLECOLON qualified_type_name
+
+complete_class_name
+    qualified_class_name
+    DOUBLECOLON qualified_class_name
+
+qualified_class_name
+    class_name
+    class_name DOUBLECOLON qualified_class_name
+
+enum_specifier
+    enum identifier LCPAREN enum_list RCPAREN
+    enum LCPAREN enum_list RCPAREN
+    enum identifier LCPAREN RCPAREN
+    enum LCPAREN RCPAREN
+
+enum_list
+    enumerator
+     enum_list COMMA enumerator
+
+enumerator
+    identifier
+    identifier EQUAL constant_expression
+
+constant_expression
+    conditional_expression
+
+linkage_specification
+    extern string_literal LCPAREN declaration_list RCPAREN
+    extern string_literal LCPAREN RCPAREN
+    extern string_literal declaration
+
+declaration_list
+    declaration
+    declaration_list declaration
+
+asm_declaration
+    asm LPAREN string_literal  RPAREN  SEMICOLON
+
+# r.17.4 Declarators
+
+declarator_list
+    init_declarator
+    declarator_list COMMA init_declarator
+
+init_declarator
+    declarator initializer
+    declarator
+
+declarator
+    dname
+    ptr_operator declarator
+    declarator LPAREN argument_declaration_list  RPAREN  cv_qualifier_list
+    declarator LPAREN argument_declaration_list  RPAREN  
+    declarator LSPAREN constant_expression RSPAREN
+    declarator LSPAREN RSPAREN
+    LPAREN declarator  RPAREN 
+
+ptr_operator
+    * cv_qualifier_list
+    *
+    & cv_qualifier_list
+    &
+    complete_class_name DOUBLECOLON * cv_qualifier_list
+    complete_class_name DOUBLECOLON * 
+
+cv_qualifier_list
+    cv_qualifier cv_qualifier_list
+    cv_qualifier
+
+cv_qualifier
+    const
+    volatile
+
+dname
+    name
+    class_name
+    ~ class_name
+    typedef_name
+    qualified_type_name
+
+type_name
+    type_specifier_list abstract_declarator
+    type_specifier_list
+
+type_specifier_list
+    type_specifier type_specifier_list
+    type_specifier
+
+abstract_declarator
+    ptr_operator abstract_declarator
+    ptr_operator
+    abstract_declarator LPAREN argument_declaration_list  RPAREN  cv_qualifier_list
+    LPAREN argument_declaration_list  RPAREN  cv_qualifier_list
+    abstract_declarator LPAREN argument_declaration_list  RPAREN 
+    LPAREN argument_declaration_list  RPAREN 
+    abstract_declarator LSPAREN constant_expression RSPAREN
+    LSPAREN constant_expression RSPAREN
+    abstract_declarator LSPAREN RSPAREN
+    LSPAREN RSPAREN
+    LPAREN abstract_declarator  RPAREN 
+
+argument_declaration_list
+    arg_declaration_list ...
+    ...
+    
+    arg_declaration_list COMMA ...
+
+arg_declaration_list
+    argument_declaration
+    arg_declaration_list COMMA argument_declaration
+
+argument_declaration
+    decl_specifiers declarator
+    decl_specifiers declaratorEQUAL expression
+    decl_specifiers abstract_declarator
+    decl_specifiers
+    decl_specifiers abstract_declaratorEQUAL expression
+    decl_specifiersEQUAL expression
+
+function_definition
+    decl_specifiers declarator ctor_initializer fct_body
+    declarator ctor_initializer fct_body
+    decl_specifiers declarator fct_body
+    declarator fct_body
+
+fct_body
+    compound_statement
+
+initializer
+   EQUAL assignment_expression
+   EQUAL LCPAREN initializer_list RCPAREN
+   EQUAL LCPAREN initializer_list COMMA RCPAREN
+    LPAREN expression_list  RPAREN 
+
+initializer_list
+    assignment_expression
+    initializer_list COMMA assignment_expression
+    LCPAREN initializer_list RCPAREN
+    LCPAREN initializer_list COMMA RCPAREN
+
+# r.17.5 Class Declarations
+
+class_specifier
+    class_head LCPAREN member_list RCPAREN
+    class_head LCPAREN RCPAREN
+
+class_head
+    class_key identifier base_spec
+    class_key base_spec
+    class_key identifier
+    class_key
+    class_key class_name base_spec
+    class_key class_name
+
+member_list
+    member_declaration member_list
+    member_declaration
+    access_specifier COLON member_list
+    access_specifier COLON
+
+member_declaration
+    decl_specifiers member_declarator_list SEMICOLON
+    member_declarator_list SEMICOLON
+    decl_specifiers SEMICOLON
+    SEMICOLON
+    function_definition SEMICOLON
+    function_definition
+    qualified_name SEMICOLON
+
+member_declarator_list
+    member_declarator
+    member_declarator_list COMMA member_declarator
+
+member_declarator
+    declarator pure_specifier
+    declarator
+    identifier COLON constant_expression
+    COLON constant_expression
+
+pure_specifier
+   EQUAL integer_constant
+
+base_spec
+    COLON base_list
+
+base_list
+    base_specifier
+    base_list COMMA base_specifier
+
+base_specifier
+    complete_class_name
+    virtual access_specifier complete_class_name
+    virtual complete_class_name
+    access_specifier virtual complete_class_name
+    access_specifier complete_class_name
+
+access_specifier
+    private
+    protected
+    public
+
+conversion_function_name
+    operator conversion_type_name
+
+conversion_type_name
+    type_specifier_list ptr_operator
+    type_specifier_list
+
+ctor_initializer
+    COLON mem_initializer_list
+
+mem_initializer_list
+    mem_initializer
+    mem_initializer COMMA mem_initializer_list
+
+mem_initializer
+    complete_class_name LPAREN expression_list  RPAREN 
+    complete_class_name LPAREN  RPAREN 
+    identifier LPAREN expression_list  RPAREN 
+    identifier LPAREN  RPAREN 
+
+operator_function_name
+    operator operator_name
+
+operator_name
+    new
+    delete
+    +
+    _
+    *
+    /
+    %
+    ^
+    &
+    |
+    ~
+    !
+   EQUAL
+    <
+    >
+    +=
+    _=
+    *=
+    /=
+    %=
+    ^=
+    &=
+    ~=
+    <<
+    >>
+    >>=
+    <<=
+    EQCOMP
+    NEQCOMP
+    <=
+    >=
+    &&
+    ||
+    ++
+    __
+    COMMA
+    _>*
+    _>
+    LPAREN  RPAREN 
+    LSPAREN RSPAREN
+
+# r.17.6 Statements
+
+statement
+    labeled_statement
+    expression_statement
+    compound_statement
+    selection_statement
+    iteration_statement
+    jump_statement
+    declaration_statement
+    try_block
+
+labeled_statement
+    identifier COLON statement
+    case constant_expression COLON statement
+    default COLON statement
+
+expression_statement
+    expression SEMICOLON
+    SEMICOLON
+
+compound_statement
+    LCPAREN statement_list RCPAREN
+    LCPAREN RCPAREN
+
+statement_list
+    statement
+    statement_list statement
+
+selection_statement
+    if LPAREN expression  RPAREN  statement
+    if LPAREN expression  RPAREN  statement else statement
+    switch LPAREN expression  RPAREN  statement
+
+iteration_statement
+    while LPAREN expression  RPAREN  statement
+    do statement while LPAREN expression  RPAREN  SEMICOLON
+    for LPAREN for_init_statement expression SEMICOLON expression  RPAREN  statement
+    for LPAREN for_init_statement SEMICOLON expression  RPAREN  statement
+    for LPAREN for_init_statement expression SEMICOLON  RPAREN  statement
+    for LPAREN for_init_statement SEMICOLON  RPAREN  statement
+
+for_init_statement
+    expression_statement
+    declaration_statement
+
+jump_statement
+    break SEMICOLON
+    continue SEMICOLON
+    return expression SEMICOLON
+    return SEMICOLON
+    goto identifier SEMICOLON
+
+declaration_statement
+    declaration
+
+# r.17.8 Templates
+
+template_declaration
+    template < template_argument_list > declaration
+
+template_argument_list
+    template_argument
+    template_argument_list COMMA template_argument
+
+template_argument
+    type_argument
+    argument_declaration
+
+type_argument
+    class identifier
+
+template_class_name
+    template_name < template_arg_list >
+
+template_arg_list
+    template_arg
+    template_arg_list COMMA template_arg
+
+template_arg
+    expression
+    type_name
+
+# r.17.9 Exception Handling
+
+try_block
+    try compound_statement handler_list
+
+handler_list
+    handler handler_list
+    handler
+
+handler
+    catch LPAREN exception_declaration  RPAREN  compound_statement
+
+exception_declaration
+    type_specifier_list declarator
+    type_specifier_list abstract_declarator
+    type_specifier_list
+    ...
+
+throw_expression
+    throw expression
+    throw
+
+exception_specification
+    throw LPAREN type_list  RPAREN 
+    throw LPAREN  RPAREN 
+
+type_list
+    type_name
+    type_list COMMA type_name
