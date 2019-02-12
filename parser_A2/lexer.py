@@ -132,9 +132,20 @@ tokens = [
         'STRING',
         'HASHTAG',
         'NOTSYM',
-        'QUESMARK'  
-] + list(keywords.values())
+        'QUESMARK',
+        'LEFTSHIFT',
+        'RIGHTLIFT',
+        'CONDTIONAL',
+        'MODQOP',
+        'LEFTQOP',
+        'RIGHTQOP',
+        'B_I_OR',
+        'B_E_OR',
+        'ARROW',
+        'ARROWSTAR',
+        'DOTSTAR'
 
+] + list(keywords.values())
 
 # Regular expression rules for simple tokens
 
@@ -155,22 +166,37 @@ t_PLUSOP    = r'\+'
 t_MINUSOP   = r'-'
 t_DIVOP     = r'/'
 t_MULTOP    = r'\*'
+t_MODOP     = r'\%'
+t_XOROP     = r'\^'
+
 t_BOROP     = r'\|'
 t_OROP      = r'\|\|'
 t_BANDOP    = r'\&'
 t_ANDOP     = r'\&\&'
-t_MODOP     = r'\%'
+
 t_PLUSEQOP  = r'\+='
 t_MINUSEQOP = r'-='
 t_MULTEQOP  = r'\*='
 t_DIVEQOP   = r'/='
 t_BANDEQOP  = r'\&\='
-t_XOROP     = r'\^'
+t_B_I_OR    = r'\|='
+t_B_E_OR    = r'^= '
+
 t_XOREQOP   = r'\^='
+
+t_EXPOP     = r'\*\*'
+
 t_UPLUSOP   = r'\+\+'
 t_UMINUSOP  = r'--'
-t_EXPOP     = r'\*\*'
 t_BNOP      = r'\~'
+
+t_LEFTSHIFT = r'<<'
+t_RIGHTLIFT = r'>>'
+t_CONDTIONAL = r'\?:'
+t_MODQOP = r'\%='
+t_LEFTQOP = r'<<='
+t_RIGHTQOP = r'>>='
+
 
 # Comparison Operator
 t_EQCOMP    = r'=='
@@ -204,6 +230,9 @@ t_STRING        = r'\".*\"'
 t_HASHTAG       = r'\#'
 t_NOTSYM        = r'\!'
 t_QUESMARK       = r'\?'
+t_ARROW         = r'-\>'
+t_ARROWSTAR     = r'-\>\*'
+t_DOTSTAR       = r'\.\*'
 
 
 # track line no.

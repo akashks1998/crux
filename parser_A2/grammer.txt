@@ -1,2 +1,0 @@
-def p_pt [ constant_expressionopt ](p):
-    '''pt [ constant_expressionopt ] : ( abstract_declarator )'''

@@ -1,16 +1,15 @@
+def get_grammer_line(s):
+    s = s.strip().replace('-','_').replace('::', ' DOUBLECOLON ')
+    return s
+
 inp = open("grammer.txt", "r").read()
 
- 
-def get_name(i):
-    name = (i.split(':')[0]).strip().replace('-','_')
-    return name
-
-inp = inp.split('\n')
+inp = inp.strip().split('\n')
 out = "def p_" 
-out = out + get_name(inp[0]) + "(p):\n"
-l1 ="    \'\'\'" + get_name(inp[0]) + " :"
+out = out + inp[0].strip().replace('-','_') + "(p):\n"
+l1 ="    \'\'\'" + inp[0].strip().replace('-','_') + " :"
 sp = len(l1)
-l1 = l1 + " " + inp[1].strip().replace('-','_')
+l1 = l1 + " " + get_grammer_line(inp[1])
 out = out +l1
 
 if(len(inp) == 2):
@@ -18,7 +17,7 @@ if(len(inp) == 2):
     exit()
 
 for each in inp[2:]:
-    out = out + "\n" + " " * (sp-1) + "| " +  each.strip().replace('-','_')
+    out = out + "\n" + " " * (sp-1) + "| " +  get_grammer_line(each)
 
 out = out + "\n    \'\'\'\n\n"
 
