@@ -116,6 +116,36 @@ def p_template_name(p):
 ########################################################################
 #################################### Expression and Statement ##########
 
+def p_assignment_operator(p):
+    '''assignment_operator : NEQCOMP MULTEQOP DIVEQOP MODEQOP PLUSEQOP MINUSEQOP RSHIFTEQOP LSHIFTEQOP BANDEQOP XOREQOP BOREQOP'''
+
+
+def p_inclusive_or_expression(p):
+    '''inclusive_or_expression : exclusive_or_expression
+                               | inclusive_or_expression BOROP exclusive_or_expression
+    '''
+    
+def p_logical_and_expression(p):
+    '''logical_and_expression : inclusive_or_expression
+                              | logical_and_expression ANDOP inclusive_or_expression
+    '''
+
+def p_logical_or_expression(p):
+    '''logical_or_expression : logical_and_expression
+                             | logical_or_expression OROP logical_and_expression
+    '''
+
+def p_conditional_expression(p):
+    '''conditional_expression : logical_or_expression
+                              | logical_or_expression QUESMARK expression COLON assignment_expression
+    '''
+
+def p_assignment_expression(p):
+    '''assignment_expression : conditional_expression
+                             | logical_or_expression assignment_operator assignment_expression
+                             | throw_expression
+    '''
+
 def p_expression_list(p):
     '''expression_list : assignment_expression
                        | expression_list COMMA assignment_expression
@@ -236,39 +266,13 @@ def p_exclusive_or_expression(p):
     '''
 
 
-def p_inclusive_or_expression(p):
-    '''inclusive_or_expression : exclusive_or_expression
-                               | inclusive_or_expression BOROP exclusive_or_expression
-    '''
 
 
-def p_logical_and_expression(p):
-    '''logical_and_expression : inclusive_or_expression
-                              | logical_and_expression ANDOP inclusive_or_expression
-    '''
 
 
-def p_logical_or_expression(p):
-    '''logical_or_expression : logical_and_expression
-                             | logical_or_expression OROP logical_and_expression
-    '''
 
 
-def p_conditional_expression(p):
-    '''conditional_expression : logical_or_expression
-                              | logical_or_expression QUESMARK expression COLON assignment_expression
-    '''
 
-
-def p_assignment_expression(p):
-    '''assignment_expression : conditional_expression
-                             | logical_or_expression assignment_operator assignment_expression
-                             | throw_expression
-    '''
-
-
-def p_assignment_operator(p):
-    '''assignment_operator : NEQCOMP MULTEQOP DIVEQOP MODEQOP PLUSEQOP MINUSEQOP RSHIFTEQOP LSHIFTEQOP BANDEQOP XOREQOP BOREQOP'''
 
 
 def p_expression(p):

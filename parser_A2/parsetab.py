@@ -6,11 +6,7 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-<<<<<<< HEAD
-_lr_signature = 'programAND ANDOP AND_EQ ASM AUTO BANDEQOP BANDOP BITAND BITOR BNOP BOOL BOROP BREAK CASE CATCH CHAR CHAR16_T CHAR32_T CHAR8_T CLASS COLON COMMA COMMENT COMPL CONST CONTINUE DEFAULT DELETE DIVEQOP DIVOP DO DOT DOUBLE DOUBLECOLON DQUOTE ELSE ENUM EQCOMP EQUAL EXPOP EXTERN FALSE FLOAT FOR GOTO GTCOMP GTECOMP HASHTAG IDENTIFIER IF INLINE INT LCPAREN LONG LRPAREN LSPAREN LTCOMP LTECOMP MINUSEQOP MINUSOP MODOP MULTEQOP MULTOP NAMESPACE NEQCOMP NEW NOT NOTSYM NOT_EQ NULLPTR NUMBER OR OROP OR_EQ PLUSEQOP PLUSOP PRIVATE PROTECTED PUBLIC QUESMARK RCPAREN RETURN RRPAREN RSPAREN SCHAR SEMICOLON SHORT SIGNED SIZEOF SQUOTE STATIC STD STRING SWITCH THIS THROW TRUE TRY TYPEDEF UMINUSOP UNION UNSIGNED UPLUSOP USING VIRTUAL VOID VOLATILE WHILE XOR XOREQOP XOROP XOR_EQprogram : NUMBER empty :typedef_name : IDENTIFIERnamespace_name : original_namespace_name\n                      | namespace_aliasoriginal_namespace_name : IDENTIFIERnamespace_alias : IDENTIFIERclass_name : IDENTIFIER\n                  | template_nameenum_name : IDENTIFIERtemplate_name : IDENTIFIER'
-=======
 _lr_signature = 'programAND ANDOP AND_EQ ASM AUTO BANDEQOP BANDOP BITAND BITOR BNOP BOOL BOROP BREAK CASE CATCH CHAR CHAR16_T CHAR32_T CHAR8_T CLASS COLON COMMA COMMENT COMPL CONST CONTINUE DEFAULT DELETE DIVEQOP DIVOP DO DOT DOUBLE DOUBLECOLON DQUOTE ELSE ENUM EQCOMP EQUAL EXPOP EXTERN FALSE FLOAT FOR GOTO GTCOMP GTECOMP HASHTAG IDENTIFIER IF INLINE INT LCPAREN LONG LRPAREN LSPAREN LTCOMP LTECOMP MINUSEQOP MINUSOP MODOP MULTEQOP MULTOP NAMESPACE NEQCOMP NEW NOT NOTSYM NOT_EQ NULLPTR NUMBER OR OROP OR_EQ PLUSEQOP PLUSOP PRIVATE PROTECTED PUBLIC QUESMARK RCPAREN RETURN RRPAREN RSPAREN SCHAR SEMICOLON SHORT SIGNED SIZEOF SQUOTE STATIC STD STRING SWITCH THIS THROW TRUE TRY TYPEDEF UMINUSOP UNION UNSIGNED UPLUSOP USING VIRTUAL VOID VOLATILE WHILE XOR XOREQOP XOROP XOR_EQprogram : NUMBER \n        | STRING\n    primary_expression : NUMBER\n\n    empty :'
->>>>>>> 36c695801d11b05508c1f981f6d48b8f4bee59e9
     
 _lr_action_items = {'NUMBER':([0,],[2,]),'STRING':([0,],[3,]),'$end':([1,2,3,],[0,-1,-2,]),}
 
@@ -32,20 +28,7 @@ del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
   ('program -> NUMBER','program',1,'p_program','parser.py',11),
-<<<<<<< HEAD
-  ('empty -> <empty>','empty',0,'p_empty','parser.py',18),
-  ('typedef_name -> IDENTIFIER','typedef_name',1,'p_typedef_name','parser.py',27),
-  ('namespace_name -> original_namespace_name','namespace_name',1,'p_namespace_name','parser.py',30),
-  ('namespace_name -> namespace_alias','namespace_name',1,'p_namespace_name','parser.py',31),
-  ('original_namespace_name -> IDENTIFIER','original_namespace_name',1,'p_original_namespace_name','parser.py',34),
-  ('namespace_alias -> IDENTIFIER','namespace_alias',1,'p_namespace_alias','parser.py',37),
-  ('class_name -> IDENTIFIER','class_name',1,'p_class_name','parser.py',40),
-  ('class_name -> template_name','class_name',1,'p_class_name','parser.py',41),
-  ('enum_name -> IDENTIFIER','enum_name',1,'p_enum_name','parser.py',44),
-  ('template_name -> IDENTIFIER','template_name',1,'p_template_name','parser.py',47),
-=======
   ('program -> STRING','program',1,'p_program','parser.py',12),
   ('primary_expression -> NUMBER','primary_expression',1,'p_primary_expression','parser.py',24),
   ('empty -> <empty>','empty',0,'p_empty','parser.py',30),
->>>>>>> 36c695801d11b05508c1f981f6d48b8f4bee59e9
 ]

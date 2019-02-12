@@ -116,22 +116,9 @@ Grammar
 
 Rule 0     S' -> program
 Rule 1     program -> NUMBER
-<<<<<<< HEAD
-Rule 2     empty -> <empty>
-Rule 3     typedef_name -> IDENTIFIER
-Rule 4     namespace_name -> original_namespace_name
-Rule 5     namespace_name -> namespace_alias
-Rule 6     original_namespace_name -> IDENTIFIER
-Rule 7     namespace_alias -> IDENTIFIER
-Rule 8     class_name -> IDENTIFIER
-Rule 9     class_name -> template_name
-Rule 10    enum_name -> IDENTIFIER
-Rule 11    template_name -> IDENTIFIER
-=======
 Rule 2     program -> STRING
 Rule 3     primary_expression -> NUMBER
 Rule 4     empty -> <empty>
->>>>>>> 36c695801d11b05508c1f981f6d48b8f4bee59e9
 
 Terminals, with rules where they appear
 
@@ -253,14 +240,7 @@ Nonterminals, with rules where they appear
 
 class_name           : 
 empty                : 
-<<<<<<< HEAD
-enum_name            : 
-namespace_alias      : 5
-namespace_name       : 
-original_namespace_name : 4
-=======
 primary_expression   : 
->>>>>>> 36c695801d11b05508c1f981f6d48b8f4bee59e9
 program              : 0
 template_name        : 9
 typedef_name         : 
