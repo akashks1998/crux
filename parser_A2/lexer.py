@@ -184,17 +184,9 @@ t_B_I_OR    = r'\|='
 t_B_E_OR    = r'^= '
 
 t_XOREQOP   = r'\^='
-<<<<<<< HEAD
 t_DPLUSOP   = r'\+\+'
 t_DMINUSOP  = r'--'
 t_EXPOP     = r'\*\*'
-=======
-
-t_EXPOP     = r'\*\*'
-
-t_UPLUSOP   = r'\+\+'
-t_UMINUSOP  = r'--'
->>>>>>> 8ac6ed2d6bce3408cdd61e4d66737ef51a1f056c
 t_BNOP      = r'\~'
 t_LSHIFT    = r'\<\<'
 t_RSHIFT    = r'\>\>'
@@ -240,19 +232,10 @@ t_SCHAR         = r'\'.\''
 t_STRING        = r'\".*\"'
 t_HASHTAG       = r'\#'
 t_NOTSYM        = r'\!'
-<<<<<<< HEAD
-t_QUESMARK      = r'\?'
-t_ARROW         = r'-\>'
-t_ARROWSTAR     = r'-\>\*'
-t_ARROWSTAR     = r'-\>\*'
-t_DOTSTAR       = r'\.\*'
-
-=======
 t_QUESMARK       = r'\?'
 t_ARROW         = r'-\>'
 t_ARROWSTAR     = r'-\>\*'
 t_DOTSTAR       = r'\.\*'
->>>>>>> 8ac6ed2d6bce3408cdd61e4d66737ef51a1f056c
 
 
 # track line no.

@@ -79,10 +79,6 @@ Grammar
 Rule 0     S' -> program
 Rule 1     program -> NUMBER
 Rule 2     program -> STRING
-<<<<<<< HEAD
-Rule 3     primary_expression -> NUMBER
-Rule 4     empty -> <empty>
-=======
 Rule 3     typedef_name -> IDENTIFIER
 Rule 4     namespace_name -> original_namespace_name
 Rule 5     namespace_name -> namespace_alias
@@ -237,7 +233,6 @@ Rule 153   expression -> assignment_expression
 Rule 154   expression -> expression COMMA assignment_expression
 Rule 155   constant_expression -> conditional_expression
 Rule 156   empty -> <empty>
->>>>>>> 8ac6ed2d6bce3408cdd61e4d66737ef51a1f056c
 
 Terminals, with rules where they appear
 
@@ -391,9 +386,6 @@ delete_expression    : 67
 direct_new_declarator : 95 97
 dynamic_cast         : 51
 empty                : 
-<<<<<<< HEAD
-primary_expression   : 
-=======
 enum_name            : 
 equality_expression  : 125 126 127 128
 exclusive_or_expression : 130 131 132
@@ -417,7 +409,6 @@ original_namespace_name : 4
 pm_expression        : 107 108 109 110 111 112
 postfix_expression   : 38 39 40 47 48 49 50 60
 primary_expression   : 37
->>>>>>> 8ac6ed2d6bce3408cdd61e4d66737ef51a1f056c
 program              : 0
 pseudo_destructor_name : 47 48
 ptr_operator         : 93 94
