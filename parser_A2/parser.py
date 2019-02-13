@@ -89,7 +89,6 @@ def p_assignment_operator(p):
                            | LSHIFTEQOP 
                            | RSHIFTEQOP 
                            | BANDEQOP 
-                           | B_E_OR 
                            | BOREQOP 
     ''' 
  
@@ -651,7 +650,7 @@ def p_operator_name(p):
                      | MULTEQOP 
                      | DIVEQOP 
                      | MODEQOP 
-                     | B_E_OR 
+                     | XOREQOP 
                      | BANDEQOP 
                      | LSHIFT 
                      | RSHIFT 
