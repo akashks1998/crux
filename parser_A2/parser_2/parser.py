@@ -546,37 +546,37 @@ def p_error(p):
      
 #######################################################################
     
-# def p_class_specifier(p):
-#     '''class_specifier : class IDENTIFIER LCPAREN final_class_list RCPAREN
-#                         | class LCPAREN final_class_list RCPAREN
-#                         | class IDENTIFIER
-#     '''
+def p_class_specifier(p):
+    '''class_specifier : class IDENTIFIER LCPAREN final_class_list RCPAREN
+                        | class LCPAREN final_class_list RCPAREN
+                        | class IDENTIFIER
+    '''
 
-# def p_class(p):
-#     '''class : CLASS '''
+def p_class(p):
+    '''class : CLASS '''
 
-# def p_final_class_list(p):
-#     ''' final_class_list : class_list
-#                          | PUBLIC COLON class_list PRIVATE COLON class_list
-#                          | PRIVATE COLON class_list PUBLIC COLON class_list
-#                          | PUBLIC COLON class_list 
-#                          | PRIVATE COLON class_list
+def p_final_class_list(p):
+    ''' final_class_list : class_list
+                         | PUBLIC COLON class_list PRIVATE COLON class_list
+                         | PRIVATE COLON class_list PUBLIC COLON class_list
+                         | PUBLIC COLON class_list 
+                         | PRIVATE COLON class_list
     
     
-#     '''
+    '''
 
-# def p_class_list(p):
-#     '''class_list : class_declaration
-#                   | class_list class_declaration
+def p_class_list(p):
+    '''class_list : class_declaration
+                  | class_list class_declaration
 
-#     '''
+    '''
 
 
-# def p_class_declaration(p):
-#     '''class_declaration : specifier_qualifier_list struct_declarator_list SEMICOLON
-#                          | function_definition
+def p_class_declaration(p):
+    '''class_declaration : specifier_qualifier_list struct_declarator_list SEMICOLON
+                         | function_definition
                          
-#     '''
+    '''
 
 #######################################################################
  

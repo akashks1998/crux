@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 class student
 {
-    char name[50];
-    int a(){return 1;}
+    private:
+	 char name[50];
+   	 int a(){return 1;}
 };
 
-=======
 int main()
 {
      int n, num, digit, rev = 0;
@@ -31,4 +30,3 @@ int main()
 
     return 0;
 }
->>>>>>> e93e91d4a929ae6cfb09d59a853c789a5a039d61

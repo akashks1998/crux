@@ -7,8 +7,6 @@ Unused terminals:
     DQUOTE
     HASHTAG
     NEW
-    PRIVATE
-    PUBLIC
     SQUOTE
     TEMPLATE
 
@@ -228,6 +226,19 @@ Rule 210   function_definition -> declaration_specifiers declarator declaration_
 Rule 211   function_definition -> declaration_specifiers declarator compound_statement
 Rule 212   function_definition -> declarator declaration_list compound_statement
 Rule 213   function_definition -> declarator compound_statement
+Rule 214   class_specifier -> class IDENTIFIER LCPAREN final_class_list RCPAREN
+Rule 215   class_specifier -> class LCPAREN final_class_list RCPAREN
+Rule 216   class_specifier -> class IDENTIFIER
+Rule 217   class -> CLASS
+Rule 218   final_class_list -> class_list
+Rule 219   final_class_list -> PUBLIC COLON class_list PRIVATE COLON class_list
+Rule 220   final_class_list -> PRIVATE COLON class_list PUBLIC COLON class_list
+Rule 221   final_class_list -> PUBLIC COLON class_list
+Rule 222   final_class_list -> PRIVATE COLON class_list
+Rule 223   class_list -> class_declaration
+Rule 224   class_list -> class_list class_declaration
+Rule 225   class_declaration -> specifier_qualifier_list struct_declarator_list SEMICOLON
+Rule 226   class_declaration -> function_definition
 
 Terminals, with rules where they appear
 
@@ -242,8 +253,8 @@ BREAK                : 203
 CASE                 : 182
 CATCH                : 
 CHAR                 : 95
-CLASS                : 110
-COLON                : 60 121 122 181 182 183
+CLASS                : 110 217
+COLON                : 60 121 122 181 182 183 219 219 220 220 221 222
 COMMA                : 16 75 86 119 127 148 150 155 172 174
 CONST                : 130
 CONTINUE             : 202
@@ -268,11 +279,11 @@ GE_OP                : 45
 GOTO                 : 201
 GTCOMP               : 43
 HASHTAG              : 
-IDENTIFIER           : 2 11 12 105 107 124 125 128 129 134 154 155 181 201
+IDENTIFIER           : 2 11 12 105 107 124 125 128 129 134 154 155 181 201 214 216
 IF                   : 194 195
 INC_OP               : 13 18
 INT                  : 97
-LCPAREN              : 105 106 123 124 171 172 184 185 186 187
+LCPAREN              : 105 106 123 124 171 172 184 185 186 187 214 215
 LEFT_ASSIGN          : 69
 LEFT_OP              : 39
 LE_OP                : 44
@@ -292,11 +303,11 @@ NUMBER               : 3
 OR_ASSIGN            : 73
 OR_OP                : 58
 PLUSOP               : 25 36
-PRIVATE              : 
+PRIVATE              : 219 220 222
 PTR_OP               : 12
-PUBLIC               : 
+PUBLIC               : 219 220 221
 QUESMARK             : 60
-RCPAREN              : 105 106 123 124 171 172 184 185 186 187
+RCPAREN              : 105 106 123 124 171 172 184 185 186 187 214 215
 REGISTER             : 93
 RETURN               : 204 205
 RIGHT_ASSIGN         : 70
@@ -304,7 +315,7 @@ RIGHT_OP             : 40
 RRPAREN              : 6 9 10 22 30 135 138 139 140 161 166 167 168 169 194 195 196 197 198 199 200
 RSPAREN              : 8 136 137 162 163 164 165
 SCHAR                : 5
-SEMICOLON            : 77 78 113 192 193 198 201 202 203 204 205
+SEMICOLON            : 77 78 113 192 193 198 201 202 203 204 205 225
 SHORT                : 96
 SIGNED               : 101
 SIZEOF               : 21 22
@@ -334,6 +345,10 @@ argument_expression_list : 10 16
 assignment_expression : 15 16 62 74 75 170
 assignment_operator  : 62
 cast_expression      : 20 30 31 32 33 34
+class                : 214 215 216
+class_declaration    : 223 224
+class_list           : 218 219 219 220 220 221 222 224
+class_specifier      : 
 compound_statement   : 176 210 211 212 213
 conditional_expression : 60 61 76
 constant_expression  : 121 122 129 136 163 165 182
@@ -351,7 +366,8 @@ exclusive_or_expression : 52 53 54
 expression           : 6 8 60 75 193 194 195 196 197 198 200 205
 expression_statement : 177 199 199 200 200
 external_declaration : 206 207
-function_definition  : 208
+final_class_list     : 214 215
+function_definition  : 208 226
 identifier_list      : 139 155
 inclusive_or_expression : 54 55 56
 init_declarator      : 85 86
@@ -374,14 +390,14 @@ program              : 0
 relational_expression : 42 43 44 45 46 47 48
 selection_statement  : 178
 shift_expression     : 39 40 41 42 43 44 45
-specifier_qualifier_list : 113 114 116 156 157
+specifier_qualifier_list : 113 114 116 156 157 225
 statement            : 181 182 183 190 191 194 195 195 196 197 198 199 200
 statement_list       : 185 187 191
 storage_class_specifier : 79 80
 struct_declaration   : 111 112
 struct_declaration_list : 105 106 112
 struct_declarator    : 118 119
-struct_declarator_list : 113 119
+struct_declarator_list : 113 119 225
 struct_or_union      : 105 106 107
 struct_or_union_specifier : 103
 translation_unit     : 1 207

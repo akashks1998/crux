@@ -37,6 +37,10 @@ Compiler for C-- language ( a subset of c++ ) written in python with X86 assembl
 - enum
 - template
 
+###Not allowed
+- multidimensional array init
+- write class is not typedefed
+
 ### Team
  - [Ashish Kumar](https://github.com/aasis21)
  - [Akash Kumar Singh](https://github.com/akashks1998)
