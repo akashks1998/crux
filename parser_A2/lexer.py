@@ -141,8 +141,7 @@ tokens = [
         'MODQOP',
         'LEFTQOP',
         'RIGHTQOP',
-        'B_I_OR',
-        'B_E_OR',
+        'XOREQOR',
         'ARROW',
         'ARROWSTAR',
         'DOTSTAR',
@@ -191,8 +190,6 @@ t_MINUSEQOP = r'-='
 t_MULTEQOP  = r'\*='
 t_DIVEQOP   = r'/='
 t_BANDEQOP  = r'\&\='
-t_B_I_OR    = r'\|='
-t_B_E_OR    = r'^= '
 
 t_XOREQOP   = r'\^='
 t_DPLUSOP   = r'\+\+'
