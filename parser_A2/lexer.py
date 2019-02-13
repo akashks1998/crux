@@ -142,7 +142,15 @@ tokens = [
         'B_E_OR',
         'ARROW',
         'ARROWSTAR',
-        'DOTSTAR'
+        'DOTSTAR',
+        'LSHIFTEQOP',
+        'RSHIFTEQOP',
+        'BOREQOP',
+        'MODEQOP',
+        'DPLUSOP',
+        'LSHIFT',
+        'RSHIFT',
+        'DMINUSOP'
 
 ] + list(keywords.values())
 

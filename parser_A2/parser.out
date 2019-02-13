@@ -9,9 +9,12 @@ Unused terminals:
     BITAND
     BITOR
     BOOL
+    BOROP
     BREAK
+    B_I_OR
     CASE
     CATCH
+    CHAR
     CHAR16_T
     CHAR32_T
     CHAR8_T
@@ -22,6 +25,7 @@ Unused terminals:
     CONST
     CONTINUE
     DEFAULT
+    DELETE
     DO
     DOUBLE
     DQUOTE
@@ -37,9 +41,13 @@ Unused terminals:
     IF
     INLINE
     INT
-    LCPAREN
+    LEFTQOP
+    LEFTSHIFT
     LONG
+    LRPAREN
+    MODQOP
     NAMESPACE
+    NEW
     NOT
     NOT_EQ
     NULLPTR
@@ -48,23 +56,27 @@ Unused terminals:
     PRIVATE
     PROTECTED
     PUBLIC
-    RCPAREN
     RETURN
     RIGHTLIFT
+    RIGHTQOP
+    RRPAREN
     SCHAR
-    SEMICOLON
     SHORT
     SIGNED
+    SIZEOF
     SQUOTE
     STATIC
     STD
     SWITCH
+    THIS
     THROW
     TRUE
     TRY
     TYPEDEF
+    UMINUSOP
     UNION
     UNSIGNED
+    UPLUSOP
     USING
     VIRTUAL
     VOID
@@ -79,277 +91,536 @@ Grammar
 Rule 0     S' -> program
 Rule 1     program -> NUMBER
 Rule 2     program -> STRING
-Rule 3     typedef_name -> IDENTIFIER
-Rule 4     namespace_name -> original_namespace_name
-Rule 5     namespace_name -> namespace_alias
-Rule 6     original_namespace_name -> IDENTIFIER
-Rule 7     namespace_alias -> IDENTIFIER
-Rule 8     class_name -> IDENTIFIER
-Rule 9     class_name -> template_name
-Rule 10    enum_name -> IDENTIFIER
-Rule 11    template_name -> IDENTIFIER
-Rule 12    type_specifier_seq -> type_specifier type_specifier_seq
-Rule 13    type_specifier_seq -> type_specifier
-Rule 14    primary_expression -> NUMBER
-Rule 15    primary_expression -> STRING
-Rule 16    primary_expression -> CHAR
-Rule 17    primary_expression -> THIS
-Rule 18    primary_expression -> DOUBLECOLON IDENTIFIER
-Rule 19    primary_expression -> DOUBLECOLON operator_function_id
-Rule 20    primary_expression -> DOUBLECOLON qualified_id
-Rule 21    primary_expression -> LPAREN expression RPAREN
-Rule 22    primary_expression -> id_expression
-Rule 23    id_expression -> unqualified_id
-Rule 24    id_expression -> qualified_id
-Rule 25    unqualified_id -> IDENTIFIER
-Rule 26    unqualified_id -> operator_function_id
-Rule 27    unqualified_id -> conversion_function_id
-Rule 28    unqualified_id -> BNOP class_name
-Rule 29    unqualified_id -> template_id
-Rule 30    qualified_id -> nested_name_specifier TEMPLATE unqualified_id
-Rule 31    qualified_id -> nested_name_specifier unqualified_id
-Rule 32    nested_name_specifier -> class_or_namespace_name DOUBLECOLON nested_name_specifier
-Rule 33    nested_name_specifier -> class_or_namespace_name DOUBLECOLON
-Rule 34    nested_name_specifier -> class_or_namespace_name DOUBLECOLON TEMPLATE nested_name_specifier
-Rule 35    class_or_namespace_name -> class_name
-Rule 36    class_or_namespace_name -> namespace_name
-Rule 37    postfix_expression -> primary_expression
-Rule 38    postfix_expression -> postfix_expression LSPAREN expression RSPAREN
-Rule 39    postfix_expression -> postfix_expression LPAREN expression_list RPAREN
-Rule 40    postfix_expression -> postfix_expression LPAREN RPAREN
-Rule 41    postfix_expression -> simple_type_specifier LPAREN expression_list RPAREN
-Rule 42    postfix_expression -> simple_type_specifier LPAREN RPAREN
-Rule 43    postfix_expression -> typename DOUBLECOLONopt nested_name_specifier IDENTIFIER LPAREN expression_list RPAREN
-Rule 44    postfix_expression -> typename DOUBLECOLONopt nested_name_specifier IDENTIFIER LPAREN RPAREN
-Rule 45    postfix_expression -> typename DOUBLECOLONopt nested_name_specifier templateopt template_id LPAREN expression_list RPAREN
-Rule 46    postfix_expression -> typename DOUBLECOLONopt nested_name_specifier templateopt template_id LPARENRPAREN
-Rule 47    postfix_expression -> postfix_expression DOT pseudo_destructor_name
-Rule 48    postfix_expression -> postfix_expression ARROW pseudo_destructor_name
-Rule 49    postfix_expression -> postfix_expression UPLUSOP
-Rule 50    postfix_expression -> postfix_expression UMINUSOP
-Rule 51    postfix_expression -> dynamic_cast LTCOMP type_id GTCOMP LPAREN expression RPAREN
-Rule 52    postfix_expression -> static_cast LTCOMP type_id LPAREN expression RPAREN
-Rule 53    postfix_expression -> reinterpret_cast LTCOMP type_id GTCOMP LPAREN expression RPAREN
-Rule 54    postfix_expression -> const_cast LTCOMP type_id GTCOMP LPAREN expression RPAREN
-Rule 55    postfix_expression -> typeid LPAREN expression RPAREN
-Rule 56    postfix_expression -> typeid LPAREN type_id RPAREN
-Rule 57    expression_list -> assignment_expression
-Rule 58    expression_list -> expression_list COMMA assignment_expression
-Rule 59    pseudo_destructor_name -> BNOP type_name
-Rule 60    unary_expression -> postfix_expression
-Rule 61    unary_expression -> UPLUSOP cast_expression
-Rule 62    unary_expression -> UMINUSOP cast_expression
-Rule 63    unary_expression -> unary_operator cast_expression
-Rule 64    unary_expression -> SIZEOF unary_expression
-Rule 65    unary_expression -> SIZEOF LPAREN type_id RPAREN
-Rule 66    unary_expression -> new_expression
-Rule 67    unary_expression -> delete_expression
-Rule 68    unary_operator -> MULTOP
-Rule 69    unary_operator -> BANDOP
-Rule 70    unary_operator -> PLUSOP
-Rule 71    unary_operator -> MINUSOP
-Rule 72    unary_operator -> NOTSYM
-Rule 73    unary_operator -> BNOP
-Rule 74    new_expression -> DOUBLECOLON NEW new_placement new_type_id new_initializer
-Rule 75    new_expression -> NEW new_placement new_type_id new_initializer
-Rule 76    new_expression -> NEW new_placement new_type_id
-Rule 77    new_expression -> NEW new_type_id new_initializer
-Rule 78    new_expression -> NEW new_type_id
-Rule 79    new_expression -> DOUBLECOLON NEW new_placement new_type_id
-Rule 80    new_expression -> DOUBLECOLON NEW new_type_id new_initializer
-Rule 81    new_expression -> DOUBLECOLON NEW new_type_id
-Rule 82    new_expression -> DOUBLECOLON NEW new_placement LPAREN type_id RPAREN new_initializer
-Rule 83    new_expression -> NEW new_placement LPAREN type_id RPAREN new_initializer
-Rule 84    new_expression -> NEW new_placement LPAREN type_id RPAREN
-Rule 85    new_expression -> NEW LPAREN type_id RPAREN new_initializer
-Rule 86    new_expression -> NEW LPAREN type_id RPAREN
-Rule 87    new_expression -> DOUBLECOLON NEW new_placement LPAREN type_id RPAREN
-Rule 88    new_expression -> DOUBLECOLON NEW LPAREN type_id RPAREN new_initializer
-Rule 89    new_expression -> DOUBLECOLON NEW LPAREN type_id RPAREN
-Rule 90    new_placement -> LRPAREN expression_list RRPAREN
-Rule 91    new_type_id -> type_specifier_seq new_declarator
-Rule 92    new_type_id -> type_specifier_seq
-Rule 93    new_declarator -> ptr_operator new_declarator
-Rule 94    new_declarator -> ptr_operator
-Rule 95    new_declarator -> direct_new_declarator
-Rule 96    direct_new_declarator -> LSPAREN expression RSPAREN
-Rule 97    direct_new_declarator -> direct_new_declarator LSPAREN constant_expression RSPAREN
-Rule 98    new_initializer -> LRPAREN expression_list RRPAREN
-Rule 99    new_initializer -> LRPAREN RRPAREN
-Rule 100   delete_expression -> DOUBLECOLON delete cast_expression
-Rule 101   delete_expression -> DELETE cast_expression
-Rule 102   delete_expression -> DELETE LSPAREN RSPAREN cast_expression
-Rule 103   delete_expression -> DOUBLECOLON DELETE LSPAREN RSPAREN cast_expression
-Rule 104   cast_expression -> unary_expression
-Rule 105   cast_expression -> LRPAREN type_id RRPAREN cast_expression
-Rule 106   pm_expression -> cast_expression
-Rule 107   pm_expression -> pm_expression DOTSTAR cast_expression
-Rule 108   pm_expression -> pm_expression ARROWSTAR cast_expression
-Rule 109   multiplicative_expression -> pm_expression
-Rule 110   multiplicative_expression -> multiplicative_expression MULTOP pm_expression
-Rule 111   multiplicative_expression -> multiplicative_expression DIVOP pm_expression
-Rule 112   multiplicative_expression -> multiplicative_expression MODOP pm_expression
-Rule 113   additive_expression -> multiplicative_expression
-Rule 114   additive_expression -> additive_expression PLUSOP multiplicative_expression
-Rule 115   additive_expression -> additive_expression MINUSOP multiplicative_expression
-Rule 116   shift_expression -> additive_expression
-Rule 117   shift_expression -> shift_expression LEFTSHIFT additive_expression
-Rule 118   shift_expression -> shift_expression RIGHTSHIFT additive_expression
-Rule 119   relational_expression -> shift_expression
-Rule 120   relational_expression -> relational_expression LTCOMP shift_expression
-Rule 121   relational_expression -> relational_expression GTCOMP shift_expression
-Rule 122   relational_expression -> relational_expression LTECOMP shift_expression
-Rule 123   relational_expression -> relational_expression GTECOMP shift_expression
-Rule 124   equality_expression -> relational_expression
-Rule 125   equality_expression -> equality_expression EQCOMP relational_expression
-Rule 126   equality_expression -> equality_expression NEQCOMP relational_expression
-Rule 127   and_expression -> equality_expression
-Rule 128   and_expression -> and_expression BAND equality_expression
-Rule 129   exclusive_or_expression -> and_expression
-Rule 130   exclusive_or_expression -> exclusive_or_expression XOROP and_expression
-Rule 131   inclusive_or_expression -> exclusive_or_expression
-Rule 132   inclusive_or_expression -> inclusive_or_expression BOROP exclusive_or_expression
-Rule 133   logical_and_expression -> inclusive_or_expression
-Rule 134   logical_and_expression -> logical_and_expression ANDOP inclusive_or_expression
-Rule 135   logical_or_expression -> logical_and_expression
-Rule 136   logical_or_expression -> logical_or_expression OROP logical_and_expression
-Rule 137   conditional_expression -> logical_or_expression
-Rule 138   conditional_expression -> logical_or_expression QUESMARK expression COLON assignment_expression
-Rule 139   assignment_expression -> conditional_expression
-Rule 140   assignment_expression -> logical_or_expression assignment_operator assignment_expression
-Rule 141   assignment_expression -> throw_expression
-Rule 142   assignment_operator -> EQUAL
-Rule 143   assignment_operator -> MULTEQOP
-Rule 144   assignment_operator -> DIVEQOP
-Rule 145   assignment_operator -> MODQOP
-Rule 146   assignment_operator -> PLUSEQOP
-Rule 147   assignment_operator -> MINUSEQOP
-Rule 148   assignment_operator -> LEFTQOP
-Rule 149   assignment_operator -> RIGHTQOP
-Rule 150   assignment_operator -> BANDEQOP
-Rule 151   assignment_operator -> B_I_OR
-Rule 152   assignment_operator -> B_E_OR
-Rule 153   expression -> assignment_expression
-Rule 154   expression -> expression COMMA assignment_expression
-Rule 155   constant_expression -> conditional_expression
-Rule 156   empty -> <empty>
+Rule 3     program -> expression
+Rule 4     class_name -> IDENTIFIER
+Rule 5     enum_name -> IDENTIFIER
+Rule 6     typedef_name -> IDENTIFIER
+Rule 7     expression -> assignment_expression
+Rule 8     expression -> expression COMMA assignment_expression
+Rule 9     assignment_expression -> conditional_expression
+Rule 10    assignment_expression -> unary_expression assignment_operator assignment_expression
+Rule 11    assignment_operator -> EQUAL
+Rule 12    assignment_operator -> MULTEQOP
+Rule 13    assignment_operator -> DIVEQOP
+Rule 14    assignment_operator -> MODEQOP
+Rule 15    assignment_operator -> PLUSEQOP
+Rule 16    assignment_operator -> MINUSEQOP
+Rule 17    assignment_operator -> LSHIFTEQOP
+Rule 18    assignment_operator -> RSHIFTEQOP
+Rule 19    assignment_operator -> BANDEQOP
+Rule 20    assignment_operator -> B_E_OR
+Rule 21    assignment_operator -> BOREQOP
+Rule 22    conditional_expression -> logical_OR_expression
+Rule 23    conditional_expression -> logical_OR_expression QUESMARK expression COLON conditional_expression
+Rule 24    logical_OR_expression -> logical_AND_expression
+Rule 25    logical_OR_expression -> logical_OR_expression OROP logical_AND_expression
+Rule 26    logical_AND_expression -> inclusive_OR_expression
+Rule 27    logical_AND_expression -> logical_AND_expression ANDOP inclusive_OR_expression
+Rule 28    inclusive_OR_expression -> exclusive_OR_expression
+Rule 29    inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression
+Rule 30    exclusive_OR_expression -> AND_expression
+Rule 31    exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression
+Rule 32    AND_expression -> equality_expression
+Rule 33    AND_expression -> AND_expression BANDOP equality_expression
+Rule 34    equality_expression -> relational_expression
+Rule 35    equality_expression -> equality_expression EQCOMP relational_expression
+Rule 36    equality_expression -> equality_expression NEQCOMP relational_expression
+Rule 37    relationa1_expression -> shift_expression
+Rule 38    relationa1_expression -> relational_expression LTCOMP shift_expression
+Rule 39    relationa1_expression -> relational_expression GTCOMP shift_expression
+Rule 40    relationa1_expression -> relational_expression LTECOMP shift_expression
+Rule 41    relationa1_expression -> relational_expression GTECOMP shift_expression
+Rule 42    shift_expression -> additive_expression
+Rule 43    shift_expression -> shift_expression LSHIFT additive_expression
+Rule 44    shift_expression -> shift_expression RSHIFT additive_expression
+Rule 45    additive_expression -> multiplicative_expression
+Rule 46    additive_expression -> additive_expression PLUSOP multiplicative_expression
+Rule 47    additive_expression -> additive_expression MINUSOP multiplicative_expression
+Rule 48    multiplicative_expression -> pm_expression
+Rule 49    multiplicative_expression -> multiplicative_expression MULTOP pm_expression
+Rule 50    multiplicative_expression -> multiplicative_expression DIVOP pm_expression
+Rule 51    multiplicative_expression -> multiplicative_expression MODOP pm_expression
+Rule 52    pm_expression -> cast_expression
+Rule 53    pm_expression -> pm_expression DOTSTAR cast_expression
+Rule 54    pm_expression -> pm_expression ARROWSTAR cast_expression
+Rule 55    cast_expression -> unary_expression
+Rule 56    cast_expression -> LPAREN type_name RPAREN cast_expression
+Rule 57    unary_expression -> posfix_expression
+Rule 58    unary_expression -> DPLUSOP unary_expression
+Rule 59    unary_expression -> DMINUSOP unary_expression
+Rule 60    unary_expression -> unary_operator cast_expression
+Rule 61    unary_expression -> sizeof unary_expression
+Rule 62    unary_expression -> sizeof LPAREN type_name RPAREN
+Rule 63    unary_expression -> allocation_expression
+Rule 64    unary_expression -> deallocation_expression
+Rule 65    unary_operator -> MULTOP
+Rule 66    unary_operator -> BANDOP
+Rule 67    unary_operator -> PLUSOP
+Rule 68    unary_operator -> MINUSOP
+Rule 69    unary_operator -> NOTSYM
+Rule 70    unary_operator -> BNOP
+Rule 71    allocation_expression -> DOUBLECOLON new placement new_type_name new_initializer
+Rule 72    allocation_expression -> new placement new_type_name new_initializer
+Rule 73    allocation_expression -> DOUBLECOLON new new_type_name new_initializer
+Rule 74    allocation_expression -> new new_type_name new_initializer
+Rule 75    allocation_expression -> DOUBLECOLON new placement new_type_name
+Rule 76    allocation_expression -> new placement new_type_name
+Rule 77    allocation_expression -> DOUBLECOLON new new_type_name
+Rule 78    allocation_expression -> new new_type_name
+Rule 79    allocation_expression -> DOUBLECOLON new placement LPAREN type_name RPAREN new_initializer
+Rule 80    allocation_expression -> new placement LPAREN type_name RPAREN new_initializer
+Rule 81    allocation_expression -> DOUBLECOLON new LPAREN type_name RPAREN new_initializer
+Rule 82    allocation_expression -> new LPAREN type_name RPAREN new_initializer
+Rule 83    allocation_expression -> DOUBLECOLON new placement LPAREN type_name RPAREN
+Rule 84    allocation_expression -> new placement LPAREN type_name RPAREN
+Rule 85    allocation_expression -> DOUBLECOLON new LPAREN type_name RPAREN
+Rule 86    allocation_expression -> new LPAREN type_name RPAREN
+Rule 87    placement -> LPAREN expression_list RPAREN
+Rule 88    new_type_name -> type_specifier_list new_declarator
+Rule 89    new_type_name -> type_specifier_list
+Rule 90    new_declarator -> MULTOP cv_qualifier_list new_declarator
+Rule 91    new_declarator -> MULTOP new_declarator
+Rule 92    new_declarator -> MULTOP cv_qualifier_list
+Rule 93    new_declarator -> MULTOP
+Rule 94    new_declarator -> complete_class_name DOUBLECOLON MULTOP cv_qualifier_list new_declarator
+Rule 95    new_declarator -> complete_class_name DOUBLECOLON MULTOP new_declarator
+Rule 96    new_declarator -> complete_class_name DOUBLECOLON MULTOP cv_qualifier_list
+Rule 97    new_declarator -> complete_class_name DOUBLECOLON MULTOP
+Rule 98    new_declarator -> new_declarator LSPAREN expression RSPAREN
+Rule 99    new_declarator -> LSPAREN expression RSPAREN
+Rule 100   new_initializer -> LPAREN initializer_list RPAREN
+Rule 101   new_initializer -> LPAREN RPAREN
+Rule 102   deallocation_expression -> DOUBLECOLON delete cast_expression
+Rule 103   deallocation_expression -> delete cast_expression
+Rule 104   deallocation_expression -> DOUBLECOLON delete LSPAREN RSPAREN cast_expression
+Rule 105   deallocation_expression -> delete LSPAREN RSPAREN cast_expression
+Rule 106   postfix_expression -> primary_expression
+Rule 107   postfix_expression -> postfix_expression LSPAREN expression RSPAREN
+Rule 108   postfix_expression -> postfix_expression LPAREN expression_list RPAREN
+Rule 109   postfix_expression -> postfix_expression LPAREN RPAREN
+Rule 110   postfix_expression -> simple_type_name LPAREN expression_list RPAREN
+Rule 111   postfix_expression -> simple_type_name LPAREN RPAREN
+Rule 112   postfix_expression -> postfix_expression DOT name
+Rule 113   postfix_expression -> postfix_expression ARROW name
+Rule 114   postfix_expression -> postfix_expression DPLUSOP
+Rule 115   postfix_expression -> postfix_expression DMINUSOP
+Rule 116   expression_list -> assignment_expression
+Rule 117   expression_list -> expression_list COMMA assignment_expression
+Rule 118   primary_expression -> literal
+Rule 119   primary_expression -> this
+Rule 120   primary_expression -> DOUBLECOLON IDENTIFIER
+Rule 121   primary_expression -> DOUBLECOLON operator_function_name
+Rule 122   primary_expression -> DOUBLECOLON qualified_name
+Rule 123   primary_expression -> LPAREN expression RPAREN
+Rule 124   primary_expression -> name
+Rule 125   name -> IDENTIFIER
+Rule 126   name -> operator_function_name
+Rule 127   name -> conversion_function_name
+Rule 128   name -> BNOP class_name
+Rule 129   name -> qualified_name
+Rule 130   qualified_name -> qualified_class_name DOUBLECOLON name
+Rule 131   literal -> integer_constant
+Rule 132   literal -> character_constant
+Rule 133   literal -> floating_constant
+Rule 134   literal -> string_literal
+Rule 135   declaration -> decl_specifiers declarator_list SEMICOLON
+Rule 136   declaration -> decl_specifiers SEMICOLON
+Rule 137   declaration -> declarator_list SEMICOLON
+Rule 138   declaration -> asm_declaration
+Rule 139   declaration -> function_definition
+Rule 140   declaration -> template_declaration
+Rule 141   declaration -> linkage_specification
+Rule 142   decl_specifier -> storage_class_specifier
+Rule 143   decl_specifier -> type_specifier
+Rule 144   decl_specifier -> fct_specifier
+Rule 145   decl_specifier -> friend
+Rule 146   decl_specifier -> typedef
+Rule 147   decl_specifiers -> decl_specifiers decl_specifier
+Rule 148   decl_specifiers -> decl_specifier
+Rule 149   storage_class_specifier -> auto
+Rule 150   storage_class_specifier -> register
+Rule 151   storage_class_specifier -> static
+Rule 152   storage_class_specifier -> extern
+Rule 153   fct_specifier -> inline
+Rule 154   fct_specifier -> virtual
+Rule 155   type_specifier -> simple_type_name
+Rule 156   type_specifier -> class_specifier
+Rule 157   type_specifier -> enum_specifier
+Rule 158   type_specifier -> elaborated_type_specifier
+Rule 159   type_specifier -> const
+Rule 160   type_specifier -> volatile
+Rule 161   simple_type_name -> complete_class_name
+Rule 162   simple_type_name -> qualified_type_name
+Rule 163   simple_type_name -> char
+Rule 164   simple_type_name -> short
+Rule 165   simple_type_name -> int
+Rule 166   simple_type_name -> long
+Rule 167   simple_type_name -> signed
+Rule 168   simple_type_name -> unsigned
+Rule 169   simple_type_name -> float
+Rule 170   simple_type_name -> double
+Rule 171   simple_type_name -> void
+Rule 172   elaborated_type_specifier -> class_key IDENTIFIER
+Rule 173   elaborated_type_specifier -> class_key class_name
+Rule 174   elaborated_type_specifier -> enum enum_name
+Rule 175   class_key -> class
+Rule 176   class_key -> struct
+Rule 177   class_key -> union
+Rule 178   qualified_type_name -> typedef_name
+Rule 179   qualified_type_name -> class_name DOUBLECOLON qualified_type_name
+Rule 180   complete_class_name -> qualified_class_name
+Rule 181   complete_class_name -> DOUBLECOLON qualified_class_name
+Rule 182   qualified_class_name -> class_name
+Rule 183   qualified_class_name -> class_name DOUBLECOLON qualified_class_name
+Rule 184   enum_specifier -> enum IDENTIFIER LCPAREN enum_list RCPAREN
+Rule 185   enum_specifier -> enum LCPAREN enum_list RCPAREN
+Rule 186   enum_specifier -> enum IDENTIFIER LCPAREN RCPAREN
+Rule 187   enum_specifier -> enum LCPAREN RCPAREN
+Rule 188   enum_list -> enumerator
+Rule 189   enum_list -> enum_list COMMA enumerator
+Rule 190   enumerator -> IDENTIFIER
+Rule 191   enumerator -> IDENTIFIER EQUAL constant_expression
+Rule 192   constant_expression -> conditional_expression
+Rule 193   linkage_specification -> extern string_literal LCPAREN declaration_list RCPAREN
+Rule 194   linkage_specification -> extern string_literal LCPAREN RCPAREN
+Rule 195   linkage_specification -> extern string_literal declaration
+Rule 196   declaration_list -> declaration
+Rule 197   declaration_list -> declaration_list declaration
+Rule 198   asm_declaration -> asm LPAREN string_literal RPAREN SEMICOLON
+Rule 199   declarator_list -> init_declarator
+Rule 200   declarator_list -> declarator_list COMMA init_declarator
+Rule 201   init_declarator -> declarator initializer
+Rule 202   init_declarator -> declarator
+Rule 203   declarator -> dname
+Rule 204   declarator -> ptr_operator declarator
+Rule 205   declarator -> declarator LPAREN argument_declaration_list RPAREN cv_qualifier_list
+Rule 206   declarator -> declarator LPAREN argument_declaration_list RPAREN
+Rule 207   declarator -> declarator LSPAREN constant_expression RSPAREN
+Rule 208   declarator -> declarator LSPAREN RSPAREN
+Rule 209   declarator -> LPAREN declarator RPAREN
+Rule 210   ptr_operator -> MULTOP cv_qualifier_list
+Rule 211   ptr_operator -> MULTOP
+Rule 212   ptr_operator -> BANDOP cv_qualifier_list
+Rule 213   ptr_operator -> BANDOP
+Rule 214   ptr_operator -> complete_class_name DOUBLECOLON MULTOP cv_qualifier_list
+Rule 215   ptr_operator -> complete_class_name DOUBLECOLON MULTOP
+Rule 216   cv_qualifier_list -> cv_qualifier cv_qualifier_list
+Rule 217   cv_qualifier_list -> cv_qualifier
+Rule 218   cv_qualifier -> const
+Rule 219   cv_qualifier -> volatile
+Rule 220   dname -> name
+Rule 221   dname -> class_name
+Rule 222   dname -> BNOP class_name
+Rule 223   dname -> typedef_name
+Rule 224   dname -> qualified_type_name
+Rule 225   type_name -> type_specifier_list abstract_declarator
+Rule 226   type_name -> type_specifier_list
+Rule 227   type_specifier_list -> type_specifier type_specifier_list
+Rule 228   type_specifier_list -> type_specifier
+Rule 229   abstract_declarator -> ptr_operator abstract_declarator
+Rule 230   abstract_declarator -> ptr_operator
+Rule 231   abstract_declarator -> abstract_declarator LPAREN argument_declaration_list RPAREN cv_qualifier_list
+Rule 232   abstract_declarator -> LPAREN argument_declaration_list RPAREN cv_qualifier_list
+Rule 233   abstract_declarator -> abstract_declarator LPAREN argument_declaration_list RPAREN
+Rule 234   abstract_declarator -> LPAREN argument_declaration_list RPAREN
+Rule 235   abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN
+Rule 236   abstract_declarator -> LSPAREN constant_expression RSPAREN
+Rule 237   abstract_declarator -> abstract_declarator LSPAREN RSPAREN
+Rule 238   abstract_declarator -> LSPAREN RSPAREN
+Rule 239   abstract_declarator -> LPAREN abstract_declarator RPAREN
+Rule 240   argument_declaration_list -> arg_declaration_list
+Rule 241   argument_declaration_list -> <empty>
+Rule 242   arg_declaration_list -> argument_declaration
+Rule 243   arg_declaration_list -> arg_declaration_list COMMA argument_declaration
+Rule 244   argument_declaration -> decl_specifiers declarator
+Rule 245   argument_declaration -> decl_specifiers declaratorEQUAL expression
+Rule 246   argument_declaration -> decl_specifiers abstract_declarator
+Rule 247   argument_declaration -> decl_specifiers
+Rule 248   argument_declaration -> decl_specifiers abstract_declaratorEQUAL expression
+Rule 249   argument_declaration -> decl_specifiersEQUAL expression
+Rule 250   function_definition -> decl_specifiers declarator ctor_initializer fct_body
+Rule 251   function_definition -> declarator ctor_initializer fct_body
+Rule 252   function_definition -> decl_specifiers declarator fct_body
+Rule 253   function_definition -> declarator fct_body
+Rule 254   fct_body -> compound_statement
+Rule 255   initializer -> EQUAL assignment_expression
+Rule 256   initializer -> EQUAL LCPAREN initializer_list RCPAREN
+Rule 257   initializer -> EQUAL LCPAREN initializer_list COMMA RCPAREN
+Rule 258   initializer -> LPAREN expression_list RPAREN
+Rule 259   initializer_list -> assignment_expression
+Rule 260   initializer_list -> initializer_list COMMA assignment_expression
+Rule 261   initializer_list -> LCPAREN initializer_list RCPAREN
+Rule 262   initializer_list -> LCPAREN initializer_list COMMA RCPAREN
+Rule 263   class_specifier -> class_head LCPAREN member_list RCPAREN
+Rule 264   class_specifier -> class_head LCPAREN RCPAREN
+Rule 265   class_head -> class_key IDENTIFIER base_spec
+Rule 266   class_head -> class_key base_spec
+Rule 267   class_head -> class_key IDENTIFIER
+Rule 268   class_head -> class_key
+Rule 269   class_head -> class_key class_name base_spec
+Rule 270   class_head -> class_key class_name
+Rule 271   member_list -> member_declaration member_list
+Rule 272   member_list -> member_declaration
+Rule 273   member_list -> access_specifier COLON member_list
+Rule 274   member_list -> access_specifier COLON
+Rule 275   member_declaration -> decl_specifiers member_declarator_list SEMICOLON
+Rule 276   member_declaration -> member_declarator_list SEMICOLON
+Rule 277   member_declaration -> decl_specifiers SEMICOLON
+Rule 278   member_declaration -> SEMICOLON
+Rule 279   member_declaration -> function_definition SEMICOLON
+Rule 280   member_declaration -> function_definition
+Rule 281   member_declaration -> qualified_name SEMICOLON
+Rule 282   member_declarator_list -> member_declarator
+Rule 283   member_declarator_list -> member_declarator_list COMMA member_declarator
+Rule 284   member_declarator -> declarator pure_specifier
+Rule 285   member_declarator -> declarator
+Rule 286   member_declarator -> IDENTIFIER COLON constant_expression
+Rule 287   member_declarator -> COLON constant_expression
+Rule 288   pure_specifier -> EQUAL integer_constant
+Rule 289   base_spec -> COLON base_list
+Rule 290   base_list -> base_specifier
+Rule 291   base_list -> base_list COMMA base_specifier
+Rule 292   base_specifier -> complete_class_name
+Rule 293   base_specifier -> virtual access_specifier complete_class_name
+Rule 294   base_specifier -> virtual complete_class_name
+Rule 295   base_specifier -> access_specifier virtual complete_class_name
+Rule 296   base_specifier -> access_specifier complete_class_name
+Rule 297   access_specifier -> private
+Rule 298   access_specifier -> protected
+Rule 299   access_specifier -> public
+Rule 300   conversion_function_name -> operator conversion_type_name
+Rule 301   conversion_type_name -> type_specifier_list ptr_operator
+Rule 302   conversion_type_name -> type_specifier_list
+Rule 303   ctor_initializer -> COLON mem_initializer_list
+Rule 304   mem_initializer_list -> mem_initializer
+Rule 305   mem_initializer_list -> mem_initializer COMMA mem_initializer_list
+Rule 306   mem_initializer -> complete_class_name LPAREN expression_list RPAREN
+Rule 307   mem_initializer -> complete_class_name LPAREN RPAREN
+Rule 308   mem_initializer -> IDENTIFIER LPAREN expression_list RPAREN
+Rule 309   mem_initializer -> IDENTIFIER LPAREN RPAREN
+Rule 310   operator_function_name -> operator operator_name
+Rule 311   operator_name -> new
+Rule 312   operator_name -> delete
+Rule 313   operator_name -> PLUSOP
+Rule 314   operator_name -> MINUSOP
+Rule 315   operator_name -> MULTOP
+Rule 316   operator_name -> DIVOP
+Rule 317   operator_name -> MODOP
+Rule 318   operator_name -> XOROP
+Rule 319   operator_name -> BANDOP
+Rule 320   operator_name -> BNOP
+Rule 321   operator_name -> NOTSYM
+Rule 322   operator_name -> EQUAL
+Rule 323   operator_name -> LTCOMP
+Rule 324   operator_name -> GTCOMP
+Rule 325   operator_name -> PLUSEQOP
+Rule 326   operator_name -> MINUSEQOP
+Rule 327   operator_name -> MULTEQOP
+Rule 328   operator_name -> DIVEQOP
+Rule 329   operator_name -> MODEQOP
+Rule 330   operator_name -> B_E_OR
+Rule 331   operator_name -> BANDEQOP
+Rule 332   operator_name -> LSHIFT
+Rule 333   operator_name -> RSHIFT
+Rule 334   operator_name -> RSHIFTEQOP
+Rule 335   operator_name -> LSHIFTEQOP
+Rule 336   operator_name -> EQCOMP
+Rule 337   operator_name -> NEQCOMP
+Rule 338   operator_name -> LTECOMP
+Rule 339   operator_name -> GTECOMP
+Rule 340   operator_name -> ANDOP
+Rule 341   operator_name -> OROP
+Rule 342   operator_name -> DPLUSOP
+Rule 343   operator_name -> DMINUSOP
+Rule 344   operator_name -> COMMA
+Rule 345   operator_name -> ARROWSTAR
+Rule 346   operator_name -> ARROW
+Rule 347   operator_name -> LPAREN RPAREN
+Rule 348   operator_name -> LSPAREN RSPAREN
+Rule 349   statement -> labeled_statement
+Rule 350   statement -> expression_statement
+Rule 351   statement -> compound_statement
+Rule 352   statement -> selection_statement
+Rule 353   statement -> iteration_statement
+Rule 354   statement -> jump_statement
+Rule 355   statement -> declaration_statement
+Rule 356   statement -> try_block
+Rule 357   labeled_statement -> IDENTIFIER COLON statement
+Rule 358   labeled_statement -> case constant_expression COLON statement
+Rule 359   labeled_statement -> default COLON statement
+Rule 360   expression_statement -> expression SEMICOLON
+Rule 361   expression_statement -> SEMICOLON
+Rule 362   compound_statement -> LCPAREN statement_list RCPAREN
+Rule 363   compound_statement -> LCPAREN RCPAREN
+Rule 364   statement_list -> statement
+Rule 365   statement_list -> statement_list statement
+Rule 366   selection_statement -> if LPAREN expression RPAREN statement
+Rule 367   selection_statement -> if LPAREN expression RPAREN statement else statement
+Rule 368   selection_statement -> switch LPAREN expression RPAREN statement
+Rule 369   iteration_statement -> while LPAREN expression RPAREN statement
+Rule 370   iteration_statement -> do statement while LPAREN expression RPAREN SEMICOLON
+Rule 371   iteration_statement -> for LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
+Rule 372   iteration_statement -> for LPAREN for_init_statement SEMICOLON expression RPAREN statement
+Rule 373   iteration_statement -> for LPAREN for_init_statement expression SEMICOLON RPAREN statement
+Rule 374   iteration_statement -> for LPAREN for_init_statement SEMICOLON RPAREN statement
+Rule 375   for_init_statement -> expression_statement
+Rule 376   for_init_statement -> declaration_statement
+Rule 377   jump_statement -> break SEMICOLON
+Rule 378   jump_statement -> continue SEMICOLON
+Rule 379   jump_statement -> return expression SEMICOLON
+Rule 380   jump_statement -> return SEMICOLON
+Rule 381   jump_statement -> goto IDENTIFIER SEMICOLON
+Rule 382   declaration_statement -> declaration
+Rule 383   template_declaration -> template LTCOMP template_argument_list GTCOMP declaration
+Rule 384   template_argument_list -> template_argument
+Rule 385   template_argument_list -> template_argument_list COMMA template_argument
+Rule 386   template_argument -> type_argument
+Rule 387   template_argument -> argument_declaration
+Rule 388   type_argument -> class IDENTIFIER
+Rule 389   template_class_name -> template_name LTCOMP template_arg_list GTCOMP
+Rule 390   template_arg_list -> template_arg
+Rule 391   template_arg_list -> template_arg_list COMMA template_arg
+Rule 392   template_arg -> expression
+Rule 393   template_arg -> type_name
+Rule 394   try_block -> try compound_statement handler_list
+Rule 395   handler_list -> handler handler_list
+Rule 396   handler_list -> handler
+Rule 397   handler -> catch LPAREN exception_declaration RPAREN compound_statement
+Rule 398   exception_declaration -> type_specifier_list declarator
+Rule 399   exception_declaration -> type_specifier_list abstract_declarator
+Rule 400   exception_declaration -> type_specifier_list
+Rule 401   throw_expression -> throw expression
+Rule 402   throw_expression -> throw
+Rule 403   exception_specification -> throw LPAREN type_list RPAREN
+Rule 404   exception_specification -> throw LPAREN RPAREN
+Rule 405   type_list -> type_name
+Rule 406   type_list -> type_list COMMA type_name
+Rule 407   empty -> <empty>
 
 Terminals, with rules where they appear
 
 AND                  : 
-ANDOP                : 134
+ANDOP                : 27 340
 AND_EQ               : 
-ARROW                : 48
-ARROWSTAR            : 108
+ARROW                : 113 346
+ARROWSTAR            : 54 345
 ASM                  : 
 AUTO                 : 
-BANDEQOP             : 150
-BANDOP               : 69
+BANDEQOP             : 19 331
+BANDOP               : 33 66 212 213 319
 BITAND               : 
 BITOR                : 
-BNOP                 : 28 59 73
+BNOP                 : 70 128 222 320
 BOOL                 : 
-BOROP                : 132
+BOREQOP              : 21
+BOROP                : 
 BREAK                : 
-B_E_OR               : 152
-B_I_OR               : 151
+B_E_OR               : 20 330
+B_I_OR               : 
 CASE                 : 
 CATCH                : 
-CHAR                 : 16
+CHAR                 : 
 CHAR16_T             : 
 CHAR32_T             : 
 CHAR8_T              : 
 CLASS                : 
-COLON                : 138
-COMMA                : 58 154
+COLON                : 23 273 274 286 287 289 303 357 358 359
+COMMA                : 8 117 189 200 243 257 260 262 283 291 305 344 385 391 406
 COMMENT              : 
 COMPL                : 
 CONDTIONAL           : 
 CONST                : 
 CONTINUE             : 
 DEFAULT              : 
-DELETE               : 101 102 103
-DIVEQOP              : 144
-DIVOP                : 111
+DELETE               : 
+DIVEQOP              : 13 328
+DIVOP                : 50 316
+DMINUSOP             : 59 115 343
 DO                   : 
-DOT                  : 47
-DOTSTAR              : 107
+DOT                  : 112
+DOTSTAR              : 53
 DOUBLE               : 
-DOUBLECOLON          : 18 19 20 32 33 34 74 79 80 81 82 87 88 89 100 103
+DOUBLECOLON          : 71 73 75 77 79 81 83 85 94 95 96 97 102 104 120 121 122 130 179 181 183 214 215
+DPLUSOP              : 58 114 342
 DQUOTE               : 
 ELSE                 : 
 ENUM                 : 
-EQCOMP               : 125
-EQUAL                : 142
+EQCOMP               : 35 336
+EQUAL                : 11 191 255 256 257 288 322
 EXPOP                : 
 EXTERN               : 
 FALSE                : 
 FLOAT                : 
 FOR                  : 
 GOTO                 : 
-GTCOMP               : 51 53 54 121
-GTECOMP              : 123
+GTCOMP               : 39 324 383 389
+GTECOMP              : 41 339
 HASHTAG              : 
-IDENTIFIER           : 3 6 7 8 10 11 18 25 43 44
+IDENTIFIER           : 4 5 6 120 125 172 184 186 190 191 265 267 286 308 309 357 381 388
 IF                   : 
 INLINE               : 
 INT                  : 
-LCPAREN              : 
-LEFTQOP              : 148
-LEFTSHIFT            : 117
+LCPAREN              : 184 185 186 187 193 194 256 257 261 262 263 264 362 363
+LEFTQOP              : 
+LEFTSHIFT            : 
 LONG                 : 
-LRPAREN              : 90 98 99 105
-LSPAREN              : 38 96 97 102 103
-LTCOMP               : 51 52 53 54 120
-LTECOMP              : 122
-MINUSEQOP            : 147
-MINUSOP              : 71 115
-MODOP                : 112
-MODQOP               : 145
-MULTEQOP             : 143
-MULTOP               : 68 110
+LRPAREN              : 
+LSHIFT               : 43 332
+LSHIFTEQOP           : 17 335
+LSPAREN              : 98 99 104 105 107 207 208 235 236 237 238 348
+LTCOMP               : 38 323 383 389
+LTECOMP              : 40 338
+MINUSEQOP            : 16 326
+MINUSOP              : 47 68 314
+MODEQOP              : 14 329
+MODOP                : 51 317
+MODQOP               : 
+MULTEQOP             : 12 327
+MULTOP               : 49 65 90 91 92 93 94 95 96 97 210 211 214 215 315
 NAMESPACE            : 
-NEQCOMP              : 126
-NEW                  : 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89
+NEQCOMP              : 36 337
+NEW                  : 
 NOT                  : 
-NOTSYM               : 72
+NOTSYM               : 69 321
 NOT_EQ               : 
 NULLPTR              : 
-NUMBER               : 1 14
+NUMBER               : 1
 OR                   : 
-OROP                 : 136
+OROP                 : 25 29 341
 OR_EQ                : 
-PLUSEQOP             : 146
-PLUSOP               : 70 114
+PLUSEQOP             : 15 325
+PLUSOP               : 46 67 313
 PRIVATE              : 
 PROTECTED            : 
 PUBLIC               : 
-QUESMARK             : 138
-RCPAREN              : 
+QUESMARK             : 23
+RCPAREN              : 184 185 186 187 193 194 256 257 261 262 263 264 362 363
 RETURN               : 
 RIGHTLIFT            : 
-RIGHTQOP             : 149
-RRPAREN              : 90 98 99 105
-RSPAREN              : 38 96 97 102 103
+RIGHTQOP             : 
+RRPAREN              : 
+RSHIFT               : 44 333
+RSHIFTEQOP           : 18 334
+RSPAREN              : 98 99 104 105 107 207 208 235 236 237 238 348
 SCHAR                : 
-SEMICOLON            : 
+SEMICOLON            : 135 136 137 198 275 276 277 278 279 281 360 361 370 371 372 373 374 377 378 379 380 381
 SHORT                : 
 SIGNED               : 
-SIZEOF               : 64 65
+SIZEOF               : 
 SQUOTE               : 
 STATIC               : 
 STD                  : 
-STRING               : 2 15
+STRING               : 2
 SWITCH               : 
-THIS                 : 17
+THIS                 : 
 THROW                : 
 TRUE                 : 
 TRY                  : 
 TYPEDEF              : 
-UMINUSOP             : 50 62
+UMINUSOP             : 
 UNION                : 
 UNSIGNED             : 
-UPLUSOP              : 49 61
+UPLUSOP              : 
 USING                : 
 VIRTUAL              : 
 VOID                 : 
@@ -357,79 +628,183 @@ VOLATILE             :
 WHILE                : 
 XOR                  : 
 XOREQOP              : 
-XOROP                : 130
+XOROP                : 31 318
 XOR_EQ               : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-BAND                 : 128
-DOUBLECOLONopt       : 43 44 45 46
-LPAREN               : 21 39 40 41 42 43 44 45 51 52 53 54 55 56 65 82 83 84 85 86 87 88 89
-LPARENRPAREN         : 46
-RIGHTSHIFT           : 118
-RPAREN               : 21 39 40 41 42 43 44 45 51 52 53 54 55 56 65 82 83 84 85 86 87 88 89
-TEMPLATE             : 30 34
-additive_expression  : 114 115 116 117 118
-and_expression       : 128 129 130
-assignment_expression : 57 58 138 140 153 154
-assignment_operator  : 140
-cast_expression      : 61 62 63 100 101 102 103 105 106 107 108
-class_name           : 28 35
-class_or_namespace_name : 32 33 34
-conditional_expression : 139 155
-const_cast           : 54
-constant_expression  : 97
-conversion_function_id : 27
-delete               : 100
-delete_expression    : 67
-direct_new_declarator : 95 97
-dynamic_cast         : 51
+AND_expression       : 30 31 33
+LPAREN               : 56 62 79 80 81 82 83 84 85 86 87 100 101 108 109 110 111 123 198 205 206 209 231 232 233 234 239 258 306 307 308 309 347 366 367 368 369 370 371 372 373 374 397 403 404
+RPAREN               : 56 62 79 80 81 82 83 84 85 86 87 100 101 108 109 110 111 123 198 205 206 209 231 232 233 234 239 258 306 307 308 309 347 366 367 368 369 370 371 372 373 374 397 403 404
+abstract_declarator  : 225 229 231 233 235 237 239 246 399
+abstract_declaratorEQUAL : 248
+access_specifier     : 273 274 293 295 296
+additive_expression  : 42 43 44 46 47
+allocation_expression : 63
+arg_declaration_list : 240 243
+argument_declaration : 242 243 387
+argument_declaration_list : 205 206 231 232 233 234
+asm                  : 198
+asm_declaration      : 138
+assignment_expression : 7 8 10 116 117 255 259 260
+assignment_operator  : 10
+auto                 : 149
+base_list            : 289 291
+base_spec            : 265 266 269
+base_specifier       : 290 291
+break                : 377
+case                 : 358
+cast_expression      : 52 53 54 56 60 102 103 104 105
+catch                : 397
+char                 : 163
+character_constant   : 132
+class                : 175 388
+class_head           : 263 264
+class_key            : 172 173 265 266 267 268 269 270
+class_name           : 128 173 179 182 183 221 222 269 270
+class_specifier      : 156
+complete_class_name  : 94 95 96 97 161 214 215 292 293 294 295 296 306 307
+compound_statement   : 254 351 394 397
+conditional_expression : 9 23 192
+const                : 159 218
+constant_expression  : 191 207 235 236 286 287 358
+continue             : 378
+conversion_function_name : 127
+conversion_type_name : 300
+ctor_initializer     : 250 251
+cv_qualifier         : 216 217
+cv_qualifier_list    : 90 92 94 96 205 210 212 214 216 231 232
+deallocation_expression : 64
+decl_specifier       : 147 148
+decl_specifiers      : 135 136 147 244 245 246 247 248 250 252 275 277
+decl_specifiersEQUAL : 249
+declaration          : 195 196 197 382 383
+declaration_list     : 193 197
+declaration_statement : 355 376
+declarator           : 201 202 204 205 206 207 208 209 244 250 251 252 253 284 285 398
+declaratorEQUAL      : 245
+declarator_list      : 135 137 200
+default              : 359
+delete               : 102 103 104 105 312
+dname                : 203
+do                   : 370
+double               : 170
+elaborated_type_specifier : 158
+else                 : 367
 empty                : 
-enum_name            : 
-equality_expression  : 125 126 127 128
-exclusive_or_expression : 130 131 132
-expression           : 21 38 51 52 53 54 55 96 138 154
-expression_list      : 39 41 43 45 58 90 98
-id_expression        : 22
-inclusive_or_expression : 132 133 134
-logical_and_expression : 134 135 136
-logical_or_expression : 136 137 138 140
-multiplicative_expression : 110 111 112 113 114 115
-namespace_alias      : 5
-namespace_name       : 36
-nested_name_specifier : 30 31 32 34 43 44 45 46
-new_declarator       : 91 93
-new_expression       : 66
-new_initializer      : 74 75 77 80 82 83 85 88
-new_placement        : 74 75 76 79 82 83 84 87
-new_type_id          : 74 75 76 77 78 79 80 81
-operator_function_id : 19 26
-original_namespace_name : 4
-pm_expression        : 107 108 109 110 111 112
-postfix_expression   : 38 39 40 47 48 49 50 60
-primary_expression   : 37
+enum                 : 174 184 185 186 187
+enum_list            : 184 185 189
+enum_name            : 174
+enum_specifier       : 157
+enumerator           : 188 189
+equality_expression  : 32 33 35 36
+exception_declaration : 397
+exception_specification : 
+exclusive_OR_expression : 28 29 31
+expression           : 3 8 23 98 99 107 123 245 248 249 360 366 367 368 369 370 371 371 372 373 379 392 401
+expression_list      : 87 108 110 117 258 306 308
+expression_statement : 350 375
+extern               : 152 193 194 195
+fct_body             : 250 251 252 253
+fct_specifier        : 144
+float                : 169
+floating_constant    : 133
+for                  : 371 372 373 374
+for_init_statement   : 371 372 373 374
+friend               : 145
+function_definition  : 139 279 280
+goto                 : 381
+handler              : 395 396
+handler_list         : 394 395
+if                   : 366 367
+inclusive_OR_expression : 26 27 29
+init_declarator      : 199 200
+initializer          : 201
+initializer_list     : 100 256 257 260 261 262
+inline               : 153
+int                  : 165
+integer_constant     : 131 288
+iteration_statement  : 353
+jump_statement       : 354
+labeled_statement    : 349
+linkage_specification : 141
+literal              : 118
+logical_AND_expression : 24 25 27
+logical_OR_expression : 22 23 25
+long                 : 166
+mem_initializer      : 304 305
+mem_initializer_list : 303 305
+member_declaration   : 271 272
+member_declarator    : 282 283
+member_declarator_list : 275 276 283
+member_list          : 263 271 273
+multiplicative_expression : 45 46 47 49 50 51
+name                 : 112 113 124 130 220
+new                  : 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 311
+new_declarator       : 88 90 91 94 95 98
+new_initializer      : 71 72 73 74 79 80 81 82
+new_type_name        : 71 72 73 74 75 76 77 78
+operator             : 300 310
+operator_function_name : 121 126
+operator_name        : 310
+placement            : 71 72 75 76 79 80 83 84
+pm_expression        : 48 49 50 51 53 54
+posfix_expression    : 57
+postfix_expression   : 107 108 109 112 113 114 115
+primary_expression   : 106
+private              : 297
 program              : 0
-pseudo_destructor_name : 47 48
-ptr_operator         : 93 94
-qualified_id         : 20 24
-reinterpret_cast     : 53
-relational_expression : 120 121 122 123 124 125 126
-shift_expression     : 117 118 119 120 121 122 123
-simple_type_specifier : 41 42
-static_cast          : 52
-template_id          : 29 45 46
-template_name        : 9
-templateopt          : 45 46
-throw_expression     : 141
-type_id              : 51 52 53 54 56 65 82 83 84 85 86 87 88 89 105
-type_name            : 59
-type_specifier       : 12 13
-type_specifier_seq   : 12 91 92
-typedef_name         : 
-typeid               : 55 56
-typename             : 43 44 45 46
-unary_expression     : 64 104
-unary_operator       : 63
-unqualified_id       : 23 30 31
+protected            : 298
+ptr_operator         : 204 229 230 301
+public               : 299
+pure_specifier       : 284
+qualified_class_name : 130 180 181 183
+qualified_name       : 122 129 281
+qualified_type_name  : 162 179 224
+register             : 150
+relationa1_expression : 
+relational_expression : 34 35 36 38 39 40 41
+return               : 379 380
+selection_statement  : 352
+shift_expression     : 37 38 39 40 41 43 44
+short                : 164
+signed               : 167
+simple_type_name     : 110 111 155
+sizeof               : 61 62
+statement            : 357 358 359 364 365 366 367 367 368 369 370 371 372 373 374
+statement_list       : 362 365
+static               : 151
+storage_class_specifier : 142
+string_literal       : 134 193 194 195 198
+struct               : 176
+switch               : 368
+template             : 383
+template_arg         : 390 391
+template_arg_list    : 389 391
+template_argument    : 384 385
+template_argument_list : 383 385
+template_class_name  : 
+template_declaration : 140
+template_name        : 389
+this                 : 119
+throw                : 401 402 403 404
+throw_expression     : 
+try                  : 394
+try_block            : 356
+type_argument        : 386
+type_list            : 403 406
+type_name            : 56 62 79 80 81 82 83 84 85 86 393 405 406
+type_specifier       : 143 227 228
+type_specifier_list  : 88 89 225 226 227 301 302 398 399 400
+typedef              : 146
+typedef_name         : 178 223
+unary_expression     : 10 55 58 59 61
+unary_operator       : 60
+union                : 177
+unsigned             : 168
+virtual              : 154 293 294 295
+void                 : 171
+volatile             : 160 219
+while                : 369 370
 

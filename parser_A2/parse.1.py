@@ -10,47 +10,9 @@ start = 'program'
 def p_program(p):
     '''program : NUMBER 
         | STRING
+        | expression
     '''
     p[0] = p[1]
-
-
-# rule for empty
-def p_empty(p):
-    'empty :'
-    pass
-
-# Error rule for syntax errors
-def p_error(p):
-    print("Syntax error in input!")
-
-
-if __name__ == "__main__":
-    parser = yacc.yacc()
-    parser.error = 0
-    
-    if(len(sys.argv) != 3):
-        print("Usage python3 parser.py LTCOMPdebugGTCOMP LTCOMPmodeGTCOMP")
-        exit()
-    
-    arglist = sys.argv
-    debug = int(arglist[1])
-
-    if(arglist[2]== "I"):
-        while True:
-            try:
-                s = input('$ GTCOMP ')
-                if(s=="end"):
-                    break
-            except EOFError:
-                break
-            if not s:
-                continue
-            result = parser.parse(s,lexer = lexer,debug=debug)
-            print(result)
-    else:
-        p = parser.parse("34",lexer = lexer,debug=debug)
-        print(p)
-
 
 
 
@@ -74,52 +36,52 @@ def p_assignment_expression(p):
 
 def p_assignment_operator(p):
     '''assignment_operator : EQUAL
-                           | *=
-                           | /=
-                           | %=
-                           | +=
-                           | _=
-                           | <<=
-                           | >>=
-                           | &=
-                           | ^=
-                           | |=
+                           | MULTEQOP
+                           | DIVEQOP
+                           | MODEQOP
+                           | PLUSEQOP
+                           | MINUSEQOP
+                           | LSHIFTEQOP
+                           | RSHIFTEQOP
+                           | BANDEQOP
+                           | B_E_OR
+                           | BOREQOP
     '''
 
 
 def p_conditional_expression(p):
     '''conditional_expression : logical_OR_expression
-                              | logical_OR_expression ? expression COLON conditional_expression
+                              | logical_OR_expression QUESMARK expression COLON conditional_expression
     '''
 
 
 def p_logical_OR_expression(p):
     '''logical_OR_expression : logical_AND_expression
-                             | logical_OR_expression || logical_AND_expression
+                             | logical_OR_expression OROP logical_AND_expression
     '''
 
 
 def p_logical_AND_expression(p):
     '''logical_AND_expression : inclusive_OR_expression
-                              | logical_AND_expression && inclusive_OR_expression
+                              | logical_AND_expression ANDOP inclusive_OR_expression
     '''
 
 
 def p_inclusive_OR_expression(p):
     '''inclusive_OR_expression : exclusive_OR_expression
-                               | inclusive_OR_expression | exclusive_OR_expression
+                               | inclusive_OR_expression OROP exclusive_OR_expression
     '''
 
 
 def p_exclusive_OR_expression(p):
     '''exclusive_OR_expression : AND_expression
-                               | exclusive_OR_expression ^ AND_expression
+                               | exclusive_OR_expression XOROP AND_expression
     '''
 
 
 def p_AND_expression(p):
     '''AND_expression : equality_expression
-                      | AND_expression & equality_expression
+                      | AND_expression BANDOP equality_expression
     '''
 
 
@@ -132,39 +94,39 @@ def p_equality_expression(p):
 
 def p_relationa1_expression(p):
     '''relationa1_expression : shift_expression
-                             | relational_expression <  shift_expression
-                             | relational_expression >  shift_expression
-                             | relational_expression <= shift_expression
-                             | relational_expression >= shift_expression
+                             | relational_expression LTCOMP  shift_expression
+                             | relational_expression GTCOMP  shift_expression
+                             | relational_expression LTECOMP shift_expression
+                             | relational_expression GTECOMP shift_expression
     '''
 
 
 def p_shift_expression(p):
     '''shift_expression : additive_expression
-                        | shift_expression << additive_expression
-                        | shift_expression >> additive_expression
+                        | shift_expression LSHIFT additive_expression
+                        | shift_expression RSHIFT additive_expression
     '''
 
 
 def p_additive_expression(p):
     '''additive_expression : multiplicative_expression
-                           | additive_expression + multiplicative_expression
-                           | additive_expression _ multiplicative_expression
+                           | additive_expression PLUSOP multiplicative_expression
+                           | additive_expression MINUSOP multiplicative_expression
     '''
 
 
 def p_multiplicative_expression(p):
     '''multiplicative_expression : pm_expression
-                                 | multiplicative_expression * pm_expression
-                                 | multiplicative_expression / pm_expression
-                                 | multiplicative_expression % pm_expression
+                                 | multiplicative_expression MULTOP pm_expression
+                                 | multiplicative_expression DIVOP pm_expression
+                                 | multiplicative_expression MODOP pm_expression
     '''
 
 
 def p_pm_expression(p):
     '''pm_expression : cast_expression
-                     | pm_expression .* cast_expression
-                     | pm_expression _>* cast_expression
+                     | pm_expression DOTSTAR cast_expression
+                     | pm_expression ARROWSTAR cast_expression
     '''
 
 
@@ -176,8 +138,8 @@ def p_cast_expression(p):
 
 def p_unary_expression(p):
     '''unary_expression : posfix_expression
-                        | ++ unary_expression
-                        | __ unary_expression
+                        | DPLUSOP unary_expression
+                        | DMINUSOP unary_expression
                         | unary_operator cast_expression
                         | sizeof  unary_expression
                         | sizeof LPAREN type_name  RPAREN
@@ -187,12 +149,12 @@ def p_unary_expression(p):
 
 
 def p_unary_operator(p):
-    '''unary_operator : *
-                      | &
-                      | +
-                      | _
-                      | !
-                      | ~
+    '''unary_operator : MULTOP
+                      | BANDOP
+                      | PLUSOP
+                      | MINUSOP
+                      | NOTSYM
+                      | BNOP
     '''
 
 
@@ -225,14 +187,14 @@ def p_new_type_name(p):
 
 
 def p_new_declarator(p):
-    '''new_declarator : * cv_qualifier_list new_declarator
-                      | * new_declarator
-                      | * cv_qualifier_list
-                      | *
-                      | complete_class_name DOUBLECOLON * cv_qualifier_list new_declarator
-                      | complete_class_name DOUBLECOLON * new_declarator
-                      | complete_class_name DOUBLECOLON * cv_qualifier_list
-                      | complete_class_name DOUBLECOLON *
+    '''new_declarator : MULTOP cv_qualifier_list new_declarator
+                      | MULTOP new_declarator
+                      | MULTOP cv_qualifier_list
+                      | MULTOP
+                      | complete_class_name DOUBLECOLON MULTOP cv_qualifier_list new_declarator
+                      | complete_class_name DOUBLECOLON MULTOP new_declarator
+                      | complete_class_name DOUBLECOLON MULTOP cv_qualifier_list
+                      | complete_class_name DOUBLECOLON MULTOP
                       | new_declarator LSPAREN expression RSPAREN
                       | LSPAREN expression RSPAREN
     '''
@@ -259,10 +221,10 @@ def p_postfix_expression(p):
                           | postfix_expression     LPAREN  RPAREN
                           | simple_type_name       LPAREN expression_list  RPAREN
                           | simple_type_name       LPAREN  RPAREN
-                          | postfix_expression     . name
-                          | postfix_expression     _> name
-                          | postfix_expression     ++
-                          | postfix_expression     __
+                          | postfix_expression     DOT name
+                          | postfix_expression     ARROW name
+                          | postfix_expression     DPLUSOP
+                          | postfix_expression     DMINUSOP
     '''
 
 
@@ -287,7 +249,7 @@ def p_name(p):
     '''name : IDENTIFIER
             | operator_function_name
             | conversion_function_name
-            | ~ class_name
+            | BNOP class_name
             | qualified_name
     '''
 
@@ -460,12 +422,12 @@ def p_declarator(p):
 
 
 def p_ptr_operator(p):
-    '''ptr_operator : * cv_qualifier_list
-                    | *
-                    | & cv_qualifier_list
-                    | &
-                    | complete_class_name DOUBLECOLON * cv_qualifier_list
-                    | complete_class_name DOUBLECOLON *
+    '''ptr_operator : MULTOP cv_qualifier_list
+                    | MULTOP
+                    | BANDOP cv_qualifier_list
+                    | BANDOP
+                    | complete_class_name DOUBLECOLON MULTOP cv_qualifier_list
+                    | complete_class_name DOUBLECOLON MULTOP
     '''
 
 
@@ -484,7 +446,7 @@ def p_cv_qualifier(p):
 def p_dname(p):
     '''dname : name
              | class_name
-             | ~ class_name
+             | BNOP class_name
              | typedef_name
              | qualified_type_name
     '''
@@ -518,10 +480,8 @@ def p_abstract_declarator(p):
 
 
 def p_argument_declaration_list(p):
-    '''argument_declaration_list : arg_declaration_list ...
-                                 | ...
+    '''argument_declaration_list : arg_declaration_list 
                                  | 
-                                 | arg_declaration_list COMMA ...
     '''
 
 
@@ -665,42 +625,40 @@ def p_operator_function_name(p):
 def p_operator_name(p):
     '''operator_name : new
                      | delete
-                     | +
-                     | _
-                     | *
-                     | /
-                     | %
-                     | ^
-                     | &
-                     | |
-                     | ~
-                     | !
+                     | PLUSOP
+                     | MINUSOP
+                     | MULTOP
+                     | DIVOP
+                     | MODOP
+                     | XOROP
+                     | BANDOP
+                     | BNOP
+                     | NOTSYM
                      | EQUAL
-                     | <
-                     | >
-                     | +=
-                     | _=
-                     | *=
-                     | /=
-                     | %=
-                     | ^=
-                     | &=
-                     | ~=
-                     | <<
-                     | >>
-                     | >>=
-                     | <<=
+                     | LTCOMP
+                     | GTCOMP
+                     | PLUSEQOP
+                     | MINUSEQOP
+                     | MULTEQOP
+                     | DIVEQOP
+                     | MODEQOP
+                     | B_E_OR
+                     | BANDEQOP
+                     | LSHIFT
+                     | RSHIFT
+                     | RSHIFTEQOP
+                     | LSHIFTEQOP
                      | EQCOMP
                      | NEQCOMP
-                     | <=
-                     | >=
-                     | &&
-                     | ||
-                     | ++
-                     | __
+                     | LTECOMP
+                     | GTECOMP
+                     | ANDOP
+                     | OROP
+                     | DPLUSOP
+                     | DMINUSOP
                      | COMMA
-                     | _>*
-                     | _>
+                     | ARROWSTAR
+                     | ARROW
                      | LPAREN  RPAREN
                      | LSPAREN RSPAREN
     '''
@@ -769,7 +727,7 @@ def p_declaration_statement(p):
     '''declaration_statement : declaration'''
 
 def p_template_declaration(p):
-    '''template_declaration : template < template_argument_list > declaration'''
+    '''template_declaration : template LTCOMP template_argument_list GTCOMP declaration'''
 
 def p_template_argument_list(p):
     '''template_argument_list : template_argument
@@ -785,7 +743,7 @@ def p_type_argument(p):
     '''type_argument : class IDENTIFIER'''
 
 def p_template_class_name(p):
-    '''template_class_name : template_name < template_arg_list >'''
+    '''template_class_name : template_name LTCOMP template_arg_list GTCOMP'''
 
 def p_template_arg_list(p):
     '''template_arg_list : template_arg
@@ -812,7 +770,6 @@ def p_exception_declaration(p):
     '''exception_declaration : type_specifier_list declarator
                              | type_specifier_list abstract_declarator
                              | type_specifier_list
-                             | ...
     '''
 
 def p_throw_expression(p):
@@ -829,4 +786,45 @@ def p_type_list(p):
     '''type_list : type_name
                  | type_list COMMA type_name
     '''
+
+
+# rule for empty
+def p_empty(p):
+    'empty :'
+    pass
+
+# Error rule for syntax errors
+def p_error(p):
+    print("Syntax error in input!")
+
+
+if __name__ == "__main__":
+    parser = yacc.yacc()
+    parser.error = 0
+    
+    if(len(sys.argv) != 3):
+        print("Usage python3 parser.py LTCOMPdebugGTCOMP LTCOMPmodeGTCOMP")
+        exit()
+    
+    arglist = sys.argv
+    debug = int(arglist[1])
+
+    if(arglist[2]== "I"):
+        while True:
+            try:
+                s = input('$ > ')
+                if(s=="end"):
+                    break
+            except EOFError:
+                break
+            if not s:
+                continue
+            result = parser.parse(s,lexer = lexer,debug=debug)
+            print(result)
+    else:
+        p = parser.parse("34",lexer = lexer,debug=debug)
+        print(p)
+
+
+
 
