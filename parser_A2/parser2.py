@@ -53,7 +53,7 @@ def p_empty(p):
 
 # Error rule FOR syntax errors 
 def p_template_class_name(p): 
-    '''template_class_name : template_name LTCOMP template_arg_list GTCOMP''' 
+    '''template_class_name : LTCOMP template_arg_list GTCOMP''' 
 
 def p_template_name(p):
     '''template_name : IDENTIFIER'''
@@ -277,6 +277,7 @@ def p_postfix_expression(p):
     '''postfix_expression : primary_expression 
                           | postfix_expression     LSPAREN expression RSPAREN 
                           | postfix_expression     LPAREN expression_list  RPAREN 
+                          | postfix_expression  template_class_name   LPAREN expression_list  RPAREN 
                           | postfix_expression     LPAREN  RPAREN 
                           | simple_type_name       LPAREN expression_list  RPAREN 
                           | simple_type_name       LPAREN  RPAREN 
@@ -300,7 +301,6 @@ def p_primary_expression(p):
 
 def p_literal(p): 
     '''literal : NUMBER 
-               | CHAR
                | STRING
                | SCHAR
     '''
@@ -745,6 +745,7 @@ def p_class_key(p):
     '''class_key : CLASS 
                  | STRUCT
                  | UNION 
+                 | TEMPLATE
     ''' 
 
 
