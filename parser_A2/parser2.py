@@ -45,10 +45,7 @@ def p_declaration_seq(p):
 
 def p_error(p): 
     print("Syntax error in input!") 
-
-
-
-
+    print(p)
 
 def p_empty(p): 
     'empty :' 
@@ -305,6 +302,7 @@ def p_literal(p):
     '''literal : NUMBER 
                | CHAR
                | STRING
+               | SCHAR
     '''
 
 def p_cast_expression(p): 

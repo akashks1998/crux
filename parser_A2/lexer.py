@@ -99,7 +99,6 @@ tokens = [
         'XOREQOP',
         'UPLUSOP',
         'UMINUSOP',
-        'EXPOP',
         'BNOP',
 
         #comparison operator, =
@@ -154,6 +153,9 @@ tokens = [
         'RSHIFT',
         'DMINUSOP'
 
+        # SPECIAL
+        
+
 ] + list(keywords.values())
 
 # Regular expression rules for simple tokens
@@ -194,7 +196,6 @@ t_BANDEQOP  = r'\&\='
 t_XOREQOP   = r'\^='
 t_DPLUSOP   = r'\+\+'
 t_DMINUSOP  = r'--'
-t_EXPOP     = r'\*\*'
 t_BNOP      = r'\~'
 t_LSHIFT    = r'\<\<'
 t_RSHIFT    = r'\>\>'
@@ -256,7 +257,7 @@ def t_COMMENT(t):
     r'( (//)[^\n\r]* ) |(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)'
     t.value = str(t.value)
     t.type = 'COMMENT'
-    return t
+    pass
 
 
 # A string containing ignored characters (spaces and tabs)

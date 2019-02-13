@@ -643,11 +643,9 @@ def p_error(p):
 #                         | class LCPAREN final_class_list RCPAREN
 #                         | class IDENTIFIER
 #     '''
-    p[0]=data(p)
 
 # def p_class(p):
 #     '''class : CLASS '''
-    p[0]=data(p)
 # def p_access_specifier(p): 
 #     '''access_specifier : PRIVATE 
 #                         | PROTECTED 
@@ -659,21 +657,18 @@ def p_error(p):
     
     
 #     '''
-    p[0]=data(p)
 
 # def p_class_list(p):
 #     '''class_list : class_declaration
 #                   | class_list class_declaration
 #                   | function_definition
 #     '''
-    p[0]=data(p)
 
 
 # def p_class_declaration(p):
 #     '''class_declaration : specifier_qualifier_list struct_declarator_list SEMICOLON
                          
 #     '''
-    p[0]=data(p)
 
 #######################################################################
  
