@@ -1,0 +1,381 @@
+graph ethane {
+    1[label=type_specifier]
+    2[label="int"]
+    1 -- 2
+    3[label=declaration_specifiers]
+    3 -- 1
+    4[label=direct_declarator]
+    5[label="a"]
+    4 -- 5
+    6[label=type_specifier]
+    7[label="int"]
+    6 -- 7
+    8[label=declaration_specifiers]
+    8 -- 6
+    9[label=direct_declarator]
+    10[label="c"]
+    9 -- 10
+    11[label=declarator]
+    11 -- 9
+    12[label=parameter_declaration]
+    12 -- 8
+    12 -- 11
+    13[label=parameter_list]
+    13 -- 12
+    14[label=parameter_type_list]
+    14 -- 13
+    15[label=direct_declarator]
+    15 -- 4
+    16[label="("]
+    15 -- 16
+    15 -- 14
+    17[label=")"]
+    15 -- 17
+    18[label=declarator]
+    18 -- 15
+    19[label=type_specifier]
+    20[label="int"]
+    19 -- 20
+    21[label=declaration_specifiers]
+    21 -- 19
+    22[label=direct_declarator]
+    23[label="d"]
+    22 -- 23
+    24[label=declarator]
+    24 -- 22
+    25[label=init_declarator]
+    25 -- 24
+    26[label=init_declarator_list]
+    26 -- 25
+    27[label=declaration]
+    27 -- 21
+    27 -- 26
+    28[label=";"]
+    27 -- 28
+    29[label=declaration_list]
+    29 -- 27
+    30[label=primary_expression]
+    31[label="0.0"]
+    30 -- 31
+    32[label=postfix_expression]
+    32 -- 30
+    33[label=unary_expression]
+    33 -- 32
+    34[label=cast_expression]
+    34 -- 33
+    35[label=multiplicative_expression]
+    35 -- 34
+    36[label=additive_expression]
+    36 -- 35
+    37[label=shift_expression]
+    37 -- 36
+    38[label=relational_expression]
+    38 -- 37
+    39[label=equality_expression]
+    39 -- 38
+    40[label=and_expression]
+    40 -- 39
+    41[label=exclusive_or_expression]
+    41 -- 40
+    42[label=inclusive_or_expression]
+    42 -- 41
+    43[label=logical_and_expression]
+    43 -- 42
+    44[label=logical_or_expression]
+    44 -- 43
+    45[label=conditional_expression]
+    45 -- 44
+    46[label=assignment_expression]
+    46 -- 45
+    47[label=expression]
+    47 -- 46
+    48[label=jump_statement]
+    49[label="return"]
+    48 -- 49
+    48 -- 47
+    50[label=";"]
+    48 -- 50
+    51[label=statement]
+    51 -- 48
+    52[label=statement_list]
+    52 -- 51
+    53[label=compound_statement]
+    54[label="{"]
+    53 -- 54
+    53 -- 29
+    53 -- 52
+    55[label="}"]
+    53 -- 55
+    56[label=function_definition]
+    56 -- 3
+    56 -- 18
+    56 -- 53
+    57[label=external_declaration]
+    57 -- 56
+    58[label=translation_unit]
+    58 -- 57
+    59[label=type_specifier]
+    60[label="int"]
+    59 -- 60
+    61[label=declaration_specifiers]
+    61 -- 59
+    62[label=direct_declarator]
+    63[label="main"]
+    62 -- 63
+    64[label=direct_declarator]
+    64 -- 62
+    65[label="("]
+    64 -- 65
+    66[label=")"]
+    64 -- 66
+    67[label=declarator]
+    67 -- 64
+    68[label=type_specifier]
+    69[label="int"]
+    68 -- 69
+    70[label=declaration_specifiers]
+    70 -- 68
+    71[label=direct_declarator]
+    72[label="x"]
+    71 -- 72
+    73[label=declarator]
+    73 -- 71
+    74[label=primary_expression]
+    75[label="1.0"]
+    74 -- 75
+    76[label=postfix_expression]
+    76 -- 74
+    77[label=unary_expression]
+    77 -- 76
+    78[label=cast_expression]
+    78 -- 77
+    79[label=multiplicative_expression]
+    79 -- 78
+    80[label=additive_expression]
+    80 -- 79
+    81[label=shift_expression]
+    81 -- 80
+    82[label=relational_expression]
+    82 -- 81
+    83[label=equality_expression]
+    83 -- 82
+    84[label=and_expression]
+    84 -- 83
+    85[label=exclusive_or_expression]
+    85 -- 84
+    86[label=inclusive_or_expression]
+    86 -- 85
+    87[label=logical_and_expression]
+    87 -- 86
+    88[label=logical_or_expression]
+    88 -- 87
+    89[label=conditional_expression]
+    89 -- 88
+    90[label=assignment_expression]
+    90 -- 89
+    91[label=initializer]
+    91 -- 90
+    92[label=init_declarator]
+    92 -- 73
+    93[label="="]
+    92 -- 93
+    92 -- 91
+    94[label=init_declarator_list]
+    94 -- 92
+    95[label=declaration]
+    95 -- 70
+    95 -- 94
+    96[label=";"]
+    95 -- 96
+    97[label=declaration_list]
+    97 -- 95
+    98[label=primary_expression]
+    99[label="x"]
+    98 -- 99
+    100[label=postfix_expression]
+    100 -- 98
+    101[label=unary_expression]
+    101 -- 100
+    102[label=assignment_operator]
+    103[label="="]
+    102 -- 103
+    104[label=primary_expression]
+    105[label="2.0"]
+    104 -- 105
+    106[label=postfix_expression]
+    106 -- 104
+    107[label=unary_expression]
+    107 -- 106
+    108[label=cast_expression]
+    108 -- 107
+    109[label=multiplicative_expression]
+    109 -- 108
+    110[label=additive_expression]
+    110 -- 109
+    111[label=shift_expression]
+    111 -- 110
+    112[label=relational_expression]
+    112 -- 111
+    113[label=equality_expression]
+    113 -- 112
+    114[label=and_expression]
+    114 -- 113
+    115[label=exclusive_or_expression]
+    115 -- 114
+    116[label=inclusive_or_expression]
+    116 -- 115
+    117[label=logical_and_expression]
+    117 -- 116
+    118[label=logical_or_expression]
+    118 -- 117
+    119[label=conditional_expression]
+    119 -- 118
+    120[label=assignment_expression]
+    120 -- 119
+    121[label=assignment_expression]
+    121 -- 101
+    121 -- 102
+    121 -- 120
+    122[label=expression]
+    122 -- 121
+    123[label=primary_expression]
+    124[label="0.0"]
+    123 -- 124
+    125[label=postfix_expression]
+    125 -- 123
+    126[label=unary_expression]
+    126 -- 125
+    127[label=cast_expression]
+    127 -- 126
+    128[label=multiplicative_expression]
+    128 -- 127
+    129[label=additive_expression]
+    129 -- 128
+    130[label=shift_expression]
+    130 -- 129
+    131[label=relational_expression]
+    131 -- 130
+    132[label=equality_expression]
+    132 -- 131
+    133[label=and_expression]
+    133 -- 132
+    134[label=exclusive_or_expression]
+    134 -- 133
+    135[label=inclusive_or_expression]
+    135 -- 134
+    136[label=logical_and_expression]
+    136 -- 135
+    137[label=logical_or_expression]
+    137 -- 136
+    138[label=conditional_expression]
+    138 -- 137
+    139[label=assignment_expression]
+    139 -- 138
+    140[label=expression]
+    140 -- 139
+    141[label=jump_statement]
+    142[label="return"]
+    141 -- 142
+    141 -- 140
+    143[label=";"]
+    141 -- 143
+    144[label=statement]
+    144 -- 141
+    145[label=statement_list]
+    145 -- 144
+    146[label=compound_statement]
+    147[label="{"]
+    146 -- 147
+    146 -- 145
+    148[label="}"]
+    146 -- 148
+    149[label=statement]
+    149 -- 146
+    150[label=primary_expression]
+    151[label="1.0"]
+    150 -- 151
+    152[label=postfix_expression]
+    152 -- 150
+    153[label=unary_expression]
+    153 -- 152
+    154[label=cast_expression]
+    154 -- 153
+    155[label=multiplicative_expression]
+    155 -- 154
+    156[label=additive_expression]
+    156 -- 155
+    157[label=shift_expression]
+    157 -- 156
+    158[label=relational_expression]
+    158 -- 157
+    159[label=equality_expression]
+    159 -- 158
+    160[label=and_expression]
+    160 -- 159
+    161[label=exclusive_or_expression]
+    161 -- 160
+    162[label=inclusive_or_expression]
+    162 -- 161
+    163[label=logical_and_expression]
+    163 -- 162
+    164[label=logical_or_expression]
+    164 -- 163
+    165[label=conditional_expression]
+    165 -- 164
+    166[label=assignment_expression]
+    166 -- 165
+    167[label=expression]
+    167 -- 166
+    168[label=jump_statement]
+    169[label="return"]
+    168 -- 169
+    168 -- 167
+    170[label=";"]
+    168 -- 170
+    171[label=statement]
+    171 -- 168
+    172[label=statement_list]
+    172 -- 171
+    173[label=compound_statement]
+    174[label="{"]
+    173 -- 174
+    173 -- 172
+    175[label="}"]
+    173 -- 175
+    176[label=statement]
+    176 -- 173
+    177[label=selection_statement]
+    178[label="if"]
+    177 -- 178
+    179[label="("]
+    177 -- 179
+    177 -- 122
+    180[label=")"]
+    177 -- 180
+    177 -- 149
+    181[label="else"]
+    177 -- 181
+    177 -- 176
+    182[label=statement]
+    182 -- 177
+    183[label=statement_list]
+    183 -- 182
+    184[label=compound_statement]
+    185[label="{"]
+    184 -- 185
+    184 -- 97
+    184 -- 183
+    186[label="}"]
+    184 -- 186
+    187[label=function_definition]
+    187 -- 61
+    187 -- 67
+    187 -- 184
+    188[label=external_declaration]
+    188 -- 187
+    189[label=translation_unit]
+    189 -- 58
+    189 -- 188
+    190[label=program]
+    190 -- 189
+}
