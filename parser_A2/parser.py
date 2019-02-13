@@ -1,33 +1,77 @@
-from ply import yacc 
-import os,sys,time 
-from lexer import lexer 
-from lexer import tokens as lexTokens 
- 
-tokens = lexTokens 
- 
-start = 'program' 
- 
-def p_program(p): 
+from ply import yacc
+import os
+import sys
+import time
+from lexer import lexer
+from lexer import tokens as lexTokens
+
+tokens = lexTokens
+
+start = 'program'
+
+
+def p_program(p):
     '''program : translation_unit
 
-    ''' 
-    p[0] = p[1] 
- 
- 
+    '''
+    p[0] = p[1]
+
+
 def p_translation_unit(p):
     '''translation_unit : declaration_seq'''
+
+
+def p_declaration_seq(p):
+    ''' declaration_seq : declaration_seq declaration
+                        | declaration
+    '''
+
+
+def p_declaration(p):
+    '''declaration : decl_specifiers declarator_list SEMICOLON
+                   | decl_specifiers SEMICOLON
+                   | declarator_list SEMICOLON
+                   | asm_declaration
+                   | function_definition
+                   | template_declaration
+                   | linkage_specification
+    '''
+
+def p_dname(p): 
+    '''dname : name 
+             | class_name 
+             | BNOP class_name 
+             | typedef_name 
+             | qualified_type_name 
+    ''' 
  
+ 
+def p_decl_specifier(p): 
+    '''decl_specifier : storage_class_specifier 
+                      | type_specifier 
+                      | fct_specifier 
+                      | TYPEDEF 
+    ''' 
+ 
+ 
+def p_decl_specifiers(p): 
+    '''decl_specifiers : decl_specifiers decl_specifier 
+                       | decl_specifier 
+    '''
+
 def p_class_name(p): 
     '''class_name : IDENTIFIER''' 
+
 def p_enum_name(p): 
     '''enum_name : IDENTIFIER''' 
+
 def p_typedef_name(p): 
     '''typedef_name : IDENTIFIER''' 
+
 def p_expression(p): 
     '''expression : assignment_expression 
                   | expression COMMA assignment_expression 
     ''' 
- 
  
 def p_assignment_expression(p): 
     '''assignment_expression : conditional_expression 
@@ -257,41 +301,13 @@ def p_name(p):
  
 def p_qualified_name(p): 
     '''qualified_name : qualified_class_name DOUBLECOLON name''' 
+
+
 def p_literal(p): 
     '''literal : NUMBER 
                | CHAR
                | STRING
-    ''' 
- 
-def p_declaration_seq(p):
-    ''' declaration_seq : declaration_seq declaration
-                        | declaration
     '''
- 
-def p_declaration(p): 
-    '''declaration : decl_specifiers declarator_list SEMICOLON 
-                   | decl_specifiers SEMICOLON 
-                   | declarator_list SEMICOLON 
-                   | asm_declaration 
-                   | function_definition 
-                   | template_declaration 
-                   | linkage_specification 
-    ''' 
- 
- 
-def p_decl_specifier(p): 
-    '''decl_specifier : storage_class_specifier 
-                      | type_specifier 
-                      | fct_specifier 
-                      | TYPEDEF 
-    ''' 
- 
- 
-def p_decl_specifiers(p): 
-    '''decl_specifiers : decl_specifiers decl_specifier 
-                       | decl_specifier 
-    ''' 
- 
  
 def p_storage_class_specifier(p): 
     '''storage_class_specifier : AUTO 
@@ -400,6 +416,7 @@ def p_declaration_list(p):
  
 def p_asm_declaration(p): 
     '''asm_declaration : ASM LPAREN STRING  RPAREN  SEMICOLON''' 
+
 def p_declarator_list(p): 
     '''declarator_list : init_declarator 
                        | declarator_list COMMA init_declarator 
@@ -443,16 +460,6 @@ def p_cv_qualifier(p):
     '''cv_qualifier : CONST 
                     | VOLATILE 
     ''' 
- 
- 
-def p_dname(p): 
-    '''dname : name 
-             | class_name 
-             | BNOP class_name 
-             | typedef_name 
-             | qualified_type_name 
-    ''' 
- 
  
 def p_type_name(p): 
     '''type_name : type_specifier_list abstract_declarator 
@@ -743,6 +750,7 @@ def p_template_argument(p):
  
 def p_type_argument(p): 
     '''type_argument : CLASS IDENTIFIER''' 
+
 def p_template_name(p):
     '''template_name : IDENTIFIER'''
 

@@ -1,2 +1,7 @@
+using namespace std;
 
-int main(int i)
+int main() 
+{
+    cout << "Hello, World!";
+    return 0;
+}
