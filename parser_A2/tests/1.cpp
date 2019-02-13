@@ -1,7 +1,6 @@
-using namespace std;
-
-int main() 
+class student
 {
-    cout << "Hello, World!";
-    return 0;
-}
+    char name[50];
+    int a(){return 1;}
+};
+
