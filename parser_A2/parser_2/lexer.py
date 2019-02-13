@@ -28,6 +28,7 @@ keywords = {
     'long':'LONG',
     'new':'NEW',
     'private': 'PRIVATE',
+    'protected':'PROTECTED',
     'public' : 'PUBLIC',
     'register': 'REGISTER',
     'return':'RETURN',

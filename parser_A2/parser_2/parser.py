@@ -4,17 +4,48 @@ import sys
 import time
 from lexer import lexer
 from lexer import tokens as lexTokens
-
+cnt=0
 tokens = lexTokens
-
 start = 'program'
-
-
+## Copy and paste the output in 
+##### Compress
+def data(p):
+    global cnt
+    p_name = sys._getframe(1).f_code.co_name
+    if len(p)>2:
+        cnt=cnt+1
+        out = (p_name[2:],cnt)
+        print(str(cnt)+"[label="+p_name[2:]+"]")
+        for each in range(len(p)-1):
+            if(type(p[each+1]) is not tuple):
+                if p[each+1]!="{" and p[each+1]!="}" and p[each+1]!=")" and p[each+1]!="(" and p[each+1]!=';':
+                    cnt=cnt+1
+                    print(str(cnt)+"[label=\""+str(p[each+1])+"\"]")
+                    p[each+1]=(p[each+1],cnt)
+            if p[each+1][0]!="{" and p[each+1][0]!="}" and p[each+1][0]!=")" and p[each+1][0]!="(" and p[each+1][0]!=';':
+                print(str(out[1])+" -- "+str(p[each+1][1]))
+    else:
+        out=p[1]
+    return out
+# Uncompress
+# def data(p):
+#     global cnt
+#     p_name = sys._getframe(1).f_code.co_name
+#     cnt=cnt+1
+#     out = (p_name[2:],cnt)
+#     print("    "+str(cnt)+"[label="+p_name[2:]+"]")
+#     for each in range(len(p)-1):
+#         if(type(p[each+1]) is not tuple):
+#             cnt=cnt+1
+#             print("    "+str(cnt)+"[label=\""+str(p[each+1])+"\"]")
+#             p[each+1]=(p[each+1],cnt)
+#         print("    "+str(out[1])+" -- "+str(p[each+1][1]))
+#     return out
 def p_program(p):
     '''program : translation_unit
 
     '''
-    p[0] = p[1]
+    p[0]=data(p)
 
 def p_primary_expression(p):
     '''primary_expression : IDENTIFIER
@@ -24,6 +55,7 @@ def p_primary_expression(p):
                          | LRPAREN expression RRPAREN
 
     '''
+    p[0]=data(p)
 
 
 def p_postfix_expression(p):
@@ -37,6 +69,7 @@ def p_postfix_expression(p):
                          | postfix_expression DEC_OP
 
     '''
+    p[0]=data(p)
 
 
 def p_argument_expression_list(p):
@@ -44,6 +77,7 @@ def p_argument_expression_list(p):
                                | argument_expression_list COMMA assignment_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_unary_expression(p):
@@ -55,6 +89,7 @@ def p_unary_expression(p):
                        | SIZEOF LRPAREN type_name RRPAREN
 
     '''
+    p[0]=data(p)
 
 
 def p_unary_operator(p):
@@ -66,6 +101,7 @@ def p_unary_operator(p):
                      | NOTSYM
 
     '''
+    p[0]=data(p)
 
 
 def p_cast_expression(p):
@@ -73,6 +109,7 @@ def p_cast_expression(p):
                       | LRPAREN type_name RRPAREN cast_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_multiplicative_expression(p):
@@ -82,6 +119,7 @@ def p_multiplicative_expression(p):
                                 | multiplicative_expression MODOP cast_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_additive_expression(p):
@@ -90,6 +128,7 @@ def p_additive_expression(p):
                           | additive_expression MINUSOP multiplicative_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_shift_expression(p):
@@ -98,6 +137,7 @@ def p_shift_expression(p):
                        | shift_expression RIGHT_OP additive_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_relational_expression(p):
@@ -108,6 +148,7 @@ def p_relational_expression(p):
                             | relational_expression GE_OP shift_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_equality_expression(p):
@@ -116,6 +157,7 @@ def p_equality_expression(p):
                           | equality_expression NE_OP relational_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_and_expression(p):
@@ -123,6 +165,7 @@ def p_and_expression(p):
                      | and_expression BANDOP equality_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_exclusive_or_expression(p):
@@ -130,6 +173,7 @@ def p_exclusive_or_expression(p):
                               | exclusive_or_expression XOROP and_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_inclusive_or_expression(p):
@@ -137,6 +181,7 @@ def p_inclusive_or_expression(p):
                               | inclusive_or_expression BOROP exclusive_or_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_logical_and_expression(p):
@@ -144,6 +189,7 @@ def p_logical_and_expression(p):
                              | logical_and_expression AND_OP inclusive_or_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_logical_or_expression(p):
@@ -151,6 +197,7 @@ def p_logical_or_expression(p):
                             | logical_or_expression OR_OP logical_and_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_conditional_expression(p):
@@ -158,6 +205,7 @@ def p_conditional_expression(p):
                              | logical_or_expression QUESMARK expression COLON conditional_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_assignment_expression(p):
@@ -165,6 +213,7 @@ def p_assignment_expression(p):
                             | unary_expression assignment_operator assignment_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_assignment_operator(p):
@@ -181,6 +230,7 @@ def p_assignment_operator(p):
                           | OR_ASSIGN
 
     '''
+    p[0]=data(p)
 
 
 def p_expression(p):
@@ -188,12 +238,14 @@ def p_expression(p):
                  | expression COMMA assignment_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_constant_expression(p):
     '''constant_expression : conditional_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_declaration(p):
@@ -201,6 +253,7 @@ def p_declaration(p):
                   | declaration_specifiers init_declarator_list SEMICOLON
 
     '''
+    p[0]=data(p)
 
 
 def p_declaration_specifiers(p):
@@ -212,6 +265,7 @@ def p_declaration_specifiers(p):
                              | type_qualifier declaration_specifiers
 
     '''
+    p[0]=data(p)
 
 
 def p_init_declarator_list(p):
@@ -219,6 +273,7 @@ def p_init_declarator_list(p):
                            | init_declarator_list COMMA init_declarator
 
     '''
+    p[0]=data(p)
 
 
 def p_init_declarator(p):
@@ -226,6 +281,7 @@ def p_init_declarator(p):
                       | declarator EQUAL initializer
 
     '''
+    p[0]=data(p)
 
 
 def p_storage_class_specifier(p):
@@ -236,6 +292,7 @@ def p_storage_class_specifier(p):
                               | REGISTER
 
     '''
+    p[0]=data(p)
 
 
 def p_type_specifier(p):
@@ -251,6 +308,7 @@ def p_type_specifier(p):
                      | struct_or_union_specifier
                      | enum_specifier
     '''
+    p[0]=data(p)
 
 
 def p_struct_or_union_specifier(p):
@@ -259,14 +317,15 @@ def p_struct_or_union_specifier(p):
                                 | struct_or_union IDENTIFIER
 
     '''
+    p[0]=data(p)
 
 
 def p_struct_or_union(p):
     '''struct_or_union : STRUCT
                       | UNION
-                      | CLASS
 
     '''
+    p[0]=data(p)
 
 
 def p_struct_declaration_list(p):
@@ -274,11 +333,13 @@ def p_struct_declaration_list(p):
                               | struct_declaration_list struct_declaration
 
     '''
+    p[0]=data(p)
 
 
 def p_struct_declaration(p):
     '''struct_declaration : specifier_qualifier_list struct_declarator_list SEMICOLON
     '''
+    p[0]=data(p)
 
 
 def p_specifier_qualifier_list(p):
@@ -288,6 +349,7 @@ def p_specifier_qualifier_list(p):
                                | type_qualifier
 
     '''
+    p[0]=data(p)
 
 
 def p_struct_declarator_list(p):
@@ -295,6 +357,7 @@ def p_struct_declarator_list(p):
                              | struct_declarator_list COMMA struct_declarator
 
     '''
+    p[0]=data(p)
 
 
 def p_struct_declarator(p):
@@ -303,6 +366,7 @@ def p_struct_declarator(p):
                         | declarator COLON constant_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_enum_specifier(p):
@@ -311,6 +375,7 @@ def p_enum_specifier(p):
                      | ENUM IDENTIFIER
 
     '''
+    p[0]=data(p)
 
 
 def p_enumerator_list(p):
@@ -318,6 +383,7 @@ def p_enumerator_list(p):
                       | enumerator_list COMMA enumerator
 
     '''
+    p[0]=data(p)
 
 
 def p_enumerator(p):
@@ -325,6 +391,7 @@ def p_enumerator(p):
                  | IDENTIFIER EQUAL constant_expression
 
     '''
+    p[0]=data(p)
 
 
 def p_type_qualifier(p):
@@ -332,6 +399,7 @@ def p_type_qualifier(p):
                      | VOLATILE
 
     '''
+    p[0]=data(p)
 
 
 def p_declarator(p):
@@ -339,6 +407,7 @@ def p_declarator(p):
                  | direct_declarator
 
     '''
+    p[0]=data(p)
 
 
 def p_direct_declarator(p):
@@ -351,6 +420,7 @@ def p_direct_declarator(p):
                         | direct_declarator LRPAREN RRPAREN
 
     '''
+    p[0]=data(p)
 
 
 def p_pointer(p):
@@ -360,6 +430,7 @@ def p_pointer(p):
               | MULTOP type_qualifier_list pointer
 
     '''
+    p[0]=data(p)
 
 
 def p_type_qualifier_list(p):
@@ -367,6 +438,7 @@ def p_type_qualifier_list(p):
                           | type_qualifier_list type_qualifier
 
     '''
+    p[0]=data(p)
 
 
 def p_parameter_type_list(p):
@@ -374,6 +446,7 @@ def p_parameter_type_list(p):
                           | parameter_list COMMA ELLIPSIS
 
     '''
+    p[0]=data(p)
 
 
 def p_parameter_list(p):
@@ -381,6 +454,7 @@ def p_parameter_list(p):
                      | parameter_list COMMA parameter_declaration
 
     '''
+    p[0]=data(p)
 
 
 def p_parameter_declaration(p):
@@ -389,6 +463,7 @@ def p_parameter_declaration(p):
                             | declaration_specifiers
 
     '''
+    p[0]=data(p)
 
 
 def p_identifier_list(p):
@@ -396,6 +471,7 @@ def p_identifier_list(p):
                       | identifier_list COMMA IDENTIFIER
 
     '''
+    p[0]=data(p)
 
 
 def p_type_name(p):
@@ -403,6 +479,7 @@ def p_type_name(p):
                 | specifier_qualifier_list abstract_declarator
 
     '''
+    p[0]=data(p)
 
 
 def p_abstract_declarator(p):
@@ -411,6 +488,7 @@ def p_abstract_declarator(p):
                           | pointer direct_abstract_declarator
 
     '''
+    p[0]=data(p)
 
 
 def p_direct_abstract_declarator(p):
@@ -425,6 +503,7 @@ def p_direct_abstract_declarator(p):
                                  | direct_abstract_declarator LRPAREN parameter_type_list RRPAREN
 
     '''
+    p[0]=data(p)
 
 
 def p_initializer(p):
@@ -433,6 +512,7 @@ def p_initializer(p):
                   | LCPAREN initializer_list COMMA RCPAREN
 
     '''
+    p[0]=data(p)
 
 
 def p_initializer_list(p):
@@ -440,6 +520,7 @@ def p_initializer_list(p):
                        | initializer_list COMMA initializer
 
     '''
+    p[0]=data(p)
 
 
 def p_statement(p):
@@ -451,6 +532,7 @@ def p_statement(p):
                 | jump_statement
 
     '''
+    p[0]=data(p)
 
 
 def p_labeled_statement(p):
@@ -459,6 +541,7 @@ def p_labeled_statement(p):
                         | DEFAULT COLON statement
 
     '''
+    p[0]=data(p)
 
 
 def p_compound_statement(p):
@@ -468,6 +551,7 @@ def p_compound_statement(p):
                          | LCPAREN declaration_list statement_list RCPAREN
 
     '''
+    p[0]=data(p)
 
 
 def p_declaration_list(p):
@@ -475,6 +559,7 @@ def p_declaration_list(p):
                        | declaration_list declaration
 
     '''
+    p[0]=data(p)
 
 
 def p_statement_list(p):
@@ -482,6 +567,7 @@ def p_statement_list(p):
                      | statement_list statement
 
     '''
+    p[0]=data(p)
 
 
 def p_expression_statement(p):
@@ -489,6 +575,7 @@ def p_expression_statement(p):
                            | expression SEMICOLON
 
     '''
+    p[0]=data(p)
 
 
 def p_selection_statement(p):
@@ -497,6 +584,7 @@ def p_selection_statement(p):
                           | SWITCH LRPAREN expression RRPAREN statement
 
     '''
+    p[0]=data(p)
 
 
 def p_iteration_statement(p):
@@ -506,6 +594,7 @@ def p_iteration_statement(p):
                           | FOR LRPAREN expression_statement expression_statement expression RRPAREN statement
 
     '''
+    p[0]=data(p)
 
 
 def p_jump_statement(p):
@@ -516,6 +605,7 @@ def p_jump_statement(p):
                      | RETURN expression SEMICOLON
 
     '''
+    p[0]=data(p)
 
 
 def p_translation_unit(p):
@@ -523,13 +613,14 @@ def p_translation_unit(p):
                        | translation_unit external_declaration
 
     '''
+    p[0]=data(p)
 
 
 def p_external_declaration(p):
     '''external_declaration : function_definition
                            | declaration
-
     '''
+    p[0]=data(p)
 
 
 def p_function_definition(p):
@@ -539,6 +630,7 @@ def p_function_definition(p):
                           | declarator compound_statement
 
     '''
+    p[0]=data(p)
 
 def p_error(p): 
     print("Syntax error in input!")
@@ -551,43 +643,47 @@ def p_error(p):
 #                         | class LCPAREN final_class_list RCPAREN
 #                         | class IDENTIFIER
 #     '''
+    p[0]=data(p)
 
 # def p_class(p):
 #     '''class : CLASS '''
-
+    p[0]=data(p)
+# def p_access_specifier(p): 
+#     '''access_specifier : PRIVATE 
+#                         | PROTECTED 
+#                         | PUBLIC 
+#     ''' 
 # def p_final_class_list(p):
-#     ''' final_class_list : class_list
-#                          | PUBLIC COLON class_list PRIVATE COLON class_list
-#                          | PRIVATE COLON class_list PUBLIC COLON class_list
-#                          | PUBLIC COLON class_list 
-#                          | PRIVATE COLON class_list
+#     ''' final_class_list : access_specifier COLON class_list 
+#                          | access_specifier COLON class_list final_class_list
     
     
 #     '''
+    p[0]=data(p)
 
 # def p_class_list(p):
 #     '''class_list : class_declaration
 #                   | class_list class_declaration
-
+#                   | function_definition
 #     '''
+    p[0]=data(p)
 
 
 # def p_class_declaration(p):
 #     '''class_declaration : specifier_qualifier_list struct_declarator_list SEMICOLON
-#                          | function_definition
                          
 #     '''
+    p[0]=data(p)
 
 #######################################################################
  
 if __name__ == "__main__": 
     parser = yacc.yacc() 
     parser.error = 0 
-     
     if(len(sys.argv) != 3): 
         print("Usage python3 parser.py LTCOMPdebugGTCOMP LTCOMPmodeGTCOMP") 
         exit() 
-     
+    print("graph ethane {")
     arglist = sys.argv 
     debug = int(arglist[1]) 
  
@@ -607,7 +703,6 @@ if __name__ == "__main__":
         file_o = open(arglist[2],'r').read()
         p = parser.parse(file_o,lexer = lexer,debug=debug) 
         print(p) 
- 
  
  
  

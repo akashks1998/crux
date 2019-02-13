@@ -1,0 +1,83 @@
+graph ethane {
+1[label=parameter_declaration]
+2[label="int"]
+1 -- 2
+3[label="c"]
+1 -- 3
+4[label=direct_declarator]
+5[label="a"]
+4 -- 5
+4 -- 1
+6[label=declaration]
+7[label="int"]
+6 -- 7
+8[label="d"]
+6 -- 8
+9[label=jump_statement]
+10[label="return"]
+9 -- 10
+11[label="0.0"]
+9 -- 11
+12[label=compound_statement]
+12 -- 6
+12 -- 9
+13[label=function_definition]
+14[label="int"]
+13 -- 14
+13 -- 4
+13 -- 12
+15[label=direct_declarator]
+16[label="main"]
+15 -- 16
+17[label=init_declarator]
+18[label="x"]
+17 -- 18
+19[label="="]
+17 -- 19
+20[label="1.0"]
+17 -- 20
+21[label=declaration]
+22[label="int"]
+21 -- 22
+21 -- 17
+23[label=assignment_expression]
+24[label="x"]
+23 -- 24
+25[label="="]
+23 -- 25
+26[label="2.0"]
+23 -- 26
+27[label=jump_statement]
+28[label="return"]
+27 -- 28
+29[label="0.0"]
+27 -- 29
+30[label=compound_statement]
+30 -- 27
+31[label=jump_statement]
+32[label="return"]
+31 -- 32
+33[label="1.0"]
+31 -- 33
+34[label=compound_statement]
+34 -- 31
+35[label=selection_statement]
+36[label="if"]
+35 -- 36
+35 -- 23
+35 -- 30
+37[label="else"]
+35 -- 37
+35 -- 34
+38[label=compound_statement]
+38 -- 21
+38 -- 35
+39[label=function_definition]
+40[label="int"]
+39 -- 40
+39 -- 15
+39 -- 38
+41[label=translation_unit]
+41 -- 13
+41 -- 39
+}
