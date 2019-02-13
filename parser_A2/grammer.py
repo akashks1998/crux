@@ -21,7 +21,7 @@ for each in inp[2:]:
 
 out = out + "\n    \'\'\'\n\n"
 
-open("grammer.txt","w").write("")
+open("grammer.txt","w").write(out)
 
 print(out)
 

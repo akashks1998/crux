@@ -11,6 +11,7 @@ def p_program(p):
     '''program : NUMBER  
         | STRING 
         | expression 
+        | statement
     ''' 
     p[0] = p[1] 
  
@@ -35,7 +36,7 @@ def p_assignment_expression(p):
  
  
 def p_assignment_operator(p): 
-    '''assignment_operator : EQUAL 
+    '''assignment_operator :   EQUAL 
                            | MULTEQOP 
                            | DIVEQOP 
                            | MODEQOP 
@@ -92,8 +93,8 @@ def p_equality_expression(p):
     ''' 
  
  
-def p_relationa1_expression(p): 
-    '''relationa1_expression : shift_expression 
+def p_relational_expression(p): 
+    '''relational_expression : shift_expression 
                              | relational_expression LTCOMP  shift_expression 
                              | relational_expression GTCOMP  shift_expression 
                              | relational_expression LTECOMP shift_expression 
@@ -137,12 +138,12 @@ def p_cast_expression(p):
  
  
 def p_unary_expression(p): 
-    '''unary_expression : posfix_expression 
+    '''unary_expression : postfix_expression 
                         | DPLUSOP unary_expression 
                         | DMINUSOP unary_expression 
                         | unary_operator cast_expression 
-                        | sizeof  unary_expression 
-                        | sizeof LPAREN type_name  RPAREN 
+                        | SIZEOF  unary_expression 
+                        | SIZEOF LPAREN type_name  RPAREN 
                         | allocation_expression 
                         | deallocation_expression 
     ''' 
@@ -159,22 +160,22 @@ def p_unary_operator(p):
  
  
 def p_allocation_expression(p): 
-    '''allocation_expression : DOUBLECOLON new placement new_type_name new_initializer 
-                             | new placement new_type_name new_initializer 
-                             | DOUBLECOLON new new_type_name new_initializer 
-                             | new new_type_name new_initializer 
-                             | DOUBLECOLON new placement new_type_name 
-                             | new placement new_type_name 
-                             | DOUBLECOLON new new_type_name 
-                             | new new_type_name 
-                             | DOUBLECOLON new placement LPAREN type_name  RPAREN  new_initializer 
-                             | new placement LPAREN type_name  RPAREN  new_initializer 
-                             | DOUBLECOLON new LPAREN type_name  RPAREN  new_initializer 
-                             | new LPAREN type_name  RPAREN  new_initializer 
-                             | DOUBLECOLON new placement LPAREN type_name  RPAREN 
-                             | new placement LPAREN type_name  RPAREN 
-                             | DOUBLECOLON new LPAREN type_name  RPAREN 
-                             | new LPAREN type_name  RPAREN 
+    '''allocation_expression : DOUBLECOLON NEW placement new_type_name new_initializer 
+                             | NEW placement new_type_name new_initializer 
+                             | DOUBLECOLON NEW new_type_name new_initializer 
+                             | NEW new_type_name new_initializer 
+                             | DOUBLECOLON NEW placement new_type_name 
+                             | NEW placement new_type_name 
+                             | DOUBLECOLON NEW new_type_name 
+                             | NEW new_type_name 
+                             | DOUBLECOLON NEW placement LPAREN type_name  RPAREN  new_initializer 
+                             | NEW placement LPAREN type_name  RPAREN  new_initializer 
+                             | DOUBLECOLON NEW LPAREN type_name  RPAREN  new_initializer 
+                             | NEW LPAREN type_name  RPAREN  new_initializer 
+                             | DOUBLECOLON NEW placement LPAREN type_name  RPAREN 
+                             | NEW placement LPAREN type_name  RPAREN 
+                             | DOUBLECOLON NEW LPAREN type_name  RPAREN 
+                             | NEW LPAREN type_name  RPAREN 
     ''' 
  
  
@@ -207,10 +208,10 @@ def p_new_initializer(p):
  
  
 def p_deallocation_expression(p): 
-    '''deallocation_expression : DOUBLECOLON delete cast_expression 
-                               | delete cast_expression 
-                               | DOUBLECOLON delete LSPAREN RSPAREN cast_expression 
-                               | delete LSPAREN RSPAREN cast_expression 
+    '''deallocation_expression : DOUBLECOLON DELETE cast_expression 
+                               | DELETE cast_expression 
+                               | DOUBLECOLON DELETE LSPAREN RSPAREN cast_expression 
+                               | DELETE LSPAREN RSPAREN cast_expression 
     ''' 
  
  
@@ -236,7 +237,7 @@ def p_expression_list(p):
  
 def p_primary_expression(p): 
     '''primary_expression : literal 
-                          | this 
+                          | THIS 
                           | DOUBLECOLON IDENTIFIER 
                           | DOUBLECOLON operator_function_name 
                           | DOUBLECOLON qualified_name 
@@ -257,10 +258,9 @@ def p_name(p):
 def p_qualified_name(p): 
     '''qualified_name : qualified_class_name DOUBLECOLON name''' 
 def p_literal(p): 
-    '''literal : integer_constant 
-               | character_constant 
-               | floating_constant 
-               | string_literal 
+    '''literal : NUMBER 
+               | CHAR
+               | STRING
     ''' 
  
  
@@ -279,8 +279,7 @@ def p_decl_specifier(p):
     '''decl_specifier : storage_class_specifier 
                       | type_specifier 
                       | fct_specifier 
-                      | friend 
-                      | typedef 
+                      | TYPEDEF 
     ''' 
  
  
@@ -291,16 +290,15 @@ def p_decl_specifiers(p):
  
  
 def p_storage_class_specifier(p): 
-    '''storage_class_specifier : auto 
-                               | register 
-                               | static 
-                               | extern 
+    '''storage_class_specifier : AUTO 
+                               | STATIC 
+                               | EXTERN 
     ''' 
  
  
 def p_fct_specifier(p): 
-    '''fct_specifier : inline 
-                     | virtual 
+    '''fct_specifier : INLINE 
+                     | VIRTUAL 
     ''' 
  
  
@@ -309,37 +307,37 @@ def p_type_specifier(p):
                       | class_specifier 
                       | enum_specifier 
                       | elaborated_type_specifier 
-                      | const 
-                      | volatile 
+                      | CONST 
+                      | VOLATILE 
     ''' 
  
  
 def p_simple_type_name(p): 
     '''simple_type_name : complete_class_name 
                         | qualified_type_name 
-                        | char 
-                        | short 
-                        | int 
-                        | long 
-                        | signed 
-                        | unsigned 
-                        | float 
-                        | double 
-                        | void 
+                        | CHAR 
+                        | SHORT 
+                        | INT 
+                        | LONG 
+                        | SIGNED 
+                        | UNSIGNED 
+                        | FLOAT 
+                        | DOUBLE 
+                        | VOID 
     ''' 
  
  
 def p_elaborated_type_specifier(p): 
     '''elaborated_type_specifier : class_key IDENTIFIER 
                                  | class_key class_name 
-                                 | enum enum_name 
+                                 | ENUM enum_name 
     ''' 
  
  
 def p_class_key(p): 
-    '''class_key : class 
-                 | struct 
-                 | union 
+    '''class_key : CLASS 
+                 | STRUCT
+                 | UNION 
     ''' 
  
  
@@ -362,10 +360,10 @@ def p_qualified_class_name(p):
  
  
 def p_enum_specifier(p): 
-    '''enum_specifier : enum IDENTIFIER LCPAREN enum_list RCPAREN 
-                      | enum LCPAREN enum_list RCPAREN 
-                      | enum IDENTIFIER LCPAREN RCPAREN 
-                      | enum LCPAREN RCPAREN 
+    '''enum_specifier : ENUM IDENTIFIER LCPAREN enum_list RCPAREN 
+                      | ENUM LCPAREN enum_list RCPAREN 
+                      | ENUM IDENTIFIER LCPAREN RCPAREN 
+                      | ENUM LCPAREN RCPAREN 
     ''' 
  
  
@@ -377,16 +375,16 @@ def p_enum_list(p):
  
 def p_enumerator(p): 
     '''enumerator : IDENTIFIER 
-                  | IDENTIFIER EQUAL constant_expression 
+                  | IDENTIFIER   EQUAL constant_expression 
     ''' 
  
  
 def p_constant_expression(p): 
     '''constant_expression : conditional_expression''' 
 def p_linkage_specification(p): 
-    '''linkage_specification : extern string_literal LCPAREN declaration_list RCPAREN 
-                             | extern string_literal LCPAREN RCPAREN 
-                             | extern string_literal declaration 
+    '''linkage_specification : EXTERN STRING LCPAREN declaration_list RCPAREN 
+                             | EXTERN STRING LCPAREN RCPAREN 
+                             | EXTERN STRING declaration 
     ''' 
  
  
@@ -397,7 +395,7 @@ def p_declaration_list(p):
  
  
 def p_asm_declaration(p): 
-    '''asm_declaration : asm LPAREN string_literal  RPAREN  SEMICOLON''' 
+    '''asm_declaration : ASM LPAREN STRING  RPAREN  SEMICOLON''' 
 def p_declarator_list(p): 
     '''declarator_list : init_declarator 
                        | declarator_list COMMA init_declarator 
@@ -438,8 +436,8 @@ def p_cv_qualifier_list(p):
  
  
 def p_cv_qualifier(p): 
-    '''cv_qualifier : const 
-                    | volatile 
+    '''cv_qualifier : CONST 
+                    | VOLATILE 
     ''' 
  
  
@@ -493,11 +491,11 @@ def p_arg_declaration_list(p):
  
 def p_argument_declaration(p): 
     '''argument_declaration : decl_specifiers declarator 
-                            | decl_specifiers declaratorEQUAL expression 
+                            | decl_specifiers declarator  EQUAL expression 
                             | decl_specifiers abstract_declarator 
                             | decl_specifiers 
-                            | decl_specifiers abstract_declaratorEQUAL expression 
-                            | decl_specifiersEQUAL expression 
+                            | decl_specifiers abstract_declarator  EQUAL expression 
+                            | decl_specifiers  EQUAL expression 
     ''' 
  
  
@@ -513,9 +511,9 @@ def p_fct_body(p):
     '''fct_body : compound_statement''' 
      
 def p_initializer(p): 
-    '''initializer : EQUAL assignment_expression 
-                   | EQUAL LCPAREN initializer_list RCPAREN 
-                   | EQUAL LCPAREN initializer_list COMMA RCPAREN 
+    '''initializer :   EQUAL assignment_expression 
+                   |   EQUAL LCPAREN initializer_list RCPAREN 
+                   |   EQUAL LCPAREN initializer_list COMMA RCPAREN 
                    | LPAREN expression_list  RPAREN 
     ''' 
  
@@ -572,7 +570,7 @@ def p_member_declarator(p):
     ''' 
  
 def p_pure_specifier(p): 
-    '''pure_specifier : EQUAL integer_constant''' 
+    '''pure_specifier :   EQUAL NUMBER''' 
  
 def p_base_spec(p): 
     '''base_spec : COLON base_list''' 
@@ -584,20 +582,20 @@ def p_base_list(p):
  
 def p_base_specifier(p): 
     '''base_specifier : complete_class_name 
-                      | virtual access_specifier complete_class_name 
-                      | virtual complete_class_name 
-                      | access_specifier virtual complete_class_name 
+                      | VIRTUAL access_specifier complete_class_name 
+                      | VIRTUAL complete_class_name 
+                      | access_specifier VIRTUAL complete_class_name 
                       | access_specifier complete_class_name 
     ''' 
  
 def p_access_specifier(p): 
-    '''access_specifier : private 
-                        | protected 
-                        | public 
+    '''access_specifier : PRIVATE 
+                        | PROTECTED 
+                        | PUBLIC 
     ''' 
  
 def p_conversion_function_name(p): 
-    '''conversion_function_name : operator conversion_type_name''' 
+    '''conversion_function_name : OPERATOR conversion_type_name''' 
  
 def p_conversion_type_name(p): 
     '''conversion_type_name : type_specifier_list ptr_operator 
@@ -620,11 +618,11 @@ def p_mem_initializer(p):
     ''' 
  
 def p_operator_function_name(p): 
-    '''operator_function_name : operator operator_name''' 
+    '''operator_function_name : OPERATOR operator_name''' 
  
 def p_operator_name(p): 
-    '''operator_name : new 
-                     | delete 
+    '''operator_name : NEW 
+                     | DELETE 
                      | PLUSOP 
                      | MINUSOP 
                      | MULTOP 
@@ -634,7 +632,7 @@ def p_operator_name(p):
                      | BANDOP 
                      | BNOP 
                      | NOTSYM 
-                     | EQUAL 
+                     |   EQUAL 
                      | LTCOMP 
                      | GTCOMP 
                      | PLUSEQOP 
@@ -676,8 +674,8 @@ def p_statement(p):
  
 def p_labeled_statement(p): 
     '''labeled_statement : IDENTIFIER COLON statement 
-                         | case constant_expression COLON statement 
-                         | default COLON statement 
+                         | CASE constant_expression COLON statement 
+                         | DEFAULT COLON statement 
     ''' 
  
 def p_expression_statement(p): 
@@ -696,18 +694,18 @@ def p_statement_list(p):
     ''' 
  
 def p_selection_statement(p): 
-    '''selection_statement : if LPAREN expression  RPAREN  statement 
-                           | if LPAREN expression  RPAREN  statement else statement 
-                           | switch LPAREN expression  RPAREN  statement 
+    '''selection_statement : IF LPAREN expression  RPAREN  statement 
+                           | IF LPAREN expression  RPAREN  statement ELSE statement 
+                           | SWITCH LPAREN expression  RPAREN  statement 
     ''' 
  
 def p_iteration_statement(p): 
-    '''iteration_statement : while LPAREN expression  RPAREN  statement 
-                           | do statement while LPAREN expression  RPAREN  SEMICOLON 
-                           | for LPAREN for_init_statement expression SEMICOLON expression  RPAREN  statement 
-                           | for LPAREN for_init_statement SEMICOLON expression  RPAREN  statement 
-                           | for LPAREN for_init_statement expression SEMICOLON  RPAREN  statement 
-                           | for LPAREN for_init_statement SEMICOLON  RPAREN  statement 
+    '''iteration_statement : WHILE LPAREN expression  RPAREN  statement 
+                           | DO statement WHILE LPAREN expression  RPAREN  SEMICOLON 
+                           | FOR LPAREN for_init_statement expression SEMICOLON expression  RPAREN  statement 
+                           | FOR LPAREN for_init_statement SEMICOLON expression  RPAREN  statement 
+                           | FOR LPAREN for_init_statement expression SEMICOLON  RPAREN  statement 
+                           | FOR LPAREN for_init_statement SEMICOLON  RPAREN  statement 
     ''' 
  
 def p_for_init_statement(p): 
@@ -716,18 +714,18 @@ def p_for_init_statement(p):
     ''' 
  
 def p_jump_statement(p): 
-    '''jump_statement : break SEMICOLON 
-                      | continue SEMICOLON 
-                      | return expression SEMICOLON 
-                      | return SEMICOLON 
-                      | goto IDENTIFIER SEMICOLON 
+    '''jump_statement : BREAK SEMICOLON 
+                      | CONTINUE SEMICOLON 
+                      | RETURN expression SEMICOLON 
+                      | RETURN SEMICOLON 
+                      | GOTO IDENTIFIER SEMICOLON 
     ''' 
  
 def p_declaration_statement(p): 
     '''declaration_statement : declaration''' 
  
 def p_template_declaration(p): 
-    '''template_declaration : template LTCOMP template_argument_list GTCOMP declaration''' 
+    '''template_declaration : TEMPLATE LTCOMP template_argument_list GTCOMP declaration''' 
  
 def p_template_argument_list(p): 
     '''template_argument_list : template_argument 
@@ -740,8 +738,10 @@ def p_template_argument(p):
     ''' 
  
 def p_type_argument(p): 
-    '''type_argument : class IDENTIFIER''' 
- 
+    '''type_argument : CLASS IDENTIFIER''' 
+def p_template_name(p):
+    '''template_name : IDENTIFIER'''
+
 def p_template_class_name(p): 
     '''template_class_name : template_name LTCOMP template_arg_list GTCOMP''' 
  
@@ -756,7 +756,7 @@ def p_template_arg(p):
     ''' 
  
 def p_try_block(p): 
-    '''try_block : try compound_statement handler_list''' 
+    '''try_block : TRY compound_statement handler_list''' 
  
 def p_handler_list(p): 
     '''handler_list : handler handler_list 
@@ -764,7 +764,7 @@ def p_handler_list(p):
     ''' 
  
 def p_handler(p): 
-    '''handler : catch LPAREN exception_declaration  RPAREN  compound_statement''' 
+    '''handler : CATCH LPAREN exception_declaration  RPAREN  compound_statement''' 
  
 def p_exception_declaration(p): 
     '''exception_declaration : type_specifier_list declarator 
@@ -773,13 +773,13 @@ def p_exception_declaration(p):
     ''' 
  
 def p_throw_expression(p): 
-    '''throw_expression : throw expression 
-                        | throw 
+    '''throw_expression : THROW expression 
+                        | THROW 
     ''' 
  
 def p_exception_specification(p): 
-    '''exception_specification : throw LPAREN type_list  RPAREN 
-                               | throw LPAREN  RPAREN 
+    '''exception_specification : THROW LPAREN type_list  RPAREN 
+                               | THROW LPAREN  RPAREN 
     ''' 
  
 def p_type_list(p): 
@@ -788,12 +788,12 @@ def p_type_list(p):
     ''' 
  
  
-# rule for empty 
+# rule FOR empty 
 def p_empty(p): 
     'empty :' 
     pass 
  
-# Error rule for syntax errors 
+# Error rule FOR syntax errors 
 def p_error(p): 
     print("Syntax error in input!") 
  
@@ -828,3 +828,4 @@ if __name__ == "__main__":
  
  
  
+

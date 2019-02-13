@@ -45,6 +45,7 @@ keywords = {
     'nullptr':'NULLPTR',
     'or':'OR',
     'or_eq':'OR_EQ',
+    'operator' : 'OPERATOR',
     'private':'PRIVATE',
     'protected':'PROTECTED',
     'public':'PUBLIC',
@@ -55,11 +56,13 @@ keywords = {
     'static':'STATIC',
     'std' : 'STD',
     'switch':'SWITCH',
+    'struct' : 'STRUCT',
     'this':'THIS',
     'throw':'THROW',
     'true':'TRUE',
     'try':'TRY',
     'typedef':'TYPEDEF',
+    'template' : 'TEMPLATE',
     'union':'UNION',
     'unsigned':'UNSIGNED',
     'using' : 'USING',
@@ -109,8 +112,8 @@ tokens = [
         'EQUAL',
 
         # Parenthesis
-        'LRPAREN',
-        'RRPAREN',
+        'LPAREN',
+        'RPAREN',
         'LCPAREN',
         'RCPAREN',
         'LSPAREN',
@@ -219,8 +222,8 @@ t_LTECOMP   = r'<='
 t_EQUAL     = r'='
 
 # Parenthesis
-t_LRPAREN   = r'\('
-t_RRPAREN   = r'\)'
+t_LPAREN   = r'\('
+t_RPAREN   = r'\)'
 t_LCPAREN   = r'\{'
 t_RCPAREN   = r'\}'
 t_LSPAREN   = r'\['
