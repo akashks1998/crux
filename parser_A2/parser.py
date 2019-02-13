@@ -8,14 +8,14 @@ tokens = lexTokens
 start = 'program' 
  
 def p_program(p): 
-    '''program : NUMBER  
-        | STRING 
-        | expression 
-        | statement
+    '''program : translation_unit
+
     ''' 
     p[0] = p[1] 
  
  
+def p_translation_unit(p):
+    '''translation_unit : declaration_seq'''
  
 def p_class_name(p): 
     '''class_name : IDENTIFIER''' 
@@ -263,6 +263,10 @@ def p_literal(p):
                | STRING
     ''' 
  
+def p_declaration_seq(p):
+    ''' declaration_seq : declaration_seq declaration
+                        | declaration
+    '''
  
 def p_declaration(p): 
     '''declaration : decl_specifiers declarator_list SEMICOLON 
@@ -822,7 +826,8 @@ if __name__ == "__main__":
             result = parser.parse(s,lexer = lexer,debug=debug) 
             print(result) 
     else: 
-        p = parser.parse("34",lexer = lexer,debug=debug) 
+        file_o = open(arglist[2],'r').read()
+        p = parser.parse(file_o,lexer = lexer,debug=debug) 
         print(p) 
  
  
