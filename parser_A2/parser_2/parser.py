@@ -20,12 +20,17 @@ def data(p):
             if(type(p[each+1]) is not tuple):
                 if p[each+1]!="{" and p[each+1]!="}" and p[each+1]!=")" and p[each+1]!="(" and p[each+1]!=';':
                     cnt=cnt+1
-                    print(str(cnt)+"[label=\""+str(p[each+1])+"\"]")
+                    print(str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
                     p[each+1]=(p[each+1],cnt)
             if p[each+1][0]!="{" and p[each+1][0]!="}" and p[each+1][0]!=")" and p[each+1][0]!="(" and p[each+1][0]!=';':
                 print(str(out[1])+" -- "+str(p[each+1][1]))
-    else:
+    elif len(p)==2:
+        
         out=p[1]
+    else:
+        cnt=cnt+1
+        print("    "+str(cnt)+"[label=\""+str(p[0]).replace('"',"")+"\"]")
+        out=(p[0],cnt)
     return out
 # Uncompress
 # def data(p):
@@ -41,6 +46,8 @@ def data(p):
 #             p[each+1]=(p[each+1],cnt)
 #         print("    "+str(out[1])+" -- "+str(p[each+1][1]))
 #     return out
+
+
 def p_program(p):
     '''program : translation_unit
 

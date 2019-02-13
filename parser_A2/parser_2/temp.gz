@@ -1,4 +1,6 @@
 graph ethane {
+Syntax error in input!
+LexToken(LEFT_OP,'<<',1,0)
 1[label=parameter_declaration]
 2[label="int"]
 1 -- 2
@@ -8,76 +10,296 @@ graph ethane {
 5[label="a"]
 4 -- 5
 4 -- 1
+Syntax error in input!
+LexToken(LCPAREN,'{',2,25)
 6[label=declaration]
 7[label="int"]
 6 -- 7
 8[label="d"]
 6 -- 8
-9[label=jump_statement]
-10[label="return"]
+Syntax error in input!
+LexToken(RETURN,'return',4,42)
+9[label=direct_declarator]
+10[label="main"]
 9 -- 10
-11[label="0.0"]
-9 -- 11
-12[label=compound_statement]
-12 -- 6
-12 -- 9
-13[label=function_definition]
-14[label="int"]
-13 -- 14
-13 -- 4
-13 -- 12
-15[label=direct_declarator]
-16[label="main"]
+11[label=init_declarator]
+12[label="x"]
+11 -- 12
+13[label="="]
+11 -- 13
+14[label="1.0"]
+11 -- 14
+15[label=declaration]
+16[label="int"]
 15 -- 16
-17[label=init_declarator]
+15 -- 11
+17[label=assignment_expression]
 18[label="x"]
 17 -- 18
 19[label="="]
 17 -- 19
-20[label="1.0"]
+20[label="2.0"]
 17 -- 20
-21[label=declaration]
-22[label="int"]
+21[label=jump_statement]
+22[label="return"]
 21 -- 22
-21 -- 17
-23[label=assignment_expression]
-24[label="x"]
-23 -- 24
-25[label="="]
-23 -- 25
-26[label="2.0"]
-23 -- 26
-27[label=jump_statement]
-28[label="return"]
-27 -- 28
-29[label="0.0"]
-27 -- 29
-30[label=compound_statement]
-30 -- 27
-31[label=jump_statement]
-32[label="return"]
-31 -- 32
-33[label="1.0"]
-31 -- 33
-34[label=compound_statement]
-34 -- 31
-35[label=selection_statement]
-36[label="if"]
-35 -- 36
-35 -- 23
-35 -- 30
-37[label="else"]
-35 -- 37
-35 -- 34
-38[label=compound_statement]
-38 -- 21
-38 -- 35
-39[label=function_definition]
-40[label="int"]
+23[label="0.0"]
+21 -- 23
+24[label=compound_statement]
+24 -- 21
+25[label=jump_statement]
+26[label="return"]
+25 -- 26
+27[label="1.0"]
+25 -- 27
+28[label=compound_statement]
+28 -- 25
+29[label=selection_statement]
+30[label="if"]
+29 -- 30
+29 -- 17
+29 -- 24
+31[label="else"]
+29 -- 31
+29 -- 28
+Syntax error in input!
+LexToken(EQ_OP,'==',14,147)
+32[label=direct_declarator]
+33[label="name"]
+32 -- 33
+34[label="["]
+32 -- 34
+35[label="50.0"]
+32 -- 35
+36[label="]"]
+32 -- 36
+37[label=declaration]
+38[label="char"]
+37 -- 38
+37 -- 32
+39[label=direct_declarator]
+40[label="a"]
 39 -- 40
-39 -- 15
-39 -- 38
-41[label=translation_unit]
-41 -- 13
-41 -- 39
+41[label=jump_statement]
+42[label="return"]
+41 -- 42
+43[label="1.0"]
+41 -- 43
+44[label=compound_statement]
+44 -- 41
+Syntax error in input!
+LexToken(RCPAREN,'}',20,225)
+45[label=direct_declarator]
+46[label="main"]
+45 -- 46
+47[label=init_declarator_list]
+48[label="n"]
+47 -- 48
+49[label=","]
+47 -- 49
+50[label="num"]
+47 -- 50
+51[label=init_declarator_list]
+51 -- 47
+52[label=","]
+51 -- 52
+53[label="digit"]
+51 -- 53
+54[label=init_declarator]
+55[label="rev"]
+54 -- 55
+56[label="="]
+54 -- 56
+57[label="0.0"]
+54 -- 57
+58[label=init_declarator_list]
+58 -- 51
+59[label=","]
+58 -- 59
+58 -- 54
+60[label=declaration]
+61[label="int"]
+60 -- 61
+60 -- 58
+62[label=shift_expression]
+63[label="cout"]
+62 -- 63
+64[label="<<"]
+62 -- 64
+65[label="Enter a positive number: "]
+62 -- 65
+66[label=expression_statement]
+66 -- 62
+67[label=shift_expression]
+68[label="cin"]
+67 -- 68
+69[label=">>"]
+67 -- 69
+70[label="num"]
+67 -- 70
+71[label=expression_statement]
+71 -- 67
+72[label=statement_list]
+72 -- 66
+72 -- 71
+73[label=assignment_expression]
+74[label="n"]
+73 -- 74
+75[label="="]
+73 -- 75
+76[label="num"]
+73 -- 76
+77[label=expression_statement]
+77 -- 73
+78[label=statement_list]
+78 -- 72
+78 -- 77
+79[label=multiplicative_expression]
+80[label="num"]
+79 -- 80
+81[label="%"]
+79 -- 81
+82[label="10.0"]
+79 -- 82
+83[label=assignment_expression]
+84[label="digit"]
+83 -- 84
+85[label="="]
+83 -- 85
+83 -- 79
+86[label=expression_statement]
+86 -- 83
+87[label=multiplicative_expression]
+88[label="rev"]
+87 -- 88
+89[label="*"]
+87 -- 89
+90[label="10.0"]
+87 -- 90
+91[label=primary_expression]
+91 -- 87
+92[label=additive_expression]
+92 -- 91
+93[label="+"]
+92 -- 93
+94[label="digit"]
+92 -- 94
+95[label=assignment_expression]
+96[label="rev"]
+95 -- 96
+97[label="="]
+95 -- 97
+95 -- 92
+98[label=expression_statement]
+98 -- 95
+99[label=statement_list]
+99 -- 86
+99 -- 98
+100[label=multiplicative_expression]
+101[label="num"]
+100 -- 101
+102[label="/"]
+100 -- 102
+103[label="10.0"]
+100 -- 103
+104[label=assignment_expression]
+105[label="num"]
+104 -- 105
+106[label="="]
+104 -- 106
+104 -- 100
+107[label=expression_statement]
+107 -- 104
+108[label=statement_list]
+108 -- 99
+108 -- 107
+109[label=compound_statement]
+109 -- 108
+110[label=equality_expression]
+111[label="num"]
+110 -- 111
+112[label="!="]
+110 -- 112
+113[label="0.0"]
+110 -- 113
+114[label=iteration_statement]
+115[label="do"]
+114 -- 115
+114 -- 109
+116[label="while"]
+114 -- 116
+114 -- 110
+117[label=statement_list]
+117 -- 78
+117 -- 114
+118[label=shift_expression]
+119[label="cout"]
+118 -- 119
+120[label="<<"]
+118 -- 120
+121[label=" The reverse of the number is: "]
+118 -- 121
+122[label=shift_expression]
+122 -- 118
+123[label="<<"]
+122 -- 123
+124[label="rev"]
+122 -- 124
+125[label=shift_expression]
+125 -- 122
+126[label="<<"]
+125 -- 126
+127[label="endl"]
+125 -- 127
+128[label=expression_statement]
+128 -- 125
+129[label=statement_list]
+129 -- 117
+129 -- 128
+130[label=equality_expression]
+131[label="n"]
+130 -- 131
+132[label="=="]
+130 -- 132
+133[label="rev"]
+130 -- 133
+134[label=shift_expression]
+135[label="cout"]
+134 -- 135
+136[label="<<"]
+134 -- 136
+137[label=" The number is a palindrome."]
+134 -- 137
+138[label=expression_statement]
+138 -- 134
+139[label=shift_expression]
+140[label="cout"]
+139 -- 140
+141[label="<<"]
+139 -- 141
+142[label=" The number is not a palindrome."]
+139 -- 142
+143[label=expression_statement]
+143 -- 139
+144[label=selection_statement]
+145[label="if"]
+144 -- 145
+144 -- 130
+144 -- 138
+146[label="else"]
+144 -- 146
+144 -- 143
+147[label=statement_list]
+147 -- 129
+147 -- 144
+148[label=jump_statement]
+149[label="return"]
+148 -- 149
+150[label="0.0"]
+148 -- 150
+151[label=statement_list]
+151 -- 147
+151 -- 148
+Syntax error in input!
+LexToken(RIGHT_OP,'>>',47,691)
 }
