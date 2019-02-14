@@ -674,7 +674,7 @@ def p_member_declarator(p):
     p[0]=data(p)
 
 def p_declarator(p): 
-    '''declarator : dname 
+    '''declarator : name 
                   | ptr_operator declarator 
                   | declarator LPAREN argument_declaration_list  RPAREN 
                   | declarator LSPAREN constant_expression RSPAREN 
@@ -684,21 +684,11 @@ def p_declarator(p):
     p[0]=data(p)
 
 
-def p_dname(p): 
-    '''dname : name 
-             | class_name 
-             | BNOP class_name 
-             | typedef_name 
-             | qualified_type_name 
-    '''
-    p[0]=data(p)
-
-
 def p_name(p): 
     '''name : IDENTIFIER 
             | operator_function_name 
             | conversion_function_name 
-            | BNOP class_name 
+            | BNOP IDENTIFIER 
     '''
     p[0]=data(p)
 
@@ -772,12 +762,10 @@ def p_pure_specifier(p):
     p[0]=data(p)
 
 def p_class_head(p): 
-    '''class_head : class_key IDENTIFIER base_spec 
-                  | class_key base_spec 
-                  | class_key IDENTIFIER 
+    '''class_head : class_key base_spec 
                   | class_key 
-                  | class_key class_name base_spec 
-                  | class_key class_name 
+                  | class_key IDENTIFIER base_spec 
+                  | class_key IDENTIFIER 
     '''
     p[0]=data(p)
 
@@ -792,11 +780,8 @@ def p_base_list(p):
     p[0]=data(p)
 
 def p_base_specifier(p): 
-    '''base_specifier : class_name 
-                      | VIRTUAL access_specifier class_name 
-                      | VIRTUAL class_name 
-                      | access_specifier VIRTUAL class_name 
-                      | access_specifier class_name 
+    '''base_specifier : IDENTIFIER 
+                      | access_specifier IDENTIFIER 
     '''
     p[0]=data(p)
 
@@ -809,7 +794,6 @@ def p_access_specifier(p):
 
 def p_elaborated_type_specifier(p): 
     '''elaborated_type_specifier : class_key IDENTIFIER 
-                                 | class_key class_name 
                                  | ENUM enum_name 
     '''
     p[0]=data(p)
@@ -829,8 +813,7 @@ def p_class_key(p):
 
 
 def p_simple_type_name(p): 
-    '''simple_type_name : class_name 
-                        | qualified_type_name 
+    '''simple_type_name : IDENTIFIER 
                         | CHAR 
                         | SHORT 
                         | INT 
@@ -844,27 +827,12 @@ def p_simple_type_name(p):
     p[0]=data(p)
 
 
-def p_qualified_type_name(p): 
-    '''qualified_type_name : typedef_name 
-    '''
-    p[0]=data(p)
-
-
-def p_typedef_name(p): 
-    '''typedef_name : IDENTIFIER'''
-    p[0]=data(p)
-
 def p_ptr_operator(p): 
     '''ptr_operator : MULTOP  
                     | BANDOP 
     '''
     p[0]=data(p)
 
-
-
-def p_class_name(p): 
-    '''class_name : IDENTIFIER'''
-    p[0]=data(p)
 
 
 if __name__ == "__main__": 

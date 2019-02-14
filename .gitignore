@@ -1,2 +1,3 @@
-*.gz
-*.out
+.gz
+.out
+.ps
