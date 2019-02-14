@@ -1,4 +1,4 @@
-python3 parser2.py 0 tests/2.cpp >temp.gz&
+python3 parser2.py 0 $1 $2 >temp.gz&
 sleep 1
 sed '$d' temp.gz>temp1.gz
 echo "}">>temp1.gz

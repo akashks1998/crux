@@ -6,44 +6,45 @@ from lexer import lexer
 from lexer import tokens as lexTokens
 cnt=0
 tokens = lexTokens
-##### Compress
+
+# Uncompress
 def data(p):
     global cnt
-    p_name = sys._getframe(1).f_code.co_name
-    if len(p)>2:
+    global compress
+    if compress=='c':
+        p_name = sys._getframe(1).f_code.co_name
+        if len(p)>2:
+            cnt=cnt+1
+            out = (p_name[2:],cnt)
+            print(str(cnt)+"[label="+p_name[2:]+"]")
+            for each in range(len(p)-1):
+                if(type(p[each+1]) is not tuple):
+                    if p[each+1]!="{" and p[each+1]!="}" and p[each+1]!=")" and p[each+1]!="(" and p[each+1]!=';':
+                        cnt=cnt+1
+                        print(str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
+                        p[each+1]=(p[each+1],cnt)
+                if p[each+1][0]!="{" and p[each+1][0]!="}" and p[each+1][0]!=")" and p[each+1][0]!="(" and p[each+1][0]!=';':
+                    print(str(out[1])+" -- "+str(p[each+1][1]))
+        elif len(p)==2:
+            
+            out=p[1]
+        else:
+            cnt=cnt+1
+            print("    "+str(cnt)+"[label=\""+str(p[0]).replace('"',"")+"\"]")
+            out=(p[0],cnt)
+        return out
+    else:
+        p_name = sys._getframe(1).f_code.co_name
         cnt=cnt+1
         out = (p_name[2:],cnt)
-        print(str(cnt)+"[label="+p_name[2:]+"]")
+        print("    "+str(cnt)+"[label="+p_name[2:]+"]")
         for each in range(len(p)-1):
             if(type(p[each+1]) is not tuple):
-                if p[each+1]!="{" and p[each+1]!="}" and p[each+1]!=")" and p[each+1]!="(" and p[each+1]!=';':
-                    cnt=cnt+1
-                    print(str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
-                    p[each+1]=(p[each+1],cnt)
-            if p[each+1][0]!="{" and p[each+1][0]!="}" and p[each+1][0]!=")" and p[each+1][0]!="(" and p[each+1][0]!=';':
-                print(str(out[1])+" -- "+str(p[each+1][1]))
-    elif len(p)==2:
-        
-        out=p[1]
-    else:
-        cnt=cnt+1
-        print("    "+str(cnt)+"[label=\""+str(p[0]).replace('"',"")+"\"]")
-        out=(p[0],cnt)
-    return out
-# Uncompress
-# def data(p):
-#     global cnt
-#     p_name = sys._getframe(1).f_code.co_name
-#     cnt=cnt+1
-#     out = (p_name[2:],cnt)
-#     print("    "+str(cnt)+"[label="+p_name[2:]+"]")
-#     for each in range(len(p)-1):
-#         if(type(p[each+1]) is not tuple):
-#             cnt=cnt+1
-#             print("    "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
-#             p[each+1]=(p[each+1],cnt)
-#         print("    "+str(out[1])+" -- "+str(p[each+1][1]))
-#     return out
+                cnt=cnt+1
+                print("    "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
+                p[each+1]=(p[each+1],cnt)
+            print("    "+str(out[1])+" -- "+str(p[each+1][1]))
+        return out
 start = 'program'
 
 def p_exception_specification(p): 
@@ -964,12 +965,13 @@ if __name__ == "__main__":
     parser = yacc.yacc() 
     parser.error = 0 
 
-    if(len(sys.argv) != 3): 
+    if(len(sys.argv) != 4): 
         print("Usage python3 parser.py LTCOMPdebugGTCOMP LTCOMPmodeGTCOMP") 
         exit() 
 
     arglist = sys.argv 
-    debug = int(arglist[1]) 
+    debug = int(arglist[1])
+    compress=arglist[3]
     print("graph ethane {")
     if(arglist[2]== "I"): 
         while True: 

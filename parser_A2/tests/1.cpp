@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-int a(int c){
-    int d;
-    return 0;
-}
-int main(){
-    int x=1;
-    if(x=2){
-        return 0;
-    }else{
-        return 1;
-    }
-}
-=======
 class student
 {
     private:
@@ -44,4 +30,3 @@ int main()
 
     return 0;
 }
->>>>>>> 3f606939ff7dc03fe4f8319d7ac9710bbf032262
