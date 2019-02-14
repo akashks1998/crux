@@ -2,7 +2,9 @@
 import re
 from collections import deque
 
-inp = open("parser.py", "r").read()
+# inp = open("parser.py", "r").read()
+# inp = open("parser2.py", "r").read()
+inp = open("panda.py", "r").read()
 
 lst = inp.split('\ndef')
 lt = [lst[i] for i in range(1, len(lst))]
@@ -10,7 +12,7 @@ idx = {}
 
 def f(s, g):
     # # print(s)
-    s = re.sub('[ ][A-Z]+(?=[ \n\'])', '', s)
+    #s = re.sub('[ ][A-Z]+(?=[ \n\'])', '', s)
     s = re.sub(r'[\n\|:]', '', s)
     s = re.sub(r'[ ]+', ' ', s)
     s = re.findall(r"\'\'\'.*\'\'\'", s, re.MULTILINE)
@@ -23,7 +25,10 @@ def f(s, g):
         s = re.sub('[ ]*$', '', s)
         s = s.split(' ')
         s = list(set(s))
-        s.remove(g)
+        try:
+            s.remove(g)
+        except:
+            x=""
         return s
     return list(set(s))
 
@@ -32,7 +37,11 @@ req = [[] for i in range(len(lt))]
 G = {}
 node = [ '' for i in range(len(lt))]
 for i in lt:
-    g = re.findall(r'(?<=p_).*(?=\()', i)[0]
+    g = re.findall(r'(?<=p_).*(?=\()', i)
+    if(g):
+        g = g[0]
+    else:
+        g = ""
     node[cnt] = g
     idx[g] = cnt
     ## print('---')
@@ -74,13 +83,13 @@ f.write("rank1 [style=invisible];\nrank2 [style=invisible];\n")
 for i in topo:
     try:
         for j in G[i]:
-            f.write( i + " -> " +j+"\n")
+            f.write( "'" + i + "'" + " -> " + "'" + j + "'" + "\n")
     except:
         continue
 stt = ""
-for i in topo:
-    stt = stt + " -> " + i
+for i in list(topo)[0:10]:
+    stt = "'" + stt + "'" + " -> " + "'" +  i + "'"
 stt=stt[4:] + " [style=invis];"
-#stt = "program -> translation_unit -> throw_expression -> type_list -> declaration [style=invis];" 
+#stt = "program -> translation_unit -> throw_expression -> type_list -> declaration [style=invis];"
 f.write("{\nrankdir = TD;\nrank2 ->" + stt+ "\n}")
 f.write("}\n")
