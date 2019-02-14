@@ -10,7 +10,7 @@ idx = {}
 
 def f(s, g):
     # # print(s)
-    #s = re.sub('[ ][A-Z]+(?=[ \n\'])', '', s)
+    s = re.sub('[ ][A-Z]+(?=[ \n\'])', '', s)
     s = re.sub(r'[\n\|:]', '', s)
     s = re.sub(r'[ ]+', ' ', s)
     s = re.findall(r"\'\'\'.*\'\'\'", s, re.MULTILINE)
@@ -70,10 +70,17 @@ topo = topological(G)
 ###
 f=open("t.gz","w")
 f.write("digraph  g{\n")
+f.write("rank1 [style=invisible];\nrank2 [style=invisible];\n")
 for i in topo:
     try:
         for j in G[i]:
             f.write( i + " -> " +j+"\n")
     except:
         continue
+stt = ""
+for i in topo:
+    stt = stt + " -> " + i
+stt=stt[4:] + " [style=invis];"
+#stt = "program -> translation_unit -> throw_expression -> type_list -> declaration [style=invis];" 
+f.write("{\nrankdir = TD;\nrank2 ->" + stt+ "\n}")
 f.write("}\n")
