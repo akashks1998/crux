@@ -28,7 +28,8 @@ def p_declaration_seq(p):
 
 
 def p_declaration(p):
-    '''declaration : decl_specifiers declarator_list SEMICOLON
+    '''declaration : decl_specifiers  declarator_list SEMICOLON
+                   |  decl_specifiers template_class_name  declarator_list SEMICOLON
                    | decl_specifiers SEMICOLON
                    | declarator_list SEMICOLON
                    | asm_declaration
@@ -357,6 +358,7 @@ def p_class_key(p):
     '''class_key : CLASS 
                  | STRUCT
                  | UNION 
+                 | TEMPLATE
     ''' 
  
  

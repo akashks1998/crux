@@ -16,34 +16,34 @@ def data(p):
         if len(p)>2:
             cnt=cnt+1
             out = (p_name[2:],cnt)
-            print(str(cnt)+"[label="+p_name[2:]+"]")
+            open('dot.gz','a').write(" "+str(cnt)+"[label="+p_name[2:]+"]")
             for each in range(len(p)-1):
                 if(type(p[each+1]) is not tuple):
                     if p[each+1]!="{" and p[each+1]!="}" and p[each+1]!=")" and p[each+1]!="(" and p[each+1]!=';':
                         cnt=cnt+1
-                        print(str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
+                        open('dot.gz','a').write(" "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
                         p[each+1]=(p[each+1],cnt)
                 if p[each+1][0]!="{" and p[each+1][0]!="}" and p[each+1][0]!=")" and p[each+1][0]!="(" and p[each+1][0]!=';':
-                    print(str(out[1])+" -- "+str(p[each+1][1]))
+                    open('dot.gz','a').write(" "+str(out[1])+" -- "+str(p[each+1][1]))
         elif len(p)==2:
             
             out=p[1]
         else:
             cnt=cnt+1
-            print("    "+str(cnt)+"[label=\""+str(p[0]).replace('"',"")+"\"]")
+            open('dot.gz','a').write("    "+str(cnt)+"[label=\""+str(p[0]).replace('"',"")+"\"]")
             out=(p[0],cnt)
         return out
     else:
         p_name = sys._getframe(1).f_code.co_name
         cnt=cnt+1
         out = (p_name[2:],cnt)
-        print("    "+str(cnt)+"[label="+p_name[2:]+"]")
+        open('dot.gz','a').write("    "+str(cnt)+"[label="+p_name[2:]+"]")
         for each in range(len(p)-1):
             if(type(p[each+1]) is not tuple):
                 cnt=cnt+1
-                print("    "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
+                open('dot.gz','a').write("    "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
                 p[each+1]=(p[each+1],cnt)
-            print("    "+str(out[1])+" -- "+str(p[each+1][1]))
+            open('dot.gz','a').write("    "+str(out[1])+" -- "+str(p[each+1][1]))
         return out
 start = 'program'
 
@@ -96,7 +96,7 @@ def p_empty(p):
 
 # Error rule FOR syntax errors 
 def p_template_class_name(p): 
-    '''template_class_name : template_name LTCOMP template_arg_list GTCOMP'''
+    '''template_class_name : LTCOMP template_arg_list GTCOMP''' 
     p[0]=data(p)
 
 def p_template_name(p):
@@ -351,6 +351,7 @@ def p_postfix_expression(p):
     '''postfix_expression : primary_expression 
                           | postfix_expression     LSPAREN expression RSPAREN 
                           | postfix_expression     LPAREN expression_list  RPAREN 
+                          | postfix_expression  template_class_name   LPAREN expression_list  RPAREN 
                           | postfix_expression     LPAREN  RPAREN 
                           | simple_type_name       LPAREN expression_list  RPAREN 
                           | simple_type_name       LPAREN  RPAREN 
@@ -376,7 +377,6 @@ def p_primary_expression(p):
 
 def p_literal(p): 
     '''literal : NUMBER 
-               | CHAR
                | STRING
                | SCHAR
     '''
@@ -887,7 +887,8 @@ def p_class_key(p):
     '''class_key : CLASS 
                  | STRUCT
                  | UNION 
-    '''
+                 | TEMPLATE
+    ''' 
     p[0]=data(p)
 
 
@@ -972,7 +973,7 @@ if __name__ == "__main__":
     arglist = sys.argv 
     debug = int(arglist[1])
     compress=arglist[3]
-    print("graph ethane {")
+    open('dot.gz','w').write("graph ethane {")
     if(arglist[2]== "I"): 
         while True: 
             try: 
@@ -988,5 +989,6 @@ if __name__ == "__main__":
     else: 
         file_o = open(arglist[2],'r').read()
         p = parser.parse(file_o,lexer = lexer,debug=debug) 
+        open('dot.gz','a').write("}\n")
         print(p) 
 
