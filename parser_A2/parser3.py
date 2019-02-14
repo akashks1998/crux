@@ -404,15 +404,21 @@ def p_arg_declaration_list(p):
 
 
 def p_argument_declaration(p): 
-    '''argument_declaration : decl_specifier declarator 
-                            | decl_specifier declarator  EQUAL expression 
-                            | decl_specifier abstract_declarator 
-                            | decl_specifier 
-                            | decl_specifier abstract_declarator  EQUAL expression 
-                            | decl_specifier  EQUAL expression 
+    '''argument_declaration : decl_specifiers declarator 
+                            | decl_specifiers declarator  EQUAL expression 
+                            | decl_specifiers abstract_declarator 
+                            | decl_specifiers 
+                            | decl_specifiers abstract_declarator  EQUAL expression 
+                            | decl_specifiers  EQUAL expression 
     '''
     p[0]=data(p)
 
+
+def p_decl_specifiers(p): 
+    '''decl_specifiers : decl_specifiers decl_specifier 
+                       | decl_specifier 
+    '''
+    p[0]=data(p)
 
 def p_decl_specifier(p): 
     '''decl_specifier : storage_class_specifier 
@@ -458,9 +464,9 @@ def p_member_list(p):
     p[0]=data(p)
 
 def p_member_declaration(p): 
-    '''member_declaration : decl_specifier member_declarator_list SEMICOLON 
+    '''member_declaration : decl_specifiers member_declarator_list SEMICOLON 
                           | member_declarator_list SEMICOLON 
-                          | decl_specifier SEMICOLON 
+                          | decl_specifiers SEMICOLON 
                           | SEMICOLON 
                           | function_definition SEMICOLON 
                           | function_definition 
@@ -468,7 +474,7 @@ def p_member_declaration(p):
     p[0]=data(p)
 
 def p_function_definition(p): 
-    '''function_definition : decl_specifier declarator fct_body 
+    '''function_definition : decl_specifiers declarator fct_body 
                            | declarator fct_body 
     '''
     p[0]=data(p)
@@ -573,13 +579,12 @@ def p_declaration_statement(p):
     p[0]=data(p)
 
 def p_declaration(p):
-    '''declaration : decl_specifier declarator_list SEMICOLON
-                   | decl_specifier SEMICOLON
+    '''declaration : decl_specifiers declarator_list SEMICOLON
+                   | decl_specifiers SEMICOLON
                    | declarator_list SEMICOLON
                    | asm_declaration
                    | function_definition
                    | template_declaration
-                   | linkage_specification
     '''
     p[0]=data(p)
 
@@ -637,13 +642,6 @@ def p_initializer_list(p):
 
 def p_asm_declaration(p): 
     '''asm_declaration : ASM LPAREN STRING  RPAREN  SEMICOLON'''
-    p[0]=data(p)
-
-def p_linkage_specification(p): 
-    '''linkage_specification : EXTERN STRING LCPAREN declaration_list RCPAREN 
-                             | EXTERN STRING LCPAREN RCPAREN 
-                             | EXTERN STRING declaration 
-    '''
     p[0]=data(p)
 
 
