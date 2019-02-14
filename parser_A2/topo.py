@@ -9,12 +9,12 @@ lt = [lst[i] for i in range(1, len(lst))]
 idx = {}
 
 def f(s, g):
-    # print(s)
-    s = re.sub('[ ][A-Z]+(?=[ \n\'])', '', s)
+    # # print(s)
+    #s = re.sub('[ ][A-Z]+(?=[ \n\'])', '', s)
     s = re.sub(r'[\n\|:]', '', s)
     s = re.sub(r'[ ]+', ' ', s)
     s = re.findall(r"\'\'\'.*\'\'\'", s, re.MULTILINE)
-    # print(s)
+    # # print(s)
     if(s):
         s = s[0]
         s = re.sub('\'', '', s)
@@ -35,51 +35,16 @@ for i in lt:
     g = re.findall(r'(?<=p_).*(?=\()', i)[0]
     node[cnt] = g
     idx[g] = cnt
-    #print('---')
-    #print(g)
+    ## print('---')
+    ## print(g)
     zx = f(lt[cnt], g)
-    #print('splice : ' + str(cnt) + '\n' + lt[cnt] + '\n')
+    ## print('splice : ' + str(cnt) + '\n' + lt[cnt] + '\n')
     if(zx and zx[0] != ''):
         req[cnt] = zx
-    #print('req : ')
-    #print(req[cnt])
+    ## print('req : ')
+    ## print(req[cnt])
     G[g] = req[cnt]
     cnt = cnt + 1
-
-for i in node:
-    print(i+' -> '+str(G[i]))
-
-###
-graph1 = {
-    "a": ["b", "c", "d"],
-    "b": [],
-    "c": ["d"],
-    "d": []
-}
-
-# 2 components
-graph2 = {
-    "a": ["b", "c", "d"],
-    "b": [],
-    "c": ["d"],
-    "d": [],
-    "e": ["g", "f", "q"],
-    "g": [],
-    "f": [],
-    "q": []
-}
-
-# cycle
-graph3 = {
-    "a": ["b", "c", "d"],
-    "b": [],
-    "c": ["d", "e"],
-    "d": [],
-    "e": ["g", "f", "q"],
-    "g": ["c"],
-    "f": [],
-    "q": []
-}
 
 GRAY, BLACK = 0, 1
 
@@ -100,10 +65,15 @@ def topological(graph):
     while enter: dfs(enter.pop())
     return order
 
-# check how it works
-print(topological(graph1))
-print(topological(graph2))
+
 topo = topological(G)
 ###
+f=open("t.gz","w")
+f.write("digraph  g{\n")
 for i in topo:
-    print(lt[idx[i]])
+    try:
+        for j in G[i]:
+            f.write( i + " -> " +j+"\n")
+    except:
+        continue
+f.write("}\n")
