@@ -6,44 +6,48 @@ from lexer import lexer
 from lexer import tokens as lexTokens
 cnt=0
 tokens = lexTokens
-##### Compress
-def data(p):
-    global cnt
-    p_name = sys._getframe(1).f_code.co_name
-    if len(p)>2:
-        cnt=cnt+1
-        out = (p_name[2:],cnt)
-        print(str(cnt)+"[label="+p_name[2:]+"]")
-        for each in range(len(p)-1):
-            if(type(p[each+1]) is not tuple):
-                if p[each+1]!="{" and p[each+1]!="}" and p[each+1]!=")" and p[each+1]!="(" and p[each+1]!=';':
-                    cnt=cnt+1
-                    print(str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
-                    p[each+1]=(p[each+1],cnt)
-            if p[each+1][0]!="{" and p[each+1][0]!="}" and p[each+1][0]!=")" and p[each+1][0]!="(" and p[each+1][0]!=';':
-                print(str(out[1])+" -- "+str(p[each+1][1]))
-    elif len(p)==2:
-        
-        out=p[1]
-    else:
-        cnt=cnt+1
-        print("    "+str(cnt)+"[label=\""+str(p[0]).replace('"',"")+"\"]")
-        out=(p[0],cnt)
-    return out
-# Uncompress
+
+# ##### Compress
 # def data(p):
 #     global cnt
 #     p_name = sys._getframe(1).f_code.co_name
-#     cnt=cnt+1
-#     out = (p_name[2:],cnt)
-#     print("    "+str(cnt)+"[label="+p_name[2:]+"]")
-#     for each in range(len(p)-1):
-#         if(type(p[each+1]) is not tuple):
-#             cnt=cnt+1
-#             print("    "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
-#             p[each+1]=(p[each+1],cnt)
-#         print("    "+str(out[1])+" -- "+str(p[each+1][1]))
+#     if len(p)>2:
+#         cnt=cnt+1
+#         out = (p_name[2:],cnt)
+#         open('dot.gz','a').write(  str(cnt) +"[label=" + p_name[2:] + "]\n" )
+#         for each in range(len(p)-1):
+#             if(type(p[each+1]) is not tuple):
+#                 if p[each+1]!="{" and p[each+1]!="}" and p[each+1]!=")" and p[each+1]!="(" and p[each+1]!=';':
+#                     cnt=cnt+1
+#                     open('dot.gz','a').write(str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]\n")
+#                     p[each+1]=(p[each+1],cnt)
+#             if p[each+1][0]!="{" and p[each+1][0]!="}" and p[each+1][0]!=")" and p[each+1][0]!="(" and p[each+1][0]!=';':
+#                 open('dot.gz','a').write(str(out[1])+" -- " + str(p[each+1][1]) + "\n")
+#     elif len(p)==2:
+        
+#         out=p[1]
+#     else:
+#         cnt=cnt+1
+#         open('dot.gz','a').write(str(cnt)+"[label=\""+str(p[0]).replace('"',"")+"\"]\n")
+#         out=(p[0],cnt)
 #     return out
+
+# Uncompress
+def data(p):
+    global cnt
+    p_name = sys._getframe(1).f_code.co_name
+    cnt=cnt+1
+    out = (p_name[2:],cnt)
+    open('dot.gz','a').write(str(cnt)+"[label="+p_name[2:]+"]\n")
+    for each in range(len(p)-1):
+        if(type(p[each+1]) is not tuple):
+            cnt=cnt+1
+            open('dot.gz','a').write(str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]\n")
+            p[each+1]=(p[each+1],cnt)
+        open('dot.gz','a').write(str(out[1])+" -- "+str(p[each+1][1]) + "\n")
+    return out
+
+
 start = 'program'
 
 def p_exception_specification(p): 
@@ -971,7 +975,7 @@ if __name__ == "__main__":
 
     arglist = sys.argv 
     debug = int(arglist[1]) 
-    print("graph ethane {")
+    open('dot.gz','w').write("graph ethane {\n")
     if(arglist[2]== "I"): 
         while True: 
             try: 
@@ -987,5 +991,6 @@ if __name__ == "__main__":
     else: 
         file_o = open(arglist[2],'r').read()
         p = parser.parse(file_o,lexer = lexer,debug=debug) 
+        open('dot.gz','a').write("}\n")
         print(p) 
 
