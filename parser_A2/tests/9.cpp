@@ -8,6 +8,8 @@ void main()
     //     i = i + 1;
     // }
     // while(i<0);
-    i< (0);
-    i#int#(84,9843);
+    int i = 1, j = 1;
+    
 }
+
+int cha(class PD s, struct k K,int a );
