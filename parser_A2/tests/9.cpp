@@ -1,20 +1,15 @@
 void main()
 {
-int i;
-clrscr();
-for(;;)
-{
-cout<<endl<<i;
+    // for(int i=0;  i <= 0 ; i++, j++ )
+    // {
+    //     cout << endl;
+    // }
+    // do{
+    //     i = i + 1;
+    // }
+    // while(i<0);
+    int i = 1, j = 1;
+    
 }
-getch();
-int i;
-clrscr();
-i=1;
-do
-{
-cout<<endl<<i;
-i++;
-}
-while(i<5);
-getch();
-}
+
+int cha(class PD s, struct k K,int a );

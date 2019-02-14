@@ -1,0 +1,10 @@
+#!/bin/bash
+for fn in tests/*; do
+    if [ -d $fn ]; then
+        echo "$fn is a directory"
+    fi
+    if [ -f $fn ]; then
+        echo "$fn is running"
+	python3.7 parser3.py 0 $fn d
+    fi
+done
