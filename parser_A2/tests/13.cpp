@@ -20,7 +20,7 @@ class sum
 
 void main()
 {
-	sum s;
+	class sum s;
 	cout<<"call main"<<endl;
 	getch();
 }

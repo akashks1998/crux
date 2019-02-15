@@ -16,10 +16,10 @@ public:
 };
 
 int main() {
-  SVal v;
+  class SVal v;
   v.Data = 0;
   v.Kind = 2142;
-  A a;
+  class A a;
   a.foo(v);
   return 0;
 }

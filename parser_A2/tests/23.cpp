@@ -1,14 +1,13 @@
-template <|T, B, C|>
+template <|type T, type B, type C|>
 class Array
 {
   private:
-    T *ptr;
+    type T *ptr;
     int size;
 
   public:
-    Array(T arr[], int s)
+    Array(type T arr[], int s)
     {
-        ptr = new T[s];
         size = s;
         for (int i = 0; i < size; i++)
             ptr[i] = arr[i];
@@ -18,6 +17,8 @@ class Array
 
 int main()
 {
-    Array<| int , char, M|> a(arr, 5);
+    class Array<| int , char, M|> a(arr, 5);
+    p = new(nothrow) type T[n]; 
+    p = new class T[n]; 
     return 0;
 }

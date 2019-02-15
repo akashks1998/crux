@@ -1,17 +1,17 @@
 
 
-template <|typename T|> 
+template <|type T|> 
 class Array { 
 private: 
-    T *ptr; 
+    type T *ptr; 
     int size; 
 public: 
-    Array(T arr[], int s); 
+    Array(type T arr[], int s); 
     void print(); 
 }; 
   
 
 int main(){
-    bubbleSort<|int,char,double|> a;
+    class bubbleSort<|int,char,double|> a;
     return 1;
 }

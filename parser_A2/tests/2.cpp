@@ -17,7 +17,7 @@ class Geeks
 	} 
 }; 
   
-int main() { 
+int main(int a[][], int b) { 
       
     class Geeks obj1; 
     obj1.geekname = "xyz"; 
