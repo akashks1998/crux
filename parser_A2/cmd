@@ -1,3 +1,38 @@
 #!/bin/bash
-python3 parser3.py $2 ./tests/$1.cpp $3
-dot -Tps dot.gz -o outfile.ps 
+
+if [[ "$1" == "--help" ]];
+then
+    echo "Usage :\n./cmd [--help][--verbose] test-file --out=out-file\nAvailable options :\n    --help - show this help optional\n    --verbose - prints debug info optional   \n    --out=out-file"
+    exit(0)
+fi
+
+if [[ "$#" == "2" || "$#" == "3" ]];
+then
+    echo "No correct args run ./cmd --help"
+fi
+
+x="$1"
+y="$2"
+s="${x#--out=}"
+t="${y#--out=}"
+outfile=""
+testfile=""
+
+if [[ "$#" == 2 ]];
+then
+    if [[ ! -z "$s" ]];
+    then
+        outfile="$s"
+    else
+        testfile="$t"
+    fi
+fi
+
+if [[ "$1" == "--verbose" ]];
+then
+    python3 parser3.py 1 $testfile a
+else
+    python3 parser3.py 0 $testfile a
+fi
+
+mv dot.gz $outfile

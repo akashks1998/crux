@@ -1,0 +1,6 @@
+Usage :
+./cmd [--help][--verbose] test-file --out=out-file
+Available options :
+    --help - show this help optional
+    --verbose - prints debug info optional   
+    --out=out-file
