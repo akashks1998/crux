@@ -47,6 +47,16 @@ def data(p):
         return out
 start = 'program'
 
+precedence = (
+    ('left', 'PLUSOP', 'MINUSOP'),
+    ('left', 'MULTOP', 'DIVOP', 'MODOP'),
+    ('left', 'DPLUSOP', 'DMINUSOP'),
+    ('left', 'DOT', 'ARROW'),
+    ('left', 'LEFTSHIFT', 'RIGHTLIFT'),
+    ('left', 'LTCOMP', 'LTECOMP'),
+    ('left', 'GTCOMP', 'GTECOMP'), 
+)
+
 def p_exception_specification(p): 
     '''exception_specification : THROW LPAREN type_list  RPAREN 
                                | THROW LPAREN  RPAREN 
@@ -432,6 +442,7 @@ def p_storage_class_specifier(p):
     '''storage_class_specifier : AUTO 
                                | STATIC 
                                | EXTERN 
+                               | VIRTUAL
     '''
     p[0]=data(p)
 
@@ -770,6 +781,8 @@ def p_class_head(p):
     '''
     p[0]=data(p)
 
+
+# use for class inhertance
 def p_base_spec(p): 
     '''base_spec : COLON base_list'''
     p[0]=data(p)
@@ -822,14 +835,14 @@ def p_simple_type_name(p):
                         | UNSIGNED 
                         | FLOAT 
                         | DOUBLE 
-                        | VOID 
+                        | VOID
     '''
     p[0]=data(p)
 
 
 def p_ptr_operator(p): 
-    '''ptr_operator : MULTOP  
-                    | BANDOP 
+    '''ptr_operator : MULTOP
+                    | BANDOP
     '''
     p[0]=data(p)
 
