@@ -1,4 +1,4 @@
-template <|class T|>
+template <|class T, B, C|>
 class Array
 {
   private:
@@ -18,6 +18,6 @@ class Array
 
 int main()
 {
-    Array<| int |> a(arr, 5);
+    Array<| int , char, M|> a(arr, 5);
     return 0;
 }
