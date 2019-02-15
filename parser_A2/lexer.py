@@ -63,6 +63,7 @@ keywords = {
     'true':'TRUE',
     'try':'TRY',
     'typedef':'TYPEDEF',
+    'type' : 'TYPE',
     'template' : 'TEMPLATE',
     'union':'UNION',
     'unsigned':'UNSIGNED',

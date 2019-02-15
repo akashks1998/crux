@@ -849,12 +849,8 @@ def p_base_list(p):
 def p_base_specifier(p): 
     '''base_specifier : class_key  IDENTIFIER 
                       | access_specifier class_key IDENTIFIER 
-                      | IDENTIFIER 
-                      | access_specifier IDENTIFIER 
                       | class_key  IDENTIFIER template_class_name
                       | access_specifier class_key IDENTIFIER template_class_name
-                      | IDENTIFIER template_class_name
-                      | access_specifier IDENTIFIER template_class_name
     '''
     p[0]=f(1,p)
 
@@ -869,6 +865,8 @@ def p_elaborated_type_specifier(p):
     '''elaborated_type_specifier : class_key IDENTIFIER 
                                  | class_key  IDENTIFIER template_class_name
                                  | ENUM enum_name 
+                                 | TYPE IDENTIFIER 
+                                 | TYPE IDENTIFIER template_class_name
     '''
     p[0]=f(1,p)
 
@@ -897,8 +895,7 @@ def p_simple_type_name(p):
                         | DOUBLE 
                         | VOID
                         | STRING
-                        | IDENTIFIER
-                        | IDENTIFIER template_class_name
+
     '''
     p[0]=f(1,p)
 
