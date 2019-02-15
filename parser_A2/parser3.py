@@ -6,10 +6,18 @@ from lexer import lexer
 from lexer import tokens as lexTokens
 cnt=0
 tokens = lexTokens
+ignor=["{","}","(",")",",","\"","'","#",";",None]
 def ctuple(p,val):
     global compress
     global cnt
+    global ignor
     if compress=='a':
+        if(type(p) is not list):
+            if p not in ignor:
+                cnt=cnt+1
+                if type(p) is str and"\"" in p:
+                    p=p.replace("\"", '')
+                p=[{"val":p,"child":[],"idx":cnt}]
         cnt=cnt+1
         return [{"val":val,"child":p,"idx":cnt}]
     return p
@@ -17,7 +25,7 @@ def ctuple(p,val):
 def f(par,p):
     global cnt
     global compress
-    ignor=["{","}","(",")",",","\"","'","#",";",None]
+    global ignor
     if compress=='a':
         if len(p)>2:
             if par!=-1:
@@ -431,6 +439,8 @@ def p_postfix_expression(p):
             p[0]=f(1,p)
         else:
             p[0]=f(3,p)
+    elif p[2]=="[":
+        p[0]=f(1,p)
     else:
         p[0]=f(2,p)
 
@@ -476,8 +486,8 @@ def p_abstract_declarator(p):
                            | LSPAREN RSPAREN 
                            | LPAREN abstract_declarator  RPAREN 
     '''
-    if p[1]=="(":
-        p[0]=f(1,p)
+    if p[1]=="[":
+        p[0]=f(2,p)
     else:
         p[0]=f(1,p)
 
@@ -631,10 +641,25 @@ def p_selection_statement(p):
                            | IF LPAREN expression  RPAREN  statement ELSE statement 
                            | SWITCH LPAREN expression  RPAREN  statement 
     '''
-    p[0]=f(1,p)
+    if p[1]=="if":
+        if len(p)==6:
+            p[3]=ctuple(p[3],"condition")
+            p[5]=ctuple(p[5],"body")
+            p[0]=f(1,p)
+        else:
+            p[3]=ctuple(p[3],"condition")
+            p[5]=ctuple(p[5],"body")
+            p[7]=ctuple(p[7],"else-body")
+            p[0]=f(1,p)
+    else:
+        p[3]=ctuple(p[3],"condition")
+        p[5]=ctuple(p[5],"body")
+        p[0]=f(1,p)
 
 def p_try_block(p): 
     '''try_block : TRY compound_statement handler_list'''
+    p[2]=ctuple(p[2],"body")
+    p[3]=ctuple(p[3],"handle")
     p[0]=f(1,p)
 
 def p_handler_list(p): 
@@ -669,7 +694,26 @@ def p_iteration_statement(p):
                            | FOR LPAREN for_init_statement expression SEMICOLON  RPAREN  statement 
                            | FOR LPAREN for_init_statement SEMICOLON  RPAREN  statement 
     '''
-    p[0]=f(1,p)
+    p[len(p)-1]=ctuple(p[len(p)-1],"body")
+    if p[1]=="while":
+        p[3]=ctuple(p[3],"condition")
+        p[5]=ctuple(p[5],"body")
+        p[0]=f(1,p)
+    elif p[1]=="for":
+        p[3]=ctuple(p[3],"Init")
+        if len(p)==8:
+            if p[4]==";":
+                p[5]=ctuple(p[5],"Update")
+            else:
+                p[4]=ctuple(p[4],"Condition")
+        else:
+            p[4]=ctuple(p[4],"Condition")
+            p[6]=ctuple(p[6],"Update")
+        p[0]=f(1,p)
+    else:
+        p[2]=ctuple(p[2],"Body")
+        p[5]=ctuple(p[5],"condition")
+        p[0]=f(1,p)
 
 def p_for_init_statement(p): 
     '''for_init_statement : expression_statement 
@@ -727,7 +771,10 @@ def p_initializer(p):
                    |   EQUAL LCPAREN initializer_list COMMA RCPAREN 
                    | LPAREN expression_list  RPAREN 
     '''
-    p[0]=f(1,p)
+    if p[1]=="(":
+        p[0]=f(2,p)
+    else:
+        p[0]=f(1,p)
 
 
 def p_initializer_list(p): 
@@ -736,7 +783,10 @@ def p_initializer_list(p):
                         | LCPAREN initializer_list RCPAREN 
                         | LCPAREN initializer_list COMMA RCPAREN 
     '''
-    p[0]=f(1,p)
+    if p[1]=="{":
+        p[0]=f(2,p)
+    else:
+        p[0]=f(-1,p)
 
 
 def p_asm_declaration(p): 
@@ -748,21 +798,21 @@ def p_declaration_list(p):
     '''declaration_list : declaration 
                         | declaration_list declaration 
     '''
-    p[0]=f(1,p)
+    p[0]=f(-1,p)
 
 
 def p_expression_list(p): 
     '''expression_list : assignment_expression 
                        | expression_list COMMA assignment_expression 
     '''
-    p[0]=f(1,p)
+    p[0]=f(-1,p)
 
 
 def p_member_declarator_list(p): 
     '''member_declarator_list : member_declarator 
                               | member_declarator_list COMMA member_declarator 
     '''
-    p[0]=f(1,p)
+    p[0]=f(-1,p)
 
 def p_member_declarator(p): 
     '''member_declarator : declarator pure_specifier 
@@ -879,7 +929,7 @@ def p_base_list(p):
     '''base_list : base_specifier
                  | base_list COMMA base_specifier 
     '''
-    p[0]=f(1,p)
+    p[0]=f(-1,p)
 
 def p_base_specifier(p): 
     '''base_specifier : class_key  IDENTIFIER 
