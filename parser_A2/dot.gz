@@ -1,195 +1,1376 @@
-graph ethane {
-    97[label="program"]
-    59[label="template"]
-    97 -- 59
-    60[label="<|"]
-    59 -- 60
-    1[label="type"]
-    59 -- 1
-    2[label="T"]
-    1 -- 2
-    3[label="type"]
-    1 -- 3
-    4[label="B"]
-    3 -- 4
-    5[label="type"]
-    1 -- 5
-    6[label="C"]
-    5 -- 6
-    61[label="|>"]
-    59 -- 61
-    7[label="class"]
-    59 -- 7
-    8[label="Array"]
-    7 -- 8
-    58[label="member_list"]
-    7 -- 58
-    15[label="private"]
-    58 -- 15
-    16[label=":"]
-    15 -- 16
-    9[label="type"]
-    15 -- 9
-    10[label="T"]
-    9 -- 10
-    11[label="*"]
-    9 -- 11
-    12[label="ptr"]
-    11 -- 12
-    13[label="int"]
-    15 -- 13
-    14[label="size"]
-    13 -- 14
-    56[label="public"]
-    58 -- 56
-    57[label=":"]
-    56 -- 57
-    25[label="Array"]
-    56 -- 25
-    24[label="arguments"]
-    25 -- 24
-    17[label="type"]
-    24 -- 17
-    18[label="T"]
-    17 -- 18
-    19[label="arr"]
-    17 -- 19
-    20[label="["]
-    19 -- 20
-    21[label="]"]
-    19 -- 21
-    22[label="int"]
-    24 -- 22
-    23[label="s"]
-    22 -- 23
-    52[label="body"]
-    25 -- 52
-    26[label="="]
-    52 -- 26
-    27[label="size"]
-    26 -- 27
-    28[label="s"]
-    26 -- 28
-    51[label="for"]
-    52 -- 51
-    48[label="Init"]
-    51 -- 48
-    32[label="int"]
-    48 -- 32
-    31[label="i"]
-    32 -- 31
-    29[label="="]
-    31 -- 29
-    30[label="0.0"]
-    29 -- 30
-    49[label="Condition"]
-    51 -- 49
-    33[label="<"]
-    49 -- 33
-    34[label="i"]
-    33 -- 34
-    35[label="size"]
-    33 -- 35
-    50[label="Update"]
-    51 -- 50
-    36[label="++"]
-    50 -- 36
-    37[label="i"]
-    36 -- 37
-    47[label="body"]
-    51 -- 47
-    46[label="="]
-    47 -- 46
-    38[label="ptr"]
-    46 -- 38
-    39[label="["]
-    38 -- 39
-    40[label="i"]
-    38 -- 40
-    41[label="]"]
-    38 -- 41
-    42[label="arr"]
-    46 -- 42
-    43[label="["]
-    42 -- 43
-    44[label="i"]
-    42 -- 44
-    45[label="]"]
-    42 -- 45
-    55[label="void"]
-    56 -- 55
-    54[label="print"]
-    55 -- 54
-    53[label="arguments"]
-    54 -- 53
-    63[label="main"]
-    97 -- 63
-    62[label="arguments"]
-    63 -- 62
-    96[label="int"]
-    63 -- 96
-    95[label="body"]
-    63 -- 95
-    71[label="class"]
-    95 -- 71
-    72[label="Array"]
-    71 -- 72
-    69[label="<|"]
-    71 -- 69
-    64[label="int"]
-    71 -- 64
-    65[label=","]
-    71 -- 65
-    66[label="char"]
-    71 -- 66
-    67[label=","]
-    71 -- 67
-    68[label="M"]
-    71 -- 68
-    70[label="|>"]
-    71 -- 70
-    73[label="a"]
-    71 -- 73
-    82[label="="]
-    95 -- 82
-    83[label="p"]
-    82 -- 83
-    81[label="new"]
-    82 -- 81
-    74[label="nothrow"]
-    81 -- 74
-    75[label="type"]
-    81 -- 75
-    76[label="T"]
-    75 -- 76
-    78[label="expression"]
-    75 -- 78
-    77[label="n"]
-    78 -- 77
-    79[label="["]
-    78 -- 79
-    80[label="]"]
-    78 -- 80
-    91[label="="]
-    95 -- 91
-    92[label="p"]
-    91 -- 92
-    90[label="new"]
-    91 -- 90
-    84[label="class"]
-    90 -- 84
-    85[label="T"]
-    84 -- 85
-    87[label="expression"]
-    84 -- 87
-    86[label="n"]
-    87 -- 86
-    88[label="["]
-    87 -- 88
-    89[label="]"]
-    87 -- 89
-    93[label="return"]
-    95 -- 93
-    94[label="0.0"]
-    93 -- 94
+digraph ethane {
+    395[label="program"]
+    1[label="struct"]
+    395 -> 1
+    2[label="Node"]
+    1 -> 2
+    12[label="member_list"]
+    1 -> 12
+    3[label="int"]
+    12 -> 3
+    4[label="data"]
+    3 -> 4
+    5[label="struct"]
+    12 -> 5
+    6[label="Node"]
+    5 -> 6
+    7[label="*"]
+    5 -> 7
+    8[label="next"]
+    7 -> 8
+    11[label=","]
+    5 -> 11
+    9[label="*"]
+    5 -> 9
+    10[label="prev"]
+    9 -> 10
+{
+rank = same;
+6 -> 7 -> 11 -> 9[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+3 -> 5[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+2 -> 12[color=white];
+ rankdir=LR;
+}
+    20[label="int"]
+    395 -> 20
+    19[label="*"]
+    20 -> 19
+    18[label="split"]
+    19 -> 18
+    17[label="arguments"]
+    18 -> 17
+    13[label="struct"]
+    17 -> 13
+    14[label="Node"]
+    13 -> 14
+    15[label="*"]
+    13 -> 15
+    16[label="head"]
+    15 -> 16
+{
+rank = same;
+14 -> 15[color=white];
+ rankdir=LR;
+}
+    106[label="function"]
+    395 -> 106
+    32[label="merge"]
+    106 -> 32
+    31[label="arguments"]
+    32 -> 31
+    23[label="struct"]
+    31 -> 23
+    24[label="Node"]
+    23 -> 24
+    25[label="*"]
+    23 -> 25
+    26[label="first"]
+    25 -> 26
+{
+rank = same;
+24 -> 25[color=white];
+ rankdir=LR;
+}
+    27[label="struct"]
+    31 -> 27
+    28[label="Node"]
+    27 -> 28
+    29[label="*"]
+    27 -> 29
+    30[label="second"]
+    29 -> 30
+{
+rank = same;
+28 -> 29[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+23 -> 27[color=white];
+ rankdir=LR;
+}
+    105[label="Return"]
+    32 -> 105
+    21[label="struct"]
+    105 -> 21
+    22[label="Node"]
+    21 -> 22
+    33[label="*"]
+    105 -> 33
+{
+rank = same;
+21 -> 33[color=white];
+ rankdir=LR;
+}
+    104[label="body"]
+    32 -> 104
+    40[label="if"]
+    104 -> 40
+    38[label="condition"]
+    40 -> 38
+    34[label="!"]
+    38 -> 34
+    35[label="first"]
+    34 -> 35
+    39[label="body"]
+    40 -> 39
+    36[label="return"]
+    39 -> 36
+    37[label="second"]
+    36 -> 37
+{
+rank = same;
+38 -> 39[color=white];
+ rankdir=LR;
+}
+    47[label="if"]
+    104 -> 47
+    45[label="condition"]
+    47 -> 45
+    41[label="!"]
+    45 -> 41
+    42[label="second"]
+    41 -> 42
+    46[label="body"]
+    47 -> 46
+    43[label="return"]
+    46 -> 43
+    44[label="first"]
+    43 -> 44
+{
+rank = same;
+45 -> 46[color=white];
+ rankdir=LR;
+}
+    102[label="if"]
+    104 -> 102
+    99[label="condition"]
+    102 -> 99
+    54[label="<"]
+    99 -> 54
+    48[label="->"]
+    54 -> 48
+    49[label="first"]
+    48 -> 49
+    50[label="data"]
+    48 -> 50
+{
+rank = same;
+49 -> 50[color=white];
+ rankdir=LR;
+}
+    51[label="->"]
+    54 -> 51
+    52[label="second"]
+    51 -> 52
+    53[label="data"]
+    51 -> 53
+{
+rank = same;
+52 -> 53[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+48 -> 51[color=white];
+ rankdir=LR;
+}
+    100[label="body"]
+    102 -> 100
+    62[label="="]
+    100 -> 62
+    55[label="->"]
+    62 -> 55
+    56[label="first"]
+    55 -> 56
+    57[label="next"]
+    55 -> 57
+{
+rank = same;
+56 -> 57[color=white];
+ rankdir=LR;
+}
+    61[label="merge"]
+    62 -> 61
+    58[label="->"]
+    61 -> 58
+    59[label="first"]
+    58 -> 59
+    60[label="next"]
+    58 -> 60
+{
+rank = same;
+59 -> 60[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+55 -> 61[color=white];
+ rankdir=LR;
+}
+    68[label="="]
+    100 -> 68
+    66[label="->"]
+    68 -> 66
+    63[label="->"]
+    66 -> 63
+    64[label="first"]
+    63 -> 64
+    65[label="next"]
+    63 -> 65
+{
+rank = same;
+64 -> 65[color=white];
+ rankdir=LR;
+}
+    67[label="prev"]
+    66 -> 67
+{
+rank = same;
+63 -> 67[color=white];
+ rankdir=LR;
+}
+    69[label="first"]
+    68 -> 69
+{
+rank = same;
+66 -> 69[color=white];
+ rankdir=LR;
+}
+    73[label="="]
+    100 -> 73
+    70[label="->"]
+    73 -> 70
+    71[label="first"]
+    70 -> 71
+    72[label="prev"]
+    70 -> 72
+{
+rank = same;
+71 -> 72[color=white];
+ rankdir=LR;
+}
+    74[label="NULL"]
+    73 -> 74
+{
+rank = same;
+70 -> 74[color=white];
+ rankdir=LR;
+}
+    75[label="return"]
+    100 -> 75
+    76[label="first"]
+    75 -> 76
+{
+rank = same;
+62 -> 68 -> 73 -> 75[color=white];
+ rankdir=LR;
+}
+    103[label="else"]
+    102 -> 103
+    101[label="else-body"]
+    102 -> 101
+    84[label="="]
+    101 -> 84
+    77[label="->"]
+    84 -> 77
+    78[label="second"]
+    77 -> 78
+    79[label="next"]
+    77 -> 79
+{
+rank = same;
+78 -> 79[color=white];
+ rankdir=LR;
+}
+    83[label="merge"]
+    84 -> 83
+    80[label="->"]
+    83 -> 80
+    81[label="second"]
+    80 -> 81
+    82[label="next"]
+    80 -> 82
+{
+rank = same;
+81 -> 82[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+77 -> 83[color=white];
+ rankdir=LR;
+}
+    90[label="="]
+    101 -> 90
+    88[label="->"]
+    90 -> 88
+    85[label="->"]
+    88 -> 85
+    86[label="second"]
+    85 -> 86
+    87[label="next"]
+    85 -> 87
+{
+rank = same;
+86 -> 87[color=white];
+ rankdir=LR;
+}
+    89[label="prev"]
+    88 -> 89
+{
+rank = same;
+85 -> 89[color=white];
+ rankdir=LR;
+}
+    91[label="second"]
+    90 -> 91
+{
+rank = same;
+88 -> 91[color=white];
+ rankdir=LR;
+}
+    95[label="="]
+    101 -> 95
+    92[label="->"]
+    95 -> 92
+    93[label="second"]
+    92 -> 93
+    94[label="prev"]
+    92 -> 94
+{
+rank = same;
+93 -> 94[color=white];
+ rankdir=LR;
+}
+    96[label="NULL"]
+    95 -> 96
+{
+rank = same;
+92 -> 96[color=white];
+ rankdir=LR;
+}
+    97[label="return"]
+    101 -> 97
+    98[label="second"]
+    97 -> 98
+{
+rank = same;
+84 -> 90 -> 95 -> 97[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+99 -> 100 -> 103 -> 101[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+40 -> 47 -> 102[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+31 -> 105 -> 104[color=white];
+ rankdir=LR;
+}
+    147[label="function"]
+    395 -> 147
+    114[label="mergeSort"]
+    147 -> 114
+    113[label="arguments"]
+    114 -> 113
+    109[label="struct"]
+    113 -> 109
+    110[label="Node"]
+    109 -> 110
+    111[label="*"]
+    109 -> 111
+    112[label="head"]
+    111 -> 112
+{
+rank = same;
+110 -> 111[color=white];
+ rankdir=LR;
+}
+    146[label="Return"]
+    114 -> 146
+    107[label="struct"]
+    146 -> 107
+    108[label="Node"]
+    107 -> 108
+    115[label="*"]
+    146 -> 115
+{
+rank = same;
+107 -> 115[color=white];
+ rankdir=LR;
+}
+    145[label="body"]
+    114 -> 145
+    127[label="if"]
+    145 -> 127
+    125[label="condition"]
+    127 -> 125
+    122[label="||"]
+    125 -> 122
+    116[label="!"]
+    122 -> 116
+    117[label="head"]
+    116 -> 117
+    121[label="!"]
+    122 -> 121
+    118[label="->"]
+    121 -> 118
+    119[label="head"]
+    118 -> 119
+    120[label="next"]
+    118 -> 120
+{
+rank = same;
+119 -> 120[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+116 -> 121[color=white];
+ rankdir=LR;
+}
+    126[label="body"]
+    127 -> 126
+    123[label="return"]
+    126 -> 123
+    124[label="head"]
+    123 -> 124
+{
+rank = same;
+125 -> 126[color=white];
+ rankdir=LR;
+}
+    128[label="struct"]
+    145 -> 128
+    129[label="Node"]
+    128 -> 129
+    134[label="="]
+    128 -> 134
+    132[label="split"]
+    134 -> 132
+    133[label="head"]
+    132 -> 133
+    130[label="*"]
+    134 -> 130
+    131[label="second"]
+    130 -> 131
+{
+rank = same;
+132 -> 130[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+129 -> 134[color=white];
+ rankdir=LR;
+}
+    137[label="="]
+    145 -> 137
+    138[label="head"]
+    137 -> 138
+    135[label="mergeSort"]
+    137 -> 135
+    136[label="head"]
+    135 -> 136
+{
+rank = same;
+138 -> 135[color=white];
+ rankdir=LR;
+}
+    141[label="="]
+    145 -> 141
+    142[label="second"]
+    141 -> 142
+    139[label="mergeSort"]
+    141 -> 139
+    140[label="second"]
+    139 -> 140
+{
+rank = same;
+142 -> 139[color=white];
+ rankdir=LR;
+}
+    144[label="return"]
+    145 -> 144
+    143[label="merge"]
+    144 -> 143
+{
+rank = same;
+127 -> 128 -> 137 -> 141 -> 144[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+113 -> 146 -> 145[color=white];
+ rankdir=LR;
+}
+    214[label="function"]
+    395 -> 214
+    156[label="insert"]
+    214 -> 156
+    155[label="arguments"]
+    156 -> 155
+    148[label="struct"]
+    155 -> 148
+    149[label="Node"]
+    148 -> 149
+    152[label="*"]
+    148 -> 152
+    150[label="*"]
+    152 -> 150
+    151[label="head"]
+    150 -> 151
+{
+rank = same;
+149 -> 152[color=white];
+ rankdir=LR;
+}
+    153[label="int"]
+    155 -> 153
+    154[label="data"]
+    153 -> 154
+{
+rank = same;
+148 -> 153[color=white];
+ rankdir=LR;
+}
+    213[label="Return"]
+    156 -> 213
+    212[label="void"]
+    213 -> 212
+    211[label="body"]
+    156 -> 211
+    157[label="struct"]
+    211 -> 157
+    158[label="Node"]
+    157 -> 158
+    168[label="="]
+    157 -> 168
+    161[label="struct"]
+    168 -> 161
+    162[label="Node"]
+    161 -> 162
+    163[label="*"]
+    161 -> 163
+    167[label="malloc"]
+    161 -> 167
+    166[label="sizeof"]
+    167 -> 166
+    164[label="struct"]
+    166 -> 164
+    165[label="Node"]
+    164 -> 165
+{
+rank = same;
+162 -> 163 -> 167[color=white];
+ rankdir=LR;
+}
+    159[label="*"]
+    168 -> 159
+    160[label="temp"]
+    159 -> 160
+{
+rank = same;
+161 -> 159[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+158 -> 168[color=white];
+ rankdir=LR;
+}
+    172[label="="]
+    211 -> 172
+    169[label="->"]
+    172 -> 169
+    170[label="temp"]
+    169 -> 170
+    171[label="data"]
+    169 -> 171
+{
+rank = same;
+170 -> 171[color=white];
+ rankdir=LR;
+}
+    173[label="data"]
+    172 -> 173
+{
+rank = same;
+169 -> 173[color=white];
+ rankdir=LR;
+}
+    182[label="="]
+    211 -> 182
+    174[label="->"]
+    182 -> 174
+    175[label="temp"]
+    174 -> 175
+    176[label="next"]
+    174 -> 176
+{
+rank = same;
+175 -> 176[color=white];
+ rankdir=LR;
+}
+    180[label="="]
+    182 -> 180
+    177[label="->"]
+    180 -> 177
+    178[label="temp"]
+    177 -> 178
+    179[label="prev"]
+    177 -> 179
+{
+rank = same;
+178 -> 179[color=white];
+ rankdir=LR;
+}
+    181[label="NULL"]
+    180 -> 181
+{
+rank = same;
+177 -> 181[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+174 -> 180[color=white];
+ rankdir=LR;
+}
+    209[label="if"]
+    211 -> 209
+    206[label="condition"]
+    209 -> 206
+    185[label="!"]
+    206 -> 185
+    183[label="*"]
+    185 -> 183
+    184[label="head"]
+    183 -> 184
+    207[label="body"]
+    209 -> 207
+    188[label="="]
+    207 -> 188
+    186[label="*"]
+    188 -> 186
+    187[label="head"]
+    186 -> 187
+    189[label="temp"]
+    188 -> 189
+{
+rank = same;
+186 -> 189[color=white];
+ rankdir=LR;
+}
+    210[label="else"]
+    209 -> 210
+    208[label="else-body"]
+    209 -> 208
+    195[label="="]
+    208 -> 195
+    190[label="->"]
+    195 -> 190
+    191[label="temp"]
+    190 -> 191
+    192[label="next"]
+    190 -> 192
+{
+rank = same;
+191 -> 192[color=white];
+ rankdir=LR;
+}
+    193[label="*"]
+    195 -> 193
+    194[label="head"]
+    193 -> 194
+{
+rank = same;
+190 -> 193[color=white];
+ rankdir=LR;
+}
+    200[label="="]
+    208 -> 200
+    198[label="->"]
+    200 -> 198
+    196[label="*"]
+    198 -> 196
+    197[label="head"]
+    196 -> 197
+    199[label="prev"]
+    198 -> 199
+{
+rank = same;
+196 -> 199[color=white];
+ rankdir=LR;
+}
+    201[label="temp"]
+    200 -> 201
+{
+rank = same;
+198 -> 201[color=white];
+ rankdir=LR;
+}
+    204[label="="]
+    208 -> 204
+    202[label="*"]
+    204 -> 202
+    203[label="head"]
+    202 -> 203
+    205[label="temp"]
+    204 -> 205
+{
+rank = same;
+202 -> 205[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+195 -> 200 -> 204[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+206 -> 207 -> 210 -> 208[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+157 -> 172 -> 182 -> 209[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+155 -> 213 -> 211[color=white];
+ rankdir=LR;
+}
+    265[label="function"]
+    395 -> 265
+    220[label="print"]
+    265 -> 220
+    219[label="arguments"]
+    220 -> 219
+    215[label="struct"]
+    219 -> 215
+    216[label="Node"]
+    215 -> 216
+    217[label="*"]
+    215 -> 217
+    218[label="head"]
+    217 -> 218
+{
+rank = same;
+216 -> 217[color=white];
+ rankdir=LR;
+}
+    264[label="Return"]
+    220 -> 264
+    263[label="void"]
+    264 -> 263
+    262[label="body"]
+    220 -> 262
+    221[label="struct"]
+    262 -> 221
+    222[label="Node"]
+    221 -> 222
+    225[label="="]
+    221 -> 225
+    226[label="head"]
+    225 -> 226
+    223[label="*"]
+    225 -> 223
+    224[label="temp"]
+    223 -> 224
+{
+rank = same;
+226 -> 223[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+222 -> 225[color=white];
+ rankdir=LR;
+}
+    227[label="printf"]
+    262 -> 227
+    228[label="Forward Traversal using next poitner\n"]
+    227 -> 228
+    245[label="while"]
+    262 -> 245
+    243[label="condition"]
+    245 -> 243
+    242[label="head"]
+    243 -> 242
+    244[label="body"]
+    245 -> 244
+    241[label="body"]
+    244 -> 241
+    232[label="printf"]
+    241 -> 232
+    229[label="->"]
+    232 -> 229
+    230[label="head"]
+    229 -> 230
+    231[label="data"]
+    229 -> 231
+{
+rank = same;
+230 -> 231[color=white];
+ rankdir=LR;
+}
+    233[label="="]
+    241 -> 233
+    234[label="temp"]
+    233 -> 234
+    235[label="head"]
+    233 -> 235
+{
+rank = same;
+234 -> 235[color=white];
+ rankdir=LR;
+}
+    239[label="="]
+    241 -> 239
+    240[label="head"]
+    239 -> 240
+    236[label="->"]
+    239 -> 236
+    237[label="head"]
+    236 -> 237
+    238[label="next"]
+    236 -> 238
+{
+rank = same;
+237 -> 238[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+240 -> 236[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+232 -> 233 -> 239[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+243 -> 244[color=white];
+ rankdir=LR;
+}
+    246[label="printf"]
+    262 -> 246
+    247[label="\nBackward Traversal using prev pointer\n"]
+    246 -> 247
+    261[label="while"]
+    262 -> 261
+    259[label="condition"]
+    261 -> 259
+    258[label="temp"]
+    259 -> 258
+    260[label="body"]
+    261 -> 260
+    257[label="body"]
+    260 -> 257
+    251[label="printf"]
+    257 -> 251
+    248[label="->"]
+    251 -> 248
+    249[label="temp"]
+    248 -> 249
+    250[label="data"]
+    248 -> 250
+{
+rank = same;
+249 -> 250[color=white];
+ rankdir=LR;
+}
+    255[label="="]
+    257 -> 255
+    256[label="temp"]
+    255 -> 256
+    252[label="->"]
+    255 -> 252
+    253[label="temp"]
+    252 -> 253
+    254[label="prev"]
+    252 -> 254
+{
+rank = same;
+253 -> 254[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+256 -> 252[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+251 -> 255[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+259 -> 260[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+221 -> 227 -> 245 -> 246 -> 261[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+219 -> 264 -> 262[color=white];
+ rankdir=LR;
+}
+    291[label="function"]
+    395 -> 291
+    273[label="swap"]
+    291 -> 273
+    272[label="arguments"]
+    273 -> 272
+    268[label="int"]
+    272 -> 268
+    266[label="*"]
+    268 -> 266
+    267[label="A"]
+    266 -> 267
+    271[label="int"]
+    272 -> 271
+    269[label="*"]
+    271 -> 269
+    270[label="B"]
+    269 -> 270
+{
+rank = same;
+268 -> 271[color=white];
+ rankdir=LR;
+}
+    290[label="Return"]
+    273 -> 290
+    289[label="void"]
+    290 -> 289
+    288[label="body"]
+    273 -> 288
+    278[label="int"]
+    288 -> 278
+    276[label="="]
+    278 -> 276
+    274[label="*"]
+    276 -> 274
+    275[label="A"]
+    274 -> 275
+    277[label="temp"]
+    276 -> 277
+{
+rank = same;
+274 -> 277[color=white];
+ rankdir=LR;
+}
+    283[label="="]
+    288 -> 283
+    279[label="*"]
+    283 -> 279
+    280[label="A"]
+    279 -> 280
+    281[label="*"]
+    283 -> 281
+    282[label="B"]
+    281 -> 282
+{
+rank = same;
+279 -> 281[color=white];
+ rankdir=LR;
+}
+    286[label="="]
+    288 -> 286
+    284[label="*"]
+    286 -> 284
+    285[label="B"]
+    284 -> 285
+    287[label="temp"]
+    286 -> 287
+{
+rank = same;
+284 -> 287[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+278 -> 283 -> 286[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+272 -> 290 -> 288[color=white];
+ rankdir=LR;
+}
+    353[label="function"]
+    395 -> 353
+    299[label="split"]
+    353 -> 299
+    298[label="arguments"]
+    299 -> 298
+    294[label="struct"]
+    298 -> 294
+    295[label="Node"]
+    294 -> 295
+    296[label="*"]
+    294 -> 296
+    297[label="head"]
+    296 -> 297
+{
+rank = same;
+295 -> 296[color=white];
+ rankdir=LR;
+}
+    352[label="Return"]
+    299 -> 352
+    292[label="struct"]
+    352 -> 292
+    293[label="Node"]
+    292 -> 293
+    300[label="*"]
+    352 -> 300
+{
+rank = same;
+292 -> 300[color=white];
+ rankdir=LR;
+}
+    351[label="body"]
+    299 -> 351
+    301[label="struct"]
+    351 -> 301
+    302[label="Node"]
+    301 -> 302
+    305[label="="]
+    301 -> 305
+    306[label="head"]
+    305 -> 306
+    303[label="*"]
+    305 -> 303
+    304[label="fast"]
+    303 -> 304
+    309[label="="]
+    305 -> 309
+    310[label="head"]
+    309 -> 310
+    307[label="*"]
+    309 -> 307
+    308[label="slow"]
+    307 -> 308
+{
+rank = same;
+310 -> 307[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+306 -> 303 -> 309[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+302 -> 305[color=white];
+ rankdir=LR;
+}
+    335[label="while"]
+    351 -> 335
+    333[label="condition"]
+    335 -> 333
+    319[label="&&"]
+    333 -> 319
+    311[label="->"]
+    319 -> 311
+    312[label="fast"]
+    311 -> 312
+    313[label="next"]
+    311 -> 313
+{
+rank = same;
+312 -> 313[color=white];
+ rankdir=LR;
+}
+    317[label="->"]
+    319 -> 317
+    314[label="->"]
+    317 -> 314
+    315[label="fast"]
+    314 -> 315
+    316[label="next"]
+    314 -> 316
+{
+rank = same;
+315 -> 316[color=white];
+ rankdir=LR;
+}
+    318[label="next"]
+    317 -> 318
+{
+rank = same;
+314 -> 318[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+311 -> 317[color=white];
+ rankdir=LR;
+}
+    334[label="body"]
+    335 -> 334
+    332[label="body"]
+    334 -> 332
+    325[label="="]
+    332 -> 325
+    326[label="fast"]
+    325 -> 326
+    323[label="->"]
+    325 -> 323
+    320[label="->"]
+    323 -> 320
+    321[label="fast"]
+    320 -> 321
+    322[label="next"]
+    320 -> 322
+{
+rank = same;
+321 -> 322[color=white];
+ rankdir=LR;
+}
+    324[label="next"]
+    323 -> 324
+{
+rank = same;
+320 -> 324[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+326 -> 323[color=white];
+ rankdir=LR;
+}
+    330[label="="]
+    332 -> 330
+    331[label="slow"]
+    330 -> 331
+    327[label="->"]
+    330 -> 327
+    328[label="slow"]
+    327 -> 328
+    329[label="next"]
+    327 -> 329
+{
+rank = same;
+328 -> 329[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+331 -> 327[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+325 -> 330[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+333 -> 334[color=white];
+ rankdir=LR;
+}
+    336[label="struct"]
+    351 -> 336
+    337[label="Node"]
+    336 -> 337
+    343[label="="]
+    336 -> 343
+    340[label="->"]
+    343 -> 340
+    341[label="slow"]
+    340 -> 341
+    342[label="next"]
+    340 -> 342
+{
+rank = same;
+341 -> 342[color=white];
+ rankdir=LR;
+}
+    338[label="*"]
+    343 -> 338
+    339[label="temp"]
+    338 -> 339
+{
+rank = same;
+340 -> 338[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+337 -> 343[color=white];
+ rankdir=LR;
+}
+    347[label="="]
+    351 -> 347
+    344[label="->"]
+    347 -> 344
+    345[label="slow"]
+    344 -> 345
+    346[label="next"]
+    344 -> 346
+{
+rank = same;
+345 -> 346[color=white];
+ rankdir=LR;
+}
+    348[label="NULL"]
+    347 -> 348
+{
+rank = same;
+344 -> 348[color=white];
+ rankdir=LR;
+}
+    349[label="return"]
+    351 -> 349
+    350[label="temp"]
+    349 -> 350
+{
+rank = same;
+301 -> 335 -> 336 -> 347 -> 349[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+298 -> 352 -> 351[color=white];
+ rankdir=LR;
+}
+    394[label="function"]
+    395 -> 394
+    356[label="main"]
+    394 -> 356
+    355[label="arguments"]
+    356 -> 355
+    354[label="void"]
+    355 -> 354
+    393[label="Return"]
+    356 -> 393
+    392[label="int"]
+    393 -> 392
+    391[label="body"]
+    356 -> 391
+    357[label="struct"]
+    391 -> 357
+    358[label="Node"]
+    357 -> 358
+    361[label="="]
+    357 -> 361
+    362[label="NULL"]
+    361 -> 362
+    359[label="*"]
+    361 -> 359
+    360[label="head"]
+    359 -> 360
+{
+rank = same;
+362 -> 359[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+358 -> 361[color=white];
+ rankdir=LR;
+}
+    365[label="insert"]
+    391 -> 365
+    363[label="&"]
+    365 -> 363
+    364[label="head"]
+    363 -> 364
+    368[label="insert"]
+    391 -> 368
+    366[label="&"]
+    368 -> 366
+    367[label="head"]
+    366 -> 367
+    371[label="insert"]
+    391 -> 371
+    369[label="&"]
+    371 -> 369
+    370[label="head"]
+    369 -> 370
+    374[label="insert"]
+    391 -> 374
+    372[label="&"]
+    374 -> 372
+    373[label="head"]
+    372 -> 373
+    377[label="insert"]
+    391 -> 377
+    375[label="&"]
+    377 -> 375
+    376[label="head"]
+    375 -> 376
+    380[label="insert"]
+    391 -> 380
+    378[label="&"]
+    380 -> 378
+    379[label="head"]
+    378 -> 379
+    383[label="="]
+    391 -> 383
+    384[label="head"]
+    383 -> 384
+    381[label="mergeSort"]
+    383 -> 381
+    382[label="head"]
+    381 -> 382
+{
+rank = same;
+384 -> 381[color=white];
+ rankdir=LR;
+}
+    385[label="printf"]
+    391 -> 385
+    386[label="\n\nLinked List after sorting\n"]
+    385 -> 386
+    387[label="print"]
+    391 -> 387
+    388[label="head"]
+    387 -> 388
+    389[label="return"]
+    391 -> 389
+    390[label="0.0"]
+    389 -> 390
+{
+rank = same;
+357 -> 365 -> 368 -> 371 -> 374 -> 377 -> 380 -> 383 -> 385 -> 387 -> 389[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+355 -> 393 -> 391[color=white];
+ rankdir=LR;
+}
+{
+rank = same;
+1 -> 20 -> 106 -> 147 -> 214 -> 265 -> 291 -> 353 -> 394[color=white];
+ rankdir=LR;
+}
 }

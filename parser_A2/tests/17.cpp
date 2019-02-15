@@ -4,7 +4,7 @@ struct Node
     struct Node *next, *prev; 
 }; 
   
-struct Node *split(struct Node *head); 
+int *split(struct Node *head); 
   
 // Function to merge two linked lists 
 struct Node *merge(struct Node *first, struct Node *second) 

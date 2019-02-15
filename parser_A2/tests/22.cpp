@@ -4,8 +4,7 @@ int foo() {
       return 42;
     }
   };
-
-  int i = 0;
+  int i=0;
   i = Local.my_number();
   return i + 1;
 }

@@ -6,7 +6,7 @@ from lexer import lexer
 from lexer import tokens as lexTokens
 cnt=0
 tokens = lexTokens
-ignor=["{","}","(",")",",","\"","'","#",";",None]
+ignor=["{","}","(",")",",","\"","'","#",";",":",None,[]]
 def ctuple(p,val):
     global compress
     global cnt
@@ -39,19 +39,24 @@ def f(par,p):
                         print("Wrong thing given")
                         print(sys._getframe(1).f_code.co_name)
                         return []
-                out=p[par]
-                for i in range(1,len(p)):
-                    if i!=par:
-                        if(type(p[i]) is not list):
-                            if p[i] not in ignor:
-                                if type(p[i]) is str and"\"" in p[i]:
-                                    p[i]=p[i].replace("\"", '')
-                                cnt=cnt+1
-                                p[i]=[{"val":p[i],"child":[],"idx":cnt}]
-                            else:
-                                continue
-                        if p[i] not in ignor:
-                            out[0]["child"].extend(p[i])
+                if len(p[par])>0:
+                    out=p[par]
+                    for i in range(1,len(p)):
+                        if i!=par:
+                            if(type(p[i]) is not list):
+                                if p[i] not in ignor:
+                                    if type(p[i]) is str and"\"" in p[i]:
+                                        p[i]=p[i].replace("\"", '')
+                                    cnt=cnt+1
+                                    p[i]=[{"val":p[i],"child":[],"idx":cnt}]
+                                else:
+                                    continue
+                            if len(p[i])!=0 and p[i] not in ignor:
+                                out[0]["child"].extend(p[i])
+                else:
+                    print("Wrong : empty parent")
+                    print(sys._getframe(1).f_code.co_name)
+                    return []
             else:
                 out=[]
                 for i in range(1,len(p)):
@@ -81,7 +86,7 @@ def f(par,p):
                         open('dot.gz','a').write(" "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
                         p[each+1]=(p[each+1],cnt)
                 if p[each+1][0]!="{" and p[each+1][0]!="}" and p[each+1][0]!=")" and p[each+1][0]!="(" and p[each+1][0]!=';':
-                    open('dot.gz','a').write(" "+str(out[1])+" -- "+str(p[each+1][1]))
+                    open('dot.gz','a').write(" "+str(out[1])+" -> "+str(p[each+1][1]))
         elif len(p)==2:
             
             out=p[1]
@@ -100,16 +105,25 @@ def f(par,p):
                 cnt=cnt+1
                 open('dot.gz','a').write("    "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
                 p[each+1]=(p[each+1],cnt)
-            open('dot.gz','a').write("    "+str(out[1])+" -- "+str(p[each+1][1]))
+            open('dot.gz','a').write("    "+str(out[1])+" -> "+str(p[each+1][1]))
         return out
 def rec(p,f):
     if type(p) is dict:
         if p["child"] !=None:
+            
             for j in p["child"]:
                 if j["val"] !=None:
                     f.write("\n    "+str(j["idx"])+"[label=\""+str(j["val"])+"\"]")
-                    f.write("\n    "+str(p["idx"])+" -- "+str(j["idx"]))
+                    f.write("\n    "+str(p["idx"])+" -> "+str(j["idx"]))
                     rec(j,f)
+            if len(p["child"])>1:
+                f.write("\n{\nrank = same;\n")
+                f.write(str(p["child"][0]["idx"]))
+                for j in p["child"][1:]:
+                    if j["val"] !=None:
+                        f.write(" -> "+str(j["idx"]))
+                
+                f.write("[color=white];\n rankdir=LR;\n}")
 
 def printast(p):
     if compress=='a':
@@ -438,7 +452,7 @@ def p_postfix_expression(p):
         if p[3]==")":
             p[0]=f(1,p)
         else:
-            p[0]=f(3,p)
+            p[0]=f(1,p)
     elif p[2]=="[":
         p[0]=f(1,p)
     else:
@@ -451,7 +465,7 @@ def p_primary_expression(p):
                           | LPAREN expression  RPAREN 
                           | name   
     '''
-    p[0]=f(1,p)
+    p[0]=f(2,p)
 
 
 def p_literal(p): 
@@ -593,10 +607,17 @@ def p_function_definition(p):
                            | declarator fct_body 
     '''
     if len(p)==4:
+        p[1]=ctuple(p[1],"Return")
+        dec = p[2]
+        while( dec[0]["val"] in ["*","&"] ):
+            p[1][0]["child"].append( {"val":dec[0]["val"], "child":[], "idx":dec[0]["idx"]} )
+            dec = dec[0]["child"]
+        p[2]=dec
+
         p[0]=f(2,p)
     else:
         p[0]=f(1,p)
-
+    p[0]=ctuple(p[0],"function")
 
 def p_fct_body(p): 
     '''fct_body : compound_statement'''
@@ -762,7 +783,7 @@ def p_init_declarator(p):
     '''init_declarator : declarator initializer 
                        | declarator 
     '''
-    p[0]=f(1,p)
+    p[0]=f(2,p)
 
 
 def p_initializer(p): 
@@ -1004,7 +1025,7 @@ if __name__ == "__main__":
     arglist = sys.argv 
     debug = int(arglist[1])
     compress=arglist[3]
-    open('dot.gz','w').write("graph ethane {")
+    open('dot.gz','w').write("digraph ethane {")
     if(arglist[2]== "I"): 
         while True: 
             try: 
@@ -1022,5 +1043,6 @@ if __name__ == "__main__":
         p = parser.parse(file_o,lexer = lexer,debug=debug) 
         printast(p)
         open('dot.gz','a').write("\n}\n")
-        print(p) 
+        if compress!='a':
+            print(p) 
         
