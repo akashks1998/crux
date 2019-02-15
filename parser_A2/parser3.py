@@ -422,7 +422,7 @@ def p_primary_expression(p):
     '''primary_expression : literal 
                           | THIS  
                           | LPAREN expression  RPAREN 
-                          | name 
+                          | name   
     '''
     p[0]=f(1,p)
 
@@ -738,7 +738,7 @@ def p_member_declarator(p):
     p[0]=f(1,p)
 
 def p_declarator(p): 
-    '''declarator : name 
+    '''declarator : name
                   | unary2_operator declarator 
                   | declarator LPAREN argument_declaration_list  RPAREN 
                   | declarator LSPAREN constant_expression RSPAREN 
@@ -871,6 +871,7 @@ def p_elaborated_type_specifier(p):
                                  | ENUM enum_name 
                                  | TYPE IDENTIFIER 
                                  | TYPE IDENTIFIER template_class_name
+                                 
     '''
     p[0]=f(1,p)
 
