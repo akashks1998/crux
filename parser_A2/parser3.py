@@ -36,7 +36,6 @@ def f(par,p):
                             p[par]=p[par].replace("\"", '')
                         p[par]=[{"val":p[par],"child":[],"idx":cnt}]
                     else:
-                        print("Wrong thing given")
                         print(sys._getframe(1).f_code.co_name)
                         return []
                 if len(p[par])>0:
@@ -54,7 +53,6 @@ def f(par,p):
                             if len(p[i])!=0 and p[i] not in ignor:
                                 out[0]["child"].extend(p[i])
                 else:
-                    print("Wrong : empty parent")
                     print(sys._getframe(1).f_code.co_name)
                     return []
             else:
