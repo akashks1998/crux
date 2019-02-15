@@ -143,15 +143,26 @@ precedence = (
     ('left', 'GTCOMP', 'GTECOMP'), 
 )
 
-def p_exception_specification(p): 
-    '''exception_specification : THROW LPAREN type_list  RPAREN 
-                               | THROW LPAREN  RPAREN 
+def p_control_line(p):
+    '''control_line : control_line control_line_stmt
+                    | control_line_stmt
+    '''
+    p[0]=f(1,p)
+
+def p_include_control(p):
+    '''include_control : HASHTAG INCLUDE
+    '''
+    p[0]=str(p[1])+str(p[2])
+
+def p_control_line_stmt(p):
+    '''control_line_stmt : include_control LTCOMP STRING_L GTCOMP
+                    | include_control STRING_L
     '''
     p[0]=f(1,p)
 
 def p_program(p):
-    '''program : translation_unit
-
+    '''program : control_line translation_unit
+               | translation_unit
     '''
     p[1]=ctuple(p[1],"program")
     p[0]=f(1,p)
@@ -327,6 +338,7 @@ def p_pm_expression(p):
 
 def p_expression(p): 
     '''expression : assignment_expression 
+                  | throw_expression
                   | expression COMMA assignment_expression 
     '''
     p[0]=f(-1,p)
@@ -489,6 +501,7 @@ def p_type_name(p):
     p[0]=f(1,p)
 
 
+# used for abstract declaration of func, int objstore_destroy(struct objfs_state*, char[]);
 def p_abstract_declarator(p): 
     '''abstract_declarator : unary2_operator abstract_declarator 
                            | unary2_operator 

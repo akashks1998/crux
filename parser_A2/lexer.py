@@ -5,6 +5,7 @@ import sys
 #Personal Groups
 
 keywords = {
+    'include':'INCLUDE',
     'and':'AND',
     'and_eq':'AND_EQ',
     'asm':'ASM',

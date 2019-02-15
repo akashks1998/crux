@@ -1,3 +1,5 @@
+#include<"bits/stdc++.h">
+#include<"blah.h">
 int foo() {
   struct Local {
     static int my_number() {
