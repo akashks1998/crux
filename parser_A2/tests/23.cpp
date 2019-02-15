@@ -1,4 +1,4 @@
-template <|class T, B, C|>
+template <|T, B, C|>
 class Array
 {
   private:
