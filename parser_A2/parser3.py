@@ -605,19 +605,9 @@ def p_template_declaration(p):
     p[0]=data(p)
 
 def p_template_argument_list(p): 
-    '''template_argument_list : template_argument 
-                              | template_argument_list COMMA template_argument 
+    '''template_argument_list : argument_declaration
+                              | template_argument_list COMMA argument_declaration
     '''
-    p[0]=data(p)
-
-def p_template_argument(p): 
-    '''template_argument : type_argument 
-                         | argument_declaration 
-    '''
-    p[0]=data(p)
-
-def p_type_argument(p): 
-    '''type_argument : CLASS IDENTIFIER'''
     p[0]=data(p)
 
 def p_declarator_list(p): 
@@ -859,7 +849,7 @@ if __name__ == "__main__":
     parser.error = 0 
 
     if(len(sys.argv) != 4): 
-        print("Usage python3 parser.py") 
+        print("Usage python3 parser.py arg1 arg2 arg3") 
         exit() 
 
     arglist = sys.argv 
