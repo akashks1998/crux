@@ -5,7 +5,7 @@ public :
   void show () = 0; //pure virtual function 
 };
 //
-class ArithmeticAdd : public Object 
+class ArithmeticAdd : public class Object, struct maaki 
 {
   int res;
 public:
@@ -21,12 +21,12 @@ public:
   }
 };
 //
-class Complex : public Object 
+class Complex : public class Object 
 {
   int real;
   int img;
 public :
-  Complex Add (Complex C1, Complex2) {
+  class Complex Add (class Complex C1, class Complex a2) {
     real = C1.real + C2.real;
     img = C1.img + C2.img;
     return this;
@@ -38,14 +38,14 @@ public :
 //
 int main () 
 {
-    Object o [2];
-   ArithmeticAdd a;
+    class Object o [2];
+   class ArithmeticAdd a;
    a.add (2,6);
    o [0] = &a;
    o [0].show ();  // Dynamic dispatch - run time polymorphisms 
    a.add (9,11,23);
    o [0].show ();
-   Complex C1, C2, C3, C4;
+   class Complex C1, C2, C3, C4;
    cin >> C1;
    cin >> C2;
    C4 = C3.Add (C1, C2); // Message passing 

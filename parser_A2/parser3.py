@@ -795,8 +795,8 @@ def p_base_list(p):
     p[0]=data(p)
 
 def p_base_specifier(p): 
-    '''base_specifier : IDENTIFIER 
-                      | access_specifier IDENTIFIER 
+    '''base_specifier : class_key  IDENTIFIER 
+                      | access_specifier class_key IDENTIFIER 
     '''
     p[0]=data(p)
 
