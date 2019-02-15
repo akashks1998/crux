@@ -2,7 +2,9 @@
 void main()
 {
 
-    A = (class B(*))a;
+    A = (class B)a;
+    class a <| int, char |> B;
+    int ***c;
     // class A aobj;
     // class B bobj;
     // class A *bptr;

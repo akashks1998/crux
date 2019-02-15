@@ -151,7 +151,9 @@ tokens = [
         'DPLUSOP',
         'LSHIFT',
         'RSHIFT',
-        'DMINUSOP'
+        'DMINUSOP',
+        'LTEMPLATE',
+        'RTEMPLATE'
 
         # SPECIAL
         
@@ -201,6 +203,9 @@ t_LSHIFT    = r'\<\<'
 t_RSHIFT    = r'\>\>'
 t_LSHIFTEQOP= r'\<\<='
 t_RSHIFTEQOP= r'\>\>='
+
+t_LTEMPLATE = r'<\|'
+t_RTEMPLATE = r'\|>'
 
 t_LEFTSHIFT = r'<<'
 t_RIGHTLIFT = r'>>'

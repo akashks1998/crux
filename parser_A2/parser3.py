@@ -106,11 +106,7 @@ def p_empty(p):
 
 # Error rule FOR syntax errors 
 def p_template_class_name(p): 
-    '''template_class_name : HASHTAG template_arg_list HASHTAG''' 
-    p[0]=data(p)
-
-def p_template_name(p):
-    '''template_name : IDENTIFIER'''
+    '''template_class_name : LTEMPLATE template_arg_list RTEMPLATE''' 
     p[0]=data(p)
 
 def p_template_arg_list(p): 
@@ -275,7 +271,8 @@ def p_unary_expression(p):
     '''unary_expression : postfix_expression 
                         | DPLUSOP unary_expression 
                         | DMINUSOP unary_expression 
-                        | unary_operator cast_expression 
+                        | unary1_operator cast_expression 
+                        | unary2_operator cast_expression 
                         | SIZEOF  unary_expression 
                         | SIZEOF LPAREN type_name  RPAREN 
                         | allocation_expression 
@@ -328,13 +325,17 @@ def p_new_initializer(p):
     p[0]=data(p)
 
 
-def p_unary_operator(p): 
-    '''unary_operator : MULTOP 
-                      | BANDOP 
-                      | PLUSOP 
+def p_unary1_operator(p): 
+    '''unary1_operator : PLUSOP 
                       | MINUSOP 
                       | NOTSYM 
                       | BNOP 
+    '''
+    p[0]=data(p)
+
+def p_unary2_operator(p): 
+    '''unary2_operator : MULTOP 
+                      | BANDOP 
     '''
     p[0]=data(p)
 
@@ -386,8 +387,8 @@ def p_type_name(p):
 
 
 def p_abstract_declarator(p): 
-    '''abstract_declarator : ptr_operator abstract_declarator 
-                           | ptr_operator 
+    '''abstract_declarator : unary2_operator abstract_declarator 
+                           | unary2_operator 
                            | abstract_declarator LPAREN argument_declaration_list  RPAREN 
                            | LPAREN argument_declaration_list  RPAREN 
                            | abstract_declarator LSPAREN constant_expression RSPAREN 
@@ -686,7 +687,7 @@ def p_member_declarator(p):
 
 def p_declarator(p): 
     '''declarator : name 
-                  | ptr_operator declarator 
+                  | unary2_operator declarator 
                   | declarator LPAREN argument_declaration_list  RPAREN 
                   | declarator LSPAREN constant_expression RSPAREN 
                   | declarator LSPAREN RSPAREN 
@@ -711,7 +712,7 @@ def p_name(p):
 #     p[0]=data(p)
 
 # def p_conversion_type_name(p): 
-#     '''conversion_type_name : type_specifier_list ptr_operator 
+#     '''conversion_type_name : type_specifier_list unary2_operator 
 #                             | type_specifier_list 
 #     '''
 #     p[0]=data(p)
@@ -808,6 +809,7 @@ def p_access_specifier(p):
 
 def p_elaborated_type_specifier(p): 
     '''elaborated_type_specifier : class_key IDENTIFIER 
+                                 | class_key  IDENTIFIER template_class_name
                                  | ENUM enum_name 
     '''
     p[0]=data(p)
@@ -840,11 +842,6 @@ def p_simple_type_name(p):
     p[0]=data(p)
 
 
-def p_ptr_operator(p): 
-    '''ptr_operator : MULTOP
-                    | BANDOP
-    '''
-    p[0]=data(p)
 
 
 
