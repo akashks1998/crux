@@ -367,7 +367,7 @@ def p_primary_expression(p):
 
 def p_literal(p): 
     '''literal : NUMBER 
-               | STRING
+               | STRING_L
                | SCHAR
     '''
     p[0]=data(p)
@@ -601,7 +601,7 @@ def p_declaration(p):
     p[0]=data(p)
 
 def p_template_declaration(p): 
-    '''template_declaration : TEMPLATE LTCOMP template_argument_list GTCOMP declaration'''
+    '''template_declaration : TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration'''
     p[0]=data(p)
 
 def p_template_argument_list(p): 
@@ -653,7 +653,7 @@ def p_initializer_list(p):
 
 
 def p_asm_declaration(p): 
-    '''asm_declaration : ASM LPAREN STRING  RPAREN  SEMICOLON'''
+    '''asm_declaration : ASM LPAREN STRING_L  RPAREN  SEMICOLON'''
     p[0]=data(p)
 
 
@@ -789,7 +789,7 @@ def p_base_spec(p):
     p[0]=data(p)
 
 def p_base_list(p): 
-    '''base_list : base_specifier 
+    '''base_list : base_specifier
                  | base_list COMMA base_specifier 
     '''
     p[0]=data(p)
@@ -797,6 +797,12 @@ def p_base_list(p):
 def p_base_specifier(p): 
     '''base_specifier : class_key  IDENTIFIER 
                       | access_specifier class_key IDENTIFIER 
+                      | IDENTIFIER 
+                      | access_specifier IDENTIFIER 
+                      | class_key  IDENTIFIER template_class_name
+                      | access_specifier class_key IDENTIFIER template_class_name
+                      | IDENTIFIER template_class_name
+                      | access_specifier IDENTIFIER template_class_name
     '''
     p[0]=data(p)
 
@@ -838,11 +844,14 @@ def p_simple_type_name(p):
                         | FLOAT 
                         | DOUBLE 
                         | VOID
+                        | STRING
+                        | IDENTIFIER
+                        | IDENTIFIER template_class_name
     '''
     p[0]=data(p)
 
 
-
+### remove  | IDENTIFIER | IDENTIFIER template_class_name to reduce conflict to 6
 
 
 if __name__ == "__main__": 

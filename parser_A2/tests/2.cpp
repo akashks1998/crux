@@ -19,7 +19,7 @@ class Geeks
   
 int main() { 
       
-    Geeks obj1; 
+    class Geeks obj1; 
     obj1.geekname = "xyz"; 
     obj1.id=15; 
       

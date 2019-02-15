@@ -1,6 +1,6 @@
 
 
-template <typename T> 
+template <|typename T|> 
 class Array { 
 private: 
     T *ptr; 
@@ -12,6 +12,6 @@ public:
   
 
 int main(){
-    bubbleSort<int,char,double>(a, 5);
+    bubbleSort<|int,char,double|> a;
     return 1;
 }
