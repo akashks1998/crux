@@ -1,20 +1,20 @@
 
 class A
 {
-public:
-  virtual void show()
-  {
-    cout << "Hello base class";
-  }
+  public:
+    virtual void show()
+    {
+      cout << "Hello base class";
+    }
 };
 
 class B : public A
 {
-public:
-  void show()
-  {
-    cout << "Hello derive class";
-  }
+  public:
+    void show()
+    {
+      cout << "Hello derive class";
+    }
 };
 
 void main()

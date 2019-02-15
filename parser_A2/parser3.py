@@ -6,18 +6,25 @@ from lexer import lexer
 from lexer import tokens as lexTokens
 cnt=0
 tokens = lexTokens
-
+def ctuple(p,val):
+    global compress
+    global cnt
+    if compress=='a':
+        cnt=cnt+1
+        return [{"val":val,"child":p,"idx":cnt}]
 # Uncompress
 def f(par,p):
     global cnt
     global compress
-    ignor=["{","}","(",")",",","\"","'","#"]
+    ignor=["{","}","(",")",",","\"","'","#",";",None]
     if compress=='a':
         if len(p)>2:
             if par!=-1:
                 if(type(p[par]) is not list):
                     if p[par] not in ignor:
                         cnt=cnt+1
+                        if type(p[par]) is str and"\"" in p[par]:
+                            p[par]=p[par].replace("\"", '')
                         p[par]=[{"val":p[par],"child":[],"idx":cnt}]
                     else:
                         print("Wrong thing given")
@@ -27,17 +34,25 @@ def f(par,p):
                 for i in range(1,len(p)):
                     if i!=par:
                         if(type(p[i]) is not list):
-                            if p[par] not in ignor:
+                            if p[i] not in ignor:
+                                if type(p[i]) is str and"\"" in p[i]:
+                                    p[i]=p[i].replace("\"", '')
                                 cnt=cnt+1
                                 p[i]=[{"val":p[i],"child":[],"idx":cnt}]
                             else:
                                 continue
-                        if p[par] not in ignor:
-                            out[0]["child"].extend(p[par])
+                        if p[i] not in ignor:
+                            out[0]["child"].extend(p[i])
             else:
                 out=[]
                 for i in range(1,len(p)):
-                    for j in p[i]:
+                    if(type(p[i]) is not list):
+                        if p[par] not in ignor:
+                            cnt=cnt+1
+                            p[i]=[{"val":p[i],"child":[],"idx":cnt}]
+                        else:
+                            continue
+                    if p[i] not in ignor:
                         out.extend(p[i])
         elif len(p)==2:
             out=p[1]
@@ -78,7 +93,20 @@ def f(par,p):
                 p[each+1]=(p[each+1],cnt)
             open('dot.gz','a').write("    "+str(out[1])+" -- "+str(p[each+1][1]))
         return out
-    
+def rec(p,f):
+    if type(p) is dict:
+        for j in p["child"]:
+            if j["val"] !=None:
+                f.write("    "+str(j["idx"])+"[label=\""+str(j["val"])+"\"]")
+                f.write("    "+str(p["idx"])+" -- "+str(j["idx"]))
+                rec(j,f)
+
+def printast(p):
+    if compress=='a':
+        f=open('dot.gz','a')
+        for i in p:
+            f.write("    "+str(i["idx"])+"[label=\""+str(i["val"])+"\"]")
+            rec(i,f)
 start = 'program'
 
 precedence = (
@@ -101,6 +129,7 @@ def p_program(p):
     '''program : translation_unit
 
     '''
+    p[1]=ctuple(p[1],"program")
     p[0]=f(1,p)
 
 
@@ -140,12 +169,8 @@ def p_empty(p):
 
 # Error rule FOR syntax errors 
 def p_template_class_name(p): 
-    '''template_class_name : HASHTAG template_arg_list HASHTAG''' 
+    '''template_class_name : LTEMPLATE template_arg_list RTEMPLATE''' 
     p[0]=f(-1,p)
-
-def p_template_name(p):
-    '''template_name : IDENTIFIER'''
-    p[0]=f(1,p)
 
 def p_template_arg_list(p): 
     '''template_arg_list : template_arg 
@@ -308,7 +333,8 @@ def p_unary_expression(p):
     '''unary_expression : postfix_expression 
                         | DPLUSOP unary_expression 
                         | DMINUSOP unary_expression 
-                        | unary_operator cast_expression 
+                        | unary1_operator cast_expression 
+                        | unary2_operator cast_expression 
                         | SIZEOF  unary_expression 
                         | SIZEOF LPAREN type_name  RPAREN 
                         | allocation_expression 
@@ -361,13 +387,17 @@ def p_new_initializer(p):
     p[0]=f(1,p)
 
 
-def p_unary_operator(p): 
-    '''unary_operator : MULTOP 
-                      | BANDOP 
-                      | PLUSOP 
+def p_unary1_operator(p): 
+    '''unary1_operator : PLUSOP 
                       | MINUSOP 
                       | NOTSYM 
                       | BNOP 
+    '''
+    p[0]=f(1,p)
+
+def p_unary2_operator(p): 
+    '''unary2_operator : MULTOP 
+                      | BANDOP 
     '''
     p[0]=f(1,p)
 
@@ -399,7 +429,7 @@ def p_primary_expression(p):
 
 def p_literal(p): 
     '''literal : NUMBER 
-               | STRING
+               | STRING_L
                | SCHAR
     '''
     p[0]=f(1,p)
@@ -419,8 +449,8 @@ def p_type_name(p):
 
 
 def p_abstract_declarator(p): 
-    '''abstract_declarator : ptr_operator abstract_declarator 
-                           | ptr_operator 
+    '''abstract_declarator : unary2_operator abstract_declarator 
+                           | unary2_operator 
                            | abstract_declarator LPAREN argument_declaration_list  RPAREN 
                            | LPAREN argument_declaration_list  RPAREN 
                            | abstract_declarator LSPAREN constant_expression RSPAREN 
@@ -633,23 +663,13 @@ def p_declaration(p):
     p[0]=f(1,p)
 
 def p_template_declaration(p): 
-    '''template_declaration : TEMPLATE LTCOMP template_argument_list GTCOMP declaration'''
+    '''template_declaration : TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration'''
     p[0]=f(1,p)
 
 def p_template_argument_list(p): 
-    '''template_argument_list : template_argument 
-                              | template_argument_list COMMA template_argument 
+    '''template_argument_list : argument_declaration
+                              | template_argument_list COMMA argument_declaration
     '''
-    p[0]=f(1,p)
-
-def p_template_argument(p): 
-    '''template_argument : type_argument 
-                         | argument_declaration 
-    '''
-    p[0]=f(1,p)
-
-def p_type_argument(p): 
-    '''type_argument : CLASS IDENTIFIER'''
     p[0]=f(1,p)
 
 def p_declarator_list(p): 
@@ -685,7 +705,7 @@ def p_initializer_list(p):
 
 
 def p_asm_declaration(p): 
-    '''asm_declaration : ASM LPAREN STRING  RPAREN  SEMICOLON'''
+    '''asm_declaration : ASM LPAREN STRING_L  RPAREN  SEMICOLON'''
     p[0]=f(1,p)
 
 
@@ -719,7 +739,7 @@ def p_member_declarator(p):
 
 def p_declarator(p): 
     '''declarator : name 
-                  | ptr_operator declarator 
+                  | unary2_operator declarator 
                   | declarator LPAREN argument_declaration_list  RPAREN 
                   | declarator LSPAREN constant_expression RSPAREN 
                   | declarator LSPAREN RSPAREN 
@@ -744,7 +764,7 @@ def p_name(p):
 #     p[0]=f(1,p)
 
 # def p_conversion_type_name(p): 
-#     '''conversion_type_name : type_specifier_list ptr_operator 
+#     '''conversion_type_name : type_specifier_list unary2_operator 
 #                             | type_specifier_list 
 #     '''
 #     p[0]=f(1,p)
@@ -821,7 +841,7 @@ def p_base_spec(p):
     p[0]=f(1,p)
 
 def p_base_list(p): 
-    '''base_list : base_specifier 
+    '''base_list : base_specifier
                  | base_list COMMA base_specifier 
     '''
     p[0]=f(1,p)
@@ -829,6 +849,12 @@ def p_base_list(p):
 def p_base_specifier(p): 
     '''base_specifier : class_key  IDENTIFIER 
                       | access_specifier class_key IDENTIFIER 
+                      | IDENTIFIER 
+                      | access_specifier IDENTIFIER 
+                      | class_key  IDENTIFIER template_class_name
+                      | access_specifier class_key IDENTIFIER template_class_name
+                      | IDENTIFIER template_class_name
+                      | access_specifier IDENTIFIER template_class_name
     '''
     p[0]=f(1,p)
 
@@ -841,6 +867,7 @@ def p_access_specifier(p):
 
 def p_elaborated_type_specifier(p): 
     '''elaborated_type_specifier : class_key IDENTIFIER 
+                                 | class_key  IDENTIFIER template_class_name
                                  | ENUM enum_name 
     '''
     p[0]=f(1,p)
@@ -869,16 +896,14 @@ def p_simple_type_name(p):
                         | FLOAT 
                         | DOUBLE 
                         | VOID
+                        | STRING
+                        | IDENTIFIER
+                        | IDENTIFIER template_class_name
     '''
     p[0]=f(1,p)
 
 
-def p_ptr_operator(p): 
-    '''ptr_operator : MULTOP
-                    | BANDOP
-    '''
-    p[0]=f(1,p)
-
+### remove  | IDENTIFIER | IDENTIFIER template_class_name to reduce conflict to 6
 
 
 if __name__ == "__main__": 
@@ -886,7 +911,7 @@ if __name__ == "__main__":
     parser.error = 0 
 
     if(len(sys.argv) != 4): 
-        print("Usage python3 parser.py") 
+        print("Usage python3 parser.py arg1 arg2 arg3") 
         exit() 
 
     arglist = sys.argv 
@@ -908,6 +933,7 @@ if __name__ == "__main__":
     else: 
         file_o = open(arglist[2],'r').read()
         p = parser.parse(file_o,lexer = lexer,debug=debug) 
+        printast(p)
         open('dot.gz','a').write("}\n")
         print(p) 
-
+        

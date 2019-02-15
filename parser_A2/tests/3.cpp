@@ -2,7 +2,7 @@
 class Object //Abstract class in C++
 {
 public :
-  void show () = 0; //pure virtual function 
+  void show (); 
 };
 //
 class ArithmeticAdd : public class Object, struct maaki 

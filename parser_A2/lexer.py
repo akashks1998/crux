@@ -57,6 +57,7 @@ keywords = {
     'std' : 'STD',
     'switch':'SWITCH',
     'struct' : 'STRUCT',
+    'string' : 'STRING',
     'this':'THIS',
     'throw':'THROW',
     'true':'TRUE',
@@ -130,7 +131,7 @@ tokens = [
         'COLON',
         'COMMENT',
         'SCHAR',
-        'STRING',
+        'STRING_L',
         'HASHTAG',
         'NOTSYM',
         'QUESMARK',
@@ -151,7 +152,9 @@ tokens = [
         'DPLUSOP',
         'LSHIFT',
         'RSHIFT',
-        'DMINUSOP'
+        'DMINUSOP',
+        'LTEMPLATE',
+        'RTEMPLATE'
 
         # SPECIAL
         
@@ -202,6 +205,9 @@ t_RSHIFT    = r'\>\>'
 t_LSHIFTEQOP= r'\<\<='
 t_RSHIFTEQOP= r'\>\>='
 
+t_LTEMPLATE = r'<\|'
+t_RTEMPLATE = r'\|>'
+
 t_LEFTSHIFT = r'<<'
 t_RIGHTLIFT = r'>>'
 t_CONDTIONAL = r'\?:'
@@ -238,7 +244,7 @@ t_SEMICOLON     = r';'
 t_DOUBLECOLON   = r'::'
 t_COLON         = r':'
 t_SCHAR         = r'\'.\''
-t_STRING        = r'\".*\"'
+t_STRING_L        = r'\".*\"'
 t_HASHTAG       = r'\#'
 t_NOTSYM        = r'\!'
 t_QUESMARK       = r'\?'

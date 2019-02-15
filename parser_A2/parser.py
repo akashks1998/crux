@@ -29,7 +29,7 @@ def p_declaration_seq(p):
 
 def p_declaration(p):
     '''declaration : decl_specifiers  declarator_list SEMICOLON
-                   |  decl_specifiers template_class_name  declarator_list SEMICOLON
+                   | decl_specifiers template_class_name  declarator_list SEMICOLON
                    | decl_specifiers SEMICOLON
                    | declarator_list SEMICOLON
                    | asm_declaration
