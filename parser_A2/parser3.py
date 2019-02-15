@@ -12,6 +12,7 @@ def ctuple(p,val):
     if compress=='a':
         cnt=cnt+1
         return [{"val":val,"child":p,"idx":cnt}]
+    return p
 # Uncompress
 def f(par,p):
     global cnt
@@ -95,17 +96,18 @@ def f(par,p):
         return out
 def rec(p,f):
     if type(p) is dict:
-        for j in p["child"]:
-            if j["val"] !=None:
-                f.write("    "+str(j["idx"])+"[label=\""+str(j["val"])+"\"]")
-                f.write("    "+str(p["idx"])+" -- "+str(j["idx"]))
-                rec(j,f)
+        if p["child"] !=None:
+            for j in p["child"]:
+                if j["val"] !=None:
+                    f.write("\n    "+str(j["idx"])+"[label=\""+str(j["val"])+"\"]")
+                    f.write("\n    "+str(p["idx"])+" -- "+str(j["idx"]))
+                    rec(j,f)
 
 def printast(p):
     if compress=='a':
         f=open('dot.gz','a')
         for i in p:
-            f.write("    "+str(i["idx"])+"[label=\""+str(i["val"])+"\"]")
+            f.write("\n    "+str(i["idx"])+"[label=\""+str(i["val"])+"\"]")
             rec(i,f)
 start = 'program'
 
@@ -204,7 +206,7 @@ def p_enumerator(p):
     '''enumerator : IDENTIFIER 
                   | IDENTIFIER   EQUAL constant_expression 
     '''
-    p[0]=f(-1,p)
+    p[0]=f(2,p)
 
 
 def p_constant_expression(p): 
@@ -374,17 +376,24 @@ def p_new_declarator(p):
                       | new_declarator LSPAREN expression RSPAREN 
                       | LSPAREN expression RSPAREN 
     '''
-    p[0]=f(1,p)
+    if len(p)==5:
+        p[3]=ctuple(p[3],"expression")
+        p[0]=f(1,p)
+    elif len(p)==4:
+        p[2]=ctuple(p[2],"expression")
+        p[0]=f(2,p)
+    else:
+        p[0]=f(1,p)
 
 
 def p_placement(p): 
     '''placement : LPAREN expression_list  RPAREN'''
-    p[0]=f(1,p)
+    p[0]=f(2,p)
 def p_new_initializer(p): 
     '''new_initializer : LPAREN initializer_list  RPAREN 
                        | LPAREN  RPAREN 
     '''
-    p[0]=f(1,p)
+    p[0]=f(2,p)
 
 
 def p_unary1_operator(p): 
@@ -415,7 +424,15 @@ def p_postfix_expression(p):
                           | postfix_expression     DPLUSOP 
                           | postfix_expression     DMINUSOP 
     '''
-    p[0]=f(1,p)
+    if len(p)==2:
+        p[0]=f(1,p)
+    elif p[2]=="(":
+        if p[3]==")":
+            p[0]=f(1,p)
+        else:
+            p[0]=f(3,p)
+    else:
+        p[0]=f(2,p)
 
 
 def p_primary_expression(p): 
@@ -438,7 +455,7 @@ def p_cast_expression(p):
     '''cast_expression : unary_expression 
                        | LPAREN type_name  RPAREN  cast_expression 
     '''
-    p[0]=f(1,p)
+    p[0]=f(2,p)
 
 
 def p_type_name(p): 
@@ -459,7 +476,10 @@ def p_abstract_declarator(p):
                            | LSPAREN RSPAREN 
                            | LPAREN abstract_declarator  RPAREN 
     '''
-    p[0]=f(1,p)
+    if p[1]=="(":
+        p[0]=f(1,p)
+    else:
+        p[0]=f(1,p)
 
 
 def p_argument_declaration_list(p): 
@@ -467,13 +487,14 @@ def p_argument_declaration_list(p):
                                  | empty
     '''
     p[0]=f(1,p)
+    p[0]=ctuple(p[0],"arguments")
 
 
 def p_arg_declaration_list(p): 
     '''arg_declaration_list : argument_declaration 
-                            | arg_declaration_list COMMA argument_declaration 
+                            | argument_declaration COMMA arg_declaration_list
     '''
-    p[0]=f(1,p)
+    p[0]=f(-1,p)
 
 
 def p_argument_declaration(p): 
@@ -527,16 +548,26 @@ def p_class_specifier(p):
     '''class_specifier : class_head LCPAREN member_list RCPAREN 
                        | class_head LCPAREN RCPAREN 
     '''
-    p[0]=f(1,p)
-
+    if p[3]==')':
+        p[0]=f(1,p)
+    else:
+        p[3]=ctuple(p[3],"member_list")
+        p[0]=f(1,p)
 def p_member_list(p): 
-    '''member_list : member_declaration member_list 
-                   | member_declaration 
-                   | access_specifier COLON member_list 
-                   | access_specifier COLON 
+    '''member_list : member_access_list
+                   | access_list
+                   | member_list access_list
     '''
+    p[0]=f(-1,p)
+def p_access_list(p):
+    '''access_list : access_specifier COLON member_access_list 
+                   | access_specifier COLON '''
     p[0]=f(1,p)
 
+def p_member_access_list(p):
+    '''member_access_list : member_declaration member_access_list 
+                   | member_declaration '''
+    p[0]=f(-1,p)
 def p_member_declaration(p): 
     '''member_declaration : decl_specifiers member_declarator_list SEMICOLON 
                           | member_declarator_list SEMICOLON 
@@ -551,12 +582,16 @@ def p_function_definition(p):
     '''function_definition : decl_specifiers declarator fct_body 
                            | declarator fct_body 
     '''
-    p[0]=f(1,p)
+    if len(p)==4:
+        p[0]=f(2,p)
+    else:
+        p[0]=f(1,p)
 
 
 def p_fct_body(p): 
     '''fct_body : compound_statement'''
     p[0]=f(1,p)
+    p[0]=ctuple(p[0],"body")
 
 def p_compound_statement(p): 
     '''compound_statement : LCPAREN statement_list RCPAREN 
@@ -568,7 +603,7 @@ def p_statement_list(p):
     '''statement_list : statement 
                       | statement_list statement 
     '''
-    p[0]=f(1,p)
+    p[0]=f(-1,p)
 
 def p_statement(p): 
     '''statement : labeled_statement 
@@ -931,6 +966,6 @@ if __name__ == "__main__":
         file_o = open(arglist[2],'r').read()
         p = parser.parse(file_o,lexer = lexer,debug=debug) 
         printast(p)
-        open('dot.gz','a').write("}\n")
+        open('dot.gz','a').write("\n}\n")
         print(p) 
         
