@@ -1,2 +1,2 @@
 #!/bin/bash
-python3.7 parser3.py $2 ./tests/$1.cpp c
+python3 parser3.py $2 ./tests/$1.cpp c

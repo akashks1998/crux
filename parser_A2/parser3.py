@@ -391,7 +391,7 @@ def p_abstract_declarator(p):
 
 def p_argument_declaration_list(p): 
     '''argument_declaration_list : arg_declaration_list  
-                                 |  
+                                 | empty
     '''
     p[0]=data(p)
 
@@ -687,22 +687,23 @@ def p_declarator(p):
 def p_name(p): 
     '''name : IDENTIFIER 
             | operator_function_name 
-            | conversion_function_name 
             | BNOP IDENTIFIER 
     '''
     p[0]=data(p)
 
 
 
-def p_conversion_function_name(p): 
-    '''conversion_function_name : OPERATOR conversion_type_name'''
-    p[0]=data(p)
 
-def p_conversion_type_name(p): 
-    '''conversion_type_name : type_specifier_list ptr_operator 
-                            | type_specifier_list 
-    '''
-    p[0]=data(p)
+# add conversion_function_name to pnmae to allow taking int of class instance... 
+# def p_conversion_function_name(p): 
+#     '''conversion_function_name : OPERATOR conversion_type_name'''
+#     p[0]=data(p)
+
+# def p_conversion_type_name(p): 
+#     '''conversion_type_name : type_specifier_list ptr_operator 
+#                             | type_specifier_list 
+#     '''
+#     p[0]=data(p)
 
 def p_type_specifier_list(p): 
     '''type_specifier_list : type_specifier type_specifier_list 
@@ -813,8 +814,7 @@ def p_class_key(p):
 
 
 def p_simple_type_name(p): 
-    '''simple_type_name : IDENTIFIER 
-                        | CHAR 
+    '''simple_type_name : CHAR 
                         | SHORT 
                         | INT 
                         | LONG 
