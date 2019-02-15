@@ -36,7 +36,6 @@ def f(par,p):
                             p[par]=p[par].replace("\"", '')
                         p[par]=[{"val":p[par],"child":[],"idx":cnt}]
                     else:
-                        print(sys._getframe(1).f_code.co_name)
                         return []
                 if len(p[par])>0:
                     out=p[par]
@@ -53,7 +52,6 @@ def f(par,p):
                             if len(p[i])!=0 and p[i] not in ignor:
                                 out[0]["child"].extend(p[i])
                 else:
-                    print(sys._getframe(1).f_code.co_name)
                     return []
             else:
                 out=[]
@@ -617,19 +615,22 @@ def p_function_definition(p):
     '''function_definition : decl_specifiers declarator fct_body 
                            | declarator fct_body 
     '''
-    if len(p)==4:
-        p[1]=ctuple(p[1],"Return")
-        dec = p[2]
-        while( dec[0]["val"] in ["*","&"] ):
-            p[1][0]["child"].append( {"val":dec[0]["val"], "child":[], "idx":dec[0]["idx"]} )
-            dec = dec[0]["child"]
-        p[2]=dec
+    global compress
+    if compress=="a":
+        if len(p)==4:
+            p[1]=ctuple(p[1],"Return")
+            dec = p[2]
+            while( dec[0]["val"] in ["*","&"] ):
+                p[1][0]["child"].append( {"val":dec[0]["val"], "child":[], "idx":dec[0]["idx"]} )
+                dec = dec[0]["child"]
+            p[2]=dec
 
-        p[0]=f(2,p)
+            p[0]=f(2,p)
+        else:
+            p[0]=f(1,p)
+        p[0]=ctuple(p[0],"function")
     else:
         p[0]=f(1,p)
-    p[0]=ctuple(p[0],"function")
-
 def p_fct_body(p): 
     '''fct_body : compound_statement'''
     p[0]=f(1,p)
