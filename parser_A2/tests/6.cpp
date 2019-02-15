@@ -8,7 +8,7 @@ class A
     }
 };
 
-class B : public A
+class B : public class A
 {
   public:
     void show()
@@ -20,9 +20,9 @@ class B : public A
 void main()
 {
   clrsct();
-  A aobj;
-  B bobj;
-  A *bptr;
+  type A aobj;
+  class B bobj;
+  class  A *bptr;
   bptr = &aobj;
   bptr->show(); // call base class function
 

@@ -789,6 +789,10 @@ def p_base_specifier(p):
                       | access_specifier class_key IDENTIFIER 
                       | class_key  IDENTIFIER template_class_name
                       | access_specifier class_key IDENTIFIER template_class_name
+                      | IDENTIFIER 
+                      | access_specifier  IDENTIFIER 
+                      | IDENTIFIER template_class_name
+                      | access_specifier  IDENTIFIER template_class_name
     '''
     p[0]=data(p)
 

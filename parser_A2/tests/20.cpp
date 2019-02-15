@@ -2,18 +2,18 @@
 
 class PrintFunctionsConsumer : public ASTConsumer
 {
-  CompilerInstance &Instance;
-  set<|string|> ParsedTemplates;
+  class CompilerInstance &Instance;
+  type set<|string|> ParsedTemplates;
 
 public:
 
 
-  void HandleTranslationUnit(ASTContext &context)
+  void HandleTranslationUnit(type ASTContext &context)
   {
 
-    struct Visitor : public RecursiveASTVisitor<|Visitor|>
+    struct Visitor : public RecursiveASTVisitor<|type Visitor|>
     {
-      const set<|string|> &ParsedTemplates;
+      type set<|string|> ParsedTemplates;
     };
   }
 };

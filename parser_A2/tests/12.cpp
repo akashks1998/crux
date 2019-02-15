@@ -5,7 +5,7 @@ class employee
 };
 class developer : public employee
 {
-    employee e;
+    class employee e;
 
   public:
     void salary()
@@ -66,19 +66,20 @@ class Derived : public Base
     }
 }
 
-void
-main()
+typedef class Derived* D_PTR;
+void main()
 {
     clrscr();
-    developer obj;
+    class developer obj;
     obj.salary();
     getch();
-    Base b;    //Base class object
-    Derived d; //Derived class object
-    b.show();  //Early Binding Ocuurs
+    class Base b;    //Base class object
+    class Derived d; //Derived class object
+    b.show();        //Early Binding Ocuurs
     d.show();
     getch();
-    sum s;
+    class sum s;
+    type  D_PTR A = as;
     s.add();
     getch();
 }

@@ -1,7 +1,7 @@
 class employee
 {
   private:
-    friend void sal();
+    void sal();
 };
 
 void sal()
@@ -36,7 +36,7 @@ int fact(int n)
 
 void main()
 {
-    employee e;
+    class employee e;
     sal();
     getch();
 }
