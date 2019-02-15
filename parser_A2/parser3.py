@@ -12,10 +12,10 @@ def f(par,p):
     global cnt
     global compress
     ignor=["{","}","(",")",",","\"","'","#"]
-    if compress=='c':
+    if compress=='a':
         if len(p)>2:
             if par!=-1:
-                if(type(p[par]) is not tuple):
+                if(type(p[par]) is not list):
                     if p[par] not in ignor:
                         cnt=cnt+1
                         p[par]=[{"val":p[par],"child":[],"idx":cnt}]
@@ -26,15 +26,14 @@ def f(par,p):
                 out=p[par]
                 for i in range(1,len(p)):
                     if i!=par:
-                        if(type(p[i]) is not tuple):
+                        if(type(p[i]) is not list):
                             if p[par] not in ignor:
                                 cnt=cnt+1
                                 p[i]=[{"val":p[i],"child":[],"idx":cnt}]
                             else:
                                 continue
                         if p[par] not in ignor:
-                            for j in p[i]:
-                                out[0]["child"].extend(j)
+                            out[0]["child"].extend(p[par])
             else:
                 out=[]
                 for i in range(1,len(p)):
@@ -43,8 +42,7 @@ def f(par,p):
         elif len(p)==2:
             out=p[1]
         else:
-            cnt=cnt+1
-            out=[{"val":p[0],"child":[],"idx":cnt}]
+            out=[]
         return out
     elif compress=='c':
         p_name = sys._getframe(1).f_code.co_name
