@@ -91,11 +91,13 @@
 //    dprintf("Done objstore init\n");
 //    return 0;
 // }
+int objstore_destroy(struct objfs_state*, char[]);
+
 
 /*
    Cleanup private data. FS is being unmounted
 */
-int objstore_destroy(struct objfs_state *objfs)
+int objstore_destroy(struct objfs_state *objfs, char [][])
 {
    dprintf("Done objstore destroy\n");
    return 0;
