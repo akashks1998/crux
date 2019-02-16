@@ -7,7 +7,7 @@ struct Node
 /* returns XORed value of the node addresses */
 struct Node* XOR (struct Node *a, struct Node *b) 
 { 
-    return (struct Node*) ((uintptr_t) (a) ^ (uintptr_t) (b)); 
+    return (struct Node*) ((uintptr_t) (a) ^ (uintptr_t) (b));
 } 
   
 /* Insert a node at the begining of the  
