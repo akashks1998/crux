@@ -5,6 +5,6 @@ for fn in test_new/*; do
     fi
     if [ -f $fn ]; then
         echo "$fn is running"
-	python3 parser3.py 0 $fn a
+	python3 parser3.py 0 $fn d
     fi
 done
