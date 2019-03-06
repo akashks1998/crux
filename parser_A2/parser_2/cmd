@@ -1,2 +1,0 @@
-#!/bin/bash
-python3.7 parser.py 0 ../tests/$1.cpp
