@@ -25,51 +25,7 @@ def ctuple(p,val):
 def f(par,p):
     global cnt
     global compress
-    global ignor
-    if compress=='a':
-        if len(p)>2:
-            if par!=-1:
-                if(type(p[par]) is not list):
-                    if p[par] not in ignor:
-                        cnt=cnt+1
-                        if type(p[par]) is str and"\"" in p[par]:
-                            p[par]=p[par].replace("\"", '')
-                        p[par]=[{"val":p[par],"child":[],"idx":cnt}]
-                    else:
-                        return []
-                if len(p[par])>0:
-                    out=p[par]
-                    for i in range(1,len(p)):
-                        if i!=par:
-                            if(type(p[i]) is not list):
-                                if p[i] not in ignor:
-                                    if type(p[i]) is str and"\"" in p[i]:
-                                        p[i]=p[i].replace("\"", '')
-                                    cnt=cnt+1
-                                    p[i]=[{"val":p[i],"child":[],"idx":cnt}]
-                                else:
-                                    continue
-                            if len(p[i])!=0 and p[i] not in ignor:
-                                out[0]["child"].extend(p[i])
-                else:
-                    return []
-            else:
-                out=[]
-                for i in range(1,len(p)):
-                    if(type(p[i]) is not list):
-                        if p[par] not in ignor:
-                            cnt=cnt+1
-                            p[i]=[{"val":p[i],"child":[],"idx":cnt}]
-                        else:
-                            continue
-                    if p[i] not in ignor:
-                        out.extend(p[i])
-        elif len(p)==2:
-            out=p[1]
-        else:
-            out=[]
-        return out
-    elif compress=='c':
+    if compress=='c':
         p_name = sys._getframe(1).f_code.co_name
         if len(p)>2:
             cnt=cnt+1
