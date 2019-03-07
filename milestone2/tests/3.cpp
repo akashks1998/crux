@@ -1,14 +1,13 @@
 
 class Object //Abstract class in C++
 {
-public :
   void show (); 
 };
 //
-class ArithmeticAdd : public class Object, struct maaki 
+class ArithmeticAdd :  class Object, struct maaki 
 {
   int res;
-public:
+
   void add (int a, int b) {
     res = a + b ;
   }
@@ -21,24 +20,26 @@ public:
   }
 };
 //
-class Complex : public class Object 
+class Complex : class Object 
 {
   int real;
   int img;
-public :
+
   class Complex Add (class Complex C1, class Complex a2) {
     real = C1.real + C2.real;
     img = C1.img + C2.img;
     return this;
   }
+
   void show () {
     cout << real << " + " << img << "i"  <<endl;
   }
+
 };
 //
 int main () 
 {
-    class Object o [2];
+   class Object o [2];
    class ArithmeticAdd a;
    a.add (2,6);
    o [0] = &a;

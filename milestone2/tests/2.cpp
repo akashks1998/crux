@@ -1,18 +1,12 @@
-class Geeks 
-{ 
-    public: 
-    string geekname; 
-    int id; 
-      
-    void printname(); 
-      
-    void printid() 
-    { 
-        cout << "Geek id is: " << id; 
-    } 
 
-	void printname() 
-	{ 
+int a;
+a = 0;
+class Geeks 
+{  
+    string geekname; 
+    int id = 0, bg = 2; 
+    
+    void printname(){ 
    	 cout << "Geekname is: " << geekname;  
 	} 
 }; 
