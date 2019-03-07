@@ -7,6 +7,7 @@ from lexer import tokens as lexTokens
 cnt=0
 tokens = lexTokens
 ignor=["{","}","(",")",",","\"","'","#",";",":",None,[]]
+    
 def ctuple(p,val):
     global compress
     global cnt
@@ -855,6 +856,7 @@ def p_member_declarator(p):
                          | IDENTIFIER COLON constant_expression 
                          | COLON constant_expression 
     '''
+
     p[0]=f(1,p)
 
 def p_declarator(p): 
@@ -1029,7 +1031,7 @@ def p_simple_type_name(p):
 
 
 if __name__ == "__main__": 
-    parser = yacc.yacc() 
+    parser = yacc.yacc("LALR",0) 
     parser.error = 0 
 
     if(len(sys.argv) != 4): 
