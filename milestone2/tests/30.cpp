@@ -1,4 +1,4 @@
-#include<"tmkc">
+#include<"tc">
 
 int prototype(int , class F &);
 type vector<|int|> V(5,0);
