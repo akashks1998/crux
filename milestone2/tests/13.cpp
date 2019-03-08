@@ -8,7 +8,7 @@ class sum
 		c=a+b;
 		cout<<"Sum: "<<c;
 	}
-	void ~sum()
+	void ~~sum()
 	{
 		cout<<"call destructor"<<endl;
 		delay(500);
