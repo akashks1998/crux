@@ -78,7 +78,7 @@ precedence = (
     ('left', 'MULTOP', 'DIVOP', 'MODOP'),
     ('left', 'DPLUSOP', 'DMINUSOP'),
     ('left', 'DOT', 'ARROW'),
-    ('left', 'LEFTSHIFT', 'RIGHTLIFT'),
+    ('left', 'LSHIFT', 'RSHIFT'),
     ('left', 'LTCOMP', 'LTECOMP'),
     ('left', 'GTCOMP', 'GTECOMP'), 
 )
@@ -563,7 +563,11 @@ def p_base_specifier(p):
                       | class_key  IDENTIFIER template_class_name
                       | IDENTIFIER 
                       | IDENTIFIER template_class_name
-    ''' 
+                      | access_specifier class_key IDENTIFIER
+                      | access_specifier class_key IDENTIFIER template_class_name
+    '''
+                    #   | access_specifier  IDENTIFIER
+                    #   | access_specifier  IDENTIFIER template_class_name 
  
     p[0]=f(p)   
 
@@ -800,7 +804,7 @@ if __name__ == "__main__":
     parser.error = 0 
 
     if(len(sys.argv) != 4): 
-        print("Usage python3 parser.py arg1 arg2 arg3") 
+        print("Usage python3 parser.py arg1 arg2 arg3 #args : ", sys.argv) 
         exit() 
 
     arglist = sys.argv 

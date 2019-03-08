@@ -1,0 +1,16 @@
+#!/bin/bash
+for i in $(ls ../tests);
+do
+	x=$(python3.7 parser.py 0 ../tests/$i c)
+	f=${x/error/er}
+	if [[ "$f" != "$x" ]];
+	then
+		echo "----------------------------------"
+		echo "Test ../tests/$i"
+		echo "Error :"
+		echo "$x"
+	else
+		echo "----------------------------------"
+		echo "Test ../tests/$i passed"
+	fi
+done

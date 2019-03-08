@@ -6,7 +6,7 @@ class Array
     int size;
 
   public:
-    Array(type T arr[], int s)
+    void Array(type T arr[], int s)
     {
         size = s;
         for (int i = 0; i < size; i++)
@@ -17,8 +17,8 @@ class Array
 
 int main()
 {
-    class Array<| int , char, M|> a(arr, 5);
-    p = new(nothrow) type T[n]; 
+    class Array<| int , char, type M|> a(arr, 5);
+    p = new type T[n]; 
     p = new class T[n]; 
     return 0;
 }

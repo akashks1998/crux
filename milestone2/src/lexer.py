@@ -6,22 +6,13 @@ import sys
 
 keywords = {
     'include':'INCLUDE',
-    'and':'AND',
-    'and_eq':'AND_EQ',
     'asm':'ASM',
     'auto':'AUTO',
-    'bitand':'BITAND',
-    'bitor':'BITOR',
-    'bool':'BOOL',
     'break':'BREAK',
     'case':'CASE',
     'catch':'CATCH',
     'char':'CHAR',
-    'char8_t':'CHAR8_T',
-    'char16_t':'CHAR16_T',
-    'char32_t':'CHAR32_T',
     'class':'CLASS',
-    'compl':'COMPL',
     'const':'CONST',
     'continue':'CONTINUE',
     'default':'DEFAULT',
@@ -29,23 +20,13 @@ keywords = {
     'do':'DO',
     'double':'DOUBLE',
     'else':'ELSE',
-    'enum':'ENUM',
-    'extern':'EXTERN',
-    'false':'FALSE',
     'float':'FLOAT',
     'for':'FOR',
     'goto':'GOTO',
     'if':'IF',
-    'inline':'INLINE',
     'int':'INT',
     'long':'LONG',
-    'namespace':'NAMESPACE',
     'new':'NEW',
-    'not':'NOT',
-    'not_eq':'NOT_EQ',
-    'nullptr':'NULLPTR',
-    'or':'OR',
-    'or_eq':'OR_EQ',
     'operator' : 'OPERATOR',
     'private':'PRIVATE',
     'protected':'PROTECTED',
@@ -54,27 +35,19 @@ keywords = {
     'short':'SHORT',
     'signed':'SIGNED',
     'sizeof':'SIZEOF',
-    'static':'STATIC',
-    'std' : 'STD',
     'switch':'SWITCH',
     'struct' : 'STRUCT',
     'string' : 'STRING',
     'this':'THIS',
     'throw':'THROW',
-    'true':'TRUE',
     'try':'TRY',
     'typedef':'TYPEDEF',
     'type' : 'TYPE',
     'template' : 'TEMPLATE',
     'union':'UNION',
     'unsigned':'UNSIGNED',
-    'using' : 'USING',
-    'virtual':'VIRTUAL',
     'void':'VOID',
-    'volatile':'VOLATILE',
     'while':'WHILE',
-    'xor':'XOR',
-    'xor_eq':'XOR_EQ',
 }
 
 # List of token names. 
@@ -88,7 +61,6 @@ tokens = [
         'MINUSOP',
         'DIVOP',
         'MULTOP',
-        'BOROP',
         'OROP',
         'BANDOP',
         'ANDOP',
@@ -100,8 +72,6 @@ tokens = [
         'BANDEQOP',
         'XOROP',
         'XOREQOP',
-        'UPLUSOP',
-        'UMINUSOP',
         'BNOP',
 
         #comparison operator, =
@@ -121,29 +91,16 @@ tokens = [
         'LSPAREN',
         'RSPAREN',
 
-        # Quotes
-        'SQUOTE',
-        'DQUOTE',
-
         # OTHER
         'COMMA',
         'DOT',
         'SEMICOLON',
-        'DOUBLECOLON',
         'COLON',
-        'COMMENT',
         'SCHAR',
         'STRING_L',
         'HASHTAG',
         'NOTSYM',
         'QUESMARK',
-        'LEFTSHIFT',
-        'RIGHTLIFT',
-        'CONDTIONAL',
-        'MODQOP',
-        'LEFTQOP',
-        'RIGHTQOP',
-        'XOREQOR',
         'ARROW',
         'ARROWSTAR',
         'DOTSTAR',
@@ -185,7 +142,6 @@ t_MULTOP    = r'\*'
 t_MODOP     = r'\%'
 t_XOROP     = r'\^'
 
-t_BOROP     = r'\|'
 t_BOREQOP   = r'\|\='
 t_OROP      = r'\|\|'
 t_BANDOP    = r'\&'
@@ -210,13 +166,6 @@ t_RSHIFTEQOP= r'\>\>='
 t_LTEMPLATE = r'<\|'
 t_RTEMPLATE = r'\|>'
 
-t_LEFTSHIFT = r'<<'
-t_RIGHTLIFT = r'>>'
-t_CONDTIONAL = r'\?:'
-t_MODQOP = r'\%='
-t_LEFTQOP = r'<<='
-t_RIGHTQOP = r'>>='
-
 
 # Comparison Operator
 t_EQCOMP    = r'=='
@@ -235,15 +184,10 @@ t_RCPAREN   = r'\}'
 t_LSPAREN   = r'\['
 t_RSPAREN   = r'\]'
 
-# Quotes
-t_SQUOTE    = r'\''
-t_DQUOTE    = r'\"'
-
 # Other
 t_COMMA         = r','
 t_DOT           = r'\.'
 t_SEMICOLON     = r';'
-t_DOUBLECOLON   = r'::'
 t_COLON         = r':'
 t_SCHAR         = r'\'.\''
 t_STRING_L        = r'\".*\"'

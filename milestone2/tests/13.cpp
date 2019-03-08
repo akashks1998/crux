@@ -1,14 +1,14 @@
 class sum
 {
 	int a,b,c;
-	sum()
+	void sum()
 	{
 		a=10;
 		b=20;
 		c=a+b;
 		cout<<"Sum: "<<c;
 	}
-	~ sum()
+	void ~sum()
 	{
 		cout<<"call destructor"<<endl;
 		delay(500);
