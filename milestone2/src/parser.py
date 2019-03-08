@@ -5,8 +5,10 @@ import time
 from lexer import lexer
 from lexer import tokens as lexTokens
 from symbolTable import SymbolTable
+import re
 cnt=0
 tokens = lexTokens
+filename=""
 
 def f(p):
     global cnt
@@ -58,6 +60,7 @@ scopeTableList.append(globalScopeTable)
 currentScopeTable = 0
 
 class OBJ:
+    data = None
     pass
 
 def addScope():
@@ -104,12 +107,14 @@ def p_include_control(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_control_line_stmt(p):
     '''control_line_stmt : include_control LTCOMP STRING_L GTCOMP
                     | include_control STRING_L
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_program(p):
     '''program : control_line translation_unit
                | translation_unit
@@ -128,26 +133,27 @@ def p_declaration_seq(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-def p_error(p): 
-    print("Syntax error in input!") 
-    print(p)
+
+def p_error(p):
+    print("Line " + str(p.lineno) + ":" + filename.split('/')[-1]) 
 
 def p_empty(p): 
     'empty :' 
     pass 
-
 
 def p_constant_expression(p): 
     '''constant_expression : conditional_expression''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     
+
 def p_conditional_expression(p): 
     '''conditional_expression : logical_OR_expression 
                               | logical_OR_expression QUESMARK expression COLON conditional_expression 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_logical_OR_expression(p): 
     '''logical_OR_expression : logical_AND_expression 
                              | logical_OR_expression OROP logical_AND_expression 
@@ -161,6 +167,7 @@ def p_logical_AND_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_inclusive_OR_expression(p): 
     '''inclusive_OR_expression : exclusive_OR_expression %prec LOWER
                                | inclusive_OR_expression OROP exclusive_OR_expression %prec HIGHER
@@ -247,6 +254,7 @@ def p_throw_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_assignment_expression(p): 
     '''assignment_expression : conditional_expression 
                              | unary_expression  assignment_operator assignment_expression 
@@ -288,7 +296,6 @@ def p_deallocation_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-
 # New Allocation
 
 def p_allocation_expression(p): 
@@ -300,14 +307,12 @@ def p_allocation_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-
 def p_new_type_name(p): 
     '''new_type_name : type_specifier_ new_declarator 
                      | type_specifier_ 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
 
 def p_new_declarator(p): 
     '''new_declarator : new_declarator MULTOP
@@ -317,8 +322,6 @@ def p_new_declarator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
-
 
 def p_new_initializer(p): 
     '''new_initializer : LPAREN initializer_list  RPAREN 
@@ -335,12 +338,15 @@ def p_unary1_operator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = p[1].data
+
 def p_unary2_operator(p): 
     '''unary2_operator : MULTOP 
                       | BANDOP 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = p[1].data
 
 def p_postfix_expression(p): 
     '''postfix_expression : primary_expression 
@@ -358,8 +364,6 @@ def p_postfix_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-
-
 def p_primary_expression(p): 
     '''primary_expression : literal 
                           | THIS  
@@ -368,7 +372,6 @@ def p_primary_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-
 
 def p_literal(p): 
     '''literal : NUMBER 
@@ -385,10 +388,9 @@ def p_cast_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)    
 
-
-
-
 # used for abstract declaration of func, int objstore_destroy(struct objfs_state*, char[]);
+# input                 abstract_class               abstract_type
+# **[][5]               ppaA                         ["*", "*", "", "5"]
 def p_abstract_declarator(p): 
     '''abstract_declarator : unary2_operator %prec LOWER
                            | unary2_operator abstract_declarator %prec LOWER
@@ -399,6 +401,36 @@ def p_abstract_declarator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    def ok(s):
+        rex = r'^p*(r|[aA]*)$'
+        return re.fullmatch(rex, s)
+    if len(p)==2:
+        p[0].data = {"abstract_class" : "p" if (p[1].data == "*") else "r" , "abstract_type" : [p[1].data]}
+    elif len(p)==3 and p[1].data=="[":
+        p[0].data = {"abstract_class" : "a" , "abstract_type" : [""]}
+    elif len(p)==4 and p[1].data=="[":
+        p[0].data = {"abstract_class" : "A", "abstract_type" : [p[2].data]}
+    elif len(p)==3:
+        p[0].data = {
+            "abstract_class" : ("p" if (p[1].data == "*") else "r") + p[2].data['abstract_class'],
+            "abstract_type" : [p[1].data] + p[2].data["abstract_type"]
+        }
+    elif len(p)==4:
+        p[0].data = {
+            "abstract_class" : p[1].data["abstract_class"]+"a",
+            "abstract_type" : p[1].data["abstract_type"]+[""]
+        }
+    else:
+        p[0].data = {
+            "abstract_class" : p[1].data["abstract_class"]+"A",
+            "abstract_type" : p[1].data["abstract_type"]+[p[3].data]
+        }
+    err=ok(p[0].data["abstract_class"])
+    if err == None:
+        print("Syntax Error", p, p.lineno, p.lineno(1), p.lineno(2), p.lineno(3))
+        print(dir(p))
+        raise SyntaxError
+        
 def p_declarator(p): 
     '''declarator : name
                   | unary2_operator declarator %prec HIGHER
@@ -416,14 +448,12 @@ def p_argument_declaration_list(p):
     p[0] = OBJ() 
     p[0].parse=f(p) 
 
-
 def p_arg_declaration_list(p): 
     '''arg_declaration_list : argument_declaration 
                             | argument_declaration COMMA arg_declaration_list
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)   
-
 
 def p_argument_declaration(p): 
     '''argument_declaration : type_specifier_ declarator 
@@ -443,10 +473,12 @@ def p_name(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_operator_function_name(p): 
     '''operator_function_name : OPERATOR operator_name''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_operator_name(p): 
     '''operator_name : NEW 
                      | DELETE 
@@ -484,41 +516,64 @@ def p_operator_name(p):
                      | COMMA 
                      | ARROWSTAR 
                      | ARROW 
-                     | LPAREN  RPAREN 
-                     | LSPAREN RSPAREN 
     ''' 
+                    #  | LPAREN  RPAREN 
+                    #  | LSPAREN RSPAREN 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
+    p[0].data = p[1].data
 
 def p_template_class_name(p): 
     '''template_class_name : LTEMPLATE template_arg_list RTEMPLATE''' 
     p[0] = OBJ()
     p[0].parse=f(p)
+    p[0].data=p[2].data
 
 def p_template_arg_list(p): 
     '''template_arg_list : type_name 
                          | template_arg_list COMMA type_name
     ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)  
+    p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data=[p[1].data]
+    else:
+        p[0].data=p[1].data
+        p[0].data.append(p[3].data)
+
+# input -> [class, type, template, template_list, abstract_class, abstract_type, const]
 def p_type_name(p): 
     '''type_name : type_specifier_ abstract_declarator 
                  | type_specifier_ 
     ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)    
+    p[0].parse=f(p)
+    if len(p)==3:
+        p[0].data = {**p[1].data, **p[2].data}
+    else:
+        p[0].data = p[1].data
+        
+
 def p_type_specifier_(p): 
     '''type_specifier_ : CONST type_specifier 
                        | type_specifier
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)  
+    if len(p)==3:
+        p[0].data = p[2].data
+        p[0].data["const"]=1
+    else:
+        p[0].data = p[1].data
+        p[0].data["const"]=0
+
 def p_typedef_declarator(p):
     '''typedef_declarator : TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
+                          | TYPEDEF type_specifier_  IDENTIFIER SEMICOLON
     '''
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_type_specifier(p): 
     '''type_specifier : simple_type_name 
                       | complex_type_specifier  
@@ -526,7 +581,7 @@ def p_type_specifier(p):
                     #   | class_define_specifier 
     p[0] = OBJ()
     p[0].parse=f(p)   
-
+    p[0].data=p[1].data
 
 def p_simple_type_name(p): 
     '''simple_type_name : CHAR 
@@ -544,9 +599,10 @@ def p_simple_type_name(p):
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)   
-    p[0].data = [ "simple", p[1].data ]
+    p[0].data = { "class" : "simple","type": p[1].data, "template" : 0, "template_list": None }
 
-
+# input                 class               type        template                    template_list
+# class A<|int,char|>   "class"             A           1                           [int,char]             
 def p_complex_type_specifier(p): 
     '''complex_type_specifier : class_key IDENTIFIER 
                                 | class_key  IDENTIFIER template_class_name
@@ -556,7 +612,11 @@ def p_complex_type_specifier(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-   
+    p[0].data = { "class":p[1].data,"type": p[2].data, "template" : 0, "template_list": None}
+    if len(p)==4:
+        p[0].data["class"]=p[0].data["class"]
+        p[0].data["template"]=1
+        p[0].data["template_list"]=p[3].data
 
 def p_pure_specifier(p): 
     '''pure_specifier :   EQUAL NUMBER''' 
@@ -570,18 +630,20 @@ def p_class_head(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-
 # use for class inhertance
+
 def p_base_spec(p): 
     '''base_spec : COLON base_list''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_base_list(p): 
     '''base_list : base_specifier
                  | base_list COMMA base_specifier 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_base_specifier(p): 
     '''base_specifier : class_key  IDENTIFIER 
                       | class_key  IDENTIFIER template_class_name
@@ -595,7 +657,6 @@ def p_base_specifier(p):
  
     p[0] = OBJ() 
     p[0].parse=f(p) 
-
 
 def p_class_key(p): 
     '''class_key : CLASS 
@@ -640,6 +701,7 @@ def p_member_access_list(p):
                           | member_declaration '''
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_member_declaration(p):
     '''member_declaration : type_specifier_ member_declarator_list SEMICOLON
                           | member_declarator_list SEMICOLON
@@ -666,12 +728,14 @@ def p_member_declarator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_function_definition(p): 
     '''function_definition : type_specifier_ declarator fct_body 
     ''' 
     p[0] = OBJ()
  
     p[0].parse=f(p)
+
 def p_fct_body(p): 
     '''fct_body : compound_statement''' 
     p[0] = OBJ() 
@@ -683,12 +747,14 @@ def p_compound_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_statement_list(p): 
     '''statement_list : statement 
                       | statement_list statement 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_statement(p): 
     '''statement : labeled_statement 
                  | expression_statement 
@@ -701,6 +767,7 @@ def p_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_jump_statement(p): 
     '''jump_statement : BREAK SEMICOLON 
                       | CONTINUE SEMICOLON 
@@ -710,6 +777,7 @@ def p_jump_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_selection_statement(p): 
     '''selection_statement : IF LPAREN expression  RPAREN  statement 
                            | IF LPAREN expression  RPAREN  statement ELSE statement 
@@ -730,6 +798,7 @@ def p_labeled_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_iteration_statement(p): 
     '''iteration_statement : WHILE LPAREN expression  RPAREN  statement 
                            | DO statement WHILE LPAREN expression  RPAREN  SEMICOLON 
@@ -740,22 +809,26 @@ def p_iteration_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
+
 def p_for_init_statement(p): 
     '''for_init_statement : expression_statement 
                           | declaration_statement 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_expression_statement(p): 
     '''expression_statement : expression SEMICOLON 
                             | SEMICOLON 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_declaration_statement(p): 
     '''declaration_statement : declaration''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_declaration(p):
     '''declaration : type_specifier_ declarator_list SEMICOLON
                    | asm_declaration
@@ -768,20 +841,20 @@ def p_declaration(p):
     p[0] = OBJ()
     p[0].parse=f(p)
 
-
  
     p[0].parse=f(p)
+
 def p_template_declaration(p): 
     '''template_declaration : TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_template_argument_list(p): 
     '''template_argument_list : argument_declaration
                               | template_argument_list COMMA argument_declaration
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
 
 def p_declarator_list(p): 
     '''declarator_list : init_declarator 
@@ -796,6 +869,7 @@ def p_init_declarator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
 def p_initializer(p): 
     '''initializer :   EQUAL assignment_expression 
                    |   EQUAL LCPAREN initializer_list RCPAREN 
@@ -804,7 +878,6 @@ def p_initializer(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-
 
 def p_initializer_list(p): 
     '''initializer_list : assignment_expression 
@@ -827,8 +900,6 @@ def p_expression_list(p):
     p[0] = OBJ() 
     p[0].parse=f(p) 
 
-
-
 if __name__ == "__main__": 
     parser = yacc.yacc() 
     parser.error = 0 
@@ -838,6 +909,7 @@ if __name__ == "__main__":
         exit() 
 
     arglist = sys.argv 
+    filename = arglist[2]
     debug = int(arglist[1])
     compress=arglist[3]
     open('dot.gz','w').write("digraph ethane {graph [ordering=\"out\"];")
