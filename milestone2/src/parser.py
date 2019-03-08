@@ -580,20 +580,40 @@ def p_class_define_specifier(p):
     ''' 
  
     p[0]=f(p)
+ 
+
 def p_member_list(p):
-    '''member_list : member_declaration member_list 
-                   | member_declaration ''' 
- 
-    p[0]=f(p)   
+    '''member_list : member_access_list
+                   | access_list
+                   | member_list access_list
+    '''
+    p[0]=f(p)
 
+def p_access_specifier(p):
+    '''access_specifier : PRIVATE
+                        | PROTECTED
+                        | PUBLIC
+    '''
+    p[0]=f(p)
 
-def p_member_declaration(p): 
-    '''member_declaration : type_specifier_ member_declarator_list SEMICOLON 
-                          | function_definition SEMICOLON 
-                          | function_definition 
-    ''' 
- 
-    p[0]=f(p)   
+def p_access_list(p):
+    '''access_list : access_specifier COLON member_access_list
+                   | access_specifier COLON '''
+    p[0]=f(p)
+
+def p_member_access_list(p):
+    '''member_access_list : member_declaration member_access_list
+                          | member_declaration '''
+    p[0]=f(p)
+def p_member_declaration(p):
+    '''member_declaration : type_specifier_ member_declarator_list SEMICOLON
+                          | member_declarator_list SEMICOLON
+                          | type_specifier_ SEMICOLON
+                          | SEMICOLON
+                          | function_definition SEMICOLON
+                          | function_definition
+    '''
+    p[0]=f(p)
 
 def p_member_declarator_list(p): 
     '''member_declarator_list : member_declarator 
@@ -612,8 +632,6 @@ def p_member_declarator(p):
 def p_function_definition(p): 
     '''function_definition : type_specifier_ declarator fct_body 
     ''' 
-    current_scope = p[0]['scopeId']
-    function_info = get_function_info(p[1],p[2])
 
  
     p[0]=f(p)
@@ -704,7 +722,6 @@ def p_declaration_statement(p):
 def p_declaration(p):
     '''declaration : type_specifier_ declarator_list SEMICOLON
                    | type_specifier_ SEMICOLON
-                   | declarator_list SEMICOLON
                    | asm_declaration
                    | function_definition
                    | template_declaration
@@ -723,6 +740,8 @@ def p_template_argument_list(p):
     ''' 
  
     p[0]=f(p)
+
+
 def p_declarator_list(p): 
     '''declarator_list : init_declarator 
                        | declarator_list COMMA init_declarator 
