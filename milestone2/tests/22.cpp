@@ -2,7 +2,7 @@
 #include<"blah.h">
 int foo() {
   struct Local{ 
-    static int my_number() {
+    int my_number() {
       return 42;
     }
   };

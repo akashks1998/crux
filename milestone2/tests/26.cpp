@@ -15,17 +15,9 @@
                       throw 4.5;                //throwing float exception
 
               }
-              catch(int a)
+              catch
               {
                   cout<<"\nInteger exception caught.";
-              }
-              catch(char ch)
-              {
-                  cout<<"\nCharacter exception caught.";
-              }
-              catch(double d)
-              {
-                  cout<<"\nDouble exception caught.";
               }
 
               cout<<"\nEnd of program.";

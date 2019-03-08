@@ -1,6 +1,6 @@
 class SVal {
   public:
-    ~SVal() {}
+    void ~SVal() {}
     const void* Data;
     unsigned Kind;
 };

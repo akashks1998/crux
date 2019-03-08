@@ -2,7 +2,7 @@
 class A
 {
   public:
-    virtual void show()
+    void show()
     {
       cout << "Hello base class";
     }

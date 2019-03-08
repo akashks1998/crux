@@ -3,7 +3,7 @@ class employee
   public:
     int salary;
 };
-class developer : public employee
+class developer : public class employee
 {
     class employee e;
 
@@ -57,16 +57,17 @@ class Base
         cout << "Base class";
     }
 };
-class Derived : public Base
+class Derived : public class Base
 {
   public:
     void show()
     {
         cout << "Derived Class";
     }
-}
+};
 
 typedef class Derived* D_PTR;
+
 void main()
 {
     clrscr();

@@ -1,4 +1,4 @@
-static void show()
+void show()
 { 
   cout<<"Hello world";
 }
