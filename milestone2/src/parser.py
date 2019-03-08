@@ -809,13 +809,6 @@ def p_asm_declaration(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def p_declaration_list(p): 
-    '''declaration_list : declaration 
-                        | declaration_list declaration 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
 def p_expression_list(p): 
     '''expression_list : assignment_expression 
                        | expression_list COMMA assignment_expression 

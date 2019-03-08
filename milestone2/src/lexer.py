@@ -44,7 +44,6 @@ keywords = {
     'typedef':'TYPEDEF',
     'type' : 'TYPE',
     'template' : 'TEMPLATE',
-    'union':'UNION',
     'unsigned':'UNSIGNED',
     'void':'VOID',
     'while':'WHILE',
