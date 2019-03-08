@@ -1,6 +1,7 @@
 
 int a;
-a = 0;
+int a = 0;
+
 class Geeks 
 {  
     string geekname; 
@@ -16,6 +17,7 @@ int main(int a[][], int b) {
     class Geeks obj1; 
     obj1.geekname = "xyz"; 
     obj1.id=15; 
+    a = 0;
       
     obj1.printname(); 
     cout << endl; 
