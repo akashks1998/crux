@@ -515,9 +515,9 @@ def p_type_specifier_(p):
     p[0].parse=f(p)  
 def p_type_specifier(p): 
     '''type_specifier : simple_type_name 
-                      | class_define_specifier 
                       | complex_type_specifier  
     ''' 
+                    #   | class_define_specifier 
     p[0] = OBJ()
     p[0].parse=f(p)   
 
