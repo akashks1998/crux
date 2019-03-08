@@ -88,6 +88,12 @@ precedence = (
     ('left', 'LSHIFT', 'RSHIFT'),
     ('left', 'LTCOMP', 'LTECOMP'),
     ('left', 'GTCOMP', 'GTECOMP'), 
+    ('left', 'LOWER'),
+    ('left', 'HIGHER'),
+    ('left', 'ONE'),
+    ('left', 'TWO'),
+    ('left', 'THREE'),
+    ('left', 'FOUR'),
 )
 
 def p_control_line(p):
@@ -154,14 +160,14 @@ def p_logical_OR_expression(p):
     p[0].parse=f(p)
 
 def p_logical_AND_expression(p): 
-    '''logical_AND_expression : inclusive_OR_expression 
-                              | logical_AND_expression ANDOP inclusive_OR_expression 
+    '''logical_AND_expression : inclusive_OR_expression %prec LOWER
+                              | logical_AND_expression ANDOP inclusive_OR_expression %prec HIGHER
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
 def p_inclusive_OR_expression(p): 
-    '''inclusive_OR_expression : exclusive_OR_expression 
-                               | inclusive_OR_expression OROP exclusive_OR_expression 
+    '''inclusive_OR_expression : exclusive_OR_expression %prec LOWER
+                               | inclusive_OR_expression OROP exclusive_OR_expression %prec HIGHER
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -388,19 +394,19 @@ def p_cast_expression(p):
 
 # used for abstract declaration of func, int objstore_destroy(struct objfs_state*, char[]);
 def p_abstract_declarator(p): 
-    '''abstract_declarator : unary2_operator 
-                           | unary2_operator abstract_declarator 
+    '''abstract_declarator : unary2_operator %prec LOWER
+                           | unary2_operator abstract_declarator %prec HIGHER
                            | LSPAREN constant_expression RSPAREN 
-                           | abstract_declarator LSPAREN constant_expression RSPAREN 
+                           | abstract_declarator LSPAREN constant_expression RSPAREN %prec HIGHER
                            | LSPAREN  RSPAREN 
-                           | abstract_declarator LSPAREN RSPAREN 
+                           | abstract_declarator LSPAREN RSPAREN %prec HIGHER
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
 def p_declarator(p): 
     '''declarator : name
-                  | unary2_operator declarator 
-                  | declarator LPAREN argument_declaration_list  RPAREN 
+                  | unary2_operator declarator %prec HIGHER
+                  | declarator LPAREN argument_declaration_list  RPAREN %prec LOWER
                   | declarator LSPAREN constant_expression RSPAREN 
                   | declarator LSPAREN RSPAREN 
     ''' 
@@ -437,7 +443,7 @@ def p_argument_declaration(p):
 def p_name(p): 
     '''name : IDENTIFIER 
             | operator_function_name 
-            | BNOP IDENTIFIER 
+            | DOUBLEBNOP IDENTIFIER 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -639,10 +645,10 @@ def p_member_declaration(p):
                           | member_declarator_list SEMICOLON
                           | type_specifier_ SEMICOLON
                           | SEMICOLON
-                          | function_definition SEMICOLON
                           | function_definition
                           |  class_define_specifier SEMICOLON
     '''
+                        #   | function_definition SEMICOLON
     p[0] = OBJ() 
     p[0].parse=f(p)
 
@@ -833,7 +839,7 @@ if __name__ == "__main__":
     arglist = sys.argv 
     debug = int(arglist[1])
     compress=arglist[3]
-    open('dot.gz','w').write("digraph ethane {")
+    open('dot.gz','w').write("digraph ethane {graph [ordering=\"out\"];")
     if(arglist[2]== "I"): 
         while True: 
             try: 

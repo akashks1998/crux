@@ -112,9 +112,10 @@ tokens = [
         'RSHIFT',
         'DMINUSOP',
         'LTEMPLATE',
-        'RTEMPLATE'
+        'RTEMPLATE',
 
         # SPECIAL
+        'DOUBLEBNOP'
         
 
 ] + list(keywords.values())
@@ -189,13 +190,14 @@ t_DOT           = r'\.'
 t_SEMICOLON     = r';'
 t_COLON         = r':'
 t_SCHAR         = r'\'.\''
-t_STRING_L        = r'\".*\"'
+t_STRING_L      = r'\".*\"'
 t_HASHTAG       = r'\#'
 t_NOTSYM        = r'\!'
-t_QUESMARK       = r'\?'
+t_QUESMARK      = r'\?'
 t_ARROW         = r'-\>'
 t_ARROWSTAR     = r'-\>\*'
 t_DOTSTAR       = r'\.\*'
+t_DOUBLEBNOP    = r'~~'
 
 
 # track line no.

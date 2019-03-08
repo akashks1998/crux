@@ -30,4 +30,8 @@ int main(){
                 cout<<"I m A";
             }
     };
+    class A *tmp = new class A;
+    class A **tmp2 = &tmp;
+    class A pred = **tmp2;
+    class A ***tmp3;
 }
