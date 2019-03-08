@@ -538,7 +538,8 @@ def p_simple_type_name(p):
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)   
-    p[0].data = [ "simple", p[1] ]
+    p[0].data = [ "simple", p[1].data ]
+
 
 def p_complex_type_specifier(p): 
     '''complex_type_specifier : class_key IDENTIFIER 
@@ -596,6 +597,7 @@ def p_class_key(p):
     ''' 
     p[0] = OBJ()
     p[0].parse = f(p) 
+    p[0].data = p[1].data
 
 def p_class_define_specifier(p): 
     '''class_define_specifier : class_head LCPAREN member_list RCPAREN 
@@ -639,6 +641,7 @@ def p_member_declaration(p):
                           | SEMICOLON
                           | function_definition SEMICOLON
                           | function_definition
+                          |  class_define_specifier SEMICOLON
     '''
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -752,6 +755,7 @@ def p_declaration(p):
                    | type_specifier_ SEMICOLON
                    | asm_declaration
                    | function_definition
+                   | class_define_specifier SEMICOLON
                    | template_declaration
     ''' 
     p[0] = OBJ()

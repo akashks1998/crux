@@ -3,11 +3,13 @@
 // usage of global variables  
 #include<"iostream"> 
 
-typedef struct employee
+struct employee
 {
     char name[50];
     int salary;
-}emp;
+};
+
+typedef struct employee emp;
 
 
 // global variable 

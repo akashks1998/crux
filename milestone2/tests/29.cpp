@@ -14,7 +14,7 @@ class A : public class B {
             public :
                 int y;
                 class full h;
-        }
+        };
         class C full;
         int x;
         void A(){
