@@ -302,7 +302,7 @@ def p_allocation_expression(p):
 
 
 def p_new_type_name(p): 
-    '''new_type_name : type_specifier_ new_declarator 
+    '''new_type_name : type_specifier_ abstract_declarator 
                      | type_specifier_ 
     ''' 
     p[0] = OBJ() 
@@ -390,8 +390,8 @@ def p_cast_expression(p):
 
 # used for abstract declaration of func, int objstore_destroy(struct objfs_state*, char[]);
 def p_abstract_declarator(p): 
-    '''abstract_declarator : unary2_operator %prec LOWER
-                           | unary2_operator abstract_declarator %prec HIGHER
+    '''abstract_declarator : unary2_operator
+                           | unary2_operator abstract_declarator
                            | LSPAREN constant_expression RSPAREN 
                            | abstract_declarator LSPAREN constant_expression RSPAREN %prec HIGHER
                            | LSPAREN  RSPAREN 

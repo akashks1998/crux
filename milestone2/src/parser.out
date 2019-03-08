@@ -79,7 +79,7 @@ Rule 73    allocation_expression -> NEW new_type_name new_initializer
 Rule 74    allocation_expression -> NEW new_type_name
 Rule 75    allocation_expression -> NEW LPAREN type_name RPAREN new_initializer
 Rule 76    allocation_expression -> NEW LPAREN type_name RPAREN
-Rule 77    new_type_name -> type_specifier_ new_declarator
+Rule 77    new_type_name -> type_specifier_ abstract_declarator
 Rule 78    new_type_name -> type_specifier_
 Rule 79    new_declarator -> MULTOP new_declarator
 Rule 80    new_declarator -> MULTOP
@@ -402,7 +402,7 @@ error                :
 Nonterminals, with rules where they appear
 
 AND_expression       : 21 22 24
-abstract_declarator  : 112 114 116 128 130 177
+abstract_declarator  : 77 112 114 116 128 130 177
 access_list          : 216 217
 access_specifier     : 209 210 221 222
 additive_expression  : 33 34 35 37 38
@@ -459,7 +459,7 @@ member_declarator_list : 225 226 232
 member_list          : 213 217
 multiplicative_expression : 36 37 38 40 41 42
 name                 : 98 99 105 117
-new_declarator       : 77 79 81
+new_declarator       : 79 81
 new_initializer      : 73 75
 new_type_name        : 73 74
 operator_function_name : 133
@@ -2238,6 +2238,35 @@ state 52
     RTEMPLATE       reduce using rule 89 (unary2_operator -> MULTOP .)
     COMMA           reduce using rule 89 (unary2_operator -> MULTOP .)
     RPAREN          reduce using rule 89 (unary2_operator -> MULTOP .)
+    MULTEQOP        reduce using rule 89 (unary2_operator -> MULTOP .)
+    DIVEQOP         reduce using rule 89 (unary2_operator -> MULTOP .)
+    MODEQOP         reduce using rule 89 (unary2_operator -> MULTOP .)
+    PLUSEQOP        reduce using rule 89 (unary2_operator -> MULTOP .)
+    MINUSEQOP       reduce using rule 89 (unary2_operator -> MULTOP .)
+    LSHIFTEQOP      reduce using rule 89 (unary2_operator -> MULTOP .)
+    RSHIFTEQOP      reduce using rule 89 (unary2_operator -> MULTOP .)
+    BANDEQOP        reduce using rule 89 (unary2_operator -> MULTOP .)
+    BOREQOP         reduce using rule 89 (unary2_operator -> MULTOP .)
+    DOTSTAR         reduce using rule 89 (unary2_operator -> MULTOP .)
+    ARROWSTAR       reduce using rule 89 (unary2_operator -> MULTOP .)
+    DIVOP           reduce using rule 89 (unary2_operator -> MULTOP .)
+    MODOP           reduce using rule 89 (unary2_operator -> MULTOP .)
+    LSHIFT          reduce using rule 89 (unary2_operator -> MULTOP .)
+    RSHIFT          reduce using rule 89 (unary2_operator -> MULTOP .)
+    LTCOMP          reduce using rule 89 (unary2_operator -> MULTOP .)
+    GTCOMP          reduce using rule 89 (unary2_operator -> MULTOP .)
+    LTECOMP         reduce using rule 89 (unary2_operator -> MULTOP .)
+    GTECOMP         reduce using rule 89 (unary2_operator -> MULTOP .)
+    EQCOMP          reduce using rule 89 (unary2_operator -> MULTOP .)
+    NEQCOMP         reduce using rule 89 (unary2_operator -> MULTOP .)
+    XOROP           reduce using rule 89 (unary2_operator -> MULTOP .)
+    OROP            reduce using rule 89 (unary2_operator -> MULTOP .)
+    ANDOP           reduce using rule 89 (unary2_operator -> MULTOP .)
+    QUESMARK        reduce using rule 89 (unary2_operator -> MULTOP .)
+    RSPAREN         reduce using rule 89 (unary2_operator -> MULTOP .)
+    SEMICOLON       reduce using rule 89 (unary2_operator -> MULTOP .)
+    RCPAREN         reduce using rule 89 (unary2_operator -> MULTOP .)
+    COLON           reduce using rule 89 (unary2_operator -> MULTOP .)
 
 
 state 53
@@ -2279,6 +2308,35 @@ state 53
     RTEMPLATE       reduce using rule 90 (unary2_operator -> BANDOP .)
     COMMA           reduce using rule 90 (unary2_operator -> BANDOP .)
     RPAREN          reduce using rule 90 (unary2_operator -> BANDOP .)
+    MULTEQOP        reduce using rule 90 (unary2_operator -> BANDOP .)
+    DIVEQOP         reduce using rule 90 (unary2_operator -> BANDOP .)
+    MODEQOP         reduce using rule 90 (unary2_operator -> BANDOP .)
+    PLUSEQOP        reduce using rule 90 (unary2_operator -> BANDOP .)
+    MINUSEQOP       reduce using rule 90 (unary2_operator -> BANDOP .)
+    LSHIFTEQOP      reduce using rule 90 (unary2_operator -> BANDOP .)
+    RSHIFTEQOP      reduce using rule 90 (unary2_operator -> BANDOP .)
+    BANDEQOP        reduce using rule 90 (unary2_operator -> BANDOP .)
+    BOREQOP         reduce using rule 90 (unary2_operator -> BANDOP .)
+    DOTSTAR         reduce using rule 90 (unary2_operator -> BANDOP .)
+    ARROWSTAR       reduce using rule 90 (unary2_operator -> BANDOP .)
+    DIVOP           reduce using rule 90 (unary2_operator -> BANDOP .)
+    MODOP           reduce using rule 90 (unary2_operator -> BANDOP .)
+    LSHIFT          reduce using rule 90 (unary2_operator -> BANDOP .)
+    RSHIFT          reduce using rule 90 (unary2_operator -> BANDOP .)
+    LTCOMP          reduce using rule 90 (unary2_operator -> BANDOP .)
+    GTCOMP          reduce using rule 90 (unary2_operator -> BANDOP .)
+    LTECOMP         reduce using rule 90 (unary2_operator -> BANDOP .)
+    GTECOMP         reduce using rule 90 (unary2_operator -> BANDOP .)
+    EQCOMP          reduce using rule 90 (unary2_operator -> BANDOP .)
+    NEQCOMP         reduce using rule 90 (unary2_operator -> BANDOP .)
+    XOROP           reduce using rule 90 (unary2_operator -> BANDOP .)
+    OROP            reduce using rule 90 (unary2_operator -> BANDOP .)
+    ANDOP           reduce using rule 90 (unary2_operator -> BANDOP .)
+    QUESMARK        reduce using rule 90 (unary2_operator -> BANDOP .)
+    RSPAREN         reduce using rule 90 (unary2_operator -> BANDOP .)
+    SEMICOLON       reduce using rule 90 (unary2_operator -> BANDOP .)
+    RCPAREN         reduce using rule 90 (unary2_operator -> BANDOP .)
+    COLON           reduce using rule 90 (unary2_operator -> BANDOP .)
 
 
 state 54
@@ -7704,7 +7762,7 @@ state 171
     (74) allocation_expression -> NEW . new_type_name
     (75) allocation_expression -> NEW . LPAREN type_name RPAREN new_initializer
     (76) allocation_expression -> NEW . LPAREN type_name RPAREN
-    (77) new_type_name -> . type_specifier_ new_declarator
+    (77) new_type_name -> . type_specifier_ abstract_declarator
     (78) new_type_name -> . type_specifier_
     (179) type_specifier_ -> . CONST type_specifier
     (180) type_specifier_ -> . TYPEDEF type_specifier
@@ -11458,18 +11516,19 @@ state 247
     (90) unary2_operator -> . BANDOP
     (135) operator_function_name -> . OPERATOR operator_name
 
+  ! shift/reduce conflict for LSPAREN resolved as shift
     EQUAL           reduce using rule 111 (abstract_declarator -> unary2_operator .)
-    LSPAREN         reduce using rule 111 (abstract_declarator -> unary2_operator .)
     RTEMPLATE       reduce using rule 111 (abstract_declarator -> unary2_operator .)
     COMMA           reduce using rule 111 (abstract_declarator -> unary2_operator .)
     RPAREN          reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    LSPAREN         shift and go to state 248
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
     MULTOP          shift and go to state 52
     BANDOP          shift and go to state 53
     OPERATOR        shift and go to state 54
 
-  ! LSPAREN         [ shift and go to state 248 ]
+  ! LSPAREN         [ reduce using rule 111 (abstract_declarator -> unary2_operator .) ]
 
     unary2_operator                shift and go to state 247
     declarator                     shift and go to state 74
@@ -14185,14 +14244,19 @@ state 293
 
 state 294
 
-    (77) new_type_name -> type_specifier_ . new_declarator
+    (77) new_type_name -> type_specifier_ . abstract_declarator
     (78) new_type_name -> type_specifier_ .
-    (79) new_declarator -> . MULTOP new_declarator
-    (80) new_declarator -> . MULTOP
-    (81) new_declarator -> . new_declarator LSPAREN expression RSPAREN
-    (82) new_declarator -> . LSPAREN expression RSPAREN
+    (111) abstract_declarator -> . unary2_operator
+    (112) abstract_declarator -> . unary2_operator abstract_declarator
+    (113) abstract_declarator -> . LSPAREN constant_expression RSPAREN
+    (114) abstract_declarator -> . abstract_declarator LSPAREN constant_expression RSPAREN
+    (115) abstract_declarator -> . LSPAREN RSPAREN
+    (116) abstract_declarator -> . abstract_declarator LSPAREN RSPAREN
+    (89) unary2_operator -> . MULTOP
+    (90) unary2_operator -> . BANDOP
 
   ! shift/reduce conflict for MULTOP resolved as shift
+  ! shift/reduce conflict for BANDOP resolved as shift
     LPAREN          reduce using rule 78 (new_type_name -> type_specifier_ .)
     EQUAL           reduce using rule 78 (new_type_name -> type_specifier_ .)
     MULTEQOP        reduce using rule 78 (new_type_name -> type_specifier_ .)
@@ -14218,7 +14282,6 @@ state 294
     GTECOMP         reduce using rule 78 (new_type_name -> type_specifier_ .)
     EQCOMP          reduce using rule 78 (new_type_name -> type_specifier_ .)
     NEQCOMP         reduce using rule 78 (new_type_name -> type_specifier_ .)
-    BANDOP          reduce using rule 78 (new_type_name -> type_specifier_ .)
     XOROP           reduce using rule 78 (new_type_name -> type_specifier_ .)
     OROP            reduce using rule 78 (new_type_name -> type_specifier_ .)
     ANDOP           reduce using rule 78 (new_type_name -> type_specifier_ .)
@@ -14230,12 +14293,15 @@ state 294
     RCPAREN         reduce using rule 78 (new_type_name -> type_specifier_ .)
     COLON           reduce using rule 78 (new_type_name -> type_specifier_ .)
     RTEMPLATE       reduce using rule 78 (new_type_name -> type_specifier_ .)
-    MULTOP          shift and go to state 380
-    LSPAREN         shift and go to state 381
+    LSPAREN         shift and go to state 248
+    MULTOP          shift and go to state 52
+    BANDOP          shift and go to state 53
 
   ! MULTOP          [ reduce using rule 78 (new_type_name -> type_specifier_ .) ]
+  ! BANDOP          [ reduce using rule 78 (new_type_name -> type_specifier_ .) ]
 
-    new_declarator                 shift and go to state 379
+    abstract_declarator            shift and go to state 379
+    unary2_operator                shift and go to state 358
 
 state 295
 
@@ -14395,7 +14461,7 @@ state 296
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    exclusive_OR_expression        shift and go to state 382
+    exclusive_OR_expression        shift and go to state 380
     AND_expression                 shift and go to state 180
     equality_expression            shift and go to state 181
     relational_expression          shift and go to state 182
@@ -14529,7 +14595,7 @@ state 297
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    AND_expression                 shift and go to state 383
+    AND_expression                 shift and go to state 381
     equality_expression            shift and go to state 181
     relational_expression          shift and go to state 182
     shift_expression               shift and go to state 183
@@ -14660,7 +14726,7 @@ state 298
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    equality_expression            shift and go to state 384
+    equality_expression            shift and go to state 382
     relational_expression          shift and go to state 182
     shift_expression               shift and go to state 183
     additive_expression            shift and go to state 184
@@ -14787,7 +14853,7 @@ state 299
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    relational_expression          shift and go to state 385
+    relational_expression          shift and go to state 383
     shift_expression               shift and go to state 183
     additive_expression            shift and go to state 184
     multiplicative_expression      shift and go to state 185
@@ -14913,7 +14979,7 @@ state 300
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    relational_expression          shift and go to state 386
+    relational_expression          shift and go to state 384
     shift_expression               shift and go to state 183
     additive_expression            shift and go to state 184
     multiplicative_expression      shift and go to state 185
@@ -15034,7 +15100,7 @@ state 301
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    shift_expression               shift and go to state 387
+    shift_expression               shift and go to state 385
     additive_expression            shift and go to state 184
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
@@ -15154,7 +15220,7 @@ state 302
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    shift_expression               shift and go to state 388
+    shift_expression               shift and go to state 386
     additive_expression            shift and go to state 184
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
@@ -15274,7 +15340,7 @@ state 303
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    shift_expression               shift and go to state 389
+    shift_expression               shift and go to state 387
     additive_expression            shift and go to state 184
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
@@ -15394,7 +15460,7 @@ state 304
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    shift_expression               shift and go to state 390
+    shift_expression               shift and go to state 388
     additive_expression            shift and go to state 184
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
@@ -15511,7 +15577,7 @@ state 305
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    additive_expression            shift and go to state 391
+    additive_expression            shift and go to state 389
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
     cast_expression                shift and go to state 158
@@ -15627,7 +15693,7 @@ state 306
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    additive_expression            shift and go to state 392
+    additive_expression            shift and go to state 390
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
     cast_expression                shift and go to state 158
@@ -15740,7 +15806,7 @@ state 307
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    multiplicative_expression      shift and go to state 393
+    multiplicative_expression      shift and go to state 391
     pm_expression                  shift and go to state 186
     cast_expression                shift and go to state 158
     unary_expression               shift and go to state 190
@@ -15852,7 +15918,7 @@ state 308
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    multiplicative_expression      shift and go to state 394
+    multiplicative_expression      shift and go to state 392
     pm_expression                  shift and go to state 186
     cast_expression                shift and go to state 158
     unary_expression               shift and go to state 190
@@ -15960,7 +16026,7 @@ state 309
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    pm_expression                  shift and go to state 395
+    pm_expression                  shift and go to state 393
     cast_expression                shift and go to state 158
     unary_expression               shift and go to state 190
     postfix_expression             shift and go to state 154
@@ -16067,7 +16133,7 @@ state 310
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    pm_expression                  shift and go to state 396
+    pm_expression                  shift and go to state 394
     cast_expression                shift and go to state 158
     unary_expression               shift and go to state 190
     postfix_expression             shift and go to state 154
@@ -16174,7 +16240,7 @@ state 311
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    pm_expression                  shift and go to state 397
+    pm_expression                  shift and go to state 395
     cast_expression                shift and go to state 158
     unary_expression               shift and go to state 190
     postfix_expression             shift and go to state 154
@@ -16278,7 +16344,7 @@ state 312
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    cast_expression                shift and go to state 398
+    cast_expression                shift and go to state 396
     unary_expression               shift and go to state 190
     postfix_expression             shift and go to state 154
     unary1_operator                shift and go to state 157
@@ -16381,7 +16447,7 @@ state 313
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    cast_expression                shift and go to state 399
+    cast_expression                shift and go to state 397
     unary_expression               shift and go to state 190
     postfix_expression             shift and go to state 154
     unary1_operator                shift and go to state 157
@@ -16539,7 +16605,7 @@ state 315
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    initializer_list               shift and go to state 400
+    initializer_list               shift and go to state 398
     assignment_expression          shift and go to state 317
     conditional_expression         shift and go to state 151
     unary_expression               shift and go to state 152
@@ -16572,8 +16638,8 @@ state 316
     (287) initializer -> EQUAL LCPAREN initializer_list . COMMA RCPAREN
     (290) initializer_list -> initializer_list . COMMA assignment_expression
 
-    RCPAREN         shift and go to state 401
-    COMMA           shift and go to state 402
+    RCPAREN         shift and go to state 399
+    COMMA           shift and go to state 400
 
 
 state 317
@@ -16916,7 +16982,7 @@ state 320
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    statement                      shift and go to state 403
+    statement                      shift and go to state 401
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -16967,7 +17033,7 @@ state 321
 
     (259) labeled_statement -> CASE constant_expression . COLON statement
 
-    COLON           shift and go to state 404
+    COLON           shift and go to state 402
 
 
 state 322
@@ -17177,7 +17243,7 @@ state 322
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    statement                      shift and go to state 405
+    statement                      shift and go to state 403
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -17409,7 +17475,7 @@ state 324
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    assignment_expression          shift and go to state 406
+    assignment_expression          shift and go to state 404
     conditional_expression         shift and go to state 151
     unary_expression               shift and go to state 152
     logical_OR_expression          shift and go to state 153
@@ -17567,7 +17633,7 @@ state 325
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    expression                     shift and go to state 407
+    expression                     shift and go to state 405
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
     conditional_expression         shift and go to state 151
@@ -17726,7 +17792,7 @@ state 326
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    expression                     shift and go to state 408
+    expression                     shift and go to state 406
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
     conditional_expression         shift and go to state 151
@@ -17885,7 +17951,7 @@ state 327
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    expression                     shift and go to state 409
+    expression                     shift and go to state 407
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
     conditional_expression         shift and go to state 151
@@ -17917,7 +17983,7 @@ state 328
 
     (262) iteration_statement -> DO statement . WHILE LPAREN expression RPAREN SEMICOLON
 
-    WHILE           shift and go to state 410
+    WHILE           shift and go to state 408
 
 
 state 329
@@ -18091,10 +18157,10 @@ state 329
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    for_init_statement             shift and go to state 411
+    for_init_statement             shift and go to state 409
     expression                     shift and go to state 209
-    expression_statement           shift and go to state 412
-    declaration_statement          shift and go to state 413
+    expression_statement           shift and go to state 410
+    declaration_statement          shift and go to state 411
     declaration                    shift and go to state 220
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
@@ -18257,7 +18323,7 @@ state 332
     (251) jump_statement -> RETURN expression . SEMICOLON
     (48) expression -> expression . COMMA assignment_expression
 
-    SEMICOLON       shift and go to state 414
+    SEMICOLON       shift and go to state 412
     COMMA           shift and go to state 324
 
 
@@ -18325,14 +18391,14 @@ state 334
 
     (253) jump_statement -> GOTO IDENTIFIER . SEMICOLON
 
-    SEMICOLON       shift and go to state 415
+    SEMICOLON       shift and go to state 413
 
 
 state 335
 
     (257) try_block -> TRY compound_statement . CATCH compound_statement
 
-    CATCH           shift and go to state 416
+    CATCH           shift and go to state 414
 
 
 state 336
@@ -18670,7 +18736,7 @@ state 344
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    expression                     shift and go to state 417
+    expression                     shift and go to state 415
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
     conditional_expression         shift and go to state 151
@@ -18842,7 +18908,7 @@ state 346
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    expression                     shift and go to state 418
+    expression                     shift and go to state 416
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
     conditional_expression         shift and go to state 151
@@ -18964,7 +19030,7 @@ state 347
     (134) name -> . DOUBLEBNOP IDENTIFIER
     (135) operator_function_name -> . OPERATOR operator_name
 
-    RSPAREN         shift and go to state 420
+    RSPAREN         shift and go to state 418
     LPAREN          shift and go to state 191
     DPLUSOP         shift and go to state 155
     DMINUSOP        shift and go to state 156
@@ -18996,7 +19062,7 @@ state 347
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    constant_expression            shift and go to state 419
+    constant_expression            shift and go to state 417
     conditional_expression         shift and go to state 189
     logical_OR_expression          shift and go to state 153
     logical_AND_expression         shift and go to state 163
@@ -19028,20 +19094,55 @@ state 348
     (114) abstract_declarator -> abstract_declarator . LSPAREN constant_expression RSPAREN
     (116) abstract_declarator -> abstract_declarator . LSPAREN RSPAREN
 
+  ! shift/reduce conflict for LSPAREN resolved as shift
     EQUAL           reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
-    LSPAREN         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
     RTEMPLATE       reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
     COMMA           reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
     RPAREN          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    LPAREN          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    MULTEQOP        reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    DIVEQOP         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    MODEQOP         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    PLUSEQOP        reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    MINUSEQOP       reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    LSHIFTEQOP      reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    RSHIFTEQOP      reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    BANDEQOP        reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    BOREQOP         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    DOTSTAR         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    ARROWSTAR       reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    MULTOP          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    DIVOP           reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    MODOP           reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    PLUSOP          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    MINUSOP         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    LSHIFT          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    RSHIFT          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    LTCOMP          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    GTCOMP          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    LTECOMP         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    GTECOMP         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    EQCOMP          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    NEQCOMP         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    BANDOP          reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    XOROP           reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    OROP            reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    ANDOP           reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    QUESMARK        reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    RSPAREN         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    SEMICOLON       reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    RCPAREN         reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    COLON           reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .)
+    LSPAREN         shift and go to state 347
 
-  ! LSPAREN         [ shift and go to state 347 ]
+  ! LSPAREN         [ reduce using rule 112 (abstract_declarator -> unary2_operator abstract_declarator .) ]
 
 
 state 349
 
     (113) abstract_declarator -> LSPAREN constant_expression . RSPAREN
 
-    RSPAREN         shift and go to state 421
+    RSPAREN         shift and go to state 419
 
 
 state 350
@@ -19053,6 +19154,40 @@ state 350
     RTEMPLATE       reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
     COMMA           reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
     RPAREN          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    LPAREN          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    MULTEQOP        reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    DIVEQOP         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    MODEQOP         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    PLUSEQOP        reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    MINUSEQOP       reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    LSHIFTEQOP      reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    RSHIFTEQOP      reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    BANDEQOP        reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    BOREQOP         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    DOTSTAR         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    ARROWSTAR       reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    MULTOP          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    DIVOP           reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    MODOP           reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    PLUSOP          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    MINUSOP         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    LSHIFT          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    RSHIFT          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    LTCOMP          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    GTCOMP          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    LTECOMP         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    GTECOMP         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    EQCOMP          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    NEQCOMP         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    BANDOP          reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    XOROP           reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    OROP            reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    ANDOP           reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    QUESMARK        reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    RSPAREN         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    SEMICOLON       reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    RCPAREN         reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
+    COLON           reduce using rule 115 (abstract_declarator -> LSPAREN RSPAREN .)
 
 
 state 351
@@ -19077,7 +19212,7 @@ state 351
     PROTECTED       shift and go to state 129
     PUBLIC          shift and go to state 130
 
-    base_specifier                 shift and go to state 422
+    base_specifier                 shift and go to state 420
     class_key                      shift and go to state 251
     access_specifier               shift and go to state 253
 
@@ -19091,7 +19226,7 @@ state 352
     LCPAREN         reduce using rule 205 (base_specifier -> class_key IDENTIFIER .)
     LTEMPLATE       shift and go to state 139
 
-    template_class_name            shift and go to state 423
+    template_class_name            shift and go to state 421
 
 state 353
 
@@ -19106,7 +19241,7 @@ state 354
     (209) base_specifier -> access_specifier class_key . IDENTIFIER
     (210) base_specifier -> access_specifier class_key . IDENTIFIER template_class_name
 
-    IDENTIFIER      shift and go to state 424
+    IDENTIFIER      shift and go to state 422
 
 
 state 355
@@ -19203,7 +19338,7 @@ state 356
     CLASS           shift and go to state 35
     STRUCT          shift and go to state 36
 
-    type_name                      shift and go to state 425
+    type_name                      shift and go to state 423
     type_specifier_                shift and go to state 256
     type_specifier                 shift and go to state 15
     simple_type_name               shift and go to state 20
@@ -19235,14 +19370,52 @@ state 358
     (89) unary2_operator -> . MULTOP
     (90) unary2_operator -> . BANDOP
 
-    LSPAREN         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+  ! shift/reduce conflict for LSPAREN resolved as shift
+  ! shift/reduce conflict for MULTOP resolved as shift
+  ! shift/reduce conflict for BANDOP resolved as shift
     RTEMPLATE       reduce using rule 111 (abstract_declarator -> unary2_operator .)
     COMMA           reduce using rule 111 (abstract_declarator -> unary2_operator .)
     RPAREN          reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    LPAREN          reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    EQUAL           reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    MULTEQOP        reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    DIVEQOP         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    MODEQOP         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    PLUSEQOP        reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    MINUSEQOP       reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    LSHIFTEQOP      reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    RSHIFTEQOP      reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    BANDEQOP        reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    BOREQOP         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    DOTSTAR         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    ARROWSTAR       reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    DIVOP           reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    MODOP           reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    PLUSOP          reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    MINUSOP         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    LSHIFT          reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    RSHIFT          reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    LTCOMP          reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    GTCOMP          reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    LTECOMP         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    GTECOMP         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    EQCOMP          reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    NEQCOMP         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    XOROP           reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    OROP            reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    ANDOP           reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    QUESMARK        reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    RSPAREN         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    SEMICOLON       reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    RCPAREN         reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    COLON           reduce using rule 111 (abstract_declarator -> unary2_operator .)
+    LSPAREN         shift and go to state 248
     MULTOP          shift and go to state 52
     BANDOP          shift and go to state 53
 
-  ! LSPAREN         [ shift and go to state 248 ]
+  ! LSPAREN         [ reduce using rule 111 (abstract_declarator -> unary2_operator .) ]
+  ! MULTOP          [ reduce using rule 111 (abstract_declarator -> unary2_operator .) ]
+  ! BANDOP          [ reduce using rule 111 (abstract_declarator -> unary2_operator .) ]
 
     unary2_operator                shift and go to state 358
     abstract_declarator            shift and go to state 348
@@ -19387,7 +19560,7 @@ state 360
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    cast_expression                shift and go to state 426
+    cast_expression                shift and go to state 424
     unary_expression               shift and go to state 190
     postfix_expression             shift and go to state 154
     unary1_operator                shift and go to state 157
@@ -19433,7 +19606,7 @@ state 364
     (14) conditional_expression -> logical_OR_expression QUESMARK expression . COLON conditional_expression
     (48) expression -> expression . COMMA assignment_expression
 
-    COLON           shift and go to state 427
+    COLON           shift and go to state 425
     COMMA           shift and go to state 324
 
 
@@ -19459,7 +19632,7 @@ state 366
     (92) postfix_expression -> postfix_expression LSPAREN expression . RSPAREN
     (48) expression -> expression . COMMA assignment_expression
 
-    RSPAREN         shift and go to state 428
+    RSPAREN         shift and go to state 426
     COMMA           shift and go to state 324
 
 
@@ -19468,7 +19641,7 @@ state 367
     (93) postfix_expression -> postfix_expression LPAREN expression_list . RPAREN
     (295) expression_list -> expression_list . COMMA assignment_expression
 
-    RPAREN          shift and go to state 429
+    RPAREN          shift and go to state 427
     COMMA           shift and go to state 261
 
 
@@ -19650,7 +19823,7 @@ state 369
     OPERATOR        shift and go to state 54
 
     postfix_expression             shift and go to state 154
-    expression_list                shift and go to state 430
+    expression_list                shift and go to state 428
     assignment_expression          shift and go to state 149
     conditional_expression         shift and go to state 151
     unary_expression               shift and go to state 152
@@ -19780,7 +19953,7 @@ state 372
 
     (69) unary_expression -> SIZEOF LPAREN type_name . RPAREN
 
-    RPAREN          shift and go to state 431
+    RPAREN          shift and go to state 429
 
 
 state 373
@@ -19807,7 +19980,7 @@ state 374
     (96) postfix_expression -> simple_type_name LPAREN expression_list . RPAREN
     (295) expression_list -> expression_list . COMMA assignment_expression
 
-    RPAREN          shift and go to state 432
+    RPAREN          shift and go to state 430
     COMMA           shift and go to state 261
 
 
@@ -20003,7 +20176,7 @@ state 377
     (109) cast_expression -> . unary_expression
     (110) cast_expression -> . LPAREN type_name RPAREN cast_expression
 
-    RPAREN          shift and go to state 434
+    RPAREN          shift and go to state 432
     LCPAREN         shift and go to state 315
     DPLUSOP         shift and go to state 155
     DMINUSOP        shift and go to state 156
@@ -20036,7 +20209,7 @@ state 377
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    initializer_list               shift and go to state 433
+    initializer_list               shift and go to state 431
     assignment_expression          shift and go to state 317
     conditional_expression         shift and go to state 151
     unary_expression               shift and go to state 152
@@ -20068,269 +20241,57 @@ state 378
     (75) allocation_expression -> NEW LPAREN type_name . RPAREN new_initializer
     (76) allocation_expression -> NEW LPAREN type_name . RPAREN
 
-    RPAREN          shift and go to state 435
+    RPAREN          shift and go to state 433
 
 
 state 379
 
-    (77) new_type_name -> type_specifier_ new_declarator .
-    (81) new_declarator -> new_declarator . LSPAREN expression RSPAREN
+    (77) new_type_name -> type_specifier_ abstract_declarator .
+    (114) abstract_declarator -> abstract_declarator . LSPAREN constant_expression RSPAREN
+    (116) abstract_declarator -> abstract_declarator . LSPAREN RSPAREN
 
-    LPAREN          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    EQUAL           reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    MULTEQOP        reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    DIVEQOP         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    MODEQOP         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    PLUSEQOP        reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    MINUSEQOP       reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    LSHIFTEQOP      reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    RSHIFTEQOP      reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    BANDEQOP        reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    BOREQOP         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    DOTSTAR         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    ARROWSTAR       reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    MULTOP          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    DIVOP           reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    MODOP           reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    PLUSOP          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    MINUSOP         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    LSHIFT          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    RSHIFT          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    LTCOMP          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    GTCOMP          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    LTECOMP         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    GTECOMP         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    EQCOMP          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    NEQCOMP         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    BANDOP          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    XOROP           reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    OROP            reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    ANDOP           reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    QUESMARK        reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    RPAREN          reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    COMMA           reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    RSPAREN         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    SEMICOLON       reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    RCPAREN         reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    COLON           reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    RTEMPLATE       reduce using rule 77 (new_type_name -> type_specifier_ new_declarator .)
-    LSPAREN         shift and go to state 436
+    LPAREN          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    EQUAL           reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    MULTEQOP        reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    DIVEQOP         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    MODEQOP         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    PLUSEQOP        reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    MINUSEQOP       reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    LSHIFTEQOP      reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    RSHIFTEQOP      reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    BANDEQOP        reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    BOREQOP         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    DOTSTAR         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    ARROWSTAR       reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    MULTOP          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    DIVOP           reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    MODOP           reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    PLUSOP          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    MINUSOP         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    LSHIFT          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    RSHIFT          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    LTCOMP          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    GTCOMP          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    LTECOMP         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    GTECOMP         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    EQCOMP          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    NEQCOMP         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    BANDOP          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    XOROP           reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    OROP            reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    ANDOP           reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    QUESMARK        reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    RPAREN          reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    COMMA           reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    RSPAREN         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    SEMICOLON       reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    RCPAREN         reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    COLON           reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    RTEMPLATE       reduce using rule 77 (new_type_name -> type_specifier_ abstract_declarator .)
+    LSPAREN         shift and go to state 347
 
 
 state 380
-
-    (79) new_declarator -> MULTOP . new_declarator
-    (80) new_declarator -> MULTOP .
-    (79) new_declarator -> . MULTOP new_declarator
-    (80) new_declarator -> . MULTOP
-    (81) new_declarator -> . new_declarator LSPAREN expression RSPAREN
-    (82) new_declarator -> . LSPAREN expression RSPAREN
-
-    LSPAREN         reduce using rule 80 (new_declarator -> MULTOP .)
-    LPAREN          reduce using rule 80 (new_declarator -> MULTOP .)
-    EQUAL           reduce using rule 80 (new_declarator -> MULTOP .)
-    MULTEQOP        reduce using rule 80 (new_declarator -> MULTOP .)
-    DIVEQOP         reduce using rule 80 (new_declarator -> MULTOP .)
-    MODEQOP         reduce using rule 80 (new_declarator -> MULTOP .)
-    PLUSEQOP        reduce using rule 80 (new_declarator -> MULTOP .)
-    MINUSEQOP       reduce using rule 80 (new_declarator -> MULTOP .)
-    LSHIFTEQOP      reduce using rule 80 (new_declarator -> MULTOP .)
-    RSHIFTEQOP      reduce using rule 80 (new_declarator -> MULTOP .)
-    BANDEQOP        reduce using rule 80 (new_declarator -> MULTOP .)
-    BOREQOP         reduce using rule 80 (new_declarator -> MULTOP .)
-    DOTSTAR         reduce using rule 80 (new_declarator -> MULTOP .)
-    ARROWSTAR       reduce using rule 80 (new_declarator -> MULTOP .)
-    MULTOP          reduce using rule 80 (new_declarator -> MULTOP .)
-    DIVOP           reduce using rule 80 (new_declarator -> MULTOP .)
-    MODOP           reduce using rule 80 (new_declarator -> MULTOP .)
-    PLUSOP          reduce using rule 80 (new_declarator -> MULTOP .)
-    MINUSOP         reduce using rule 80 (new_declarator -> MULTOP .)
-    LSHIFT          reduce using rule 80 (new_declarator -> MULTOP .)
-    RSHIFT          reduce using rule 80 (new_declarator -> MULTOP .)
-    LTCOMP          reduce using rule 80 (new_declarator -> MULTOP .)
-    GTCOMP          reduce using rule 80 (new_declarator -> MULTOP .)
-    LTECOMP         reduce using rule 80 (new_declarator -> MULTOP .)
-    GTECOMP         reduce using rule 80 (new_declarator -> MULTOP .)
-    EQCOMP          reduce using rule 80 (new_declarator -> MULTOP .)
-    NEQCOMP         reduce using rule 80 (new_declarator -> MULTOP .)
-    BANDOP          reduce using rule 80 (new_declarator -> MULTOP .)
-    XOROP           reduce using rule 80 (new_declarator -> MULTOP .)
-    OROP            reduce using rule 80 (new_declarator -> MULTOP .)
-    ANDOP           reduce using rule 80 (new_declarator -> MULTOP .)
-    QUESMARK        reduce using rule 80 (new_declarator -> MULTOP .)
-    RPAREN          reduce using rule 80 (new_declarator -> MULTOP .)
-    COMMA           reduce using rule 80 (new_declarator -> MULTOP .)
-    RSPAREN         reduce using rule 80 (new_declarator -> MULTOP .)
-    SEMICOLON       reduce using rule 80 (new_declarator -> MULTOP .)
-    RCPAREN         reduce using rule 80 (new_declarator -> MULTOP .)
-    COLON           reduce using rule 80 (new_declarator -> MULTOP .)
-    RTEMPLATE       reduce using rule 80 (new_declarator -> MULTOP .)
-
-  ! MULTOP          [ shift and go to state 380 ]
-  ! LSPAREN         [ shift and go to state 381 ]
-
-    new_declarator                 shift and go to state 437
-
-state 381
-
-    (82) new_declarator -> LSPAREN . expression RSPAREN
-    (46) expression -> . assignment_expression
-    (47) expression -> . throw_expression
-    (48) expression -> . expression COMMA assignment_expression
-    (51) assignment_expression -> . conditional_expression
-    (52) assignment_expression -> . unary_expression assignment_operator assignment_expression
-    (49) throw_expression -> . THROW expression
-    (50) throw_expression -> . THROW
-    (13) conditional_expression -> . logical_OR_expression
-    (14) conditional_expression -> . logical_OR_expression QUESMARK expression COLON conditional_expression
-    (63) unary_expression -> . postfix_expression
-    (64) unary_expression -> . DPLUSOP unary_expression
-    (65) unary_expression -> . DMINUSOP unary_expression
-    (66) unary_expression -> . unary1_operator cast_expression
-    (67) unary_expression -> . unary2_operator cast_expression
-    (68) unary_expression -> . SIZEOF unary_expression
-    (69) unary_expression -> . SIZEOF LPAREN type_name RPAREN
-    (70) unary_expression -> . allocation_expression
-    (71) unary_expression -> . deallocation_expression
-    (15) logical_OR_expression -> . logical_AND_expression
-    (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
-    (91) postfix_expression -> . primary_expression
-    (92) postfix_expression -> . postfix_expression LSPAREN expression RSPAREN
-    (93) postfix_expression -> . postfix_expression LPAREN expression_list RPAREN
-    (94) postfix_expression -> . postfix_expression template_class_name LPAREN expression_list RPAREN
-    (95) postfix_expression -> . postfix_expression LPAREN RPAREN
-    (96) postfix_expression -> . simple_type_name LPAREN expression_list RPAREN
-    (97) postfix_expression -> . simple_type_name LPAREN RPAREN
-    (98) postfix_expression -> . postfix_expression DOT name
-    (99) postfix_expression -> . postfix_expression ARROW name
-    (100) postfix_expression -> . postfix_expression DPLUSOP
-    (101) postfix_expression -> . postfix_expression DMINUSOP
-    (85) unary1_operator -> . PLUSOP
-    (86) unary1_operator -> . MINUSOP
-    (87) unary1_operator -> . NOTSYM
-    (88) unary1_operator -> . BNOP
-    (89) unary2_operator -> . MULTOP
-    (90) unary2_operator -> . BANDOP
-    (73) allocation_expression -> . NEW new_type_name new_initializer
-    (74) allocation_expression -> . NEW new_type_name
-    (75) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
-    (76) allocation_expression -> . NEW LPAREN type_name RPAREN
-    (72) deallocation_expression -> . DELETE cast_expression
-    (17) logical_AND_expression -> . inclusive_OR_expression
-    (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
-    (102) primary_expression -> . literal
-    (103) primary_expression -> . THIS
-    (104) primary_expression -> . LPAREN expression RPAREN
-    (105) primary_expression -> . name
-    (184) simple_type_name -> . CHAR
-    (185) simple_type_name -> . SHORT
-    (186) simple_type_name -> . INT
-    (187) simple_type_name -> . LONG
-    (188) simple_type_name -> . SIGNED
-    (189) simple_type_name -> . UNSIGNED
-    (190) simple_type_name -> . FLOAT
-    (191) simple_type_name -> . DOUBLE
-    (192) simple_type_name -> . VOID
-    (193) simple_type_name -> . STRING
-    (194) simple_type_name -> . AUTO
-    (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
-    (108) literal -> . SCHAR
-    (132) name -> . IDENTIFIER
-    (133) name -> . operator_function_name
-    (134) name -> . DOUBLEBNOP IDENTIFIER
-    (21) exclusive_OR_expression -> . AND_expression
-    (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
-    (135) operator_function_name -> . OPERATOR operator_name
-    (23) AND_expression -> . equality_expression
-    (24) AND_expression -> . AND_expression BANDOP equality_expression
-    (25) equality_expression -> . relational_expression
-    (26) equality_expression -> . equality_expression EQCOMP relational_expression
-    (27) equality_expression -> . equality_expression NEQCOMP relational_expression
-    (28) relational_expression -> . shift_expression
-    (29) relational_expression -> . relational_expression LTCOMP shift_expression
-    (30) relational_expression -> . relational_expression GTCOMP shift_expression
-    (31) relational_expression -> . relational_expression LTECOMP shift_expression
-    (32) relational_expression -> . relational_expression GTECOMP shift_expression
-    (33) shift_expression -> . additive_expression
-    (34) shift_expression -> . shift_expression LSHIFT additive_expression
-    (35) shift_expression -> . shift_expression RSHIFT additive_expression
-    (36) additive_expression -> . multiplicative_expression
-    (37) additive_expression -> . additive_expression PLUSOP multiplicative_expression
-    (38) additive_expression -> . additive_expression MINUSOP multiplicative_expression
-    (39) multiplicative_expression -> . pm_expression
-    (40) multiplicative_expression -> . multiplicative_expression MULTOP pm_expression
-    (41) multiplicative_expression -> . multiplicative_expression DIVOP pm_expression
-    (42) multiplicative_expression -> . multiplicative_expression MODOP pm_expression
-    (43) pm_expression -> . cast_expression
-    (44) pm_expression -> . pm_expression DOTSTAR cast_expression
-    (45) pm_expression -> . pm_expression ARROWSTAR cast_expression
-    (109) cast_expression -> . unary_expression
-    (110) cast_expression -> . LPAREN type_name RPAREN cast_expression
-
-    THROW           shift and go to state 224
-    DPLUSOP         shift and go to state 155
-    DMINUSOP        shift and go to state 156
-    SIZEOF          shift and go to state 160
-    PLUSOP          shift and go to state 167
-    MINUSOP         shift and go to state 168
-    NOTSYM          shift and go to state 169
-    BNOP            shift and go to state 170
-    MULTOP          shift and go to state 52
-    BANDOP          shift and go to state 53
-    NEW             shift and go to state 171
-    DELETE          shift and go to state 172
-    THIS            shift and go to state 175
-    LPAREN          shift and go to state 144
-    CHAR            shift and go to state 23
-    SHORT           shift and go to state 24
-    INT             shift and go to state 25
-    LONG            shift and go to state 26
-    SIGNED          shift and go to state 27
-    UNSIGNED        shift and go to state 28
-    FLOAT           shift and go to state 29
-    DOUBLE          shift and go to state 30
-    VOID            shift and go to state 31
-    STRING          shift and go to state 32
-    AUTO            shift and go to state 33
-    NUMBER          shift and go to state 177
-    STRING_L        shift and go to state 178
-    SCHAR           shift and go to state 179
-    IDENTIFIER      shift and go to state 49
-    DOUBLEBNOP      shift and go to state 51
-    OPERATOR        shift and go to state 54
-
-    expression                     shift and go to state 438
-    assignment_expression          shift and go to state 222
-    throw_expression               shift and go to state 223
-    conditional_expression         shift and go to state 151
-    unary_expression               shift and go to state 152
-    logical_OR_expression          shift and go to state 153
-    postfix_expression             shift and go to state 154
-    unary1_operator                shift and go to state 157
-    cast_expression                shift and go to state 158
-    unary2_operator                shift and go to state 159
-    allocation_expression          shift and go to state 161
-    deallocation_expression        shift and go to state 162
-    logical_AND_expression         shift and go to state 163
-    primary_expression             shift and go to state 164
-    simple_type_name               shift and go to state 192
-    name                           shift and go to state 166
-    inclusive_OR_expression        shift and go to state 173
-    literal                        shift and go to state 174
-    exclusive_OR_expression        shift and go to state 176
-    operator_function_name         shift and go to state 50
-    AND_expression                 shift and go to state 180
-    equality_expression            shift and go to state 181
-    relational_expression          shift and go to state 182
-    shift_expression               shift and go to state 183
-    additive_expression            shift and go to state 184
-    multiplicative_expression      shift and go to state 185
-    pm_expression                  shift and go to state 186
-
-state 382
 
     (20) inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .
     (22) exclusive_OR_expression -> exclusive_OR_expression . XOROP AND_expression
@@ -20348,7 +20309,7 @@ state 382
     XOROP           shift and go to state 297
 
 
-state 383
+state 381
 
     (22) exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .
     (24) AND_expression -> AND_expression . BANDOP equality_expression
@@ -20367,7 +20328,7 @@ state 383
     BANDOP          shift and go to state 298
 
 
-state 384
+state 382
 
     (24) AND_expression -> AND_expression BANDOP equality_expression .
     (26) equality_expression -> equality_expression . EQCOMP relational_expression
@@ -20389,7 +20350,7 @@ state 384
     NEQCOMP         shift and go to state 300
 
 
-state 385
+state 383
 
     (26) equality_expression -> equality_expression EQCOMP relational_expression .
     (29) relational_expression -> relational_expression . LTCOMP shift_expression
@@ -20417,7 +20378,7 @@ state 385
     GTECOMP         shift and go to state 304
 
 
-state 386
+state 384
 
     (27) equality_expression -> equality_expression NEQCOMP relational_expression .
     (29) relational_expression -> relational_expression . LTCOMP shift_expression
@@ -20445,7 +20406,7 @@ state 386
     GTECOMP         shift and go to state 304
 
 
-state 387
+state 385
 
     (29) relational_expression -> relational_expression LTCOMP shift_expression .
     (34) shift_expression -> shift_expression . LSHIFT additive_expression
@@ -20473,7 +20434,7 @@ state 387
     RSHIFT          shift and go to state 306
 
 
-state 388
+state 386
 
     (30) relational_expression -> relational_expression GTCOMP shift_expression .
     (34) shift_expression -> shift_expression . LSHIFT additive_expression
@@ -20501,7 +20462,7 @@ state 388
     RSHIFT          shift and go to state 306
 
 
-state 389
+state 387
 
     (31) relational_expression -> relational_expression LTECOMP shift_expression .
     (34) shift_expression -> shift_expression . LSHIFT additive_expression
@@ -20529,7 +20490,7 @@ state 389
     RSHIFT          shift and go to state 306
 
 
-state 390
+state 388
 
     (32) relational_expression -> relational_expression GTECOMP shift_expression .
     (34) shift_expression -> shift_expression . LSHIFT additive_expression
@@ -20557,7 +20518,7 @@ state 390
     RSHIFT          shift and go to state 306
 
 
-state 391
+state 389
 
     (34) shift_expression -> shift_expression LSHIFT additive_expression .
     (37) additive_expression -> additive_expression . PLUSOP multiplicative_expression
@@ -20587,7 +20548,7 @@ state 391
     MINUSOP         shift and go to state 308
 
 
-state 392
+state 390
 
     (35) shift_expression -> shift_expression RSHIFT additive_expression .
     (37) additive_expression -> additive_expression . PLUSOP multiplicative_expression
@@ -20617,7 +20578,7 @@ state 392
     MINUSOP         shift and go to state 308
 
 
-state 393
+state 391
 
     (37) additive_expression -> additive_expression PLUSOP multiplicative_expression .
     (40) multiplicative_expression -> multiplicative_expression . MULTOP pm_expression
@@ -20651,7 +20612,7 @@ state 393
     MODOP           shift and go to state 311
 
 
-state 394
+state 392
 
     (38) additive_expression -> additive_expression MINUSOP multiplicative_expression .
     (40) multiplicative_expression -> multiplicative_expression . MULTOP pm_expression
@@ -20685,7 +20646,7 @@ state 394
     MODOP           shift and go to state 311
 
 
-state 395
+state 393
 
     (40) multiplicative_expression -> multiplicative_expression MULTOP pm_expression .
     (44) pm_expression -> pm_expression . DOTSTAR cast_expression
@@ -20720,7 +20681,7 @@ state 395
     ARROWSTAR       shift and go to state 313
 
 
-state 396
+state 394
 
     (41) multiplicative_expression -> multiplicative_expression DIVOP pm_expression .
     (44) pm_expression -> pm_expression . DOTSTAR cast_expression
@@ -20755,7 +20716,7 @@ state 396
     ARROWSTAR       shift and go to state 313
 
 
-state 397
+state 395
 
     (42) multiplicative_expression -> multiplicative_expression MODOP pm_expression .
     (44) pm_expression -> pm_expression . DOTSTAR cast_expression
@@ -20790,7 +20751,7 @@ state 397
     ARROWSTAR       shift and go to state 313
 
 
-state 398
+state 396
 
     (44) pm_expression -> pm_expression DOTSTAR cast_expression .
 
@@ -20823,7 +20784,7 @@ state 398
     RTEMPLATE       reduce using rule 44 (pm_expression -> pm_expression DOTSTAR cast_expression .)
 
 
-state 399
+state 397
 
     (45) pm_expression -> pm_expression ARROWSTAR cast_expression .
 
@@ -20856,17 +20817,17 @@ state 399
     RTEMPLATE       reduce using rule 45 (pm_expression -> pm_expression ARROWSTAR cast_expression .)
 
 
-state 400
+state 398
 
     (291) initializer_list -> LCPAREN initializer_list . RCPAREN
     (292) initializer_list -> LCPAREN initializer_list . COMMA RCPAREN
     (290) initializer_list -> initializer_list . COMMA assignment_expression
 
-    RCPAREN         shift and go to state 439
-    COMMA           shift and go to state 440
+    RCPAREN         shift and go to state 434
+    COMMA           shift and go to state 435
 
 
-state 401
+state 399
 
     (286) initializer -> EQUAL LCPAREN initializer_list RCPAREN .
 
@@ -20874,7 +20835,7 @@ state 401
     COMMA           reduce using rule 286 (initializer -> EQUAL LCPAREN initializer_list RCPAREN .)
 
 
-state 402
+state 400
 
     (287) initializer -> EQUAL LCPAREN initializer_list COMMA . RCPAREN
     (290) initializer_list -> initializer_list COMMA . assignment_expression
@@ -20969,7 +20930,7 @@ state 402
     (109) cast_expression -> . unary_expression
     (110) cast_expression -> . LPAREN type_name RPAREN cast_expression
 
-    RCPAREN         shift and go to state 441
+    RCPAREN         shift and go to state 436
     DPLUSOP         shift and go to state 155
     DMINUSOP        shift and go to state 156
     SIZEOF          shift and go to state 160
@@ -21001,7 +20962,7 @@ state 402
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    assignment_expression          shift and go to state 442
+    assignment_expression          shift and go to state 437
     conditional_expression         shift and go to state 151
     unary_expression               shift and go to state 152
     logical_OR_expression          shift and go to state 153
@@ -21027,7 +20988,7 @@ state 402
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 403
+state 401
 
     (258) labeled_statement -> IDENTIFIER COLON statement .
 
@@ -21087,7 +21048,7 @@ state 403
     ELSE            reduce using rule 258 (labeled_statement -> IDENTIFIER COLON statement .)
 
 
-state 404
+state 402
 
     (259) labeled_statement -> CASE constant_expression COLON . statement
     (241) statement -> . labeled_statement
@@ -21294,7 +21255,7 @@ state 404
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    statement                      shift and go to state 443
+    statement                      shift and go to state 438
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -21341,7 +21302,7 @@ state 404
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 405
+state 403
 
     (260) labeled_statement -> DEFAULT COLON statement .
 
@@ -21401,7 +21362,7 @@ state 405
     ELSE            reduce using rule 260 (labeled_statement -> DEFAULT COLON statement .)
 
 
-state 406
+state 404
 
     (48) expression -> expression COMMA assignment_expression .
 
@@ -21413,42 +21374,42 @@ state 406
     RSPAREN         reduce using rule 48 (expression -> expression COMMA assignment_expression .)
 
 
-state 407
+state 405
 
     (254) selection_statement -> IF LPAREN expression . RPAREN statement
     (255) selection_statement -> IF LPAREN expression . RPAREN statement ELSE statement
     (48) expression -> expression . COMMA assignment_expression
 
-    RPAREN          shift and go to state 444
+    RPAREN          shift and go to state 439
+    COMMA           shift and go to state 324
+
+
+state 406
+
+    (256) selection_statement -> SWITCH LPAREN expression . RPAREN statement
+    (48) expression -> expression . COMMA assignment_expression
+
+    RPAREN          shift and go to state 440
+    COMMA           shift and go to state 324
+
+
+state 407
+
+    (261) iteration_statement -> WHILE LPAREN expression . RPAREN statement
+    (48) expression -> expression . COMMA assignment_expression
+
+    RPAREN          shift and go to state 441
     COMMA           shift and go to state 324
 
 
 state 408
 
-    (256) selection_statement -> SWITCH LPAREN expression . RPAREN statement
-    (48) expression -> expression . COMMA assignment_expression
+    (262) iteration_statement -> DO statement WHILE . LPAREN expression RPAREN SEMICOLON
 
-    RPAREN          shift and go to state 445
-    COMMA           shift and go to state 324
+    LPAREN          shift and go to state 442
 
 
 state 409
-
-    (261) iteration_statement -> WHILE LPAREN expression . RPAREN statement
-    (48) expression -> expression . COMMA assignment_expression
-
-    RPAREN          shift and go to state 446
-    COMMA           shift and go to state 324
-
-
-state 410
-
-    (262) iteration_statement -> DO statement WHILE . LPAREN expression RPAREN SEMICOLON
-
-    LPAREN          shift and go to state 447
-
-
-state 411
 
     (263) iteration_statement -> FOR LPAREN for_init_statement . expression SEMICOLON expression RPAREN statement
     (264) iteration_statement -> FOR LPAREN for_init_statement . SEMICOLON expression RPAREN statement
@@ -21550,7 +21511,7 @@ state 411
     (109) cast_expression -> . unary_expression
     (110) cast_expression -> . LPAREN type_name RPAREN cast_expression
 
-    SEMICOLON       shift and go to state 449
+    SEMICOLON       shift and go to state 444
     THROW           shift and go to state 224
     DPLUSOP         shift and go to state 155
     DMINUSOP        shift and go to state 156
@@ -21583,7 +21544,7 @@ state 411
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    expression                     shift and go to state 448
+    expression                     shift and go to state 443
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
     conditional_expression         shift and go to state 151
@@ -21611,7 +21572,7 @@ state 411
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 412
+state 410
 
     (267) for_init_statement -> expression_statement .
 
@@ -21649,7 +21610,7 @@ state 412
     OPERATOR        reduce using rule 267 (for_init_statement -> expression_statement .)
 
 
-state 413
+state 411
 
     (268) for_init_statement -> declaration_statement .
 
@@ -21687,7 +21648,7 @@ state 413
     OPERATOR        reduce using rule 268 (for_init_statement -> declaration_statement .)
 
 
-state 414
+state 412
 
     (251) jump_statement -> RETURN expression SEMICOLON .
 
@@ -21747,7 +21708,7 @@ state 414
     ELSE            reduce using rule 251 (jump_statement -> RETURN expression SEMICOLON .)
 
 
-state 415
+state 413
 
     (253) jump_statement -> GOTO IDENTIFIER SEMICOLON .
 
@@ -21807,7 +21768,7 @@ state 415
     ELSE            reduce using rule 253 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
 
 
-state 416
+state 414
 
     (257) try_block -> TRY compound_statement CATCH . compound_statement
     (237) compound_statement -> . LCPAREN statement_list RCPAREN
@@ -21815,9 +21776,9 @@ state 416
 
     LCPAREN         shift and go to state 73
 
-    compound_statement             shift and go to state 450
+    compound_statement             shift and go to state 445
 
-state 417
+state 415
 
     (127) argument_declaration -> type_specifier_ declarator EQUAL expression .
     (48) expression -> expression . COMMA assignment_expression
@@ -21830,7 +21791,7 @@ state 417
   ! COMMA           [ reduce using rule 127 (argument_declaration -> type_specifier_ declarator EQUAL expression .) ]
 
 
-state 418
+state 416
 
     (130) argument_declaration -> type_specifier_ abstract_declarator EQUAL expression .
     (48) expression -> expression . COMMA assignment_expression
@@ -21843,14 +21804,14 @@ state 418
   ! COMMA           [ reduce using rule 130 (argument_declaration -> type_specifier_ abstract_declarator EQUAL expression .) ]
 
 
-state 419
+state 417
 
     (114) abstract_declarator -> abstract_declarator LSPAREN constant_expression . RSPAREN
 
-    RSPAREN         shift and go to state 451
+    RSPAREN         shift and go to state 446
 
 
-state 420
+state 418
 
     (116) abstract_declarator -> abstract_declarator LSPAREN RSPAREN .
 
@@ -21859,9 +21820,43 @@ state 420
     RTEMPLATE       reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
     COMMA           reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
     RPAREN          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    LPAREN          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    MULTEQOP        reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    DIVEQOP         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    MODEQOP         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    PLUSEQOP        reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    MINUSEQOP       reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    LSHIFTEQOP      reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    RSHIFTEQOP      reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    BANDEQOP        reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    BOREQOP         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    DOTSTAR         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    ARROWSTAR       reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    MULTOP          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    DIVOP           reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    MODOP           reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    PLUSOP          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    MINUSOP         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    LSHIFT          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    RSHIFT          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    LTCOMP          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    GTCOMP          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    LTECOMP         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    GTECOMP         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    EQCOMP          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    NEQCOMP         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    BANDOP          reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    XOROP           reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    OROP            reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    ANDOP           reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    QUESMARK        reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    RSPAREN         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    SEMICOLON       reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    RCPAREN         reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
+    COLON           reduce using rule 116 (abstract_declarator -> abstract_declarator LSPAREN RSPAREN .)
 
 
-state 421
+state 419
 
     (113) abstract_declarator -> LSPAREN constant_expression RSPAREN .
 
@@ -21870,9 +21865,43 @@ state 421
     RTEMPLATE       reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
     COMMA           reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
     RPAREN          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    LPAREN          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    MULTEQOP        reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    DIVEQOP         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    MODEQOP         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    PLUSEQOP        reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    MINUSEQOP       reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    LSHIFTEQOP      reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    RSHIFTEQOP      reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    BANDEQOP        reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    BOREQOP         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    DOTSTAR         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    ARROWSTAR       reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    MULTOP          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    DIVOP           reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    MODOP           reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    PLUSOP          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    MINUSOP         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    LSHIFT          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    RSHIFT          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    LTCOMP          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    GTCOMP          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    LTECOMP         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    GTECOMP         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    EQCOMP          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    NEQCOMP         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    BANDOP          reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    XOROP           reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    OROP            reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    ANDOP           reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    QUESMARK        reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    RSPAREN         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    SEMICOLON       reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    RCPAREN         reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
+    COLON           reduce using rule 113 (abstract_declarator -> LSPAREN constant_expression RSPAREN .)
 
 
-state 422
+state 420
 
     (204) base_list -> base_list COMMA base_specifier .
 
@@ -21880,7 +21909,7 @@ state 422
     LCPAREN         reduce using rule 204 (base_list -> base_list COMMA base_specifier .)
 
 
-state 423
+state 421
 
     (206) base_specifier -> class_key IDENTIFIER template_class_name .
 
@@ -21888,7 +21917,7 @@ state 423
     LCPAREN         reduce using rule 206 (base_specifier -> class_key IDENTIFIER template_class_name .)
 
 
-state 424
+state 422
 
     (209) base_specifier -> access_specifier class_key IDENTIFIER .
     (210) base_specifier -> access_specifier class_key IDENTIFIER . template_class_name
@@ -21898,9 +21927,9 @@ state 424
     LCPAREN         reduce using rule 209 (base_specifier -> access_specifier class_key IDENTIFIER .)
     LTEMPLATE       shift and go to state 139
 
-    template_class_name            shift and go to state 452
+    template_class_name            shift and go to state 447
 
-state 425
+state 423
 
     (176) template_arg_list -> template_arg_list COMMA type_name .
 
@@ -21908,7 +21937,7 @@ state 425
     COMMA           reduce using rule 176 (template_arg_list -> template_arg_list COMMA type_name .)
 
 
-state 426
+state 424
 
     (110) cast_expression -> LPAREN type_name RPAREN cast_expression .
 
@@ -21951,7 +21980,7 @@ state 426
     RTEMPLATE       reduce using rule 110 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
 
 
-state 427
+state 425
 
     (14) conditional_expression -> logical_OR_expression QUESMARK expression COLON . conditional_expression
     (13) conditional_expression -> . logical_OR_expression
@@ -22075,7 +22104,7 @@ state 427
     OPERATOR        shift and go to state 54
 
     logical_OR_expression          shift and go to state 153
-    conditional_expression         shift and go to state 453
+    conditional_expression         shift and go to state 448
     logical_AND_expression         shift and go to state 163
     inclusive_OR_expression        shift and go to state 173
     exclusive_OR_expression        shift and go to state 176
@@ -22099,7 +22128,7 @@ state 427
     literal                        shift and go to state 174
     operator_function_name         shift and go to state 50
 
-state 428
+state 426
 
     (92) postfix_expression -> postfix_expression LSPAREN expression RSPAREN .
 
@@ -22149,7 +22178,7 @@ state 428
     RTEMPLATE       reduce using rule 92 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
 
 
-state 429
+state 427
 
     (93) postfix_expression -> postfix_expression LPAREN expression_list RPAREN .
 
@@ -22199,16 +22228,16 @@ state 429
     RTEMPLATE       reduce using rule 93 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
 
 
-state 430
+state 428
 
     (94) postfix_expression -> postfix_expression template_class_name LPAREN expression_list . RPAREN
     (295) expression_list -> expression_list . COMMA assignment_expression
 
-    RPAREN          shift and go to state 454
+    RPAREN          shift and go to state 449
     COMMA           shift and go to state 261
 
 
-state 431
+state 429
 
     (69) unary_expression -> SIZEOF LPAREN type_name RPAREN .
 
@@ -22251,7 +22280,7 @@ state 431
     RTEMPLATE       reduce using rule 69 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
 
 
-state 432
+state 430
 
     (96) postfix_expression -> simple_type_name LPAREN expression_list RPAREN .
 
@@ -22301,16 +22330,16 @@ state 432
     RTEMPLATE       reduce using rule 96 (postfix_expression -> simple_type_name LPAREN expression_list RPAREN .)
 
 
-state 433
+state 431
 
     (83) new_initializer -> LPAREN initializer_list . RPAREN
     (290) initializer_list -> initializer_list . COMMA assignment_expression
 
-    RPAREN          shift and go to state 455
-    COMMA           shift and go to state 456
+    RPAREN          shift and go to state 450
+    COMMA           shift and go to state 451
 
 
-state 434
+state 432
 
     (84) new_initializer -> LPAREN RPAREN .
 
@@ -22353,7 +22382,7 @@ state 434
     RTEMPLATE       reduce using rule 84 (new_initializer -> LPAREN RPAREN .)
 
 
-state 435
+state 433
 
     (75) allocation_expression -> NEW LPAREN type_name RPAREN . new_initializer
     (76) allocation_expression -> NEW LPAREN type_name RPAREN .
@@ -22399,225 +22428,9 @@ state 435
     RTEMPLATE       reduce using rule 76 (allocation_expression -> NEW LPAREN type_name RPAREN .)
     LPAREN          shift and go to state 377
 
-    new_initializer                shift and go to state 457
+    new_initializer                shift and go to state 452
 
-state 436
-
-    (81) new_declarator -> new_declarator LSPAREN . expression RSPAREN
-    (46) expression -> . assignment_expression
-    (47) expression -> . throw_expression
-    (48) expression -> . expression COMMA assignment_expression
-    (51) assignment_expression -> . conditional_expression
-    (52) assignment_expression -> . unary_expression assignment_operator assignment_expression
-    (49) throw_expression -> . THROW expression
-    (50) throw_expression -> . THROW
-    (13) conditional_expression -> . logical_OR_expression
-    (14) conditional_expression -> . logical_OR_expression QUESMARK expression COLON conditional_expression
-    (63) unary_expression -> . postfix_expression
-    (64) unary_expression -> . DPLUSOP unary_expression
-    (65) unary_expression -> . DMINUSOP unary_expression
-    (66) unary_expression -> . unary1_operator cast_expression
-    (67) unary_expression -> . unary2_operator cast_expression
-    (68) unary_expression -> . SIZEOF unary_expression
-    (69) unary_expression -> . SIZEOF LPAREN type_name RPAREN
-    (70) unary_expression -> . allocation_expression
-    (71) unary_expression -> . deallocation_expression
-    (15) logical_OR_expression -> . logical_AND_expression
-    (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
-    (91) postfix_expression -> . primary_expression
-    (92) postfix_expression -> . postfix_expression LSPAREN expression RSPAREN
-    (93) postfix_expression -> . postfix_expression LPAREN expression_list RPAREN
-    (94) postfix_expression -> . postfix_expression template_class_name LPAREN expression_list RPAREN
-    (95) postfix_expression -> . postfix_expression LPAREN RPAREN
-    (96) postfix_expression -> . simple_type_name LPAREN expression_list RPAREN
-    (97) postfix_expression -> . simple_type_name LPAREN RPAREN
-    (98) postfix_expression -> . postfix_expression DOT name
-    (99) postfix_expression -> . postfix_expression ARROW name
-    (100) postfix_expression -> . postfix_expression DPLUSOP
-    (101) postfix_expression -> . postfix_expression DMINUSOP
-    (85) unary1_operator -> . PLUSOP
-    (86) unary1_operator -> . MINUSOP
-    (87) unary1_operator -> . NOTSYM
-    (88) unary1_operator -> . BNOP
-    (89) unary2_operator -> . MULTOP
-    (90) unary2_operator -> . BANDOP
-    (73) allocation_expression -> . NEW new_type_name new_initializer
-    (74) allocation_expression -> . NEW new_type_name
-    (75) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
-    (76) allocation_expression -> . NEW LPAREN type_name RPAREN
-    (72) deallocation_expression -> . DELETE cast_expression
-    (17) logical_AND_expression -> . inclusive_OR_expression
-    (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
-    (102) primary_expression -> . literal
-    (103) primary_expression -> . THIS
-    (104) primary_expression -> . LPAREN expression RPAREN
-    (105) primary_expression -> . name
-    (184) simple_type_name -> . CHAR
-    (185) simple_type_name -> . SHORT
-    (186) simple_type_name -> . INT
-    (187) simple_type_name -> . LONG
-    (188) simple_type_name -> . SIGNED
-    (189) simple_type_name -> . UNSIGNED
-    (190) simple_type_name -> . FLOAT
-    (191) simple_type_name -> . DOUBLE
-    (192) simple_type_name -> . VOID
-    (193) simple_type_name -> . STRING
-    (194) simple_type_name -> . AUTO
-    (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
-    (108) literal -> . SCHAR
-    (132) name -> . IDENTIFIER
-    (133) name -> . operator_function_name
-    (134) name -> . DOUBLEBNOP IDENTIFIER
-    (21) exclusive_OR_expression -> . AND_expression
-    (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
-    (135) operator_function_name -> . OPERATOR operator_name
-    (23) AND_expression -> . equality_expression
-    (24) AND_expression -> . AND_expression BANDOP equality_expression
-    (25) equality_expression -> . relational_expression
-    (26) equality_expression -> . equality_expression EQCOMP relational_expression
-    (27) equality_expression -> . equality_expression NEQCOMP relational_expression
-    (28) relational_expression -> . shift_expression
-    (29) relational_expression -> . relational_expression LTCOMP shift_expression
-    (30) relational_expression -> . relational_expression GTCOMP shift_expression
-    (31) relational_expression -> . relational_expression LTECOMP shift_expression
-    (32) relational_expression -> . relational_expression GTECOMP shift_expression
-    (33) shift_expression -> . additive_expression
-    (34) shift_expression -> . shift_expression LSHIFT additive_expression
-    (35) shift_expression -> . shift_expression RSHIFT additive_expression
-    (36) additive_expression -> . multiplicative_expression
-    (37) additive_expression -> . additive_expression PLUSOP multiplicative_expression
-    (38) additive_expression -> . additive_expression MINUSOP multiplicative_expression
-    (39) multiplicative_expression -> . pm_expression
-    (40) multiplicative_expression -> . multiplicative_expression MULTOP pm_expression
-    (41) multiplicative_expression -> . multiplicative_expression DIVOP pm_expression
-    (42) multiplicative_expression -> . multiplicative_expression MODOP pm_expression
-    (43) pm_expression -> . cast_expression
-    (44) pm_expression -> . pm_expression DOTSTAR cast_expression
-    (45) pm_expression -> . pm_expression ARROWSTAR cast_expression
-    (109) cast_expression -> . unary_expression
-    (110) cast_expression -> . LPAREN type_name RPAREN cast_expression
-
-    THROW           shift and go to state 224
-    DPLUSOP         shift and go to state 155
-    DMINUSOP        shift and go to state 156
-    SIZEOF          shift and go to state 160
-    PLUSOP          shift and go to state 167
-    MINUSOP         shift and go to state 168
-    NOTSYM          shift and go to state 169
-    BNOP            shift and go to state 170
-    MULTOP          shift and go to state 52
-    BANDOP          shift and go to state 53
-    NEW             shift and go to state 171
-    DELETE          shift and go to state 172
-    THIS            shift and go to state 175
-    LPAREN          shift and go to state 144
-    CHAR            shift and go to state 23
-    SHORT           shift and go to state 24
-    INT             shift and go to state 25
-    LONG            shift and go to state 26
-    SIGNED          shift and go to state 27
-    UNSIGNED        shift and go to state 28
-    FLOAT           shift and go to state 29
-    DOUBLE          shift and go to state 30
-    VOID            shift and go to state 31
-    STRING          shift and go to state 32
-    AUTO            shift and go to state 33
-    NUMBER          shift and go to state 177
-    STRING_L        shift and go to state 178
-    SCHAR           shift and go to state 179
-    IDENTIFIER      shift and go to state 49
-    DOUBLEBNOP      shift and go to state 51
-    OPERATOR        shift and go to state 54
-
-    expression                     shift and go to state 458
-    assignment_expression          shift and go to state 222
-    throw_expression               shift and go to state 223
-    conditional_expression         shift and go to state 151
-    unary_expression               shift and go to state 152
-    logical_OR_expression          shift and go to state 153
-    postfix_expression             shift and go to state 154
-    unary1_operator                shift and go to state 157
-    cast_expression                shift and go to state 158
-    unary2_operator                shift and go to state 159
-    allocation_expression          shift and go to state 161
-    deallocation_expression        shift and go to state 162
-    logical_AND_expression         shift and go to state 163
-    primary_expression             shift and go to state 164
-    simple_type_name               shift and go to state 192
-    name                           shift and go to state 166
-    inclusive_OR_expression        shift and go to state 173
-    literal                        shift and go to state 174
-    exclusive_OR_expression        shift and go to state 176
-    operator_function_name         shift and go to state 50
-    AND_expression                 shift and go to state 180
-    equality_expression            shift and go to state 181
-    relational_expression          shift and go to state 182
-    shift_expression               shift and go to state 183
-    additive_expression            shift and go to state 184
-    multiplicative_expression      shift and go to state 185
-    pm_expression                  shift and go to state 186
-
-state 437
-
-    (79) new_declarator -> MULTOP new_declarator .
-    (81) new_declarator -> new_declarator . LSPAREN expression RSPAREN
-
-    LSPAREN         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    LPAREN          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    EQUAL           reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    MULTEQOP        reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    DIVEQOP         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    MODEQOP         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    PLUSEQOP        reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    MINUSEQOP       reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    LSHIFTEQOP      reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    RSHIFTEQOP      reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    BANDEQOP        reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    BOREQOP         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    DOTSTAR         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    ARROWSTAR       reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    MULTOP          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    DIVOP           reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    MODOP           reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    PLUSOP          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    MINUSOP         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    LSHIFT          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    RSHIFT          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    LTCOMP          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    GTCOMP          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    LTECOMP         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    GTECOMP         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    EQCOMP          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    NEQCOMP         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    BANDOP          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    XOROP           reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    OROP            reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    ANDOP           reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    QUESMARK        reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    RPAREN          reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    COMMA           reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    RSPAREN         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    SEMICOLON       reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    RCPAREN         reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    COLON           reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-    RTEMPLATE       reduce using rule 79 (new_declarator -> MULTOP new_declarator .)
-
-  ! LSPAREN         [ shift and go to state 436 ]
-
-
-state 438
-
-    (82) new_declarator -> LSPAREN expression . RSPAREN
-    (48) expression -> expression . COMMA assignment_expression
-
-    RSPAREN         shift and go to state 459
-    COMMA           shift and go to state 324
-
-
-state 439
+state 434
 
     (291) initializer_list -> LCPAREN initializer_list RCPAREN .
 
@@ -22626,7 +22439,7 @@ state 439
     RPAREN          reduce using rule 291 (initializer_list -> LCPAREN initializer_list RCPAREN .)
 
 
-state 440
+state 435
 
     (292) initializer_list -> LCPAREN initializer_list COMMA . RCPAREN
     (290) initializer_list -> initializer_list COMMA . assignment_expression
@@ -22721,7 +22534,7 @@ state 440
     (109) cast_expression -> . unary_expression
     (110) cast_expression -> . LPAREN type_name RPAREN cast_expression
 
-    RCPAREN         shift and go to state 460
+    RCPAREN         shift and go to state 453
     DPLUSOP         shift and go to state 155
     DMINUSOP        shift and go to state 156
     SIZEOF          shift and go to state 160
@@ -22753,7 +22566,7 @@ state 440
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    assignment_expression          shift and go to state 442
+    assignment_expression          shift and go to state 437
     conditional_expression         shift and go to state 151
     unary_expression               shift and go to state 152
     logical_OR_expression          shift and go to state 153
@@ -22779,7 +22592,7 @@ state 440
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 441
+state 436
 
     (287) initializer -> EQUAL LCPAREN initializer_list COMMA RCPAREN .
 
@@ -22787,7 +22600,7 @@ state 441
     COMMA           reduce using rule 287 (initializer -> EQUAL LCPAREN initializer_list COMMA RCPAREN .)
 
 
-state 442
+state 437
 
     (290) initializer_list -> initializer_list COMMA assignment_expression .
 
@@ -22796,7 +22609,7 @@ state 442
     RPAREN          reduce using rule 290 (initializer_list -> initializer_list COMMA assignment_expression .)
 
 
-state 443
+state 438
 
     (259) labeled_statement -> CASE constant_expression COLON statement .
 
@@ -22856,7 +22669,7 @@ state 443
     ELSE            reduce using rule 259 (labeled_statement -> CASE constant_expression COLON statement .)
 
 
-state 444
+state 439
 
     (254) selection_statement -> IF LPAREN expression RPAREN . statement
     (255) selection_statement -> IF LPAREN expression RPAREN . statement ELSE statement
@@ -23065,7 +22878,7 @@ state 444
     OPERATOR        shift and go to state 54
 
     expression                     shift and go to state 209
-    statement                      shift and go to state 461
+    statement                      shift and go to state 454
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -23111,7 +22924,7 @@ state 444
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 445
+state 440
 
     (256) selection_statement -> SWITCH LPAREN expression RPAREN . statement
     (241) statement -> . labeled_statement
@@ -23319,7 +23132,7 @@ state 445
     OPERATOR        shift and go to state 54
 
     expression                     shift and go to state 209
-    statement                      shift and go to state 462
+    statement                      shift and go to state 455
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -23365,7 +23178,7 @@ state 445
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 446
+state 441
 
     (261) iteration_statement -> WHILE LPAREN expression RPAREN . statement
     (241) statement -> . labeled_statement
@@ -23573,7 +23386,7 @@ state 446
     OPERATOR        shift and go to state 54
 
     expression                     shift and go to state 209
-    statement                      shift and go to state 463
+    statement                      shift and go to state 456
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -23619,7 +23432,7 @@ state 446
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 447
+state 442
 
     (262) iteration_statement -> DO statement WHILE LPAREN . expression RPAREN SEMICOLON
     (46) expression -> . assignment_expression
@@ -23750,7 +23563,7 @@ state 447
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    expression                     shift and go to state 464
+    expression                     shift and go to state 457
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
     conditional_expression         shift and go to state 151
@@ -23778,17 +23591,17 @@ state 447
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 448
+state 443
 
     (263) iteration_statement -> FOR LPAREN for_init_statement expression . SEMICOLON expression RPAREN statement
     (265) iteration_statement -> FOR LPAREN for_init_statement expression . SEMICOLON RPAREN statement
     (48) expression -> expression . COMMA assignment_expression
 
-    SEMICOLON       shift and go to state 465
+    SEMICOLON       shift and go to state 458
     COMMA           shift and go to state 324
 
 
-state 449
+state 444
 
     (264) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON . expression RPAREN statement
     (266) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON . RPAREN statement
@@ -23888,7 +23701,7 @@ state 449
     (109) cast_expression -> . unary_expression
     (110) cast_expression -> . LPAREN type_name RPAREN cast_expression
 
-    RPAREN          shift and go to state 467
+    RPAREN          shift and go to state 460
     THROW           shift and go to state 224
     DPLUSOP         shift and go to state 155
     DMINUSOP        shift and go to state 156
@@ -23921,7 +23734,7 @@ state 449
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    expression                     shift and go to state 466
+    expression                     shift and go to state 459
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
     conditional_expression         shift and go to state 151
@@ -23949,7 +23762,7 @@ state 449
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 450
+state 445
 
     (257) try_block -> TRY compound_statement CATCH compound_statement .
 
@@ -24009,7 +23822,7 @@ state 450
     ELSE            reduce using rule 257 (try_block -> TRY compound_statement CATCH compound_statement .)
 
 
-state 451
+state 446
 
     (114) abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .
 
@@ -24018,9 +23831,43 @@ state 451
     RTEMPLATE       reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
     COMMA           reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
     RPAREN          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    LPAREN          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    MULTEQOP        reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    DIVEQOP         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    MODEQOP         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    PLUSEQOP        reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    MINUSEQOP       reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    LSHIFTEQOP      reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    RSHIFTEQOP      reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    BANDEQOP        reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    BOREQOP         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    DOTSTAR         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    ARROWSTAR       reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    MULTOP          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    DIVOP           reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    MODOP           reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    PLUSOP          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    MINUSOP         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    LSHIFT          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    RSHIFT          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    LTCOMP          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    GTCOMP          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    LTECOMP         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    GTECOMP         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    EQCOMP          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    NEQCOMP         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    BANDOP          reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    XOROP           reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    OROP            reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    ANDOP           reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    QUESMARK        reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    RSPAREN         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    SEMICOLON       reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    RCPAREN         reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
+    COLON           reduce using rule 114 (abstract_declarator -> abstract_declarator LSPAREN constant_expression RSPAREN .)
 
 
-state 452
+state 447
 
     (210) base_specifier -> access_specifier class_key IDENTIFIER template_class_name .
 
@@ -24028,7 +23875,7 @@ state 452
     LCPAREN         reduce using rule 210 (base_specifier -> access_specifier class_key IDENTIFIER template_class_name .)
 
 
-state 453
+state 448
 
     (14) conditional_expression -> logical_OR_expression QUESMARK expression COLON conditional_expression .
 
@@ -24041,7 +23888,7 @@ state 453
     RTEMPLATE       reduce using rule 14 (conditional_expression -> logical_OR_expression QUESMARK expression COLON conditional_expression .)
 
 
-state 454
+state 449
 
     (94) postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .
 
@@ -24091,7 +23938,7 @@ state 454
     RTEMPLATE       reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
 
 
-state 455
+state 450
 
     (83) new_initializer -> LPAREN initializer_list RPAREN .
 
@@ -24134,7 +23981,7 @@ state 455
     RTEMPLATE       reduce using rule 83 (new_initializer -> LPAREN initializer_list RPAREN .)
 
 
-state 456
+state 451
 
     (290) initializer_list -> initializer_list COMMA . assignment_expression
     (51) assignment_expression -> . conditional_expression
@@ -24259,7 +24106,7 @@ state 456
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    assignment_expression          shift and go to state 442
+    assignment_expression          shift and go to state 437
     conditional_expression         shift and go to state 151
     unary_expression               shift and go to state 152
     logical_OR_expression          shift and go to state 153
@@ -24285,7 +24132,7 @@ state 456
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 457
+state 452
 
     (75) allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .
 
@@ -24328,61 +24175,7 @@ state 457
     RTEMPLATE       reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
 
 
-state 458
-
-    (81) new_declarator -> new_declarator LSPAREN expression . RSPAREN
-    (48) expression -> expression . COMMA assignment_expression
-
-    RSPAREN         shift and go to state 468
-    COMMA           shift and go to state 324
-
-
-state 459
-
-    (82) new_declarator -> LSPAREN expression RSPAREN .
-
-    LSPAREN         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    LPAREN          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    EQUAL           reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    MULTEQOP        reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    DIVEQOP         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    MODEQOP         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    PLUSEQOP        reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    MINUSEQOP       reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    LSHIFTEQOP      reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    RSHIFTEQOP      reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    BANDEQOP        reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    BOREQOP         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    DOTSTAR         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    ARROWSTAR       reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    MULTOP          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    DIVOP           reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    MODOP           reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    PLUSOP          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    MINUSOP         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    LSHIFT          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    RSHIFT          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    LTCOMP          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    GTCOMP          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    LTECOMP         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    GTECOMP         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    EQCOMP          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    NEQCOMP         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    BANDOP          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    XOROP           reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    OROP            reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    ANDOP           reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    QUESMARK        reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    RPAREN          reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    COMMA           reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    RSPAREN         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    SEMICOLON       reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    RCPAREN         reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    COLON           reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-    RTEMPLATE       reduce using rule 82 (new_declarator -> LSPAREN expression RSPAREN .)
-
-
-state 460
+state 453
 
     (292) initializer_list -> LCPAREN initializer_list COMMA RCPAREN .
 
@@ -24391,7 +24184,7 @@ state 460
     RPAREN          reduce using rule 292 (initializer_list -> LCPAREN initializer_list COMMA RCPAREN .)
 
 
-state 461
+state 454
 
     (254) selection_statement -> IF LPAREN expression RPAREN statement .
     (255) selection_statement -> IF LPAREN expression RPAREN statement . ELSE statement
@@ -24450,12 +24243,12 @@ state 461
     SCHAR           reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement .)
     DOUBLEBNOP      reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement .)
     OPERATOR        reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement .)
-    ELSE            shift and go to state 469
+    ELSE            shift and go to state 461
 
   ! ELSE            [ reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement .) ]
 
 
-state 462
+state 455
 
     (256) selection_statement -> SWITCH LPAREN expression RPAREN statement .
 
@@ -24515,7 +24308,7 @@ state 462
     ELSE            reduce using rule 256 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
 
 
-state 463
+state 456
 
     (261) iteration_statement -> WHILE LPAREN expression RPAREN statement .
 
@@ -24575,16 +24368,16 @@ state 463
     ELSE            reduce using rule 261 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
 
 
-state 464
+state 457
 
     (262) iteration_statement -> DO statement WHILE LPAREN expression . RPAREN SEMICOLON
     (48) expression -> expression . COMMA assignment_expression
 
-    RPAREN          shift and go to state 470
+    RPAREN          shift and go to state 462
     COMMA           shift and go to state 324
 
 
-state 465
+state 458
 
     (263) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON . expression RPAREN statement
     (265) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON . RPAREN statement
@@ -24684,7 +24477,7 @@ state 465
     (109) cast_expression -> . unary_expression
     (110) cast_expression -> . LPAREN type_name RPAREN cast_expression
 
-    RPAREN          shift and go to state 472
+    RPAREN          shift and go to state 464
     THROW           shift and go to state 224
     DPLUSOP         shift and go to state 155
     DMINUSOP        shift and go to state 156
@@ -24717,7 +24510,7 @@ state 465
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    expression                     shift and go to state 471
+    expression                     shift and go to state 463
     assignment_expression          shift and go to state 222
     throw_expression               shift and go to state 223
     conditional_expression         shift and go to state 151
@@ -24745,16 +24538,16 @@ state 465
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 466
+state 459
 
     (264) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression . RPAREN statement
     (48) expression -> expression . COMMA assignment_expression
 
-    RPAREN          shift and go to state 473
+    RPAREN          shift and go to state 465
     COMMA           shift and go to state 324
 
 
-state 467
+state 460
 
     (266) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN . statement
     (241) statement -> . labeled_statement
@@ -24961,7 +24754,7 @@ state 467
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
 
-    statement                      shift and go to state 474
+    statement                      shift and go to state 466
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -25008,52 +24801,7 @@ state 467
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 468
-
-    (81) new_declarator -> new_declarator LSPAREN expression RSPAREN .
-
-    LSPAREN         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    LPAREN          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    EQUAL           reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    MULTEQOP        reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    DIVEQOP         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    MODEQOP         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    PLUSEQOP        reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    MINUSEQOP       reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    LSHIFTEQOP      reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    RSHIFTEQOP      reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    BANDEQOP        reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    BOREQOP         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    DOTSTAR         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    ARROWSTAR       reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    MULTOP          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    DIVOP           reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    MODOP           reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    PLUSOP          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    MINUSOP         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    LSHIFT          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    RSHIFT          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    LTCOMP          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    GTCOMP          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    LTECOMP         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    GTECOMP         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    EQCOMP          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    NEQCOMP         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    BANDOP          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    XOROP           reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    OROP            reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    ANDOP           reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    QUESMARK        reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    RPAREN          reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    COMMA           reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    RSPAREN         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    SEMICOLON       reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    RCPAREN         reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    COLON           reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    RTEMPLATE       reduce using rule 81 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-
-
-state 469
+state 461
 
     (255) selection_statement -> IF LPAREN expression RPAREN statement ELSE . statement
     (241) statement -> . labeled_statement
@@ -25261,7 +25009,7 @@ state 469
     OPERATOR        shift and go to state 54
 
     expression                     shift and go to state 209
-    statement                      shift and go to state 475
+    statement                      shift and go to state 467
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -25307,23 +25055,23 @@ state 469
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 470
+state 462
 
     (262) iteration_statement -> DO statement WHILE LPAREN expression RPAREN . SEMICOLON
 
-    SEMICOLON       shift and go to state 476
+    SEMICOLON       shift and go to state 468
 
 
-state 471
+state 463
 
     (263) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression . RPAREN statement
     (48) expression -> expression . COMMA assignment_expression
 
-    RPAREN          shift and go to state 477
+    RPAREN          shift and go to state 469
     COMMA           shift and go to state 324
 
 
-state 472
+state 464
 
     (265) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN . statement
     (241) statement -> . labeled_statement
@@ -25531,7 +25279,7 @@ state 472
     OPERATOR        shift and go to state 54
 
     expression                     shift and go to state 209
-    statement                      shift and go to state 478
+    statement                      shift and go to state 470
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -25577,7 +25325,7 @@ state 472
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 473
+state 465
 
     (264) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN . statement
     (241) statement -> . labeled_statement
@@ -25785,7 +25533,7 @@ state 473
     OPERATOR        shift and go to state 54
 
     expression                     shift and go to state 209
-    statement                      shift and go to state 479
+    statement                      shift and go to state 471
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -25831,7 +25579,7 @@ state 473
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 474
+state 466
 
     (266) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .
 
@@ -25891,7 +25639,7 @@ state 474
     ELSE            reduce using rule 266 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
 
 
-state 475
+state 467
 
     (255) selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .
 
@@ -25951,7 +25699,7 @@ state 475
     ELSE            reduce using rule 255 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
 
 
-state 476
+state 468
 
     (262) iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .
 
@@ -26011,7 +25759,7 @@ state 476
     ELSE            reduce using rule 262 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
 
 
-state 477
+state 469
 
     (263) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN . statement
     (241) statement -> . labeled_statement
@@ -26219,7 +25967,7 @@ state 477
     OPERATOR        shift and go to state 54
 
     expression                     shift and go to state 209
-    statement                      shift and go to state 480
+    statement                      shift and go to state 472
     labeled_statement              shift and go to state 198
     expression_statement           shift and go to state 199
     compound_statement             shift and go to state 200
@@ -26265,7 +26013,7 @@ state 477
     multiplicative_expression      shift and go to state 185
     pm_expression                  shift and go to state 186
 
-state 478
+state 470
 
     (265) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .
 
@@ -26325,7 +26073,7 @@ state 478
     ELSE            reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
 
 
-state 479
+state 471
 
     (264) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .
 
@@ -26385,7 +26133,7 @@ state 479
     ELSE            reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
 
 
-state 480
+state 472
 
     (263) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .
 
@@ -26447,9 +26195,15 @@ state 480
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
+WARNING: shift/reduce conflict for LSPAREN in state 247 resolved as shift
 WARNING: shift/reduce conflict for MULTOP in state 294 resolved as shift
+WARNING: shift/reduce conflict for BANDOP in state 294 resolved as shift
 WARNING: shift/reduce conflict for COMMA in state 336 resolved as shift
 WARNING: shift/reduce conflict for COMMA in state 345 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 417 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 418 resolved as shift
-WARNING: shift/reduce conflict for ELSE in state 461 resolved as shift
+WARNING: shift/reduce conflict for LSPAREN in state 348 resolved as shift
+WARNING: shift/reduce conflict for LSPAREN in state 358 resolved as shift
+WARNING: shift/reduce conflict for MULTOP in state 358 resolved as shift
+WARNING: shift/reduce conflict for BANDOP in state 358 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 415 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 416 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 454 resolved as shift
