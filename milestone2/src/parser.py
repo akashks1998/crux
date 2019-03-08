@@ -510,11 +510,15 @@ def p_type_name(p):
     p[0].parse=f(p)    
 def p_type_specifier_(p): 
     '''type_specifier_ : CONST type_specifier 
-                       | TYPEDEF type_specifier
                        | type_specifier
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)  
+def p_typedef_declarator(p):
+    '''typedef_declarator : TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
+    '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
 def p_type_specifier(p): 
     '''type_specifier : simple_type_name 
                       | complex_type_specifier  
@@ -754,12 +758,13 @@ def p_declaration_statement(p):
     p[0].parse=f(p)
 def p_declaration(p):
     '''declaration : type_specifier_ declarator_list SEMICOLON
-                   | type_specifier_ SEMICOLON
                    | asm_declaration
                    | function_definition
                    | class_define_specifier SEMICOLON
                    | template_declaration
+                   | typedef_declarator
     ''' 
+                #    | type_specifier_ SEMICOLON
     p[0] = OBJ()
     p[0].parse=f(p)
 
