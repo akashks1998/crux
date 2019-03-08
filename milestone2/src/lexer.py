@@ -197,7 +197,7 @@ t_QUESMARK      = r'\?'
 t_ARROW         = r'-\>'
 t_ARROWSTAR     = r'-\>\*'
 t_DOTSTAR       = r'\.\*'
-t_DOUBLEBNOP    = r'~~'
+t_DOUBLEBNOP    = r'\~\~'
 
 
 # track line no.

@@ -90,10 +90,6 @@ precedence = (
     ('left', 'GTCOMP', 'GTECOMP'), 
     ('left', 'LOWER'),
     ('left', 'HIGHER'),
-    ('left', 'ONE'),
-    ('left', 'TWO'),
-    ('left', 'THREE'),
-    ('left', 'FOUR'),
 )
 
 def p_control_line(p):
