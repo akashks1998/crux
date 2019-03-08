@@ -1,7 +1,7 @@
 #!/bin/bash
 for i in $(ls ../tests);
 do
-	x=$(python3.7 parser.py 0 ../tests/$i d)
+	x=$(python3 parser.py 0 ../tests/$i d)
 	f=${x/error/er}
 	if [[ "$f" != "$x" ]];
 	then
