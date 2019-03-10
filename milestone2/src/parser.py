@@ -1007,12 +1007,12 @@ def p_labeled_statement(p):
     p[0].parse=f(p)
 
 def p_iteration_statement(p): 
-    '''iteration_statement : WHILE LPAREN expression  RPAREN  statement 
-                           | DO statement WHILE LPAREN expression  RPAREN  SEMICOLON 
-                           | FOR LPAREN for_init_statement expression SEMICOLON expression  RPAREN  compound_statement 
-                           | FOR LPAREN for_init_statement SEMICOLON expression  RPAREN  compound_statement 
-                           | FOR LPAREN for_init_statement expression SEMICOLON  RPAREN  compound_statement 
-                           | FOR LPAREN for_init_statement SEMICOLON  RPAREN  statement 
+    '''iteration_statement : WHILE push_scope LPAREN expression  RPAREN  statement pop_scope 
+                           | DO push_scope statement WHILE LPAREN expression  RPAREN  SEMICOLON pop_scope 
+                           | FOR LPAREN push_scope for_init_statement expression SEMICOLON expression  RPAREN  compound_statement pop_scope 
+                           | FOR LPAREN push_scope for_init_statement SEMICOLON expression  RPAREN  compound_statement pop_scope 
+                           | FOR LPAREN push_scope for_init_statement expression SEMICOLON  RPAREN  compound_statement pop_scope 
+                           | FOR LPAREN push_scope for_init_statement SEMICOLON  RPAREN  statement pop_scope 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 

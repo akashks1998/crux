@@ -1,18 +1,19 @@
-<<<<<<< HEAD
-int **main(int** m){
-    int i;
-    int sub(int j){
-        int subsub(int k){
-            int l;
-        }
-    }
-=======
 int main(){
     int a, b;
     {
         int a, b, c;
 
     }
-    int a ;
->>>>>>> f911d7db12b49a3f40648b5f06263d69137ca00e
+    for(int i;i<k;i++){
+        int h;
+    }
+    if(g){
+        int j;
+    }else{
+        {
+            switch(a){
+                case 3: flow(); int i;
+            }
+        }
+    }
 }
