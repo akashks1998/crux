@@ -544,7 +544,7 @@ def p_declarator4(p):
         
 def p_arg_list(p):
     ''' arg_list : argument_declaration_list 
-                  | empty
+                  |
     '''
 
     global currentScopeTable
@@ -560,18 +560,21 @@ def p_arg_list(p):
     
     return_sig = p[-3].data["type"] + "|" + return_decl
     
-
-    input_sig = p[1].data
+    if len(p)==2:
+        temp=p[1].data
+    else:
+        temp=("",[])
+    input_sig = temp
     p[0].data = {
         "name" : function_name,
         "return_sig" : return_sig,
         "input" : input_sig,
         "body_scope" : currentScopeTable,
         "declaration": True,
-        "string" :  p[1].data[0]
+        "string" :  temp[0]
     }
     parent=getParentScope(currentScopeTable)
-    func_sig = function_name +"|" + p[1].data[0]
+    func_sig = function_name +"|" + temp[0]
     print("sd", func_sig)
     if checkVar(function_name,parent) is False:
         # this function is not seen 
