@@ -12,44 +12,21 @@ filename=""
 
 def f(p):
     global cnt
-    global compress
-    if compress=='c':
-        p_name = sys._getframe(1).f_code.co_name
-        if len(p)>2:
+    p_name = sys._getframe(1).f_code.co_name
+    cnt=cnt+1
+    out = (p_name[2:],cnt)
+    open('dot.gz','a').write("    "+str(cnt)+"[label="+p_name[2:]+"]")
+    for each in range(len(p)-1):
+        if( not isinstance(p[each + 1], OBJ) ):
             cnt=cnt+1
-            out = (p_name[2:],cnt)
-            open('dot.gz','a').write(" "+str(cnt)+"[label="+p_name[2:]+"]")
-            for each in range(len(p)-1):
-                if(type(p[each+1].parse) is not tuple):
-                    if p[each+1].parse!="{" and p[each+1]!="}" and p[each+1].parse!=")" and p[each+1]!="(" and p[each+1]!=';':
-                        cnt=cnt+1
-                        open('dot.gz','a').write(" "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
-                        p[each+1]=(p[each+1],cnt)
-                if p[each+1][0]!="{" and p[each+1][0]!="}" and p[each+1][0]!=")" and p[each+1][0]!="(" and p[each+1][0]!=';':
-                    open('dot.gz','a').write(" "+str(out[1])+" -> "+str(p[each+1][1]))
-        elif len(p)==2:
-            out=p[1]
-        else:
-            cnt=cnt+1
-            open('dot.gz','a').write("    "+str(cnt)+"[label=\""+str(p[0]).replace('"',"")+"\"]")
-            out=(p[0],cnt)
-        return out
-    else:
-        p_name = sys._getframe(1).f_code.co_name
-        cnt=cnt+1
-        out = (p_name[2:],cnt)
-        open('dot.gz','a').write("    "+str(cnt)+"[label="+p_name[2:]+"]")
-        for each in range(len(p)-1):
-            if( not isinstance(p[each + 1], OBJ) ):
-                cnt=cnt+1
-                open('dot.gz','a').write("    "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
-                token = p[each + 1]
-                p[each + 1] = OBJ()
-                p[each + 1].data = token
-                p[each+1].parse = (token, cnt)            
-            
-            open('dot.gz','a').write("    " + str(out[1])  +  " -> " + str(p[each+1].parse[1]))
-        return out
+            open('dot.gz','a').write("    "+str(cnt)+"[label=\""+str(p[each+1]).replace('"',"")+"\"]")
+            token = p[each + 1]
+            p[each + 1] = OBJ()
+            p[each + 1].data = token
+            p[each+1].parse = (token, cnt)            
+        
+        open('dot.gz','a').write("    " + str(out[1])  +  " -> " + str(p[each+1].parse[1]))
+    return out
         
 
 scopeTableList = []
@@ -467,41 +444,89 @@ def p_abstract_declarator(p):
         print("Syntax Error", p, p.lineno, p.lineno(1), p.lineno(2), p.lineno(3))
         print(dir(p))
         raise SyntaxError
+
         
-def p_declarator(p): 
-    '''declarator : name
-                  | unary2_operator declarator %prec HIGHER
-                  | declarator LPAREN argument_declaration_list  RPAREN %prec LOWER
-                  | declarator LSPAREN constant_expression RSPAREN 
-                  | declarator LSPAREN RSPAREN 
-    ''' 
+def p_declarator0(p): 
+    '''declarator : name ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)    
+    p[0].parse=f(p)
+    p[0].data = {"name" : p[1].data, "type" : "", "meta" : []}
+        
+        
+def p_declarator1(p): 
+    '''declarator : unary2_operator declarator %prec HIGHER  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+    p[0].data = {
+        "name" : p[2].data["name"], 
+        "type" : ("p" if (p[1].data == "*") else "r") + p[2].data['type'],
+        "meta" : [p[1].data] + p[2].data["meta"] 
+    }
+
+        
+
+   
+        
+def p_declarator3(p): 
+    '''declarator :  declarator LSPAREN constant_expression RSPAREN  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = {
+        "name" : p[1].data["name"], 
+        "type" : p[1].data['type'] + "A",
+        "meta" : p[2].data["meta"] + [p[3].data] 
+    }
+        
+        
+def p_declarator4(p): 
+    '''declarator : declarator LSPAREN RSPAREN  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = {
+        "name" : p[1].data["name"], 
+        "type" : p[1].data['type'] + "a",
+        "meta" : p[2].data["meta"] + [""] 
+    }
+        
 
 def p_argument_declaration_list(p): 
-    '''argument_declaration_list : arg_declaration_list  
-                                 | empty
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p) 
-
-def p_arg_declaration_list(p): 
-    '''arg_declaration_list : argument_declaration 
-                            | argument_declaration COMMA arg_declaration_list
+    '''argument_declaration_list : argument_declaration 
+                                 | argument_declaration COMMA argument_declaration_list
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)   
 
-def p_argument_declaration(p): 
-    '''argument_declaration : type_specifier_ declarator 
-                            | type_specifier_ declarator  EQUAL expression 
-                            | type_specifier_ abstract_declarator 
-                            | type_specifier_ 
-                            | type_specifier_ abstract_declarator  EQUAL expression 
-                            | type_specifier_  EQUAL expression 
-    ''' 
+def p_argument_declaration_1(p): 
+    '''argument_declaration : type_specifier_ declarator   ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    type_info = {"specifier" : p[1].data, "declarator" : p[2].data }
+    p[0].data = {"name" : p[2].data["name"], "type" : type_info  , "init" : None }
+
+
+def p_argument_declaration_2(p): 
+    '''argument_declaration :  type_specifier_ declarator  EQUAL expression ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    type_info = {"specifier" : p[1].data, "declarator" : p[2].data }
+    p[0].data = {"name" : p[2].data["name"], "type" : type_info  , "init" : p[4] }
+
+
+# these two can be removed, will be handled later if time permits
+def p_argument_declaration_3(p): 
+    '''argument_declaration : type_specifier_ abstract_declarator ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    # p[0].data = {"name" : , "type" : "meta": [] , "init" : }
+
+
+def p_argument_declaration_4(p): 
+    '''argument_declaration :  type_specifier_ ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    # p[0].data = {"name" : , "type" : "meta": [] , "init" : }
+
 
 def p_name(p): 
     '''name : IDENTIFIER 
@@ -766,12 +791,27 @@ def p_member_declarator(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def p_function_definition(p): 
-    '''function_definition : type_specifier_ declarator fct_body 
-    ''' 
+def p_function_definition0(p): 
+    '''function_definition : type_specifier_ declarator LPAREN argument_declaration_list  RPAREN fct_body ''' 
     p[0] = OBJ()
- 
     p[0].parse=f(p)
+
+def p_function_definition1(p): 
+    '''function_definition : type_specifier_ declarator LPAREN  RPAREN fct_body ''' 
+    p[0] = OBJ()
+    p[0].parse=f(p)
+
+def p_function_decl0(p): 
+    '''function_decl : type_specifier_ declarator LPAREN argument_declaration_list  RPAREN  ''' 
+    p[0] = OBJ()
+    p[0].parse=f(p)
+
+def p_function_decl1(p): 
+    '''function_decl : type_specifier_ declarator LPAREN  RPAREN ''' 
+    p[0] = OBJ()
+    p[0].parse=f(p)
+        
+
 
 def p_fct_body(p): 
     '''fct_body : compound_statement''' 
@@ -866,19 +906,43 @@ def p_declaration_statement(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def p_declaration(p):
-    '''declaration : type_specifier_ declarator_list SEMICOLON
-                   | asm_declaration
-                   | function_definition
-                   | class_define_specifier SEMICOLON
-                   | template_declaration
-                   | typedef_declarator
-    ''' 
+def p_declaration0(p):
+    '''declaration : type_specifier_ declarator_list SEMICOLON ''' 
                 #    | type_specifier_ SEMICOLON
     p[0] = OBJ()
     p[0].parse=f(p)
 
- 
+
+def p_declaration1(p):
+    '''declaration :  asm_declaration  ''' 
+        
+    p[0] = OBJ()
+    p[0].parse=f(p)
+
+
+def p_declaration2(p):
+    '''declaration :  function_definition 
+                    | function_decl
+    ''' 
+    p[0] = OBJ()
+    p[0].parse=f(p)
+    print("Hi from function decl")
+
+def p_declaration3(p):
+    '''declaration : class_define_specifier SEMICOLON ''' 
+    p[0] = OBJ()
+    p[0].parse=f(p)
+
+
+def p_declaration4(p):
+    '''declaration :  template_declaration ''' 
+    p[0] = OBJ()
+    p[0].parse=f(p)
+
+
+def p_declaration5(p):
+    '''declaration : typedef_declarator ''' 
+    p[0] = OBJ()
     p[0].parse=f(p)
 
 def p_template_declaration(p): 
@@ -941,31 +1005,14 @@ if __name__ == "__main__":
     parser = yacc.yacc() 
     parser.error = 0 
 
-    if(len(sys.argv) != 4): 
-        print("Usage python3 parser.py arg1 arg2 arg3 #args : ", sys.argv) 
+    if(len(sys.argv) != 3): 
+        print("Usage python3 parser.py arg1 arg2 #args : ", sys.argv) 
         exit() 
 
     arglist = sys.argv 
     filename = arglist[2]
     debug = int(arglist[1])
-    compress=arglist[3]
     open('dot.gz','w').write("digraph ethane {graph [ordering=\"out\"];")
-    if(arglist[2]== "I"): 
-        while True: 
-            try: 
-                s = input('$ > ') 
-                if(s=="end"): 
-                    break 
-            except EOFError: 
-                break 
-            if not s: 
-                continue 
-            result = parser.parse(s,lexer = lexer,debug=debug) 
-            print(result) 
-    else: 
-        file_o = open(arglist[2],'r').read()
-        p = parser.parse(file_o,lexer = lexer,debug=debug)  
-        open('dot.gz','a').write("\n}\n")
-        if compress!='a':
-            print(p) 
-        
+    file_o = open(arglist[2],'r').read()
+    p = parser.parse(file_o,lexer = lexer,debug=debug)  
+    open('dot.gz','a').write("\n}\n")
