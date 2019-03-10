@@ -8,5 +8,4 @@ int **main(int ** m){
     int a;
 }
 int c(){
-    case 1: int a=0;
 }

@@ -1,3 +1,5 @@
-.gz
-.out
-.ps
+*.gz
+*.out
+*.ps
+*.parsetab.py
+*/__pycache__*
