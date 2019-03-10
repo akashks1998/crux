@@ -9,7 +9,6 @@ import re
 cnt=0
 tokens = lexTokens
 filename=""
-
 def f(p):
     global cnt
     p_name = sys._getframe(1).f_code.co_name
@@ -43,9 +42,7 @@ def addScope():
     global scopeTableList
     global currentScopeTable
     
-    newScope = SymbolTable()
-    newScope.setParent(currentScopeTable)
-
+    newScope = SymbolTable(parent=currentScopeTable)
     scopeTableList.append(newScope)
     currentScopeTable = len(scopeTableList)
 
@@ -441,7 +438,7 @@ def p_abstract_declarator(p):
         }
     err=ok(p[0].data["abstract_class"])
     if err == None:
-        print("Syntax Error", p, p.lineno, p.lineno(1), p.lineno(2), p.lineno(3))
+        print("Syntax Error",p.lineno(1))
         print(dir(p))
         raise SyntaxError
 
@@ -1002,7 +999,7 @@ def p_expression_list(p):
     p[0].parse=f(p) 
 
 if __name__ == "__main__": 
-    parser = yacc.yacc() 
+    parser = yacc.yacc()
     parser.error = 0 
 
     if(len(sys.argv) != 3): 
@@ -1014,5 +1011,5 @@ if __name__ == "__main__":
     debug = int(arglist[1])
     open('dot.gz','w').write("digraph ethane {graph [ordering=\"out\"];")
     file_o = open(arglist[2],'r').read()
-    p = parser.parse(file_o,lexer = lexer,debug=debug)  
+    p = parser.parse(file_o,lexer = lexer,debug=debug,tracking=True)  
     open('dot.gz','a').write("\n}\n")

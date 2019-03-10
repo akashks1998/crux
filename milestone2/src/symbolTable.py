@@ -1,7 +1,7 @@
 class SymbolTable:
-    def __init__(self):
+    def __init__(self,parent=None):
         self.table = {}
-        self.parent = None
+        self.parent = parent
 
     def lookUp(self, name):
         return (name in self.table)
