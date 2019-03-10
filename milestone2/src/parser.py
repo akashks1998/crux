@@ -46,8 +46,7 @@ def f(p):
                 token = p[each + 1]
                 p[each + 1] = OBJ()
                 p[each + 1].data = token
-                p[each+1].parse = (token, cnt)
-            
+                p[each+1].parse = (token, cnt)            
             
             open('dot.gz','a').write("    " + str(out[1])  +  " -> " + str(p[each+1].parse[1]))
         return out
@@ -351,35 +350,73 @@ def p_unary2_operator(p):
 def p_postfix_expression(p): 
     '''postfix_expression : primary_expression 
                           | postfix_expression     LSPAREN expression RSPAREN 
-                          | postfix_expression     LPAREN expression_list  RPAREN 
+                          | postfix_expression     LPAREN expression_list  RPAREN  
                           | postfix_expression template_class_name  LPAREN expression_list  RPAREN 
                           | postfix_expression     LPAREN  RPAREN 
-                          | simple_type_name       LPAREN expression_list  RPAREN 
-                          | simple_type_name       LPAREN  RPAREN 
                           | postfix_expression     DOT name 
                           | postfix_expression     ARROW name 
                           | postfix_expression     DPLUSOP 
                           | postfix_expression     DMINUSOP 
     ''' 
+
+                        #   | simple_type_name       LPAREN expression_list  RPAREN 
+                        #   | simple_type_name       LPAREN  RPAREN 
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def p_primary_expression(p): 
-    '''primary_expression : literal 
-                          | THIS  
-                          | LPAREN expression  RPAREN 
-                          | name   
+
+
+def p_primary_expression0(p): 
+    '''primary_expression : name   
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
+    p[0].data = {"type" : p[1].data["type"]}
 
-def p_literal(p): 
-    '''literal : NUMBER 
-               | STRING_L
-               | SCHAR
+def p_primary_expression1(p): 
+    '''primary_expression : literal           
     ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)    
+    p[0].parse=f(p) 
+    p[0].data = {"type" : p[1].data["type"]}
+
+    
+def p_primary_expression2(p): 
+    '''primary_expression : THIS  
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+    
+    p[0].data = {"type" : "class"} # use symbol table to determine
+
+
+def p_primary_expression3(p): 
+    '''primary_expression : LPAREN expression  RPAREN   
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+    p[0].data = {"type" : p[2].data["type"]}
+
+
+   
+
+def p_literal_string(p): 
+    '''literal :  STRING_L ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = {"type": "string", "value" : p[1].data}
+
+def p_literal_number(p): 
+    '''literal : NUMBER ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = {"type": "number", "value" : p[1].data}
+
+def p_literal_char(p): 
+    '''literal : SCHAR ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = {"type": "char", "value" : p[1].data}
 
 def p_cast_expression(p): 
     '''cast_expression : unary_expression 
@@ -468,16 +505,16 @@ def p_argument_declaration(p):
 
 def p_name(p): 
     '''name : IDENTIFIER 
-            | operator_function_name 
             | DOUBLEBNOP IDENTIFIER 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = {"type" : "int"} # check from symbol table
 
-def p_operator_function_name(p): 
-    '''operator_function_name : OPERATOR operator_name''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+# def p_operator_function_name(p): 
+#     '''operator_function_name : OPERATOR operator_name''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
 
 def p_operator_name(p): 
     '''operator_name : NEW 

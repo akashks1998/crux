@@ -108,8 +108,8 @@ Rule 102   primary_expression -> literal
 Rule 103   primary_expression -> THIS
 Rule 104   primary_expression -> LPAREN expression RPAREN
 Rule 105   primary_expression -> name
-Rule 106   literal -> NUMBER
-Rule 107   literal -> STRING_L
+Rule 106   literal -> STRING_L
+Rule 107   literal -> NUMBER
 Rule 108   literal -> SCHAR
 Rule 109   cast_expression -> unary_expression
 Rule 110   cast_expression -> LPAREN type_name RPAREN cast_expression
@@ -360,7 +360,7 @@ MULTOP               : 40 79 80 89 140
 NEQCOMP              : 27 162
 NEW                  : 73 74 75 76 136
 NOTSYM               : 87 146
-NUMBER               : 106 198
+NUMBER               : 107 198
 OPERATOR             : 135
 OROP                 : 16 20 166
 PLUSEQOP             : 57 150
@@ -382,7 +382,7 @@ SHORT                : 184
 SIGNED               : 187
 SIZEOF               : 68 69
 STRING               : 192
-STRING_L             : 4 5 107 292
+STRING_L             : 4 5 106 292
 STRUCT               : 211
 SWITCH               : 255
 TEMPLATE             : 277
@@ -903,8 +903,8 @@ state 10
     DELETE          reduce using rule 272 (declaration -> asm_declaration .)
     THIS            reduce using rule 272 (declaration -> asm_declaration .)
     LPAREN          reduce using rule 272 (declaration -> asm_declaration .)
-    NUMBER          reduce using rule 272 (declaration -> asm_declaration .)
     STRING_L        reduce using rule 272 (declaration -> asm_declaration .)
+    NUMBER          reduce using rule 272 (declaration -> asm_declaration .)
     SCHAR           reduce using rule 272 (declaration -> asm_declaration .)
     DOUBLEBNOP      reduce using rule 272 (declaration -> asm_declaration .)
     OPERATOR        reduce using rule 272 (declaration -> asm_declaration .)
@@ -964,8 +964,8 @@ state 11
     DELETE          reduce using rule 273 (declaration -> function_definition .)
     THIS            reduce using rule 273 (declaration -> function_definition .)
     LPAREN          reduce using rule 273 (declaration -> function_definition .)
-    NUMBER          reduce using rule 273 (declaration -> function_definition .)
     STRING_L        reduce using rule 273 (declaration -> function_definition .)
+    NUMBER          reduce using rule 273 (declaration -> function_definition .)
     SCHAR           reduce using rule 273 (declaration -> function_definition .)
     DOUBLEBNOP      reduce using rule 273 (declaration -> function_definition .)
     OPERATOR        reduce using rule 273 (declaration -> function_definition .)
@@ -1032,8 +1032,8 @@ state 13
     DELETE          reduce using rule 275 (declaration -> template_declaration .)
     THIS            reduce using rule 275 (declaration -> template_declaration .)
     LPAREN          reduce using rule 275 (declaration -> template_declaration .)
-    NUMBER          reduce using rule 275 (declaration -> template_declaration .)
     STRING_L        reduce using rule 275 (declaration -> template_declaration .)
+    NUMBER          reduce using rule 275 (declaration -> template_declaration .)
     SCHAR           reduce using rule 275 (declaration -> template_declaration .)
     DOUBLEBNOP      reduce using rule 275 (declaration -> template_declaration .)
     OPERATOR        reduce using rule 275 (declaration -> template_declaration .)
@@ -1093,8 +1093,8 @@ state 14
     DELETE          reduce using rule 276 (declaration -> typedef_declarator .)
     THIS            reduce using rule 276 (declaration -> typedef_declarator .)
     LPAREN          reduce using rule 276 (declaration -> typedef_declarator .)
-    NUMBER          reduce using rule 276 (declaration -> typedef_declarator .)
     STRING_L        reduce using rule 276 (declaration -> typedef_declarator .)
+    NUMBER          reduce using rule 276 (declaration -> typedef_declarator .)
     SCHAR           reduce using rule 276 (declaration -> typedef_declarator .)
     DOUBLEBNOP      reduce using rule 276 (declaration -> typedef_declarator .)
     OPERATOR        reduce using rule 276 (declaration -> typedef_declarator .)
@@ -2240,8 +2240,8 @@ state 52
     VOID            reduce using rule 89 (unary2_operator -> MULTOP .)
     STRING          reduce using rule 89 (unary2_operator -> MULTOP .)
     AUTO            reduce using rule 89 (unary2_operator -> MULTOP .)
-    NUMBER          reduce using rule 89 (unary2_operator -> MULTOP .)
     STRING_L        reduce using rule 89 (unary2_operator -> MULTOP .)
+    NUMBER          reduce using rule 89 (unary2_operator -> MULTOP .)
     SCHAR           reduce using rule 89 (unary2_operator -> MULTOP .)
     EQUAL           reduce using rule 89 (unary2_operator -> MULTOP .)
     RTEMPLATE       reduce using rule 89 (unary2_operator -> MULTOP .)
@@ -2281,8 +2281,8 @@ state 53
     VOID            reduce using rule 90 (unary2_operator -> BANDOP .)
     STRING          reduce using rule 90 (unary2_operator -> BANDOP .)
     AUTO            reduce using rule 90 (unary2_operator -> BANDOP .)
-    NUMBER          reduce using rule 90 (unary2_operator -> BANDOP .)
     STRING_L        reduce using rule 90 (unary2_operator -> BANDOP .)
+    NUMBER          reduce using rule 90 (unary2_operator -> BANDOP .)
     SCHAR           reduce using rule 90 (unary2_operator -> BANDOP .)
     EQUAL           reduce using rule 90 (unary2_operator -> BANDOP .)
     RTEMPLATE       reduce using rule 90 (unary2_operator -> BANDOP .)
@@ -2422,8 +2422,8 @@ state 55
     DELETE          reduce using rule 274 (declaration -> class_define_specifier SEMICOLON .)
     THIS            reduce using rule 274 (declaration -> class_define_specifier SEMICOLON .)
     LPAREN          reduce using rule 274 (declaration -> class_define_specifier SEMICOLON .)
-    NUMBER          reduce using rule 274 (declaration -> class_define_specifier SEMICOLON .)
     STRING_L        reduce using rule 274 (declaration -> class_define_specifier SEMICOLON .)
+    NUMBER          reduce using rule 274 (declaration -> class_define_specifier SEMICOLON .)
     SCHAR           reduce using rule 274 (declaration -> class_define_specifier SEMICOLON .)
     DOUBLEBNOP      reduce using rule 274 (declaration -> class_define_specifier SEMICOLON .)
     OPERATOR        reduce using rule 274 (declaration -> class_define_specifier SEMICOLON .)
@@ -2813,8 +2813,8 @@ state 65
     DELETE          reduce using rule 271 (declaration -> type_specifier_ declarator_list SEMICOLON .)
     THIS            reduce using rule 271 (declaration -> type_specifier_ declarator_list SEMICOLON .)
     LPAREN          reduce using rule 271 (declaration -> type_specifier_ declarator_list SEMICOLON .)
-    NUMBER          reduce using rule 271 (declaration -> type_specifier_ declarator_list SEMICOLON .)
     STRING_L        reduce using rule 271 (declaration -> type_specifier_ declarator_list SEMICOLON .)
+    NUMBER          reduce using rule 271 (declaration -> type_specifier_ declarator_list SEMICOLON .)
     SCHAR           reduce using rule 271 (declaration -> type_specifier_ declarator_list SEMICOLON .)
     DOUBLEBNOP      reduce using rule 271 (declaration -> type_specifier_ declarator_list SEMICOLON .)
     OPERATOR        reduce using rule 271 (declaration -> type_specifier_ declarator_list SEMICOLON .)
@@ -2908,8 +2908,8 @@ state 67
     DELETE          reduce using rule 234 (function_definition -> type_specifier_ declarator fct_body .)
     THIS            reduce using rule 234 (function_definition -> type_specifier_ declarator fct_body .)
     LPAREN          reduce using rule 234 (function_definition -> type_specifier_ declarator fct_body .)
-    NUMBER          reduce using rule 234 (function_definition -> type_specifier_ declarator fct_body .)
     STRING_L        reduce using rule 234 (function_definition -> type_specifier_ declarator fct_body .)
+    NUMBER          reduce using rule 234 (function_definition -> type_specifier_ declarator fct_body .)
     SCHAR           reduce using rule 234 (function_definition -> type_specifier_ declarator fct_body .)
     ELSE            reduce using rule 234 (function_definition -> type_specifier_ declarator fct_body .)
 
@@ -2995,8 +2995,8 @@ state 68
     (197) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -3059,8 +3059,8 @@ state 68
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
     TYPE            shift and go to state 35
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -3189,8 +3189,8 @@ state 69
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -3222,8 +3222,8 @@ state 69
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -3316,8 +3316,8 @@ state 71
     DELETE          reduce using rule 235 (fct_body -> compound_statement .)
     THIS            reduce using rule 235 (fct_body -> compound_statement .)
     LPAREN          reduce using rule 235 (fct_body -> compound_statement .)
-    NUMBER          reduce using rule 235 (fct_body -> compound_statement .)
     STRING_L        reduce using rule 235 (fct_body -> compound_statement .)
+    NUMBER          reduce using rule 235 (fct_body -> compound_statement .)
     SCHAR           reduce using rule 235 (fct_body -> compound_statement .)
     DOUBLEBNOP      reduce using rule 235 (fct_body -> compound_statement .)
     OPERATOR        reduce using rule 235 (fct_body -> compound_statement .)
@@ -3388,8 +3388,8 @@ state 72
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -3448,8 +3448,8 @@ state 72
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -3604,8 +3604,8 @@ state 73
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -3687,8 +3687,8 @@ state 73
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -6263,8 +6263,8 @@ state 137
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -6296,8 +6296,8 @@ state 137
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -6644,8 +6644,8 @@ state 146
     (211) class_key -> . STRUCT
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -6708,8 +6708,8 @@ state 146
     LPAREN          shift and go to state 146
     CLASS           shift and go to state 36
     STRUCT          shift and go to state 37
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -6989,8 +6989,8 @@ state 157
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -7021,8 +7021,8 @@ state 157
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -7089,8 +7089,8 @@ state 158
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -7121,8 +7121,8 @@ state 158
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -7191,8 +7191,8 @@ state 159
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -7223,8 +7223,8 @@ state 159
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -7327,8 +7327,8 @@ state 161
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -7359,8 +7359,8 @@ state 161
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -7429,8 +7429,8 @@ state 162
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -7461,8 +7461,8 @@ state 162
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -7729,8 +7729,8 @@ state 169
     VOID            reduce using rule 85 (unary1_operator -> PLUSOP .)
     STRING          reduce using rule 85 (unary1_operator -> PLUSOP .)
     AUTO            reduce using rule 85 (unary1_operator -> PLUSOP .)
-    NUMBER          reduce using rule 85 (unary1_operator -> PLUSOP .)
     STRING_L        reduce using rule 85 (unary1_operator -> PLUSOP .)
+    NUMBER          reduce using rule 85 (unary1_operator -> PLUSOP .)
     SCHAR           reduce using rule 85 (unary1_operator -> PLUSOP .)
     IDENTIFIER      reduce using rule 85 (unary1_operator -> PLUSOP .)
     DOUBLEBNOP      reduce using rule 85 (unary1_operator -> PLUSOP .)
@@ -7765,8 +7765,8 @@ state 170
     VOID            reduce using rule 86 (unary1_operator -> MINUSOP .)
     STRING          reduce using rule 86 (unary1_operator -> MINUSOP .)
     AUTO            reduce using rule 86 (unary1_operator -> MINUSOP .)
-    NUMBER          reduce using rule 86 (unary1_operator -> MINUSOP .)
     STRING_L        reduce using rule 86 (unary1_operator -> MINUSOP .)
+    NUMBER          reduce using rule 86 (unary1_operator -> MINUSOP .)
     SCHAR           reduce using rule 86 (unary1_operator -> MINUSOP .)
     IDENTIFIER      reduce using rule 86 (unary1_operator -> MINUSOP .)
     DOUBLEBNOP      reduce using rule 86 (unary1_operator -> MINUSOP .)
@@ -7801,8 +7801,8 @@ state 171
     VOID            reduce using rule 87 (unary1_operator -> NOTSYM .)
     STRING          reduce using rule 87 (unary1_operator -> NOTSYM .)
     AUTO            reduce using rule 87 (unary1_operator -> NOTSYM .)
-    NUMBER          reduce using rule 87 (unary1_operator -> NOTSYM .)
     STRING_L        reduce using rule 87 (unary1_operator -> NOTSYM .)
+    NUMBER          reduce using rule 87 (unary1_operator -> NOTSYM .)
     SCHAR           reduce using rule 87 (unary1_operator -> NOTSYM .)
     IDENTIFIER      reduce using rule 87 (unary1_operator -> NOTSYM .)
     DOUBLEBNOP      reduce using rule 87 (unary1_operator -> NOTSYM .)
@@ -7837,8 +7837,8 @@ state 172
     VOID            reduce using rule 88 (unary1_operator -> BNOP .)
     STRING          reduce using rule 88 (unary1_operator -> BNOP .)
     AUTO            reduce using rule 88 (unary1_operator -> BNOP .)
-    NUMBER          reduce using rule 88 (unary1_operator -> BNOP .)
     STRING_L        reduce using rule 88 (unary1_operator -> BNOP .)
+    NUMBER          reduce using rule 88 (unary1_operator -> BNOP .)
     SCHAR           reduce using rule 88 (unary1_operator -> BNOP .)
     IDENTIFIER      reduce using rule 88 (unary1_operator -> BNOP .)
     DOUBLEBNOP      reduce using rule 88 (unary1_operator -> BNOP .)
@@ -7950,8 +7950,8 @@ state 174
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -7982,8 +7982,8 @@ state 174
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -8141,102 +8141,102 @@ state 178
 
 state 179
 
-    (106) literal -> NUMBER .
+    (106) literal -> STRING_L .
 
-    LSPAREN         reduce using rule 106 (literal -> NUMBER .)
-    LPAREN          reduce using rule 106 (literal -> NUMBER .)
-    DOT             reduce using rule 106 (literal -> NUMBER .)
-    ARROW           reduce using rule 106 (literal -> NUMBER .)
-    DPLUSOP         reduce using rule 106 (literal -> NUMBER .)
-    DMINUSOP        reduce using rule 106 (literal -> NUMBER .)
-    LTEMPLATE       reduce using rule 106 (literal -> NUMBER .)
-    EQUAL           reduce using rule 106 (literal -> NUMBER .)
-    MULTEQOP        reduce using rule 106 (literal -> NUMBER .)
-    DIVEQOP         reduce using rule 106 (literal -> NUMBER .)
-    MODEQOP         reduce using rule 106 (literal -> NUMBER .)
-    PLUSEQOP        reduce using rule 106 (literal -> NUMBER .)
-    MINUSEQOP       reduce using rule 106 (literal -> NUMBER .)
-    LSHIFTEQOP      reduce using rule 106 (literal -> NUMBER .)
-    RSHIFTEQOP      reduce using rule 106 (literal -> NUMBER .)
-    BANDEQOP        reduce using rule 106 (literal -> NUMBER .)
-    BOREQOP         reduce using rule 106 (literal -> NUMBER .)
-    DOTSTAR         reduce using rule 106 (literal -> NUMBER .)
-    ARROWSTAR       reduce using rule 106 (literal -> NUMBER .)
-    MULTOP          reduce using rule 106 (literal -> NUMBER .)
-    DIVOP           reduce using rule 106 (literal -> NUMBER .)
-    MODOP           reduce using rule 106 (literal -> NUMBER .)
-    PLUSOP          reduce using rule 106 (literal -> NUMBER .)
-    MINUSOP         reduce using rule 106 (literal -> NUMBER .)
-    LSHIFT          reduce using rule 106 (literal -> NUMBER .)
-    RSHIFT          reduce using rule 106 (literal -> NUMBER .)
-    LTCOMP          reduce using rule 106 (literal -> NUMBER .)
-    GTCOMP          reduce using rule 106 (literal -> NUMBER .)
-    LTECOMP         reduce using rule 106 (literal -> NUMBER .)
-    GTECOMP         reduce using rule 106 (literal -> NUMBER .)
-    EQCOMP          reduce using rule 106 (literal -> NUMBER .)
-    NEQCOMP         reduce using rule 106 (literal -> NUMBER .)
-    BANDOP          reduce using rule 106 (literal -> NUMBER .)
-    XOROP           reduce using rule 106 (literal -> NUMBER .)
-    OROP            reduce using rule 106 (literal -> NUMBER .)
-    ANDOP           reduce using rule 106 (literal -> NUMBER .)
-    QUESMARK        reduce using rule 106 (literal -> NUMBER .)
-    RPAREN          reduce using rule 106 (literal -> NUMBER .)
-    COMMA           reduce using rule 106 (literal -> NUMBER .)
-    RSPAREN         reduce using rule 106 (literal -> NUMBER .)
-    SEMICOLON       reduce using rule 106 (literal -> NUMBER .)
-    RCPAREN         reduce using rule 106 (literal -> NUMBER .)
-    COLON           reduce using rule 106 (literal -> NUMBER .)
-    RTEMPLATE       reduce using rule 106 (literal -> NUMBER .)
+    LSPAREN         reduce using rule 106 (literal -> STRING_L .)
+    LPAREN          reduce using rule 106 (literal -> STRING_L .)
+    DOT             reduce using rule 106 (literal -> STRING_L .)
+    ARROW           reduce using rule 106 (literal -> STRING_L .)
+    DPLUSOP         reduce using rule 106 (literal -> STRING_L .)
+    DMINUSOP        reduce using rule 106 (literal -> STRING_L .)
+    LTEMPLATE       reduce using rule 106 (literal -> STRING_L .)
+    EQUAL           reduce using rule 106 (literal -> STRING_L .)
+    MULTEQOP        reduce using rule 106 (literal -> STRING_L .)
+    DIVEQOP         reduce using rule 106 (literal -> STRING_L .)
+    MODEQOP         reduce using rule 106 (literal -> STRING_L .)
+    PLUSEQOP        reduce using rule 106 (literal -> STRING_L .)
+    MINUSEQOP       reduce using rule 106 (literal -> STRING_L .)
+    LSHIFTEQOP      reduce using rule 106 (literal -> STRING_L .)
+    RSHIFTEQOP      reduce using rule 106 (literal -> STRING_L .)
+    BANDEQOP        reduce using rule 106 (literal -> STRING_L .)
+    BOREQOP         reduce using rule 106 (literal -> STRING_L .)
+    DOTSTAR         reduce using rule 106 (literal -> STRING_L .)
+    ARROWSTAR       reduce using rule 106 (literal -> STRING_L .)
+    MULTOP          reduce using rule 106 (literal -> STRING_L .)
+    DIVOP           reduce using rule 106 (literal -> STRING_L .)
+    MODOP           reduce using rule 106 (literal -> STRING_L .)
+    PLUSOP          reduce using rule 106 (literal -> STRING_L .)
+    MINUSOP         reduce using rule 106 (literal -> STRING_L .)
+    LSHIFT          reduce using rule 106 (literal -> STRING_L .)
+    RSHIFT          reduce using rule 106 (literal -> STRING_L .)
+    LTCOMP          reduce using rule 106 (literal -> STRING_L .)
+    GTCOMP          reduce using rule 106 (literal -> STRING_L .)
+    LTECOMP         reduce using rule 106 (literal -> STRING_L .)
+    GTECOMP         reduce using rule 106 (literal -> STRING_L .)
+    EQCOMP          reduce using rule 106 (literal -> STRING_L .)
+    NEQCOMP         reduce using rule 106 (literal -> STRING_L .)
+    BANDOP          reduce using rule 106 (literal -> STRING_L .)
+    XOROP           reduce using rule 106 (literal -> STRING_L .)
+    OROP            reduce using rule 106 (literal -> STRING_L .)
+    ANDOP           reduce using rule 106 (literal -> STRING_L .)
+    QUESMARK        reduce using rule 106 (literal -> STRING_L .)
+    RPAREN          reduce using rule 106 (literal -> STRING_L .)
+    COMMA           reduce using rule 106 (literal -> STRING_L .)
+    RSPAREN         reduce using rule 106 (literal -> STRING_L .)
+    SEMICOLON       reduce using rule 106 (literal -> STRING_L .)
+    RCPAREN         reduce using rule 106 (literal -> STRING_L .)
+    COLON           reduce using rule 106 (literal -> STRING_L .)
+    RTEMPLATE       reduce using rule 106 (literal -> STRING_L .)
 
 
 state 180
 
-    (107) literal -> STRING_L .
+    (107) literal -> NUMBER .
 
-    LSPAREN         reduce using rule 107 (literal -> STRING_L .)
-    LPAREN          reduce using rule 107 (literal -> STRING_L .)
-    DOT             reduce using rule 107 (literal -> STRING_L .)
-    ARROW           reduce using rule 107 (literal -> STRING_L .)
-    DPLUSOP         reduce using rule 107 (literal -> STRING_L .)
-    DMINUSOP        reduce using rule 107 (literal -> STRING_L .)
-    LTEMPLATE       reduce using rule 107 (literal -> STRING_L .)
-    EQUAL           reduce using rule 107 (literal -> STRING_L .)
-    MULTEQOP        reduce using rule 107 (literal -> STRING_L .)
-    DIVEQOP         reduce using rule 107 (literal -> STRING_L .)
-    MODEQOP         reduce using rule 107 (literal -> STRING_L .)
-    PLUSEQOP        reduce using rule 107 (literal -> STRING_L .)
-    MINUSEQOP       reduce using rule 107 (literal -> STRING_L .)
-    LSHIFTEQOP      reduce using rule 107 (literal -> STRING_L .)
-    RSHIFTEQOP      reduce using rule 107 (literal -> STRING_L .)
-    BANDEQOP        reduce using rule 107 (literal -> STRING_L .)
-    BOREQOP         reduce using rule 107 (literal -> STRING_L .)
-    DOTSTAR         reduce using rule 107 (literal -> STRING_L .)
-    ARROWSTAR       reduce using rule 107 (literal -> STRING_L .)
-    MULTOP          reduce using rule 107 (literal -> STRING_L .)
-    DIVOP           reduce using rule 107 (literal -> STRING_L .)
-    MODOP           reduce using rule 107 (literal -> STRING_L .)
-    PLUSOP          reduce using rule 107 (literal -> STRING_L .)
-    MINUSOP         reduce using rule 107 (literal -> STRING_L .)
-    LSHIFT          reduce using rule 107 (literal -> STRING_L .)
-    RSHIFT          reduce using rule 107 (literal -> STRING_L .)
-    LTCOMP          reduce using rule 107 (literal -> STRING_L .)
-    GTCOMP          reduce using rule 107 (literal -> STRING_L .)
-    LTECOMP         reduce using rule 107 (literal -> STRING_L .)
-    GTECOMP         reduce using rule 107 (literal -> STRING_L .)
-    EQCOMP          reduce using rule 107 (literal -> STRING_L .)
-    NEQCOMP         reduce using rule 107 (literal -> STRING_L .)
-    BANDOP          reduce using rule 107 (literal -> STRING_L .)
-    XOROP           reduce using rule 107 (literal -> STRING_L .)
-    OROP            reduce using rule 107 (literal -> STRING_L .)
-    ANDOP           reduce using rule 107 (literal -> STRING_L .)
-    QUESMARK        reduce using rule 107 (literal -> STRING_L .)
-    RPAREN          reduce using rule 107 (literal -> STRING_L .)
-    COMMA           reduce using rule 107 (literal -> STRING_L .)
-    RSPAREN         reduce using rule 107 (literal -> STRING_L .)
-    SEMICOLON       reduce using rule 107 (literal -> STRING_L .)
-    RCPAREN         reduce using rule 107 (literal -> STRING_L .)
-    COLON           reduce using rule 107 (literal -> STRING_L .)
-    RTEMPLATE       reduce using rule 107 (literal -> STRING_L .)
+    LSPAREN         reduce using rule 107 (literal -> NUMBER .)
+    LPAREN          reduce using rule 107 (literal -> NUMBER .)
+    DOT             reduce using rule 107 (literal -> NUMBER .)
+    ARROW           reduce using rule 107 (literal -> NUMBER .)
+    DPLUSOP         reduce using rule 107 (literal -> NUMBER .)
+    DMINUSOP        reduce using rule 107 (literal -> NUMBER .)
+    LTEMPLATE       reduce using rule 107 (literal -> NUMBER .)
+    EQUAL           reduce using rule 107 (literal -> NUMBER .)
+    MULTEQOP        reduce using rule 107 (literal -> NUMBER .)
+    DIVEQOP         reduce using rule 107 (literal -> NUMBER .)
+    MODEQOP         reduce using rule 107 (literal -> NUMBER .)
+    PLUSEQOP        reduce using rule 107 (literal -> NUMBER .)
+    MINUSEQOP       reduce using rule 107 (literal -> NUMBER .)
+    LSHIFTEQOP      reduce using rule 107 (literal -> NUMBER .)
+    RSHIFTEQOP      reduce using rule 107 (literal -> NUMBER .)
+    BANDEQOP        reduce using rule 107 (literal -> NUMBER .)
+    BOREQOP         reduce using rule 107 (literal -> NUMBER .)
+    DOTSTAR         reduce using rule 107 (literal -> NUMBER .)
+    ARROWSTAR       reduce using rule 107 (literal -> NUMBER .)
+    MULTOP          reduce using rule 107 (literal -> NUMBER .)
+    DIVOP           reduce using rule 107 (literal -> NUMBER .)
+    MODOP           reduce using rule 107 (literal -> NUMBER .)
+    PLUSOP          reduce using rule 107 (literal -> NUMBER .)
+    MINUSOP         reduce using rule 107 (literal -> NUMBER .)
+    LSHIFT          reduce using rule 107 (literal -> NUMBER .)
+    RSHIFT          reduce using rule 107 (literal -> NUMBER .)
+    LTCOMP          reduce using rule 107 (literal -> NUMBER .)
+    GTCOMP          reduce using rule 107 (literal -> NUMBER .)
+    LTECOMP         reduce using rule 107 (literal -> NUMBER .)
+    GTECOMP         reduce using rule 107 (literal -> NUMBER .)
+    EQCOMP          reduce using rule 107 (literal -> NUMBER .)
+    NEQCOMP         reduce using rule 107 (literal -> NUMBER .)
+    BANDOP          reduce using rule 107 (literal -> NUMBER .)
+    XOROP           reduce using rule 107 (literal -> NUMBER .)
+    OROP            reduce using rule 107 (literal -> NUMBER .)
+    ANDOP           reduce using rule 107 (literal -> NUMBER .)
+    QUESMARK        reduce using rule 107 (literal -> NUMBER .)
+    RPAREN          reduce using rule 107 (literal -> NUMBER .)
+    COMMA           reduce using rule 107 (literal -> NUMBER .)
+    RSPAREN         reduce using rule 107 (literal -> NUMBER .)
+    SEMICOLON       reduce using rule 107 (literal -> NUMBER .)
+    RCPAREN         reduce using rule 107 (literal -> NUMBER .)
+    COLON           reduce using rule 107 (literal -> NUMBER .)
+    RTEMPLATE       reduce using rule 107 (literal -> NUMBER .)
 
 
 state 181
@@ -8634,8 +8634,8 @@ state 193
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -8698,8 +8698,8 @@ state 193
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -8818,8 +8818,8 @@ state 196
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -8878,8 +8878,8 @@ state 196
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -9033,8 +9033,8 @@ state 197
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -9116,8 +9116,8 @@ state 197
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -9223,8 +9223,8 @@ state 198
     DELETE          reduce using rule 237 (compound_statement -> LCPAREN RCPAREN .)
     THIS            reduce using rule 237 (compound_statement -> LCPAREN RCPAREN .)
     LPAREN          reduce using rule 237 (compound_statement -> LCPAREN RCPAREN .)
-    NUMBER          reduce using rule 237 (compound_statement -> LCPAREN RCPAREN .)
     STRING_L        reduce using rule 237 (compound_statement -> LCPAREN RCPAREN .)
+    NUMBER          reduce using rule 237 (compound_statement -> LCPAREN RCPAREN .)
     SCHAR           reduce using rule 237 (compound_statement -> LCPAREN RCPAREN .)
     DOUBLEBNOP      reduce using rule 237 (compound_statement -> LCPAREN RCPAREN .)
     OPERATOR        reduce using rule 237 (compound_statement -> LCPAREN RCPAREN .)
@@ -9287,8 +9287,8 @@ state 199
     STRUCT          reduce using rule 238 (statement_list -> statement .)
     THIS            reduce using rule 238 (statement_list -> statement .)
     LPAREN          reduce using rule 238 (statement_list -> statement .)
-    NUMBER          reduce using rule 238 (statement_list -> statement .)
     STRING_L        reduce using rule 238 (statement_list -> statement .)
+    NUMBER          reduce using rule 238 (statement_list -> statement .)
     SCHAR           reduce using rule 238 (statement_list -> statement .)
     DOUBLEBNOP      reduce using rule 238 (statement_list -> statement .)
     OPERATOR        reduce using rule 238 (statement_list -> statement .)
@@ -9346,8 +9346,8 @@ state 200
     STRUCT          reduce using rule 240 (statement -> labeled_statement .)
     THIS            reduce using rule 240 (statement -> labeled_statement .)
     LPAREN          reduce using rule 240 (statement -> labeled_statement .)
-    NUMBER          reduce using rule 240 (statement -> labeled_statement .)
     STRING_L        reduce using rule 240 (statement -> labeled_statement .)
+    NUMBER          reduce using rule 240 (statement -> labeled_statement .)
     SCHAR           reduce using rule 240 (statement -> labeled_statement .)
     DOUBLEBNOP      reduce using rule 240 (statement -> labeled_statement .)
     OPERATOR        reduce using rule 240 (statement -> labeled_statement .)
@@ -9406,8 +9406,8 @@ state 201
     STRUCT          reduce using rule 241 (statement -> expression_statement .)
     THIS            reduce using rule 241 (statement -> expression_statement .)
     LPAREN          reduce using rule 241 (statement -> expression_statement .)
-    NUMBER          reduce using rule 241 (statement -> expression_statement .)
     STRING_L        reduce using rule 241 (statement -> expression_statement .)
+    NUMBER          reduce using rule 241 (statement -> expression_statement .)
     SCHAR           reduce using rule 241 (statement -> expression_statement .)
     DOUBLEBNOP      reduce using rule 241 (statement -> expression_statement .)
     OPERATOR        reduce using rule 241 (statement -> expression_statement .)
@@ -9466,8 +9466,8 @@ state 202
     STRUCT          reduce using rule 242 (statement -> compound_statement .)
     THIS            reduce using rule 242 (statement -> compound_statement .)
     LPAREN          reduce using rule 242 (statement -> compound_statement .)
-    NUMBER          reduce using rule 242 (statement -> compound_statement .)
     STRING_L        reduce using rule 242 (statement -> compound_statement .)
+    NUMBER          reduce using rule 242 (statement -> compound_statement .)
     SCHAR           reduce using rule 242 (statement -> compound_statement .)
     DOUBLEBNOP      reduce using rule 242 (statement -> compound_statement .)
     OPERATOR        reduce using rule 242 (statement -> compound_statement .)
@@ -9526,8 +9526,8 @@ state 203
     STRUCT          reduce using rule 243 (statement -> selection_statement .)
     THIS            reduce using rule 243 (statement -> selection_statement .)
     LPAREN          reduce using rule 243 (statement -> selection_statement .)
-    NUMBER          reduce using rule 243 (statement -> selection_statement .)
     STRING_L        reduce using rule 243 (statement -> selection_statement .)
+    NUMBER          reduce using rule 243 (statement -> selection_statement .)
     SCHAR           reduce using rule 243 (statement -> selection_statement .)
     DOUBLEBNOP      reduce using rule 243 (statement -> selection_statement .)
     OPERATOR        reduce using rule 243 (statement -> selection_statement .)
@@ -9586,8 +9586,8 @@ state 204
     STRUCT          reduce using rule 244 (statement -> iteration_statement .)
     THIS            reduce using rule 244 (statement -> iteration_statement .)
     LPAREN          reduce using rule 244 (statement -> iteration_statement .)
-    NUMBER          reduce using rule 244 (statement -> iteration_statement .)
     STRING_L        reduce using rule 244 (statement -> iteration_statement .)
+    NUMBER          reduce using rule 244 (statement -> iteration_statement .)
     SCHAR           reduce using rule 244 (statement -> iteration_statement .)
     DOUBLEBNOP      reduce using rule 244 (statement -> iteration_statement .)
     OPERATOR        reduce using rule 244 (statement -> iteration_statement .)
@@ -9646,8 +9646,8 @@ state 205
     STRUCT          reduce using rule 245 (statement -> jump_statement .)
     THIS            reduce using rule 245 (statement -> jump_statement .)
     LPAREN          reduce using rule 245 (statement -> jump_statement .)
-    NUMBER          reduce using rule 245 (statement -> jump_statement .)
     STRING_L        reduce using rule 245 (statement -> jump_statement .)
+    NUMBER          reduce using rule 245 (statement -> jump_statement .)
     SCHAR           reduce using rule 245 (statement -> jump_statement .)
     DOUBLEBNOP      reduce using rule 245 (statement -> jump_statement .)
     OPERATOR        reduce using rule 245 (statement -> jump_statement .)
@@ -9706,8 +9706,8 @@ state 206
     STRUCT          reduce using rule 246 (statement -> declaration_statement .)
     THIS            reduce using rule 246 (statement -> declaration_statement .)
     LPAREN          reduce using rule 246 (statement -> declaration_statement .)
-    NUMBER          reduce using rule 246 (statement -> declaration_statement .)
     STRING_L        reduce using rule 246 (statement -> declaration_statement .)
+    NUMBER          reduce using rule 246 (statement -> declaration_statement .)
     SCHAR           reduce using rule 246 (statement -> declaration_statement .)
     DOUBLEBNOP      reduce using rule 246 (statement -> declaration_statement .)
     OPERATOR        reduce using rule 246 (statement -> declaration_statement .)
@@ -9766,8 +9766,8 @@ state 207
     STRUCT          reduce using rule 247 (statement -> try_block .)
     THIS            reduce using rule 247 (statement -> try_block .)
     LPAREN          reduce using rule 247 (statement -> try_block .)
-    NUMBER          reduce using rule 247 (statement -> try_block .)
     STRING_L        reduce using rule 247 (statement -> try_block .)
+    NUMBER          reduce using rule 247 (statement -> try_block .)
     SCHAR           reduce using rule 247 (statement -> try_block .)
     DOUBLEBNOP      reduce using rule 247 (statement -> try_block .)
     OPERATOR        reduce using rule 247 (statement -> try_block .)
@@ -9906,8 +9906,8 @@ state 209
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -9938,8 +9938,8 @@ state 209
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -10039,8 +10039,8 @@ state 212
     STRUCT          reduce using rule 269 (expression_statement -> SEMICOLON .)
     THIS            reduce using rule 269 (expression_statement -> SEMICOLON .)
     LPAREN          reduce using rule 269 (expression_statement -> SEMICOLON .)
-    NUMBER          reduce using rule 269 (expression_statement -> SEMICOLON .)
     STRING_L        reduce using rule 269 (expression_statement -> SEMICOLON .)
+    NUMBER          reduce using rule 269 (expression_statement -> SEMICOLON .)
     SCHAR           reduce using rule 269 (expression_statement -> SEMICOLON .)
     DOUBLEBNOP      reduce using rule 269 (expression_statement -> SEMICOLON .)
     OPERATOR        reduce using rule 269 (expression_statement -> SEMICOLON .)
@@ -10189,8 +10189,8 @@ state 216
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -10271,8 +10271,8 @@ state 216
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -10414,8 +10414,8 @@ state 220
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -10475,8 +10475,8 @@ state 220
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -10569,8 +10569,8 @@ state 222
     STRUCT          reduce using rule 270 (declaration_statement -> declaration .)
     THIS            reduce using rule 270 (declaration_statement -> declaration .)
     LPAREN          reduce using rule 270 (declaration_statement -> declaration .)
-    NUMBER          reduce using rule 270 (declaration_statement -> declaration .)
     STRING_L        reduce using rule 270 (declaration_statement -> declaration .)
+    NUMBER          reduce using rule 270 (declaration_statement -> declaration .)
     SCHAR           reduce using rule 270 (declaration_statement -> declaration .)
     DOUBLEBNOP      reduce using rule 270 (declaration_statement -> declaration .)
     OPERATOR        reduce using rule 270 (declaration_statement -> declaration .)
@@ -10676,8 +10676,8 @@ state 226
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -10742,8 +10742,8 @@ state 226
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -11363,8 +11363,8 @@ state 245
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -11423,8 +11423,8 @@ state 245
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -11607,8 +11607,8 @@ state 249
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -11640,8 +11640,8 @@ state 249
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -11726,8 +11726,8 @@ state 250
     DELETE          reduce using rule 180 (typedef_declarator -> TYPEDEF type_specifier_ IDENTIFIER SEMICOLON .)
     THIS            reduce using rule 180 (typedef_declarator -> TYPEDEF type_specifier_ IDENTIFIER SEMICOLON .)
     LPAREN          reduce using rule 180 (typedef_declarator -> TYPEDEF type_specifier_ IDENTIFIER SEMICOLON .)
-    NUMBER          reduce using rule 180 (typedef_declarator -> TYPEDEF type_specifier_ IDENTIFIER SEMICOLON .)
     STRING_L        reduce using rule 180 (typedef_declarator -> TYPEDEF type_specifier_ IDENTIFIER SEMICOLON .)
+    NUMBER          reduce using rule 180 (typedef_declarator -> TYPEDEF type_specifier_ IDENTIFIER SEMICOLON .)
     SCHAR           reduce using rule 180 (typedef_declarator -> TYPEDEF type_specifier_ IDENTIFIER SEMICOLON .)
     DOUBLEBNOP      reduce using rule 180 (typedef_declarator -> TYPEDEF type_specifier_ IDENTIFIER SEMICOLON .)
     OPERATOR        reduce using rule 180 (typedef_declarator -> TYPEDEF type_specifier_ IDENTIFIER SEMICOLON .)
@@ -11955,8 +11955,8 @@ state 266
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -12014,8 +12014,8 @@ state 266
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -12163,8 +12163,8 @@ state 268
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -12222,8 +12222,8 @@ state 268
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -12283,8 +12283,8 @@ state 269
     VOID            reduce using rule 53 (assignment_operator -> EQUAL .)
     STRING          reduce using rule 53 (assignment_operator -> EQUAL .)
     AUTO            reduce using rule 53 (assignment_operator -> EQUAL .)
-    NUMBER          reduce using rule 53 (assignment_operator -> EQUAL .)
     STRING_L        reduce using rule 53 (assignment_operator -> EQUAL .)
+    NUMBER          reduce using rule 53 (assignment_operator -> EQUAL .)
     SCHAR           reduce using rule 53 (assignment_operator -> EQUAL .)
     IDENTIFIER      reduce using rule 53 (assignment_operator -> EQUAL .)
     DOUBLEBNOP      reduce using rule 53 (assignment_operator -> EQUAL .)
@@ -12319,8 +12319,8 @@ state 270
     VOID            reduce using rule 54 (assignment_operator -> MULTEQOP .)
     STRING          reduce using rule 54 (assignment_operator -> MULTEQOP .)
     AUTO            reduce using rule 54 (assignment_operator -> MULTEQOP .)
-    NUMBER          reduce using rule 54 (assignment_operator -> MULTEQOP .)
     STRING_L        reduce using rule 54 (assignment_operator -> MULTEQOP .)
+    NUMBER          reduce using rule 54 (assignment_operator -> MULTEQOP .)
     SCHAR           reduce using rule 54 (assignment_operator -> MULTEQOP .)
     IDENTIFIER      reduce using rule 54 (assignment_operator -> MULTEQOP .)
     DOUBLEBNOP      reduce using rule 54 (assignment_operator -> MULTEQOP .)
@@ -12355,8 +12355,8 @@ state 271
     VOID            reduce using rule 55 (assignment_operator -> DIVEQOP .)
     STRING          reduce using rule 55 (assignment_operator -> DIVEQOP .)
     AUTO            reduce using rule 55 (assignment_operator -> DIVEQOP .)
-    NUMBER          reduce using rule 55 (assignment_operator -> DIVEQOP .)
     STRING_L        reduce using rule 55 (assignment_operator -> DIVEQOP .)
+    NUMBER          reduce using rule 55 (assignment_operator -> DIVEQOP .)
     SCHAR           reduce using rule 55 (assignment_operator -> DIVEQOP .)
     IDENTIFIER      reduce using rule 55 (assignment_operator -> DIVEQOP .)
     DOUBLEBNOP      reduce using rule 55 (assignment_operator -> DIVEQOP .)
@@ -12391,8 +12391,8 @@ state 272
     VOID            reduce using rule 56 (assignment_operator -> MODEQOP .)
     STRING          reduce using rule 56 (assignment_operator -> MODEQOP .)
     AUTO            reduce using rule 56 (assignment_operator -> MODEQOP .)
-    NUMBER          reduce using rule 56 (assignment_operator -> MODEQOP .)
     STRING_L        reduce using rule 56 (assignment_operator -> MODEQOP .)
+    NUMBER          reduce using rule 56 (assignment_operator -> MODEQOP .)
     SCHAR           reduce using rule 56 (assignment_operator -> MODEQOP .)
     IDENTIFIER      reduce using rule 56 (assignment_operator -> MODEQOP .)
     DOUBLEBNOP      reduce using rule 56 (assignment_operator -> MODEQOP .)
@@ -12427,8 +12427,8 @@ state 273
     VOID            reduce using rule 57 (assignment_operator -> PLUSEQOP .)
     STRING          reduce using rule 57 (assignment_operator -> PLUSEQOP .)
     AUTO            reduce using rule 57 (assignment_operator -> PLUSEQOP .)
-    NUMBER          reduce using rule 57 (assignment_operator -> PLUSEQOP .)
     STRING_L        reduce using rule 57 (assignment_operator -> PLUSEQOP .)
+    NUMBER          reduce using rule 57 (assignment_operator -> PLUSEQOP .)
     SCHAR           reduce using rule 57 (assignment_operator -> PLUSEQOP .)
     IDENTIFIER      reduce using rule 57 (assignment_operator -> PLUSEQOP .)
     DOUBLEBNOP      reduce using rule 57 (assignment_operator -> PLUSEQOP .)
@@ -12463,8 +12463,8 @@ state 274
     VOID            reduce using rule 58 (assignment_operator -> MINUSEQOP .)
     STRING          reduce using rule 58 (assignment_operator -> MINUSEQOP .)
     AUTO            reduce using rule 58 (assignment_operator -> MINUSEQOP .)
-    NUMBER          reduce using rule 58 (assignment_operator -> MINUSEQOP .)
     STRING_L        reduce using rule 58 (assignment_operator -> MINUSEQOP .)
+    NUMBER          reduce using rule 58 (assignment_operator -> MINUSEQOP .)
     SCHAR           reduce using rule 58 (assignment_operator -> MINUSEQOP .)
     IDENTIFIER      reduce using rule 58 (assignment_operator -> MINUSEQOP .)
     DOUBLEBNOP      reduce using rule 58 (assignment_operator -> MINUSEQOP .)
@@ -12499,8 +12499,8 @@ state 275
     VOID            reduce using rule 59 (assignment_operator -> LSHIFTEQOP .)
     STRING          reduce using rule 59 (assignment_operator -> LSHIFTEQOP .)
     AUTO            reduce using rule 59 (assignment_operator -> LSHIFTEQOP .)
-    NUMBER          reduce using rule 59 (assignment_operator -> LSHIFTEQOP .)
     STRING_L        reduce using rule 59 (assignment_operator -> LSHIFTEQOP .)
+    NUMBER          reduce using rule 59 (assignment_operator -> LSHIFTEQOP .)
     SCHAR           reduce using rule 59 (assignment_operator -> LSHIFTEQOP .)
     IDENTIFIER      reduce using rule 59 (assignment_operator -> LSHIFTEQOP .)
     DOUBLEBNOP      reduce using rule 59 (assignment_operator -> LSHIFTEQOP .)
@@ -12535,8 +12535,8 @@ state 276
     VOID            reduce using rule 60 (assignment_operator -> RSHIFTEQOP .)
     STRING          reduce using rule 60 (assignment_operator -> RSHIFTEQOP .)
     AUTO            reduce using rule 60 (assignment_operator -> RSHIFTEQOP .)
-    NUMBER          reduce using rule 60 (assignment_operator -> RSHIFTEQOP .)
     STRING_L        reduce using rule 60 (assignment_operator -> RSHIFTEQOP .)
+    NUMBER          reduce using rule 60 (assignment_operator -> RSHIFTEQOP .)
     SCHAR           reduce using rule 60 (assignment_operator -> RSHIFTEQOP .)
     IDENTIFIER      reduce using rule 60 (assignment_operator -> RSHIFTEQOP .)
     DOUBLEBNOP      reduce using rule 60 (assignment_operator -> RSHIFTEQOP .)
@@ -12571,8 +12571,8 @@ state 277
     VOID            reduce using rule 61 (assignment_operator -> BANDEQOP .)
     STRING          reduce using rule 61 (assignment_operator -> BANDEQOP .)
     AUTO            reduce using rule 61 (assignment_operator -> BANDEQOP .)
-    NUMBER          reduce using rule 61 (assignment_operator -> BANDEQOP .)
     STRING_L        reduce using rule 61 (assignment_operator -> BANDEQOP .)
+    NUMBER          reduce using rule 61 (assignment_operator -> BANDEQOP .)
     SCHAR           reduce using rule 61 (assignment_operator -> BANDEQOP .)
     IDENTIFIER      reduce using rule 61 (assignment_operator -> BANDEQOP .)
     DOUBLEBNOP      reduce using rule 61 (assignment_operator -> BANDEQOP .)
@@ -12607,8 +12607,8 @@ state 278
     VOID            reduce using rule 62 (assignment_operator -> BOREQOP .)
     STRING          reduce using rule 62 (assignment_operator -> BOREQOP .)
     AUTO            reduce using rule 62 (assignment_operator -> BOREQOP .)
-    NUMBER          reduce using rule 62 (assignment_operator -> BOREQOP .)
     STRING_L        reduce using rule 62 (assignment_operator -> BOREQOP .)
+    NUMBER          reduce using rule 62 (assignment_operator -> BOREQOP .)
     SCHAR           reduce using rule 62 (assignment_operator -> BOREQOP .)
     IDENTIFIER      reduce using rule 62 (assignment_operator -> BOREQOP .)
     DOUBLEBNOP      reduce using rule 62 (assignment_operator -> BOREQOP .)
@@ -12679,8 +12679,8 @@ state 279
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -12739,8 +12739,8 @@ state 279
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -12854,8 +12854,8 @@ state 280
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -12886,8 +12886,8 @@ state 280
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -12980,8 +12980,8 @@ state 281
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -13040,8 +13040,8 @@ state 281
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -13137,8 +13137,8 @@ state 282
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -13197,8 +13197,8 @@ state 282
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -13475,8 +13475,8 @@ state 289
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -13535,8 +13535,8 @@ state 289
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -13819,8 +13819,8 @@ state 294
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -13883,8 +13883,8 @@ state 294
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -14001,8 +14001,8 @@ state 295
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -14033,8 +14033,8 @@ state 295
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -14124,8 +14124,8 @@ state 296
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -14184,8 +14184,8 @@ state 296
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -14490,8 +14490,8 @@ state 301
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -14522,8 +14522,8 @@ state 301
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -14624,8 +14624,8 @@ state 302
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -14656,8 +14656,8 @@ state 302
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -14755,8 +14755,8 @@ state 303
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -14787,8 +14787,8 @@ state 303
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -14882,8 +14882,8 @@ state 304
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -14914,8 +14914,8 @@ state 304
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -15008,8 +15008,8 @@ state 305
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -15040,8 +15040,8 @@ state 305
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -15129,8 +15129,8 @@ state 306
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -15161,8 +15161,8 @@ state 306
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -15249,8 +15249,8 @@ state 307
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -15281,8 +15281,8 @@ state 307
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -15369,8 +15369,8 @@ state 308
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -15401,8 +15401,8 @@ state 308
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -15489,8 +15489,8 @@ state 309
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -15521,8 +15521,8 @@ state 309
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -15606,8 +15606,8 @@ state 310
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -15638,8 +15638,8 @@ state 310
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -15722,8 +15722,8 @@ state 311
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -15754,8 +15754,8 @@ state 311
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -15835,8 +15835,8 @@ state 312
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -15867,8 +15867,8 @@ state 312
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -15947,8 +15947,8 @@ state 313
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -15979,8 +15979,8 @@ state 313
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -16055,8 +16055,8 @@ state 314
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -16087,8 +16087,8 @@ state 314
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -16162,8 +16162,8 @@ state 315
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -16194,8 +16194,8 @@ state 315
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -16269,8 +16269,8 @@ state 316
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -16301,8 +16301,8 @@ state 316
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -16373,8 +16373,8 @@ state 317
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -16405,8 +16405,8 @@ state 317
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -16476,8 +16476,8 @@ state 318
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -16508,8 +16508,8 @@ state 318
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -16606,8 +16606,8 @@ state 320
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -16666,8 +16666,8 @@ state 320
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -16772,8 +16772,8 @@ state 323
     DELETE          reduce using rule 236 (compound_statement -> LCPAREN statement_list RCPAREN .)
     THIS            reduce using rule 236 (compound_statement -> LCPAREN statement_list RCPAREN .)
     LPAREN          reduce using rule 236 (compound_statement -> LCPAREN statement_list RCPAREN .)
-    NUMBER          reduce using rule 236 (compound_statement -> LCPAREN statement_list RCPAREN .)
     STRING_L        reduce using rule 236 (compound_statement -> LCPAREN statement_list RCPAREN .)
+    NUMBER          reduce using rule 236 (compound_statement -> LCPAREN statement_list RCPAREN .)
     SCHAR           reduce using rule 236 (compound_statement -> LCPAREN statement_list RCPAREN .)
     DOUBLEBNOP      reduce using rule 236 (compound_statement -> LCPAREN statement_list RCPAREN .)
     OPERATOR        reduce using rule 236 (compound_statement -> LCPAREN statement_list RCPAREN .)
@@ -16836,8 +16836,8 @@ state 324
     STRUCT          reduce using rule 239 (statement_list -> statement_list statement .)
     THIS            reduce using rule 239 (statement_list -> statement_list statement .)
     LPAREN          reduce using rule 239 (statement_list -> statement_list statement .)
-    NUMBER          reduce using rule 239 (statement_list -> statement_list statement .)
     STRING_L        reduce using rule 239 (statement_list -> statement_list statement .)
+    NUMBER          reduce using rule 239 (statement_list -> statement_list statement .)
     SCHAR           reduce using rule 239 (statement_list -> statement_list statement .)
     DOUBLEBNOP      reduce using rule 239 (statement_list -> statement_list statement .)
     OPERATOR        reduce using rule 239 (statement_list -> statement_list statement .)
@@ -16963,8 +16963,8 @@ state 325
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -17045,8 +17045,8 @@ state 325
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -17226,8 +17226,8 @@ state 327
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -17308,8 +17308,8 @@ state 327
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -17414,8 +17414,8 @@ state 328
     STRUCT          reduce using rule 268 (expression_statement -> expression SEMICOLON .)
     THIS            reduce using rule 268 (expression_statement -> expression SEMICOLON .)
     LPAREN          reduce using rule 268 (expression_statement -> expression SEMICOLON .)
-    NUMBER          reduce using rule 268 (expression_statement -> expression SEMICOLON .)
     STRING_L        reduce using rule 268 (expression_statement -> expression SEMICOLON .)
+    NUMBER          reduce using rule 268 (expression_statement -> expression SEMICOLON .)
     SCHAR           reduce using rule 268 (expression_statement -> expression SEMICOLON .)
     DOUBLEBNOP      reduce using rule 268 (expression_statement -> expression SEMICOLON .)
     OPERATOR        reduce using rule 268 (expression_statement -> expression SEMICOLON .)
@@ -17481,8 +17481,8 @@ state 329
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -17540,8 +17540,8 @@ state 329
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -17638,8 +17638,8 @@ state 330
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -17698,8 +17698,8 @@ state 330
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -17797,8 +17797,8 @@ state 331
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -17857,8 +17857,8 @@ state 331
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -17956,8 +17956,8 @@ state 332
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -18016,8 +18016,8 @@ state 332
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -18155,8 +18155,8 @@ state 334
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -18223,8 +18223,8 @@ state 334
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -18324,8 +18324,8 @@ state 335
     STRUCT          reduce using rule 248 (jump_statement -> BREAK SEMICOLON .)
     THIS            reduce using rule 248 (jump_statement -> BREAK SEMICOLON .)
     LPAREN          reduce using rule 248 (jump_statement -> BREAK SEMICOLON .)
-    NUMBER          reduce using rule 248 (jump_statement -> BREAK SEMICOLON .)
     STRING_L        reduce using rule 248 (jump_statement -> BREAK SEMICOLON .)
+    NUMBER          reduce using rule 248 (jump_statement -> BREAK SEMICOLON .)
     SCHAR           reduce using rule 248 (jump_statement -> BREAK SEMICOLON .)
     DOUBLEBNOP      reduce using rule 248 (jump_statement -> BREAK SEMICOLON .)
     OPERATOR        reduce using rule 248 (jump_statement -> BREAK SEMICOLON .)
@@ -18384,8 +18384,8 @@ state 336
     STRUCT          reduce using rule 249 (jump_statement -> CONTINUE SEMICOLON .)
     THIS            reduce using rule 249 (jump_statement -> CONTINUE SEMICOLON .)
     LPAREN          reduce using rule 249 (jump_statement -> CONTINUE SEMICOLON .)
-    NUMBER          reduce using rule 249 (jump_statement -> CONTINUE SEMICOLON .)
     STRING_L        reduce using rule 249 (jump_statement -> CONTINUE SEMICOLON .)
+    NUMBER          reduce using rule 249 (jump_statement -> CONTINUE SEMICOLON .)
     SCHAR           reduce using rule 249 (jump_statement -> CONTINUE SEMICOLON .)
     DOUBLEBNOP      reduce using rule 249 (jump_statement -> CONTINUE SEMICOLON .)
     OPERATOR        reduce using rule 249 (jump_statement -> CONTINUE SEMICOLON .)
@@ -18453,8 +18453,8 @@ state 338
     STRUCT          reduce using rule 251 (jump_statement -> RETURN SEMICOLON .)
     THIS            reduce using rule 251 (jump_statement -> RETURN SEMICOLON .)
     LPAREN          reduce using rule 251 (jump_statement -> RETURN SEMICOLON .)
-    NUMBER          reduce using rule 251 (jump_statement -> RETURN SEMICOLON .)
     STRING_L        reduce using rule 251 (jump_statement -> RETURN SEMICOLON .)
+    NUMBER          reduce using rule 251 (jump_statement -> RETURN SEMICOLON .)
     SCHAR           reduce using rule 251 (jump_statement -> RETURN SEMICOLON .)
     DOUBLEBNOP      reduce using rule 251 (jump_statement -> RETURN SEMICOLON .)
     OPERATOR        reduce using rule 251 (jump_statement -> RETURN SEMICOLON .)
@@ -18544,8 +18544,8 @@ state 342
     DELETE          reduce using rule 292 (asm_declaration -> ASM LPAREN STRING_L RPAREN SEMICOLON .)
     THIS            reduce using rule 292 (asm_declaration -> ASM LPAREN STRING_L RPAREN SEMICOLON .)
     LPAREN          reduce using rule 292 (asm_declaration -> ASM LPAREN STRING_L RPAREN SEMICOLON .)
-    NUMBER          reduce using rule 292 (asm_declaration -> ASM LPAREN STRING_L RPAREN SEMICOLON .)
     STRING_L        reduce using rule 292 (asm_declaration -> ASM LPAREN STRING_L RPAREN SEMICOLON .)
+    NUMBER          reduce using rule 292 (asm_declaration -> ASM LPAREN STRING_L RPAREN SEMICOLON .)
     SCHAR           reduce using rule 292 (asm_declaration -> ASM LPAREN STRING_L RPAREN SEMICOLON .)
     DOUBLEBNOP      reduce using rule 292 (asm_declaration -> ASM LPAREN STRING_L RPAREN SEMICOLON .)
     OPERATOR        reduce using rule 292 (asm_declaration -> ASM LPAREN STRING_L RPAREN SEMICOLON .)
@@ -18662,8 +18662,8 @@ state 347
     DELETE          reduce using rule 277 (template_declaration -> TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration .)
     THIS            reduce using rule 277 (template_declaration -> TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration .)
     LPAREN          reduce using rule 277 (template_declaration -> TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration .)
-    NUMBER          reduce using rule 277 (template_declaration -> TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration .)
     STRING_L        reduce using rule 277 (template_declaration -> TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration .)
+    NUMBER          reduce using rule 277 (template_declaration -> TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration .)
     SCHAR           reduce using rule 277 (template_declaration -> TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration .)
     DOUBLEBNOP      reduce using rule 277 (template_declaration -> TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration .)
     OPERATOR        reduce using rule 277 (template_declaration -> TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration .)
@@ -18742,8 +18742,8 @@ state 349
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -18802,8 +18802,8 @@ state 349
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -18914,8 +18914,8 @@ state 351
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -18974,8 +18974,8 @@ state 351
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -19062,8 +19062,8 @@ state 352
     DELETE          reduce using rule 179 (typedef_declarator -> TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON .)
     THIS            reduce using rule 179 (typedef_declarator -> TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON .)
     LPAREN          reduce using rule 179 (typedef_declarator -> TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON .)
-    NUMBER          reduce using rule 179 (typedef_declarator -> TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON .)
     STRING_L        reduce using rule 179 (typedef_declarator -> TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON .)
+    NUMBER          reduce using rule 179 (typedef_declarator -> TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON .)
     SCHAR           reduce using rule 179 (typedef_declarator -> TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON .)
     DOUBLEBNOP      reduce using rule 179 (typedef_declarator -> TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON .)
     OPERATOR        reduce using rule 179 (typedef_declarator -> TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON .)
@@ -19367,8 +19367,8 @@ state 364
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -19399,8 +19399,8 @@ state 364
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -19602,8 +19602,8 @@ state 373
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -19661,8 +19661,8 @@ state 373
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -19987,8 +19987,8 @@ state 381
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -20048,8 +20048,8 @@ state 381
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -20249,8 +20249,8 @@ state 385
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -20309,8 +20309,8 @@ state 385
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -20948,8 +20948,8 @@ state 406
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -21008,8 +21008,8 @@ state 406
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -21093,8 +21093,8 @@ state 407
     STRUCT          reduce using rule 257 (labeled_statement -> IDENTIFIER COLON statement .)
     THIS            reduce using rule 257 (labeled_statement -> IDENTIFIER COLON statement .)
     LPAREN          reduce using rule 257 (labeled_statement -> IDENTIFIER COLON statement .)
-    NUMBER          reduce using rule 257 (labeled_statement -> IDENTIFIER COLON statement .)
     STRING_L        reduce using rule 257 (labeled_statement -> IDENTIFIER COLON statement .)
+    NUMBER          reduce using rule 257 (labeled_statement -> IDENTIFIER COLON statement .)
     SCHAR           reduce using rule 257 (labeled_statement -> IDENTIFIER COLON statement .)
     DOUBLEBNOP      reduce using rule 257 (labeled_statement -> IDENTIFIER COLON statement .)
     OPERATOR        reduce using rule 257 (labeled_statement -> IDENTIFIER COLON statement .)
@@ -21221,8 +21221,8 @@ state 408
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -21303,8 +21303,8 @@ state 408
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -21409,8 +21409,8 @@ state 409
     STRUCT          reduce using rule 259 (labeled_statement -> DEFAULT COLON statement .)
     THIS            reduce using rule 259 (labeled_statement -> DEFAULT COLON statement .)
     LPAREN          reduce using rule 259 (labeled_statement -> DEFAULT COLON statement .)
-    NUMBER          reduce using rule 259 (labeled_statement -> DEFAULT COLON statement .)
     STRING_L        reduce using rule 259 (labeled_statement -> DEFAULT COLON statement .)
+    NUMBER          reduce using rule 259 (labeled_statement -> DEFAULT COLON statement .)
     SCHAR           reduce using rule 259 (labeled_statement -> DEFAULT COLON statement .)
     DOUBLEBNOP      reduce using rule 259 (labeled_statement -> DEFAULT COLON statement .)
     OPERATOR        reduce using rule 259 (labeled_statement -> DEFAULT COLON statement .)
@@ -21531,8 +21531,8 @@ state 415
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -21592,8 +21592,8 @@ state 415
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -21657,8 +21657,8 @@ state 416
     VOID            reduce using rule 266 (for_init_statement -> expression_statement .)
     STRING          reduce using rule 266 (for_init_statement -> expression_statement .)
     AUTO            reduce using rule 266 (for_init_statement -> expression_statement .)
-    NUMBER          reduce using rule 266 (for_init_statement -> expression_statement .)
     STRING_L        reduce using rule 266 (for_init_statement -> expression_statement .)
+    NUMBER          reduce using rule 266 (for_init_statement -> expression_statement .)
     SCHAR           reduce using rule 266 (for_init_statement -> expression_statement .)
     IDENTIFIER      reduce using rule 266 (for_init_statement -> expression_statement .)
     DOUBLEBNOP      reduce using rule 266 (for_init_statement -> expression_statement .)
@@ -21695,8 +21695,8 @@ state 417
     VOID            reduce using rule 267 (for_init_statement -> declaration_statement .)
     STRING          reduce using rule 267 (for_init_statement -> declaration_statement .)
     AUTO            reduce using rule 267 (for_init_statement -> declaration_statement .)
-    NUMBER          reduce using rule 267 (for_init_statement -> declaration_statement .)
     STRING_L        reduce using rule 267 (for_init_statement -> declaration_statement .)
+    NUMBER          reduce using rule 267 (for_init_statement -> declaration_statement .)
     SCHAR           reduce using rule 267 (for_init_statement -> declaration_statement .)
     IDENTIFIER      reduce using rule 267 (for_init_statement -> declaration_statement .)
     DOUBLEBNOP      reduce using rule 267 (for_init_statement -> declaration_statement .)
@@ -21755,8 +21755,8 @@ state 418
     STRUCT          reduce using rule 250 (jump_statement -> RETURN expression SEMICOLON .)
     THIS            reduce using rule 250 (jump_statement -> RETURN expression SEMICOLON .)
     LPAREN          reduce using rule 250 (jump_statement -> RETURN expression SEMICOLON .)
-    NUMBER          reduce using rule 250 (jump_statement -> RETURN expression SEMICOLON .)
     STRING_L        reduce using rule 250 (jump_statement -> RETURN expression SEMICOLON .)
+    NUMBER          reduce using rule 250 (jump_statement -> RETURN expression SEMICOLON .)
     SCHAR           reduce using rule 250 (jump_statement -> RETURN expression SEMICOLON .)
     DOUBLEBNOP      reduce using rule 250 (jump_statement -> RETURN expression SEMICOLON .)
     OPERATOR        reduce using rule 250 (jump_statement -> RETURN expression SEMICOLON .)
@@ -21815,8 +21815,8 @@ state 419
     STRUCT          reduce using rule 252 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
     THIS            reduce using rule 252 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
     LPAREN          reduce using rule 252 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
-    NUMBER          reduce using rule 252 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
     STRING_L        reduce using rule 252 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
+    NUMBER          reduce using rule 252 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
     SCHAR           reduce using rule 252 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
     DOUBLEBNOP      reduce using rule 252 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
     OPERATOR        reduce using rule 252 (jump_statement -> GOTO IDENTIFIER SEMICOLON .)
@@ -22034,8 +22034,8 @@ state 429
     (191) simple_type_name -> . VOID
     (192) simple_type_name -> . STRING
     (193) simple_type_name -> . AUTO
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -22066,8 +22066,8 @@ state 429
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -22509,8 +22509,8 @@ state 439
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -22569,8 +22569,8 @@ state 439
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -22682,8 +22682,8 @@ state 442
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -22742,8 +22742,8 @@ state 442
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -22844,8 +22844,8 @@ state 445
     STRUCT          reduce using rule 258 (labeled_statement -> CASE constant_expression COLON statement .)
     THIS            reduce using rule 258 (labeled_statement -> CASE constant_expression COLON statement .)
     LPAREN          reduce using rule 258 (labeled_statement -> CASE constant_expression COLON statement .)
-    NUMBER          reduce using rule 258 (labeled_statement -> CASE constant_expression COLON statement .)
     STRING_L        reduce using rule 258 (labeled_statement -> CASE constant_expression COLON statement .)
+    NUMBER          reduce using rule 258 (labeled_statement -> CASE constant_expression COLON statement .)
     SCHAR           reduce using rule 258 (labeled_statement -> CASE constant_expression COLON statement .)
     DOUBLEBNOP      reduce using rule 258 (labeled_statement -> CASE constant_expression COLON statement .)
     OPERATOR        reduce using rule 258 (labeled_statement -> CASE constant_expression COLON statement .)
@@ -22973,8 +22973,8 @@ state 446
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -23055,8 +23055,8 @@ state 446
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -23229,8 +23229,8 @@ state 447
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -23311,8 +23311,8 @@ state 447
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -23485,8 +23485,8 @@ state 448
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -23567,8 +23567,8 @@ state 448
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -23685,8 +23685,8 @@ state 449
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -23745,8 +23745,8 @@ state 449
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -23855,8 +23855,8 @@ state 451
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -23916,8 +23916,8 @@ state 451
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -24003,8 +24003,8 @@ state 452
     STRUCT          reduce using rule 256 (try_block -> TRY compound_statement CATCH compound_statement .)
     THIS            reduce using rule 256 (try_block -> TRY compound_statement CATCH compound_statement .)
     LPAREN          reduce using rule 256 (try_block -> TRY compound_statement CATCH compound_statement .)
-    NUMBER          reduce using rule 256 (try_block -> TRY compound_statement CATCH compound_statement .)
     STRING_L        reduce using rule 256 (try_block -> TRY compound_statement CATCH compound_statement .)
+    NUMBER          reduce using rule 256 (try_block -> TRY compound_statement CATCH compound_statement .)
     SCHAR           reduce using rule 256 (try_block -> TRY compound_statement CATCH compound_statement .)
     DOUBLEBNOP      reduce using rule 256 (try_block -> TRY compound_statement CATCH compound_statement .)
     OPERATOR        reduce using rule 256 (try_block -> TRY compound_statement CATCH compound_statement .)
@@ -24184,8 +24184,8 @@ state 457
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -24243,8 +24243,8 @@ state 457
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -24436,8 +24436,8 @@ state 462
     STRUCT          reduce using rule 253 (selection_statement -> IF LPAREN expression RPAREN statement .)
     THIS            reduce using rule 253 (selection_statement -> IF LPAREN expression RPAREN statement .)
     LPAREN          reduce using rule 253 (selection_statement -> IF LPAREN expression RPAREN statement .)
-    NUMBER          reduce using rule 253 (selection_statement -> IF LPAREN expression RPAREN statement .)
     STRING_L        reduce using rule 253 (selection_statement -> IF LPAREN expression RPAREN statement .)
+    NUMBER          reduce using rule 253 (selection_statement -> IF LPAREN expression RPAREN statement .)
     SCHAR           reduce using rule 253 (selection_statement -> IF LPAREN expression RPAREN statement .)
     DOUBLEBNOP      reduce using rule 253 (selection_statement -> IF LPAREN expression RPAREN statement .)
     OPERATOR        reduce using rule 253 (selection_statement -> IF LPAREN expression RPAREN statement .)
@@ -24498,8 +24498,8 @@ state 463
     STRUCT          reduce using rule 255 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
     THIS            reduce using rule 255 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
     LPAREN          reduce using rule 255 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
-    NUMBER          reduce using rule 255 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
     STRING_L        reduce using rule 255 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
+    NUMBER          reduce using rule 255 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
     SCHAR           reduce using rule 255 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
     DOUBLEBNOP      reduce using rule 255 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
     OPERATOR        reduce using rule 255 (selection_statement -> SWITCH LPAREN expression RPAREN statement .)
@@ -24558,8 +24558,8 @@ state 464
     STRUCT          reduce using rule 260 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
     THIS            reduce using rule 260 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
     LPAREN          reduce using rule 260 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
-    NUMBER          reduce using rule 260 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
     STRING_L        reduce using rule 260 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
+    NUMBER          reduce using rule 260 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
     SCHAR           reduce using rule 260 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
     DOUBLEBNOP      reduce using rule 260 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
     OPERATOR        reduce using rule 260 (iteration_statement -> WHILE LPAREN expression RPAREN statement .)
@@ -24640,8 +24640,8 @@ state 466
     (193) simple_type_name -> . AUTO
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -24701,8 +24701,8 @@ state 466
     VOID            shift and go to state 32
     STRING          shift and go to state 33
     AUTO            shift and go to state 34
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     IDENTIFIER      shift and go to state 49
     DOUBLEBNOP      shift and go to state 51
@@ -24865,8 +24865,8 @@ state 468
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -24947,8 +24947,8 @@ state 468
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -25166,8 +25166,8 @@ state 470
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -25248,8 +25248,8 @@ state 470
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -25438,8 +25438,8 @@ state 473
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -25520,8 +25520,8 @@ state 473
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -25694,8 +25694,8 @@ state 474
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -25776,8 +25776,8 @@ state 474
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -25882,8 +25882,8 @@ state 475
     STRUCT          reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
     THIS            reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
     LPAREN          reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
-    NUMBER          reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
     STRING_L        reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
+    NUMBER          reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
     SCHAR           reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
     DOUBLEBNOP      reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
     OPERATOR        reduce using rule 265 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement .)
@@ -25942,8 +25942,8 @@ state 476
     STRUCT          reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
     THIS            reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
     LPAREN          reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
-    NUMBER          reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
     STRING_L        reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
+    NUMBER          reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
     SCHAR           reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
     DOUBLEBNOP      reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
     OPERATOR        reduce using rule 254 (selection_statement -> IF LPAREN expression RPAREN statement ELSE statement .)
@@ -26002,8 +26002,8 @@ state 477
     STRUCT          reduce using rule 261 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
     THIS            reduce using rule 261 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
     LPAREN          reduce using rule 261 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
-    NUMBER          reduce using rule 261 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
     STRING_L        reduce using rule 261 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
+    NUMBER          reduce using rule 261 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
     SCHAR           reduce using rule 261 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
     DOUBLEBNOP      reduce using rule 261 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
     OPERATOR        reduce using rule 261 (iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON .)
@@ -26130,8 +26130,8 @@ state 478
     (105) primary_expression -> . name
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (106) literal -> . NUMBER
-    (107) literal -> . STRING_L
+    (106) literal -> . STRING_L
+    (107) literal -> . NUMBER
     (108) literal -> . SCHAR
     (132) name -> . IDENTIFIER
     (133) name -> . operator_function_name
@@ -26212,8 +26212,8 @@ state 478
     STRUCT          shift and go to state 37
     THIS            shift and go to state 177
     LPAREN          shift and go to state 146
-    NUMBER          shift and go to state 179
-    STRING_L        shift and go to state 180
+    STRING_L        shift and go to state 179
+    NUMBER          shift and go to state 180
     SCHAR           shift and go to state 181
     DOUBLEBNOP      shift and go to state 51
     OPERATOR        shift and go to state 54
@@ -26318,8 +26318,8 @@ state 479
     STRUCT          reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
     THIS            reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
     LPAREN          reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    NUMBER          reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
     STRING_L        reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
+    NUMBER          reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
     SCHAR           reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
     DOUBLEBNOP      reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
     OPERATOR        reduce using rule 264 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
@@ -26378,8 +26378,8 @@ state 480
     STRUCT          reduce using rule 263 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
     THIS            reduce using rule 263 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
     LPAREN          reduce using rule 263 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    NUMBER          reduce using rule 263 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
     STRING_L        reduce using rule 263 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
+    NUMBER          reduce using rule 263 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
     SCHAR           reduce using rule 263 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
     DOUBLEBNOP      reduce using rule 263 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
     OPERATOR        reduce using rule 263 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
@@ -26438,8 +26438,8 @@ state 481
     STRUCT          reduce using rule 262 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
     THIS            reduce using rule 262 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
     LPAREN          reduce using rule 262 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    NUMBER          reduce using rule 262 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
     STRING_L        reduce using rule 262 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
+    NUMBER          reduce using rule 262 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
     SCHAR           reduce using rule 262 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
     DOUBLEBNOP      reduce using rule 262 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
     OPERATOR        reduce using rule 262 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
