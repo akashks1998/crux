@@ -57,15 +57,22 @@ def getParentScope(scopeId):
         return scopeTableList[scopeId].parent 
     else:
         return False
-def pushVar(identifier, val,scope):
+def pushVar(identifier, val,scope = None):
     global scopeTableList
     global currentScopeTable
-    
-    if checkVar(identifier, scope )==False:
-        scopeTableList[scope].insert(identifier,val)
-        return True
+
+    if scope == None:    
+        if checkVar(identifier, currentScopeTable )==False:
+            scopeTableList[currentScopeTable].insert(identifier,val)
+            return True
+        else:
+            return False
     else:
-        return False
+        if checkVar(identifier, scope )==False:
+            scopeTableList[scope].insert(identifier,val)
+            return True
+        else:
+            return False
     
     
 
@@ -614,8 +621,9 @@ def p_argument_declaration_1(p):
     type_info = {"specifier" : p[1].data, "declarator" : p[2].data }
     type_string = p[1].data["type"] + "|" + p[2].data["type"]
     p[0].data = {"name" : p[2].data["name"], "type" : type_info  , "init" : None, "string": type_string  }
-    # if pushVar(p[2].data["name"],p[0].data)==False:
-    #     print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
+    if pushVar(p[2].data["name"],p[0].data)==False:
+        print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
+        exit()
 
 
 def p_argument_declaration_2(p): 
