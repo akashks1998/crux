@@ -24,7 +24,6 @@ def f(p):
             token = p[each + 1]
             p[each + 1] = OBJ()
             p[each + 1].data = token
-            p[each + 1].lineno = p.lineno(each+1)
             p[each+1].parse = (token, cnt)            
         
         open('dot.gz','a').write("    " + str(out[1])  +  " -> " + str(p[each+1].parse[1]))
@@ -41,21 +40,44 @@ class OBJ:
     data = None
     pass
 
-def addScope():
+def pushScope():
     global scopeTableList
     global currentScopeTable
-    
     newScope = SymbolTable(parent=currentScopeTable)
     scopeTableList.append(newScope)
     currentScopeTable = len(scopeTableList)
+
+def popScope():
+    global scopeTableList
+    global currentScopeTable
+    currentScopeTable = scopeTableList[currentScopeTable].parent
 
 def getParentScope(scopeId):
     global scopeTableList
     if(scopeId < len(scopeTableList)):
         return scopeTableList[scopeId].parent 
     else:
-        return -1 
-   
+        return -1
+
+def checkVar(identifier,scopeId):
+    global scopeTableList
+    global currentScopeTable
+    if scopeId == "global":
+        if scopeTableList[0].lookUp(identifier):
+            return scopeTableList[0].getDetail(identifier)
+        return False
+
+    if scopeId == "*":
+        if scopeTableList[currentScopeTable].lookUp(identifier):
+            return scopeTableList[currentScopeTable].getDetail(identifier)
+        return False
+    scope=currentScopeTable
+    while scope!=None:
+        if scopeTableList[scope].lookUp(identifier):
+            return scopeTableList[scope].getDetail(identifier)
+        scope=scopeTableList[scope].parent
+    return False
+ 
 
 start = 'program'
 
@@ -803,8 +825,7 @@ def p_function_definition(p):
 
     return_decl = p[2].data["type"]
     if re.fullmatch( r'^p*$', return_decl) == None:
-        print("Error: given return type not allowed at line " + str(p[3].lineno))
-        print(p.lineno(1))
+        print("Error: given return type not allowed at line " + str(p.lineno(1)))
         raise SyntaxError
     
     return_sig = p[1].data["type"] + "|" + p[2].data["type"]
