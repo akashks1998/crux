@@ -1,7 +1,7 @@
 from ply import lex
 import re
 import sys
-
+lineno = 0
 #Personal Groups
 
 keywords = {
@@ -204,6 +204,8 @@ t_DOUBLEBNOP    = r'\~\~'
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+    global lineno
+    lineno = lineno + 1
 
 # comment
 def t_COMMENT(t):

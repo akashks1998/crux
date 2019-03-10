@@ -6,6 +6,8 @@ from lexer import lexer
 from lexer import tokens as lexTokens
 from symbolTable import SymbolTable
 import re
+
+
 cnt=0
 tokens = lexTokens
 filename=""
@@ -22,6 +24,7 @@ def f(p):
             token = p[each + 1]
             p[each + 1] = OBJ()
             p[each + 1].data = token
+            p[each + 1].lineno = p.lineno(each+1)
             p[each+1].parse = (token, cnt)            
         
         open('dot.gz','a').write("    " + str(out[1])  +  " -> " + str(p[each+1].parse[1]))
@@ -471,8 +474,8 @@ def p_declarator3(p):
     p[0].parse=f(p)
     p[0].data = {
         "name" : p[1].data["name"], 
-        "type" : p[1].data['type'] + "A",
-        "meta" : p[2].data["meta"] + [p[3].data] 
+        "type" : p[1].data['type'] + "a",
+        "meta" : p[1].data["meta"] + [p[3].data] 
     }
         
         
@@ -483,7 +486,7 @@ def p_declarator4(p):
     p[0].data = {
         "name" : p[1].data["name"], 
         "type" : p[1].data['type'] + "a",
-        "meta" : p[2].data["meta"] + [""] 
+        "meta" : p[1].data["meta"] + [""] 
     }
         
 
@@ -492,7 +495,11 @@ def p_argument_declaration_list(p):
                                  | argument_declaration COMMA argument_declaration_list
     ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)   
+    p[0].parse=f(p)  
+    if(len(p) == 2 ):
+        p[0].data = [p[1].data]
+    else:
+        p[0].data = [ p[1].data ] + p[3].data 
 
 def p_argument_declaration_1(p): 
     '''argument_declaration : type_specifier_ declarator   ''' 
@@ -533,10 +540,7 @@ def p_name(p):
     p[0].parse=f(p)
     p[0].data = {"type" : "int"} # check from symbol table
 
-# def p_operator_function_name(p): 
-#     '''operator_function_name : OPERATOR operator_name''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
+
 
 def p_operator_name(p): 
     '''operator_name : NEW 
@@ -700,6 +704,7 @@ def p_base_list(p):
     '''base_list : base_specifier
                  | base_list COMMA base_specifier 
     ''' 
+
     p[0] = OBJ() 
     p[0].parse=f(p)
 
@@ -788,15 +793,35 @@ def p_member_declarator(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def p_function_definition0(p): 
-    '''function_definition : type_specifier_ declarator LPAREN argument_declaration_list  RPAREN fct_body ''' 
-    p[0] = OBJ()
+def p_function_definition(p): 
+    '''function_definition : type_specifier_ declarator LPAREN argument_declaration_list  RPAREN fct_body 
+                            | type_specifier_ declarator LPAREN  RPAREN fct_body 
+    ''' 
+    p[0] = OBJ() 
     p[0].parse=f(p)
+    function_name = p[2].data["name"]
 
-def p_function_definition1(p): 
-    '''function_definition : type_specifier_ declarator LPAREN  RPAREN fct_body ''' 
-    p[0] = OBJ()
-    p[0].parse=f(p)
+    return_decl = p[2].data["type"]
+    if re.fullmatch( r'^p*$', return_decl) == None:
+        print("Error: given return type not allowed at line " + str(p[3].lineno))
+        print(p.lineno(1))
+        raise SyntaxError
+    
+    return_sig = p[1].data["type"] + "|" + p[2].data["type"]
+
+    input_sig = p[4].data if len(p)== 7 else None
+
+    scope = 1
+
+    p[0].data = {
+        "name" : function_name,
+        "return_sig" : return_sig,
+        "return" : (p[1].data, p[2].data),
+        "input" : input_sig,
+        "body_scope" : scope
+    }    
+
+
 
 def p_function_decl0(p): 
     '''function_decl : type_specifier_ declarator LPAREN argument_declaration_list  RPAREN  ''' 
