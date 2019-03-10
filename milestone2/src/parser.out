@@ -263,9 +263,9 @@ Rule 253   labeled_statement -> CASE constant_expression COLON statement
 Rule 254   labeled_statement -> DEFAULT COLON statement
 Rule 255   iteration_statement -> WHILE LPAREN expression RPAREN statement
 Rule 256   iteration_statement -> DO statement WHILE LPAREN expression RPAREN SEMICOLON
-Rule 257   iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-Rule 258   iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-Rule 259   iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+Rule 257   iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+Rule 258   iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+Rule 259   iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
 Rule 260   iteration_statement -> FOR LPAREN for_init_statement SEMICOLON RPAREN statement
 Rule 261   for_init_statement -> expression_statement
 Rule 262   for_init_statement -> declaration_statement
@@ -422,7 +422,7 @@ class_define_specifier : 222 270
 class_head           : 205 206
 class_key            : 187 188 192 193 197 198 201 202
 complex_type_specifier : 175
-compound_statement   : 230 237 251 251
+compound_statement   : 230 237 251 251 257 258 259
 conditional_expression : 12 14 51
 constant_expression  : 111 112 117 253
 control_line         : 1 6
@@ -477,7 +477,7 @@ relational_expression : 25 26 27 29 30 31 32
 selection_statement  : 238
 shift_expression     : 28 29 30 31 32 34 35
 simple_type_name     : 174
-statement            : 233 234 248 249 249 250 252 253 254 255 256 257 258 259 260
+statement            : 233 234 248 249 249 250 252 253 254 255 256 260
 statement_list       : 231 234
 template_arg_list    : 165 167
 template_argument_list : 273 275
@@ -11834,9 +11834,9 @@ state 275
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -13989,9 +13989,9 @@ state 329
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -15102,9 +15102,9 @@ state 348
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -15334,9 +15334,9 @@ state 348
 
 state 349
 
-    (257) iteration_statement -> FOR . LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> FOR . LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> FOR . LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> FOR . LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> FOR . LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> FOR . LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> FOR . LPAREN for_init_statement SEMICOLON RPAREN statement
 
     LPAREN          shift and go to state 385
@@ -16489,9 +16489,9 @@ state 377
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -16749,9 +16749,9 @@ state 379
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -17438,9 +17438,9 @@ state 384
 
 state 385
 
-    (257) iteration_statement -> FOR LPAREN . for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> FOR LPAREN . for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> FOR LPAREN . for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> FOR LPAREN . for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> FOR LPAREN . for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> FOR LPAREN . for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> FOR LPAREN . for_init_statement SEMICOLON RPAREN statement
     (261) for_init_statement -> . expression_statement
     (262) for_init_statement -> . declaration_statement
@@ -18263,9 +18263,9 @@ state 401
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -18589,9 +18589,9 @@ state 406
 
 state 407
 
-    (257) iteration_statement -> FOR LPAREN for_init_statement . expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> FOR LPAREN for_init_statement . SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> FOR LPAREN for_init_statement . expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> FOR LPAREN for_init_statement . expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> FOR LPAREN for_init_statement . SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> FOR LPAREN for_init_statement . expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> FOR LPAREN for_init_statement . SEMICOLON RPAREN statement
     (46) expression -> . assignment_expression
     (47) expression -> . throw_expression
@@ -19029,9 +19029,9 @@ state 415
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -19282,9 +19282,9 @@ state 416
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -19535,9 +19535,9 @@ state 417
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -19897,8 +19897,8 @@ state 418
 
 state 419
 
-    (257) iteration_statement -> FOR LPAREN for_init_statement expression . SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> FOR LPAREN for_init_statement expression . SEMICOLON RPAREN statement
+    (257) iteration_statement -> FOR LPAREN for_init_statement expression . SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> FOR LPAREN for_init_statement expression . SEMICOLON RPAREN compound_statement
     (48) expression -> expression . COMMA assignment_expression
 
     SEMICOLON       shift and go to state 426
@@ -19907,7 +19907,7 @@ state 419
 
 state 420
 
-    (258) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON . expression RPAREN statement
+    (258) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON . expression RPAREN compound_statement
     (260) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON . RPAREN statement
     (46) expression -> . assignment_expression
     (47) expression -> . throw_expression
@@ -20288,8 +20288,8 @@ state 425
 
 state 426
 
-    (257) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON . expression RPAREN statement
-    (259) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON . RPAREN statement
+    (257) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON . expression RPAREN compound_statement
+    (259) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON . RPAREN compound_statement
     (46) expression -> . assignment_expression
     (47) expression -> . throw_expression
     (48) expression -> . expression COMMA assignment_expression
@@ -20420,7 +20420,7 @@ state 426
 
 state 427
 
-    (258) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression . RPAREN statement
+    (258) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression . RPAREN compound_statement
     (48) expression -> expression . COMMA assignment_expression
 
     RPAREN          shift and go to state 433
@@ -20450,9 +20450,9 @@ state 428
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -20703,9 +20703,9 @@ state 429
     (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
     (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
     (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
+    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement
+    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement
+    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement
     (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
     (243) jump_statement -> . BREAK SEMICOLON
     (244) jump_statement -> . CONTINUE SEMICOLON
@@ -20942,7 +20942,7 @@ state 430
 
 state 431
 
-    (257) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression . RPAREN statement
+    (257) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression . RPAREN compound_statement
     (48) expression -> expression . COMMA assignment_expression
 
     RPAREN          shift and go to state 437
@@ -20951,509 +20951,23 @@ state 431
 
 state 432
 
-    (259) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN . statement
-    (235) statement -> . labeled_statement
-    (236) statement -> . expression_statement
-    (237) statement -> . compound_statement
-    (238) statement -> . selection_statement
-    (239) statement -> . iteration_statement
-    (240) statement -> . jump_statement
-    (241) statement -> . declaration_statement
-    (242) statement -> . try_block
-    (252) labeled_statement -> . IDENTIFIER COLON statement
-    (253) labeled_statement -> . CASE constant_expression COLON statement
-    (254) labeled_statement -> . DEFAULT COLON statement
-    (263) expression_statement -> . expression SEMICOLON
-    (264) expression_statement -> . SEMICOLON
+    (259) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN . compound_statement
     (231) compound_statement -> . LCPAREN statement_list RCPAREN
     (232) compound_statement -> . LCPAREN RCPAREN
-    (248) selection_statement -> . IF LPAREN expression RPAREN statement
-    (249) selection_statement -> . IF LPAREN expression RPAREN statement ELSE statement
-    (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
-    (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
-    (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
-    (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
-    (243) jump_statement -> . BREAK SEMICOLON
-    (244) jump_statement -> . CONTINUE SEMICOLON
-    (245) jump_statement -> . RETURN expression SEMICOLON
-    (246) jump_statement -> . RETURN SEMICOLON
-    (247) jump_statement -> . GOTO IDENTIFIER SEMICOLON
-    (265) declaration_statement -> . declaration
-    (251) try_block -> . TRY compound_statement CATCH compound_statement
-    (46) expression -> . assignment_expression
-    (47) expression -> . throw_expression
-    (48) expression -> . expression COMMA assignment_expression
-    (266) declaration -> . type_specifier_ declarator_list SEMICOLON
-    (267) declaration -> . asm_declaration
-    (268) declaration -> . function_definition
-    (269) declaration -> . function_decl
-    (270) declaration -> . class_define_specifier SEMICOLON
-    (271) declaration -> . template_declaration
-    (272) declaration -> . typedef_declarator
-    (51) assignment_expression -> . conditional_expression
-    (52) assignment_expression -> . unary_expression assignment_operator assignment_expression
-    (49) throw_expression -> . THROW expression
-    (50) throw_expression -> . THROW
-    (170) type_specifier_ -> . CONST type_specifier
-    (171) type_specifier_ -> . type_specifier
-    (288) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
-    (227) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
-    (228) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (205) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (206) class_define_specifier -> . class_head LCPAREN RCPAREN
-    (273) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
-    (172) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
-    (173) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
-    (13) conditional_expression -> . logical_OR_expression
-    (14) conditional_expression -> . logical_OR_expression QUESMARK expression COLON conditional_expression
-    (63) unary_expression -> . postfix_expression
-    (64) unary_expression -> . DPLUSOP unary_expression
-    (65) unary_expression -> . DMINUSOP unary_expression
-    (66) unary_expression -> . unary1_operator cast_expression
-    (67) unary_expression -> . unary2_operator cast_expression
-    (68) unary_expression -> . SIZEOF unary_expression
-    (69) unary_expression -> . SIZEOF LPAREN type_name RPAREN
-    (70) unary_expression -> . allocation_expression
-    (71) unary_expression -> . deallocation_expression
-    (174) type_specifier -> . simple_type_name
-    (175) type_specifier -> . complex_type_specifier
-    (192) class_head -> . class_key IDENTIFIER base_spec
-    (193) class_head -> . class_key IDENTIFIER
-    (15) logical_OR_expression -> . logical_AND_expression
-    (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
-    (91) postfix_expression -> . primary_expression
-    (92) postfix_expression -> . postfix_expression LSPAREN expression RSPAREN
-    (93) postfix_expression -> . postfix_expression LPAREN expression_list RPAREN
-    (94) postfix_expression -> . postfix_expression template_class_name LPAREN expression_list RPAREN
-    (95) postfix_expression -> . postfix_expression LPAREN RPAREN
-    (96) postfix_expression -> . postfix_expression DOT name
-    (97) postfix_expression -> . postfix_expression ARROW name
-    (98) postfix_expression -> . postfix_expression DPLUSOP
-    (99) postfix_expression -> . postfix_expression DMINUSOP
-    (85) unary1_operator -> . PLUSOP
-    (86) unary1_operator -> . MINUSOP
-    (87) unary1_operator -> . NOTSYM
-    (88) unary1_operator -> . BNOP
-    (89) unary2_operator -> . MULTOP
-    (90) unary2_operator -> . BANDOP
-    (73) allocation_expression -> . NEW new_type_name new_initializer
-    (74) allocation_expression -> . NEW new_type_name
-    (75) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
-    (76) allocation_expression -> . NEW LPAREN type_name RPAREN
-    (72) deallocation_expression -> . DELETE cast_expression
-    (176) simple_type_name -> . CHAR
-    (177) simple_type_name -> . SHORT
-    (178) simple_type_name -> . INT
-    (179) simple_type_name -> . LONG
-    (180) simple_type_name -> . SIGNED
-    (181) simple_type_name -> . UNSIGNED
-    (182) simple_type_name -> . FLOAT
-    (183) simple_type_name -> . DOUBLE
-    (184) simple_type_name -> . VOID
-    (185) simple_type_name -> . STRING
-    (186) simple_type_name -> . AUTO
-    (187) complex_type_specifier -> . class_key IDENTIFIER
-    (188) complex_type_specifier -> . class_key IDENTIFIER template_class_name
-    (189) complex_type_specifier -> . TYPE IDENTIFIER
-    (190) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (203) class_key -> . CLASS
-    (204) class_key -> . STRUCT
-    (17) logical_AND_expression -> . inclusive_OR_expression
-    (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
-    (100) primary_expression -> . name
-    (101) primary_expression -> . literal
-    (102) primary_expression -> . THIS
-    (103) primary_expression -> . LPAREN expression RPAREN
-    (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (127) name -> . IDENTIFIER
-    (128) name -> . DOUBLEBNOP IDENTIFIER
-    (104) literal -> . STRING_L
-    (105) literal -> . NUMBER
-    (106) literal -> . SCHAR
-    (21) exclusive_OR_expression -> . AND_expression
-    (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
-    (23) AND_expression -> . equality_expression
-    (24) AND_expression -> . AND_expression BANDOP equality_expression
-    (25) equality_expression -> . relational_expression
-    (26) equality_expression -> . equality_expression EQCOMP relational_expression
-    (27) equality_expression -> . equality_expression NEQCOMP relational_expression
-    (28) relational_expression -> . shift_expression
-    (29) relational_expression -> . relational_expression LTCOMP shift_expression
-    (30) relational_expression -> . relational_expression GTCOMP shift_expression
-    (31) relational_expression -> . relational_expression LTECOMP shift_expression
-    (32) relational_expression -> . relational_expression GTECOMP shift_expression
-    (33) shift_expression -> . additive_expression
-    (34) shift_expression -> . shift_expression LSHIFT additive_expression
-    (35) shift_expression -> . shift_expression RSHIFT additive_expression
-    (36) additive_expression -> . multiplicative_expression
-    (37) additive_expression -> . additive_expression PLUSOP multiplicative_expression
-    (38) additive_expression -> . additive_expression MINUSOP multiplicative_expression
-    (39) multiplicative_expression -> . pm_expression
-    (40) multiplicative_expression -> . multiplicative_expression MULTOP pm_expression
-    (41) multiplicative_expression -> . multiplicative_expression DIVOP pm_expression
-    (42) multiplicative_expression -> . multiplicative_expression MODOP pm_expression
-    (43) pm_expression -> . cast_expression
-    (44) pm_expression -> . pm_expression DOTSTAR cast_expression
-    (45) pm_expression -> . pm_expression ARROWSTAR cast_expression
-    (107) cast_expression -> . unary_expression
-    (108) cast_expression -> . LPAREN type_name RPAREN cast_expression
 
-    IDENTIFIER      shift and go to state 340
-    CASE            shift and go to state 341
-    DEFAULT         shift and go to state 342
-    SEMICOLON       shift and go to state 344
     LCPAREN         shift and go to state 275
-    IF              shift and go to state 345
-    SWITCH          shift and go to state 346
-    WHILE           shift and go to state 347
-    DO              shift and go to state 348
-    FOR             shift and go to state 349
-    BREAK           shift and go to state 350
-    CONTINUE        shift and go to state 351
-    RETURN          shift and go to state 352
-    GOTO            shift and go to state 353
-    TRY             shift and go to state 355
-    THROW           shift and go to state 216
-    CONST           shift and go to state 16
-    ASM             shift and go to state 18
-    TEMPLATE        shift and go to state 20
-    TYPEDEF         shift and go to state 21
-    DPLUSOP         shift and go to state 130
-    DMINUSOP        shift and go to state 131
-    SIZEOF          shift and go to state 134
-    PLUSOP          shift and go to state 123
-    MINUSOP         shift and go to state 124
-    NOTSYM          shift and go to state 139
-    BNOP            shift and go to state 140
-    MULTOP          shift and go to state 52
-    BANDOP          shift and go to state 53
-    NEW             shift and go to state 141
-    DELETE          shift and go to state 142
-    CHAR            shift and go to state 25
-    SHORT           shift and go to state 26
-    INT             shift and go to state 27
-    LONG            shift and go to state 28
-    SIGNED          shift and go to state 29
-    UNSIGNED        shift and go to state 30
-    FLOAT           shift and go to state 31
-    DOUBLE          shift and go to state 32
-    VOID            shift and go to state 33
-    STRING          shift and go to state 34
-    AUTO            shift and go to state 35
-    TYPE            shift and go to state 36
-    CLASS           shift and go to state 37
-    STRUCT          shift and go to state 38
-    THIS            shift and go to state 144
-    LPAREN          shift and go to state 148
-    DOUBLEBNOP      shift and go to state 51
-    STRING_L        shift and go to state 145
-    NUMBER          shift and go to state 146
-    SCHAR           shift and go to state 147
 
-    expression                     shift and go to state 343
-    statement                      shift and go to state 438
-    labeled_statement              shift and go to state 332
-    expression_statement           shift and go to state 333
-    compound_statement             shift and go to state 334
-    selection_statement            shift and go to state 335
-    iteration_statement            shift and go to state 336
-    jump_statement                 shift and go to state 337
-    declaration_statement          shift and go to state 338
-    try_block                      shift and go to state 339
-    declaration                    shift and go to state 354
-    assignment_expression          shift and go to state 214
-    throw_expression               shift and go to state 215
-    type_specifier_                shift and go to state 9
-    asm_declaration                shift and go to state 10
-    function_definition            shift and go to state 11
-    function_decl                  shift and go to state 12
-    class_define_specifier         shift and go to state 13
-    template_declaration           shift and go to state 14
-    typedef_declarator             shift and go to state 15
-    conditional_expression         shift and go to state 151
-    unary_expression               shift and go to state 152
-    type_specifier                 shift and go to state 17
-    class_head                     shift and go to state 19
-    logical_OR_expression          shift and go to state 113
-    postfix_expression             shift and go to state 129
-    unary1_operator                shift and go to state 132
-    cast_expression                shift and go to state 126
-    unary2_operator                shift and go to state 133
-    allocation_expression          shift and go to state 135
-    deallocation_expression        shift and go to state 136
-    simple_type_name               shift and go to state 22
-    complex_type_specifier         shift and go to state 23
-    class_key                      shift and go to state 24
-    logical_AND_expression         shift and go to state 114
-    primary_expression             shift and go to state 137
-    name                           shift and go to state 138
-    inclusive_OR_expression        shift and go to state 115
-    literal                        shift and go to state 143
-    exclusive_OR_expression        shift and go to state 116
-    AND_expression                 shift and go to state 117
-    equality_expression            shift and go to state 118
-    relational_expression          shift and go to state 119
-    shift_expression               shift and go to state 120
-    additive_expression            shift and go to state 121
-    multiplicative_expression      shift and go to state 122
-    pm_expression                  shift and go to state 125
+    compound_statement             shift and go to state 438
 
 state 433
 
-    (258) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN . statement
-    (235) statement -> . labeled_statement
-    (236) statement -> . expression_statement
-    (237) statement -> . compound_statement
-    (238) statement -> . selection_statement
-    (239) statement -> . iteration_statement
-    (240) statement -> . jump_statement
-    (241) statement -> . declaration_statement
-    (242) statement -> . try_block
-    (252) labeled_statement -> . IDENTIFIER COLON statement
-    (253) labeled_statement -> . CASE constant_expression COLON statement
-    (254) labeled_statement -> . DEFAULT COLON statement
-    (263) expression_statement -> . expression SEMICOLON
-    (264) expression_statement -> . SEMICOLON
+    (258) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN . compound_statement
     (231) compound_statement -> . LCPAREN statement_list RCPAREN
     (232) compound_statement -> . LCPAREN RCPAREN
-    (248) selection_statement -> . IF LPAREN expression RPAREN statement
-    (249) selection_statement -> . IF LPAREN expression RPAREN statement ELSE statement
-    (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
-    (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
-    (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
-    (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
-    (243) jump_statement -> . BREAK SEMICOLON
-    (244) jump_statement -> . CONTINUE SEMICOLON
-    (245) jump_statement -> . RETURN expression SEMICOLON
-    (246) jump_statement -> . RETURN SEMICOLON
-    (247) jump_statement -> . GOTO IDENTIFIER SEMICOLON
-    (265) declaration_statement -> . declaration
-    (251) try_block -> . TRY compound_statement CATCH compound_statement
-    (46) expression -> . assignment_expression
-    (47) expression -> . throw_expression
-    (48) expression -> . expression COMMA assignment_expression
-    (266) declaration -> . type_specifier_ declarator_list SEMICOLON
-    (267) declaration -> . asm_declaration
-    (268) declaration -> . function_definition
-    (269) declaration -> . function_decl
-    (270) declaration -> . class_define_specifier SEMICOLON
-    (271) declaration -> . template_declaration
-    (272) declaration -> . typedef_declarator
-    (51) assignment_expression -> . conditional_expression
-    (52) assignment_expression -> . unary_expression assignment_operator assignment_expression
-    (49) throw_expression -> . THROW expression
-    (50) throw_expression -> . THROW
-    (170) type_specifier_ -> . CONST type_specifier
-    (171) type_specifier_ -> . type_specifier
-    (288) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
-    (227) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
-    (228) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (205) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (206) class_define_specifier -> . class_head LCPAREN RCPAREN
-    (273) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
-    (172) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
-    (173) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
-    (13) conditional_expression -> . logical_OR_expression
-    (14) conditional_expression -> . logical_OR_expression QUESMARK expression COLON conditional_expression
-    (63) unary_expression -> . postfix_expression
-    (64) unary_expression -> . DPLUSOP unary_expression
-    (65) unary_expression -> . DMINUSOP unary_expression
-    (66) unary_expression -> . unary1_operator cast_expression
-    (67) unary_expression -> . unary2_operator cast_expression
-    (68) unary_expression -> . SIZEOF unary_expression
-    (69) unary_expression -> . SIZEOF LPAREN type_name RPAREN
-    (70) unary_expression -> . allocation_expression
-    (71) unary_expression -> . deallocation_expression
-    (174) type_specifier -> . simple_type_name
-    (175) type_specifier -> . complex_type_specifier
-    (192) class_head -> . class_key IDENTIFIER base_spec
-    (193) class_head -> . class_key IDENTIFIER
-    (15) logical_OR_expression -> . logical_AND_expression
-    (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
-    (91) postfix_expression -> . primary_expression
-    (92) postfix_expression -> . postfix_expression LSPAREN expression RSPAREN
-    (93) postfix_expression -> . postfix_expression LPAREN expression_list RPAREN
-    (94) postfix_expression -> . postfix_expression template_class_name LPAREN expression_list RPAREN
-    (95) postfix_expression -> . postfix_expression LPAREN RPAREN
-    (96) postfix_expression -> . postfix_expression DOT name
-    (97) postfix_expression -> . postfix_expression ARROW name
-    (98) postfix_expression -> . postfix_expression DPLUSOP
-    (99) postfix_expression -> . postfix_expression DMINUSOP
-    (85) unary1_operator -> . PLUSOP
-    (86) unary1_operator -> . MINUSOP
-    (87) unary1_operator -> . NOTSYM
-    (88) unary1_operator -> . BNOP
-    (89) unary2_operator -> . MULTOP
-    (90) unary2_operator -> . BANDOP
-    (73) allocation_expression -> . NEW new_type_name new_initializer
-    (74) allocation_expression -> . NEW new_type_name
-    (75) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
-    (76) allocation_expression -> . NEW LPAREN type_name RPAREN
-    (72) deallocation_expression -> . DELETE cast_expression
-    (176) simple_type_name -> . CHAR
-    (177) simple_type_name -> . SHORT
-    (178) simple_type_name -> . INT
-    (179) simple_type_name -> . LONG
-    (180) simple_type_name -> . SIGNED
-    (181) simple_type_name -> . UNSIGNED
-    (182) simple_type_name -> . FLOAT
-    (183) simple_type_name -> . DOUBLE
-    (184) simple_type_name -> . VOID
-    (185) simple_type_name -> . STRING
-    (186) simple_type_name -> . AUTO
-    (187) complex_type_specifier -> . class_key IDENTIFIER
-    (188) complex_type_specifier -> . class_key IDENTIFIER template_class_name
-    (189) complex_type_specifier -> . TYPE IDENTIFIER
-    (190) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (203) class_key -> . CLASS
-    (204) class_key -> . STRUCT
-    (17) logical_AND_expression -> . inclusive_OR_expression
-    (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
-    (100) primary_expression -> . name
-    (101) primary_expression -> . literal
-    (102) primary_expression -> . THIS
-    (103) primary_expression -> . LPAREN expression RPAREN
-    (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (127) name -> . IDENTIFIER
-    (128) name -> . DOUBLEBNOP IDENTIFIER
-    (104) literal -> . STRING_L
-    (105) literal -> . NUMBER
-    (106) literal -> . SCHAR
-    (21) exclusive_OR_expression -> . AND_expression
-    (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
-    (23) AND_expression -> . equality_expression
-    (24) AND_expression -> . AND_expression BANDOP equality_expression
-    (25) equality_expression -> . relational_expression
-    (26) equality_expression -> . equality_expression EQCOMP relational_expression
-    (27) equality_expression -> . equality_expression NEQCOMP relational_expression
-    (28) relational_expression -> . shift_expression
-    (29) relational_expression -> . relational_expression LTCOMP shift_expression
-    (30) relational_expression -> . relational_expression GTCOMP shift_expression
-    (31) relational_expression -> . relational_expression LTECOMP shift_expression
-    (32) relational_expression -> . relational_expression GTECOMP shift_expression
-    (33) shift_expression -> . additive_expression
-    (34) shift_expression -> . shift_expression LSHIFT additive_expression
-    (35) shift_expression -> . shift_expression RSHIFT additive_expression
-    (36) additive_expression -> . multiplicative_expression
-    (37) additive_expression -> . additive_expression PLUSOP multiplicative_expression
-    (38) additive_expression -> . additive_expression MINUSOP multiplicative_expression
-    (39) multiplicative_expression -> . pm_expression
-    (40) multiplicative_expression -> . multiplicative_expression MULTOP pm_expression
-    (41) multiplicative_expression -> . multiplicative_expression DIVOP pm_expression
-    (42) multiplicative_expression -> . multiplicative_expression MODOP pm_expression
-    (43) pm_expression -> . cast_expression
-    (44) pm_expression -> . pm_expression DOTSTAR cast_expression
-    (45) pm_expression -> . pm_expression ARROWSTAR cast_expression
-    (107) cast_expression -> . unary_expression
-    (108) cast_expression -> . LPAREN type_name RPAREN cast_expression
 
-    IDENTIFIER      shift and go to state 340
-    CASE            shift and go to state 341
-    DEFAULT         shift and go to state 342
-    SEMICOLON       shift and go to state 344
     LCPAREN         shift and go to state 275
-    IF              shift and go to state 345
-    SWITCH          shift and go to state 346
-    WHILE           shift and go to state 347
-    DO              shift and go to state 348
-    FOR             shift and go to state 349
-    BREAK           shift and go to state 350
-    CONTINUE        shift and go to state 351
-    RETURN          shift and go to state 352
-    GOTO            shift and go to state 353
-    TRY             shift and go to state 355
-    THROW           shift and go to state 216
-    CONST           shift and go to state 16
-    ASM             shift and go to state 18
-    TEMPLATE        shift and go to state 20
-    TYPEDEF         shift and go to state 21
-    DPLUSOP         shift and go to state 130
-    DMINUSOP        shift and go to state 131
-    SIZEOF          shift and go to state 134
-    PLUSOP          shift and go to state 123
-    MINUSOP         shift and go to state 124
-    NOTSYM          shift and go to state 139
-    BNOP            shift and go to state 140
-    MULTOP          shift and go to state 52
-    BANDOP          shift and go to state 53
-    NEW             shift and go to state 141
-    DELETE          shift and go to state 142
-    CHAR            shift and go to state 25
-    SHORT           shift and go to state 26
-    INT             shift and go to state 27
-    LONG            shift and go to state 28
-    SIGNED          shift and go to state 29
-    UNSIGNED        shift and go to state 30
-    FLOAT           shift and go to state 31
-    DOUBLE          shift and go to state 32
-    VOID            shift and go to state 33
-    STRING          shift and go to state 34
-    AUTO            shift and go to state 35
-    TYPE            shift and go to state 36
-    CLASS           shift and go to state 37
-    STRUCT          shift and go to state 38
-    THIS            shift and go to state 144
-    LPAREN          shift and go to state 148
-    DOUBLEBNOP      shift and go to state 51
-    STRING_L        shift and go to state 145
-    NUMBER          shift and go to state 146
-    SCHAR           shift and go to state 147
 
-    expression                     shift and go to state 343
-    statement                      shift and go to state 439
-    labeled_statement              shift and go to state 332
-    expression_statement           shift and go to state 333
-    compound_statement             shift and go to state 334
-    selection_statement            shift and go to state 335
-    iteration_statement            shift and go to state 336
-    jump_statement                 shift and go to state 337
-    declaration_statement          shift and go to state 338
-    try_block                      shift and go to state 339
-    declaration                    shift and go to state 354
-    assignment_expression          shift and go to state 214
-    throw_expression               shift and go to state 215
-    type_specifier_                shift and go to state 9
-    asm_declaration                shift and go to state 10
-    function_definition            shift and go to state 11
-    function_decl                  shift and go to state 12
-    class_define_specifier         shift and go to state 13
-    template_declaration           shift and go to state 14
-    typedef_declarator             shift and go to state 15
-    conditional_expression         shift and go to state 151
-    unary_expression               shift and go to state 152
-    type_specifier                 shift and go to state 17
-    class_head                     shift and go to state 19
-    logical_OR_expression          shift and go to state 113
-    postfix_expression             shift and go to state 129
-    unary1_operator                shift and go to state 132
-    cast_expression                shift and go to state 126
-    unary2_operator                shift and go to state 133
-    allocation_expression          shift and go to state 135
-    deallocation_expression        shift and go to state 136
-    simple_type_name               shift and go to state 22
-    complex_type_specifier         shift and go to state 23
-    class_key                      shift and go to state 24
-    logical_AND_expression         shift and go to state 114
-    primary_expression             shift and go to state 137
-    name                           shift and go to state 138
-    inclusive_OR_expression        shift and go to state 115
-    literal                        shift and go to state 143
-    exclusive_OR_expression        shift and go to state 116
-    AND_expression                 shift and go to state 117
-    equality_expression            shift and go to state 118
-    relational_expression          shift and go to state 119
-    shift_expression               shift and go to state 120
-    additive_expression            shift and go to state 121
-    multiplicative_expression      shift and go to state 122
-    pm_expression                  shift and go to state 125
+    compound_statement             shift and go to state 439
 
 state 434
 
@@ -21634,432 +21148,189 @@ state 436
 
 state 437
 
-    (257) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN . statement
-    (235) statement -> . labeled_statement
-    (236) statement -> . expression_statement
-    (237) statement -> . compound_statement
-    (238) statement -> . selection_statement
-    (239) statement -> . iteration_statement
-    (240) statement -> . jump_statement
-    (241) statement -> . declaration_statement
-    (242) statement -> . try_block
-    (252) labeled_statement -> . IDENTIFIER COLON statement
-    (253) labeled_statement -> . CASE constant_expression COLON statement
-    (254) labeled_statement -> . DEFAULT COLON statement
-    (263) expression_statement -> . expression SEMICOLON
-    (264) expression_statement -> . SEMICOLON
+    (257) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN . compound_statement
     (231) compound_statement -> . LCPAREN statement_list RCPAREN
     (232) compound_statement -> . LCPAREN RCPAREN
-    (248) selection_statement -> . IF LPAREN expression RPAREN statement
-    (249) selection_statement -> . IF LPAREN expression RPAREN statement ELSE statement
-    (250) selection_statement -> . SWITCH LPAREN expression RPAREN statement
-    (255) iteration_statement -> . WHILE LPAREN expression RPAREN statement
-    (256) iteration_statement -> . DO statement WHILE LPAREN expression RPAREN SEMICOLON
-    (257) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement
-    (258) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement
-    (259) iteration_statement -> . FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement
-    (260) iteration_statement -> . FOR LPAREN for_init_statement SEMICOLON RPAREN statement
-    (243) jump_statement -> . BREAK SEMICOLON
-    (244) jump_statement -> . CONTINUE SEMICOLON
-    (245) jump_statement -> . RETURN expression SEMICOLON
-    (246) jump_statement -> . RETURN SEMICOLON
-    (247) jump_statement -> . GOTO IDENTIFIER SEMICOLON
-    (265) declaration_statement -> . declaration
-    (251) try_block -> . TRY compound_statement CATCH compound_statement
-    (46) expression -> . assignment_expression
-    (47) expression -> . throw_expression
-    (48) expression -> . expression COMMA assignment_expression
-    (266) declaration -> . type_specifier_ declarator_list SEMICOLON
-    (267) declaration -> . asm_declaration
-    (268) declaration -> . function_definition
-    (269) declaration -> . function_decl
-    (270) declaration -> . class_define_specifier SEMICOLON
-    (271) declaration -> . template_declaration
-    (272) declaration -> . typedef_declarator
-    (51) assignment_expression -> . conditional_expression
-    (52) assignment_expression -> . unary_expression assignment_operator assignment_expression
-    (49) throw_expression -> . THROW expression
-    (50) throw_expression -> . THROW
-    (170) type_specifier_ -> . CONST type_specifier
-    (171) type_specifier_ -> . type_specifier
-    (288) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
-    (227) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
-    (228) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (205) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (206) class_define_specifier -> . class_head LCPAREN RCPAREN
-    (273) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
-    (172) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
-    (173) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
-    (13) conditional_expression -> . logical_OR_expression
-    (14) conditional_expression -> . logical_OR_expression QUESMARK expression COLON conditional_expression
-    (63) unary_expression -> . postfix_expression
-    (64) unary_expression -> . DPLUSOP unary_expression
-    (65) unary_expression -> . DMINUSOP unary_expression
-    (66) unary_expression -> . unary1_operator cast_expression
-    (67) unary_expression -> . unary2_operator cast_expression
-    (68) unary_expression -> . SIZEOF unary_expression
-    (69) unary_expression -> . SIZEOF LPAREN type_name RPAREN
-    (70) unary_expression -> . allocation_expression
-    (71) unary_expression -> . deallocation_expression
-    (174) type_specifier -> . simple_type_name
-    (175) type_specifier -> . complex_type_specifier
-    (192) class_head -> . class_key IDENTIFIER base_spec
-    (193) class_head -> . class_key IDENTIFIER
-    (15) logical_OR_expression -> . logical_AND_expression
-    (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
-    (91) postfix_expression -> . primary_expression
-    (92) postfix_expression -> . postfix_expression LSPAREN expression RSPAREN
-    (93) postfix_expression -> . postfix_expression LPAREN expression_list RPAREN
-    (94) postfix_expression -> . postfix_expression template_class_name LPAREN expression_list RPAREN
-    (95) postfix_expression -> . postfix_expression LPAREN RPAREN
-    (96) postfix_expression -> . postfix_expression DOT name
-    (97) postfix_expression -> . postfix_expression ARROW name
-    (98) postfix_expression -> . postfix_expression DPLUSOP
-    (99) postfix_expression -> . postfix_expression DMINUSOP
-    (85) unary1_operator -> . PLUSOP
-    (86) unary1_operator -> . MINUSOP
-    (87) unary1_operator -> . NOTSYM
-    (88) unary1_operator -> . BNOP
-    (89) unary2_operator -> . MULTOP
-    (90) unary2_operator -> . BANDOP
-    (73) allocation_expression -> . NEW new_type_name new_initializer
-    (74) allocation_expression -> . NEW new_type_name
-    (75) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
-    (76) allocation_expression -> . NEW LPAREN type_name RPAREN
-    (72) deallocation_expression -> . DELETE cast_expression
-    (176) simple_type_name -> . CHAR
-    (177) simple_type_name -> . SHORT
-    (178) simple_type_name -> . INT
-    (179) simple_type_name -> . LONG
-    (180) simple_type_name -> . SIGNED
-    (181) simple_type_name -> . UNSIGNED
-    (182) simple_type_name -> . FLOAT
-    (183) simple_type_name -> . DOUBLE
-    (184) simple_type_name -> . VOID
-    (185) simple_type_name -> . STRING
-    (186) simple_type_name -> . AUTO
-    (187) complex_type_specifier -> . class_key IDENTIFIER
-    (188) complex_type_specifier -> . class_key IDENTIFIER template_class_name
-    (189) complex_type_specifier -> . TYPE IDENTIFIER
-    (190) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (203) class_key -> . CLASS
-    (204) class_key -> . STRUCT
-    (17) logical_AND_expression -> . inclusive_OR_expression
-    (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
-    (100) primary_expression -> . name
-    (101) primary_expression -> . literal
-    (102) primary_expression -> . THIS
-    (103) primary_expression -> . LPAREN expression RPAREN
-    (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
-    (127) name -> . IDENTIFIER
-    (128) name -> . DOUBLEBNOP IDENTIFIER
-    (104) literal -> . STRING_L
-    (105) literal -> . NUMBER
-    (106) literal -> . SCHAR
-    (21) exclusive_OR_expression -> . AND_expression
-    (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
-    (23) AND_expression -> . equality_expression
-    (24) AND_expression -> . AND_expression BANDOP equality_expression
-    (25) equality_expression -> . relational_expression
-    (26) equality_expression -> . equality_expression EQCOMP relational_expression
-    (27) equality_expression -> . equality_expression NEQCOMP relational_expression
-    (28) relational_expression -> . shift_expression
-    (29) relational_expression -> . relational_expression LTCOMP shift_expression
-    (30) relational_expression -> . relational_expression GTCOMP shift_expression
-    (31) relational_expression -> . relational_expression LTECOMP shift_expression
-    (32) relational_expression -> . relational_expression GTECOMP shift_expression
-    (33) shift_expression -> . additive_expression
-    (34) shift_expression -> . shift_expression LSHIFT additive_expression
-    (35) shift_expression -> . shift_expression RSHIFT additive_expression
-    (36) additive_expression -> . multiplicative_expression
-    (37) additive_expression -> . additive_expression PLUSOP multiplicative_expression
-    (38) additive_expression -> . additive_expression MINUSOP multiplicative_expression
-    (39) multiplicative_expression -> . pm_expression
-    (40) multiplicative_expression -> . multiplicative_expression MULTOP pm_expression
-    (41) multiplicative_expression -> . multiplicative_expression DIVOP pm_expression
-    (42) multiplicative_expression -> . multiplicative_expression MODOP pm_expression
-    (43) pm_expression -> . cast_expression
-    (44) pm_expression -> . pm_expression DOTSTAR cast_expression
-    (45) pm_expression -> . pm_expression ARROWSTAR cast_expression
-    (107) cast_expression -> . unary_expression
-    (108) cast_expression -> . LPAREN type_name RPAREN cast_expression
 
-    IDENTIFIER      shift and go to state 340
-    CASE            shift and go to state 341
-    DEFAULT         shift and go to state 342
-    SEMICOLON       shift and go to state 344
     LCPAREN         shift and go to state 275
-    IF              shift and go to state 345
-    SWITCH          shift and go to state 346
-    WHILE           shift and go to state 347
-    DO              shift and go to state 348
-    FOR             shift and go to state 349
-    BREAK           shift and go to state 350
-    CONTINUE        shift and go to state 351
-    RETURN          shift and go to state 352
-    GOTO            shift and go to state 353
-    TRY             shift and go to state 355
-    THROW           shift and go to state 216
-    CONST           shift and go to state 16
-    ASM             shift and go to state 18
-    TEMPLATE        shift and go to state 20
-    TYPEDEF         shift and go to state 21
-    DPLUSOP         shift and go to state 130
-    DMINUSOP        shift and go to state 131
-    SIZEOF          shift and go to state 134
-    PLUSOP          shift and go to state 123
-    MINUSOP         shift and go to state 124
-    NOTSYM          shift and go to state 139
-    BNOP            shift and go to state 140
-    MULTOP          shift and go to state 52
-    BANDOP          shift and go to state 53
-    NEW             shift and go to state 141
-    DELETE          shift and go to state 142
-    CHAR            shift and go to state 25
-    SHORT           shift and go to state 26
-    INT             shift and go to state 27
-    LONG            shift and go to state 28
-    SIGNED          shift and go to state 29
-    UNSIGNED        shift and go to state 30
-    FLOAT           shift and go to state 31
-    DOUBLE          shift and go to state 32
-    VOID            shift and go to state 33
-    STRING          shift and go to state 34
-    AUTO            shift and go to state 35
-    TYPE            shift and go to state 36
-    CLASS           shift and go to state 37
-    STRUCT          shift and go to state 38
-    THIS            shift and go to state 144
-    LPAREN          shift and go to state 148
-    DOUBLEBNOP      shift and go to state 51
-    STRING_L        shift and go to state 145
-    NUMBER          shift and go to state 146
-    SCHAR           shift and go to state 147
 
-    expression                     shift and go to state 343
-    statement                      shift and go to state 440
-    labeled_statement              shift and go to state 332
-    expression_statement           shift and go to state 333
-    compound_statement             shift and go to state 334
-    selection_statement            shift and go to state 335
-    iteration_statement            shift and go to state 336
-    jump_statement                 shift and go to state 337
-    declaration_statement          shift and go to state 338
-    try_block                      shift and go to state 339
-    declaration                    shift and go to state 354
-    assignment_expression          shift and go to state 214
-    throw_expression               shift and go to state 215
-    type_specifier_                shift and go to state 9
-    asm_declaration                shift and go to state 10
-    function_definition            shift and go to state 11
-    function_decl                  shift and go to state 12
-    class_define_specifier         shift and go to state 13
-    template_declaration           shift and go to state 14
-    typedef_declarator             shift and go to state 15
-    conditional_expression         shift and go to state 151
-    unary_expression               shift and go to state 152
-    type_specifier                 shift and go to state 17
-    class_head                     shift and go to state 19
-    logical_OR_expression          shift and go to state 113
-    postfix_expression             shift and go to state 129
-    unary1_operator                shift and go to state 132
-    cast_expression                shift and go to state 126
-    unary2_operator                shift and go to state 133
-    allocation_expression          shift and go to state 135
-    deallocation_expression        shift and go to state 136
-    simple_type_name               shift and go to state 22
-    complex_type_specifier         shift and go to state 23
-    class_key                      shift and go to state 24
-    logical_AND_expression         shift and go to state 114
-    primary_expression             shift and go to state 137
-    name                           shift and go to state 138
-    inclusive_OR_expression        shift and go to state 115
-    literal                        shift and go to state 143
-    exclusive_OR_expression        shift and go to state 116
-    AND_expression                 shift and go to state 117
-    equality_expression            shift and go to state 118
-    relational_expression          shift and go to state 119
-    shift_expression               shift and go to state 120
-    additive_expression            shift and go to state 121
-    multiplicative_expression      shift and go to state 122
-    pm_expression                  shift and go to state 125
+    compound_statement             shift and go to state 440
 
 state 438
 
-    (259) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .
+    (259) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .
 
-    RCPAREN         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    IDENTIFIER      reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    CASE            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    DEFAULT         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    SEMICOLON       reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    LCPAREN         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    IF              reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    SWITCH          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    WHILE           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    DO              reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    FOR             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    BREAK           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    CONTINUE        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    RETURN          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    GOTO            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    TRY             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    THROW           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    CONST           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    ASM             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    TEMPLATE        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    TYPEDEF         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    DPLUSOP         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    DMINUSOP        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    SIZEOF          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    PLUSOP          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    MINUSOP         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    NOTSYM          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    BNOP            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    MULTOP          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    BANDOP          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    NEW             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    DELETE          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    CHAR            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    SHORT           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    INT             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    LONG            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    SIGNED          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    UNSIGNED        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    FLOAT           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    DOUBLE          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    VOID            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    STRING          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    AUTO            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    TYPE            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    CLASS           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    STRUCT          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    THIS            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    LPAREN          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    DOUBLEBNOP      reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    STRING_L        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    NUMBER          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    SCHAR           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
-    ELSE            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN statement .)
+    RCPAREN         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    IDENTIFIER      reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    CASE            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    DEFAULT         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    SEMICOLON       reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    LCPAREN         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    IF              reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    SWITCH          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    WHILE           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    DO              reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    FOR             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    BREAK           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    CONTINUE        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    RETURN          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    GOTO            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    TRY             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    THROW           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    CONST           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    ASM             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    TEMPLATE        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    TYPEDEF         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    DPLUSOP         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    DMINUSOP        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    SIZEOF          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    PLUSOP          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    MINUSOP         reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    NOTSYM          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    BNOP            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    MULTOP          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    BANDOP          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    NEW             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    DELETE          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    CHAR            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    SHORT           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    INT             reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    LONG            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    SIGNED          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    UNSIGNED        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    FLOAT           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    DOUBLE          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    VOID            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    STRING          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    AUTO            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    TYPE            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    CLASS           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    STRUCT          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    THIS            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    LPAREN          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    DOUBLEBNOP      reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    STRING_L        reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    NUMBER          reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    SCHAR           reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
+    ELSE            reduce using rule 259 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON RPAREN compound_statement .)
 
 
 state 439
 
-    (258) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .
+    (258) iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .
 
-    RCPAREN         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    IDENTIFIER      reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    CASE            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    DEFAULT         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    SEMICOLON       reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    LCPAREN         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    IF              reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    SWITCH          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    WHILE           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    DO              reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    FOR             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    BREAK           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    CONTINUE        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    RETURN          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    GOTO            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    TRY             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    THROW           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    CONST           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    ASM             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    TEMPLATE        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    TYPEDEF         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    DPLUSOP         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    DMINUSOP        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    SIZEOF          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    PLUSOP          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    MINUSOP         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    NOTSYM          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    BNOP            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    MULTOP          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    BANDOP          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    NEW             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    DELETE          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    CHAR            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    SHORT           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    INT             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    LONG            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    SIGNED          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    UNSIGNED        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    FLOAT           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    DOUBLE          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    VOID            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    STRING          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    AUTO            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    TYPE            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    CLASS           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    STRUCT          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    THIS            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    LPAREN          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    DOUBLEBNOP      reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    STRING_L        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    NUMBER          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    SCHAR           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
-    ELSE            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN statement .)
+    RCPAREN         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    IDENTIFIER      reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    CASE            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    DEFAULT         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    SEMICOLON       reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    LCPAREN         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    IF              reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    SWITCH          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    WHILE           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    DO              reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    FOR             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    BREAK           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    CONTINUE        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    RETURN          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    GOTO            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    TRY             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    THROW           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    CONST           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    ASM             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    TEMPLATE        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    TYPEDEF         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    DPLUSOP         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    DMINUSOP        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    SIZEOF          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    PLUSOP          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    MINUSOP         reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    NOTSYM          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    BNOP            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    MULTOP          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    BANDOP          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    NEW             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    DELETE          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    CHAR            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    SHORT           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    INT             reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    LONG            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    SIGNED          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    UNSIGNED        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    FLOAT           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    DOUBLE          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    VOID            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    STRING          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    AUTO            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    TYPE            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    CLASS           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    STRUCT          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    THIS            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    LPAREN          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    DOUBLEBNOP      reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    STRING_L        reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    NUMBER          reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    SCHAR           reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
+    ELSE            reduce using rule 258 (iteration_statement -> FOR LPAREN for_init_statement SEMICOLON expression RPAREN compound_statement .)
 
 
 state 440
 
-    (257) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .
+    (257) iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .
 
-    RCPAREN         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    IDENTIFIER      reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    CASE            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    DEFAULT         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    SEMICOLON       reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    LCPAREN         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    IF              reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    SWITCH          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    WHILE           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    DO              reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    FOR             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    BREAK           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    CONTINUE        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    RETURN          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    GOTO            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    TRY             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    THROW           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    CONST           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    ASM             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    TEMPLATE        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    TYPEDEF         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    DPLUSOP         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    DMINUSOP        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    SIZEOF          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    PLUSOP          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    MINUSOP         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    NOTSYM          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    BNOP            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    MULTOP          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    BANDOP          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    NEW             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    DELETE          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    CHAR            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    SHORT           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    INT             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    LONG            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    SIGNED          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    UNSIGNED        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    FLOAT           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    DOUBLE          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    VOID            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    STRING          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    AUTO            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    TYPE            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    CLASS           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    STRUCT          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    THIS            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    LPAREN          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    DOUBLEBNOP      reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    STRING_L        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    NUMBER          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    SCHAR           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
-    ELSE            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN statement .)
+    RCPAREN         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    IDENTIFIER      reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    CASE            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    DEFAULT         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    SEMICOLON       reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    LCPAREN         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    IF              reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    SWITCH          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    WHILE           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    DO              reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    FOR             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    BREAK           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    CONTINUE        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    RETURN          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    GOTO            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    TRY             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    THROW           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    CONST           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    ASM             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    TEMPLATE        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    TYPEDEF         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    DPLUSOP         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    DMINUSOP        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    SIZEOF          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    PLUSOP          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    MINUSOP         reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    NOTSYM          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    BNOP            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    MULTOP          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    BANDOP          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    NEW             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    DELETE          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    CHAR            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    SHORT           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    INT             reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    LONG            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    SIGNED          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    UNSIGNED        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    FLOAT           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    DOUBLE          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    VOID            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    STRING          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    AUTO            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    TYPE            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    CLASS           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    STRUCT          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    THIS            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    LPAREN          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    DOUBLEBNOP      reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    STRING_L        reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    NUMBER          reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    SCHAR           reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
+    ELSE            reduce using rule 257 (iteration_statement -> FOR LPAREN for_init_statement expression SEMICOLON expression RPAREN compound_statement .)
 
 WARNING: 
 WARNING: Conflicts:

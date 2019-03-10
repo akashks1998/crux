@@ -1,3 +1,4 @@
+import pprint
 from ply import yacc
 import os
 import sys
@@ -91,9 +92,7 @@ def checkVar(identifier,scopeId):
         return False
 
     if scopeId == "*":
-        print("bi")
         if scopeTableList[currentScopeTable].lookUp(identifier):
-            print("hi")
             return scopeTableList[currentScopeTable].getDetail(identifier)
         return False
     if scopeId=="**":
@@ -401,14 +400,14 @@ def p_primary_expression0(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    p[0].data = {"type" : p[1].data["type"]}
+    p[0].data = {"type" : p[1].data}
 
 def p_primary_expression1(p): 
     '''primary_expression : literal           
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    p[0].data = {"type" : p[1].data["type"]}
+    p[0].data = {"type" : p[1].data}
 
     
 def p_primary_expression2(p): 
@@ -571,11 +570,8 @@ def p_arg_list(p):
     }
     parent=getParentScope(currentScopeTable)
     func_sig = function_name +"|" + p[1].data[0]
-    print("sd", func_sig)
     if checkVar(function_name,parent) is False:
         # this function is not seen 
-        print("sd")
-        print(parent)
         pushVar(func_sig, p[0].data, scope = parent)
         pushVar(function_name, [func_sig], scope = parent )
     else:
@@ -1000,9 +996,9 @@ def p_labeled_statement(p):
 def p_iteration_statement(p): 
     '''iteration_statement : WHILE LPAREN expression  RPAREN  statement 
                            | DO statement WHILE LPAREN expression  RPAREN  SEMICOLON 
-                           | FOR LPAREN for_init_statement expression SEMICOLON expression  RPAREN  statement 
-                           | FOR LPAREN for_init_statement SEMICOLON expression  RPAREN  statement 
-                           | FOR LPAREN for_init_statement expression SEMICOLON  RPAREN  statement 
+                           | FOR LPAREN for_init_statement expression SEMICOLON expression  RPAREN  compound_statement 
+                           | FOR LPAREN for_init_statement SEMICOLON expression  RPAREN  compound_statement 
+                           | FOR LPAREN for_init_statement expression SEMICOLON  RPAREN  compound_statement 
                            | FOR LPAREN for_init_statement SEMICOLON  RPAREN  statement 
     ''' 
     p[0] = OBJ() 
@@ -1047,7 +1043,6 @@ def p_declaration2(p):
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
-    print("Hi from function decl")
 
 def p_declaration3(p):
     '''declaration : class_define_specifier SEMICOLON ''' 
@@ -1130,6 +1125,28 @@ def p_pop_scope(p):
     '''pop_scope : '''
     popScope()
 
+def scope_table_graph(S):
+    pp = pprint.PrettyPrinter(indent=4)
+    open('scope.gz','w').write("digraph ethane{ rankdir=LR {graph [ordering=\"out\"];node [fontsize=20 width=0.25 shape=box ]; ")
+    cnt=0
+    done = {}
+    for s in S:
+        if s.parent != None:
+            label_child = pp.pformat(s.table)
+            label_parent = pp.pformat(S[s.parent])
+            if done.get(cnt, False)==False :
+                done[cnt]=True
+                sr = "\n" + str(cnt) + "[label=\"" + label_child + "\"]" + "\n"
+                open('scope.gz', 'a').write(sr)
+            if done.get(s.parent, False)==False :
+                done[s.parent]=True
+                sr = "\n" + str(s.parent) + "[label=\"" + label_parent + "\"]" + "\n"
+                open('scope.gz', 'a').write(sr)
+            sr = "\n" + str(s.parent) + " -> " + str(cnt) + "\n"
+            open('scope.gz', 'a').write(sr)
+        cnt=cnt+1
+    open('scope.gz','a').write("\n}\n}\n")
+
 if __name__ == "__main__": 
     parser = yacc.yacc()
     parser.error = 0 
@@ -1145,3 +1162,4 @@ if __name__ == "__main__":
     file_o = open(arglist[2],'r').read()
     p = parser.parse(file_o,lexer = lexer,debug=debug,tracking=True)  
     open('dot.gz','a').write("\n}\n")
+    scope_table_graph(scopeTableList)

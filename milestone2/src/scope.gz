@@ -1,0 +1,79 @@
+digraph ethane{ rankdir=LR {graph [ordering="out"];node [fontsize=20 width=0.25 shape=box ]; 
+1[label="{   'm': {   'init': None,
+             'name': 'm',
+             'string': 'int|pp',
+             'type': {   'declarator': {   'meta': ['*', '*'],
+                                           'name': 'm',
+                                           'type': 'pp'},
+                         'specifier': {   'class': 'simple',
+                                          'const': 0,
+                                          'template': 0,
+                                          'template_list': None,
+                                          'type': 'int'}}},
+    'sub': ['sub|int|'],
+    'sub|int|': {   'body_scope': 2,
+                    'declaration': True,
+                    'input': (   'int|',
+                                 [   {   'init': None,
+                                         'name': 'j',
+                                         'string': 'int|',
+                                         'type': {   'declarator': {   'meta': [   ],
+                                                                       'name': 'j',
+                                                                       'type': ''},
+                                                     'specifier': {   'class': 'simple',
+                                                                      'const': 0,
+                                                                      'template': 0,
+                                                                      'template_list': None,
+                                                                      'type': 'int'}}}]),
+                    'name': 'sub',
+                    'return_sig': 'int|',
+                    'string': 'int|'}}"]
+
+0[label="<symbolTable.SymbolTable object at 0x7f07f6cc4588>"]
+
+0 -> 1
+
+2[label="{   'j': {   'init': None,
+             'name': 'j',
+             'string': 'int|',
+             'type': {   'declarator': {'meta': [], 'name': 'j', 'type': ''},
+                         'specifier': {   'class': 'simple',
+                                          'const': 0,
+                                          'template': 0,
+                                          'template_list': None,
+                                          'type': 'int'}}},
+    'subsub': ['subsub|int|'],
+    'subsub|int|': {   'body_scope': 3,
+                       'declaration': True,
+                       'input': (   'int|',
+                                    [   {   'init': None,
+                                            'name': 'k',
+                                            'string': 'int|',
+                                            'type': {   'declarator': {   'meta': [   ],
+                                                                          'name': 'k',
+                                                                          'type': ''},
+                                                        'specifier': {   'class': 'simple',
+                                                                         'const': 0,
+                                                                         'template': 0,
+                                                                         'template_list': None,
+                                                                         'type': 'int'}}}]),
+                       'name': 'subsub',
+                       'return_sig': 'int|',
+                       'string': 'int|'}}"]
+
+1 -> 2
+
+3[label="{   'k': {   'init': None,
+             'name': 'k',
+             'string': 'int|',
+             'type': {   'declarator': {'meta': [], 'name': 'k', 'type': ''},
+                         'specifier': {   'class': 'simple',
+                                          'const': 0,
+                                          'template': 0,
+                                          'template_list': None,
+                                          'type': 'int'}}}}"]
+
+2 -> 3
+
+}
+}
