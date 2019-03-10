@@ -58,6 +58,10 @@ def getParentScope(scopeId):
         return scopeTableList[scopeId].parent 
     else:
         return -1
+def addVar(identifier, val):
+    global scopeTableList
+    global currentScopeTable
+    return scopeTableList[currentScopeTable].insert(identifier,val)
 
 def checkVar(identifier,scopeId):
     global scopeTableList
@@ -74,7 +78,7 @@ def checkVar(identifier,scopeId):
     scope=currentScopeTable
     while scope!=None:
         if scopeTableList[scope].lookUp(identifier):
-            return scopeTableList[scope].getDetail(identifier)
+            return {"var":scopeTableList[scope].getDetail(identifier), "scope":scope}
         scope=scopeTableList[scope].parent
     return False
  
@@ -511,6 +515,14 @@ def p_declarator4(p):
         "meta" : p[1].data["meta"] + [""] 
     }
         
+def p_arg_list(p):
+    ''' arg_list : argument_declaration_list 
+                  |
+    '''
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+    p[0].data = p[1].data
+
 
 def p_argument_declaration_list(p): 
     '''argument_declaration_list : argument_declaration 
@@ -816,8 +828,7 @@ def p_member_declarator(p):
     p[0].parse=f(p)
 
 def p_function_definition(p): 
-    '''function_definition : type_specifier_ declarator LPAREN argument_declaration_list  RPAREN fct_body 
-                            | type_specifier_ declarator LPAREN  RPAREN fct_body 
+    '''function_definition : type_specifier_ declarator push_scope LPAREN arg_list  RPAREN fct_body pop_scope 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -844,15 +855,12 @@ def p_function_definition(p):
 
 
 
-def p_function_decl0(p): 
-    '''function_decl : type_specifier_ declarator LPAREN argument_declaration_list  RPAREN  ''' 
+def p_function_decl(p): 
+    '''function_decl : type_specifier_ declarator LPAREN arg_list  RPAREN  ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
 
-def p_function_decl1(p): 
-    '''function_decl : type_specifier_ declarator LPAREN  RPAREN ''' 
-    p[0] = OBJ()
-    p[0].parse=f(p)
+
         
 
 
@@ -1043,6 +1051,14 @@ def p_expression_list(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
+
+def p_push_scope(p):
+    '''push_scope : '''
+    pushScope()
+
+def p_pop_scope(p):
+    '''pop_scope : '''
+    popScope()
 
 if __name__ == "__main__": 
     parser = yacc.yacc()

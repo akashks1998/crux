@@ -9,9 +9,9 @@ class SymbolTable:
     def insert(self, name, value):
         if (not self.lookUp(name)):
             (self.table)[name] = value
-            return 1
+            return True
         else:
-            return 0
+            return False
  
     def getDetail(self, name):
         if(self.lookUp(name)):
