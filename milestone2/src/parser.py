@@ -7,7 +7,6 @@ from lexer import tokens as lexTokens
 from symbolTable import SymbolTable
 import re
 
-
 cnt=0
 tokens = lexTokens
 filename=""
@@ -45,7 +44,7 @@ def pushScope():
     global currentScopeTable
     newScope = SymbolTable(parent=currentScopeTable)
     scopeTableList.append(newScope)
-    currentScopeTable = len(scopeTableList)
+    currentScopeTable = len(scopeTableList) - 1
 
 def popScope():
     global scopeTableList
@@ -57,11 +56,24 @@ def getParentScope(scopeId):
     if(scopeId < len(scopeTableList)):
         return scopeTableList[scopeId].parent 
     else:
-        return -1
-def addVar(identifier, val):
+        return False
+def pushVar(identifier, val,scope):
     global scopeTableList
     global currentScopeTable
-    return scopeTableList[currentScopeTable].insert(identifier,val)
+    
+    if checkVar(identifier, scope )==False:
+        scopeTableList[scope].insert(identifier,val)
+        return True
+    else:
+        return False
+    
+    
+
+def updateVar(identifier, val,scope):
+    global scopeTableList
+    global currentScopeTable
+    scopeTableList[scope].update(identifier, val)
+    
 
 def checkVar(identifier,scopeId):
     global scopeTableList
@@ -72,16 +84,23 @@ def checkVar(identifier,scopeId):
         return False
 
     if scopeId == "*":
+        print("bi")
         if scopeTableList[currentScopeTable].lookUp(identifier):
+            print("hi")
             return scopeTableList[currentScopeTable].getDetail(identifier)
         return False
-    scope=currentScopeTable
-    while scope!=None:
-        if scopeTableList[scope].lookUp(identifier):
-            return {"var":scopeTableList[scope].getDetail(identifier), "scope":scope}
-        scope=scopeTableList[scope].parent
-    return False
- 
+    if scopeId=="**":
+        scope=currentScopeTable
+
+        while scope!=None:
+            if scopeTableList[scope].lookUp(identifier):
+                return {"var":scopeTableList[scope].getDetail(identifier), "scope":scope}
+            scope=scopeTableList[scope].parent
+        return False
+    else:
+        if scopeTableList[scopeId].lookUp(identifier):
+            return scopeTableList[scopeId].getDetail(identifier)
+        return False
 
 start = 'program'
 
@@ -141,7 +160,8 @@ def p_error(p):
 
 def p_empty(p): 
     'empty :' 
-    pass 
+    p[0]=OBJ()
+    p[0].data=None
 
 def p_constant_expression(p): 
     '''constant_expression : conditional_expression''' 
@@ -468,7 +488,6 @@ def p_abstract_declarator(p):
     err=ok(p[0].data["abstract_class"])
     if err == None:
         print("Syntax Error",p.lineno(1))
-        print(dir(p))
         raise SyntaxError
 
         
@@ -517,11 +536,64 @@ def p_declarator4(p):
         
 def p_arg_list(p):
     ''' arg_list : argument_declaration_list 
-                  |
+                  | empty
     '''
+
+    global currentScopeTable
     p[0] = OBJ() 
-    p[0].parse=f(p) 
-    p[0].data = p[1].data
+    p[0].parse=f(p)
+
+    function_name = p[-2].data["name"]
+
+    return_decl = p[-2].data["type"]
+    if re.fullmatch( r'^p*$', return_decl) == None:
+        print("Error: given return type not allowed at line " + str(p.lineno(1)))
+        raise SyntaxError
+    
+    return_sig = p[-3].data["type"] + "|" + return_decl
+    
+
+    input_sig = p[1].data
+    p[0].data = {
+        "name" : function_name,
+        "return_sig" : return_sig,
+        "input" : input_sig,
+        "body_scope" : currentScopeTable,
+        "declaration": True,
+        "string" :  p[1].data[0]
+    }
+    parent=getParentScope(currentScopeTable)
+    func_sig = function_name +"|" + p[1].data[0]
+    print("sd", func_sig)
+    if checkVar(function_name,parent) is False:
+        # this function is not seen 
+        print("sd")
+        print(parent)
+        pushVar(func_sig, p[0].data, scope = parent)
+        pushVar(function_name, [func_sig], scope = parent )
+    else:
+        # this name is seen but may be overloaded
+        if func_sig in checkVar(function_name, parent) :
+            func_detail = checkVar(func_sig, parent)
+            if return_sig != func_detail["return_sig"]:
+                print("Error: " + str(p.lineno(1)) + ": Return type of function "+function_name+" is not correct")
+                raise SyntaxError
+
+            if func_detail["declaration"] == False:
+                # function of same sig has been defined
+                print("Error: " + str(p.lineno(1)) + ": Redeclaration of function "+ function_name)
+                raise SyntaxError
+            else:
+                # function definition to be entered
+                updateVar(func_sig, p[0].data, scope = parent)
+
+        else:
+            pushVar(func_sig, p[0].data, scope = parent)
+            updateVar(function_name, checkVar(function_name, parent) + [func_sig], scope = parent )
+
+
+
+    
 
 
 def p_argument_declaration_list(p): 
@@ -531,16 +603,19 @@ def p_argument_declaration_list(p):
     p[0] = OBJ() 
     p[0].parse=f(p)  
     if(len(p) == 2 ):
-        p[0].data = [p[1].data]
+        p[0].data = ( p[1].data["string"], [p[1].data])
     else:
-        p[0].data = [ p[1].data ] + p[3].data 
+        p[0].data = ( p[1].data["string"] + p[3].data[0] , [ p[1].data ] + p[3].data[1] )
 
 def p_argument_declaration_1(p): 
     '''argument_declaration : type_specifier_ declarator   ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     type_info = {"specifier" : p[1].data, "declarator" : p[2].data }
-    p[0].data = {"name" : p[2].data["name"], "type" : type_info  , "init" : None }
+    type_string = p[1].data["type"] + "|" + p[2].data["type"]
+    p[0].data = {"name" : p[2].data["name"], "type" : type_info  , "init" : None, "string": type_string  }
+    # if pushVar(p[2].data["name"],p[0].data)==False:
+    #     print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
 
 
 def p_argument_declaration_2(p): 
@@ -548,7 +623,8 @@ def p_argument_declaration_2(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     type_info = {"specifier" : p[1].data, "declarator" : p[2].data }
-    p[0].data = {"name" : p[2].data["name"], "type" : type_info  , "init" : p[4] }
+    type_string = p[1].data["type"] + "|" + p[2].data["type"]
+    p[0].data = {"name" : p[2].data["name"], "type" : type_info  , "init" : p[4], "string":type_string }
 
 
 # these two can be removed, will be handled later if time permits
@@ -572,7 +648,7 @@ def p_name(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"type" : "int"} # check from symbol table
+    p[0].data = p[1].data if len(p) == 2 else "~~" + p[2].data
 
 
 
@@ -828,40 +904,26 @@ def p_member_declarator(p):
     p[0].parse=f(p)
 
 def p_function_definition(p): 
-    '''function_definition : type_specifier_ declarator push_scope LPAREN arg_list  RPAREN fct_body pop_scope 
+    '''function_definition : type_specifier_ declarator func_push_scope arg_list  RPAREN fct_body pop_scope 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
     function_name = p[2].data["name"]
-
-    return_decl = p[2].data["type"]
-    if re.fullmatch( r'^p*$', return_decl) == None:
-        print("Error: given return type not allowed at line " + str(p.lineno(1)))
-        raise SyntaxError
+    func_sig = function_name +"|" + p[4].data["string"]
     
-    return_sig = p[1].data["type"] + "|" + p[2].data["type"]
-
-    input_sig = p[4].data if len(p)== 7 else None
-
-    scope = 1
-
-    p[0].data = {
-        "name" : function_name,
-        "return_sig" : return_sig,
-        "return" : (p[1].data, p[2].data),
-        "input" : input_sig,
-        "body_scope" : scope
-    }    
-
+    func_detail = checkVar(func_sig, "*")
+    # updateVar(func_sig, func_detail)    
 
 
 def p_function_decl(p): 
-    '''function_decl : type_specifier_ declarator LPAREN arg_list  RPAREN  ''' 
+    '''function_decl : type_specifier_ declarator func_push_scope arg_list  RPAREN SEMICOLON pop_scope ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
 
-
-        
+def p_func_push_scope(p):
+    ''' func_push_scope : LPAREN '''
+    pushScope()
 
 
 def p_fct_body(p): 

@@ -12,6 +12,11 @@ class SymbolTable:
             return True
         else:
             return False
+    
+    def update(self, name, value):
+        (self.table)[name] = value
+        return True
+
  
     def getDetail(self, name):
         if(self.lookUp(name)):

@@ -2,7 +2,7 @@
 
 
 
-int main(int *&*[6]){
-
-    f(3,4,5);
+int **main(int ** m);
+int **main(int ** m){
+    int a;
 }
