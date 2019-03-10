@@ -163,7 +163,8 @@ def p_declaration_seq(p):
     p[0].parse=f(p)
 
 def p_error(p):
-    print("Line " + str(p.lineno) + ":" + filename.split('/')[-1]) 
+    print("Error: Line " + str(p.lineno) + ":" + filename.split('/')[-1])
+    exit()
 
 def p_empty(p): 
     'empty :' 
@@ -401,14 +402,14 @@ def p_primary_expression0(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    p[0].data = {"type" : p[1].data["type"]}
+    # p[0].data = {"type" : p[1].data["type"]}
 
 def p_primary_expression1(p): 
     '''primary_expression : literal           
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    p[0].data = {"type" : p[1].data["type"]}
+    # p[0].data = {"type" : p[1].data["type"]}
 
     
 def p_primary_expression2(p): 
@@ -417,7 +418,7 @@ def p_primary_expression2(p):
     p[0] = OBJ() 
     p[0].parse=f(p) 
     
-    p[0].data = {"type" : "class"} # use symbol table to determine
+    # p[0].data = {"type" : "class"} # use symbol table to determine
 
 
 def p_primary_expression3(p): 
@@ -425,7 +426,7 @@ def p_primary_expression3(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    p[0].data = {"type" : p[2].data["type"]}
+    # p[0].data = {"type" : p[2].data["type"]}
 
 
    
@@ -495,7 +496,7 @@ def p_abstract_declarator(p):
     err=ok(p[0].data["abstract_class"])
     if err == None:
         print("Syntax Error",p.lineno(1))
-        raise SyntaxError
+        exit()
 
         
 def p_declarator0(p): 
@@ -555,7 +556,7 @@ def p_arg_list(p):
     return_decl = p[-2].data["type"]
     if re.fullmatch( r'^p*$', return_decl) == None:
         print("Error: given return type not allowed at line " + str(p.lineno(1)))
-        raise SyntaxError
+        exit()
     
     return_sig = p[-3].data["type"] + "|" + return_decl
     
@@ -584,12 +585,12 @@ def p_arg_list(p):
             func_detail = checkVar(func_sig, parent)
             if return_sig != func_detail["return_sig"]:
                 print("Error: " + str(p.lineno(1)) + ": Return type of function "+function_name+" is not correct")
-                raise SyntaxError
+                exit()
 
             if func_detail["declaration"] == False:
                 # function of same sig has been defined
                 print("Error: " + str(p.lineno(1)) + ": Redeclaration of function "+ function_name)
-                raise SyntaxError
+                exit()
             else:
                 # function definition to be entered
                 updateVar(func_sig, p[0].data, scope = parent)
@@ -954,9 +955,8 @@ def p_statement_list(p):
     p[0].parse=f(p)
 
 def p_statement(p): 
-    '''statement : labeled_statement 
-                 | expression_statement 
-                 | compound_statement 
+    '''statement : expression_statement 
+                 | push_scope compound_statement pop_scope
                  | selection_statement 
                  | iteration_statement 
                  | jump_statement 
@@ -975,24 +975,33 @@ def p_jump_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+  
 
 def p_selection_statement(p): 
-    '''selection_statement : IF LPAREN expression  RPAREN  statement 
-                           | IF LPAREN expression  RPAREN  statement ELSE statement 
-                           | SWITCH LPAREN expression  RPAREN  statement 
+    '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope
+                           | IF LPAREN expression  RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope 
+                           | SWITCH LPAREN expression  RPAREN push_scope  LCPAREN labeled_statement_list RCPAREN pop_scope
     ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)   
+    p[0].parse=f(p)  
+  
 
 def p_try_block(p): 
-    '''try_block : TRY compound_statement CATCH compound_statement''' 
+    '''try_block : TRY push_scope compound_statement pop_scope CATCH  push_scope compound_statement pop_scope''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+
+def p_labeled_statement_list(p): 
+    '''labeled_statement_list : labeled_statement
+                              | labeled_statement_list labeled_statement 
+    ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
 
 def p_labeled_statement(p): 
-    '''labeled_statement : IDENTIFIER COLON statement 
-                         | CASE constant_expression COLON statement 
-                         | DEFAULT COLON statement 
+    '''labeled_statement : CASE constant_expression COLON statement_list
+                         | DEFAULT COLON statement_list
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
