@@ -1044,6 +1044,15 @@ def p_declaration0(p):
                 #    | type_specifier_ SEMICOLON
     p[0] = OBJ()
     p[0].parse=f(p)
+    decl_list = p[2].data
+    for each in decl_list:
+        type_info = {"specifier" : p[1].data, "declarator" : each }
+        type_string = p[1].data["type"] + "|" + each["type"]
+        to_push  = {"name" : each["name"], "type" : type_info  , "init" : None, "string": type_string  }
+        print("pushing", to_push["name"])
+        if pushVar(each["name"],to_push)==False:
+            print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
+            exit()
 
 
 def p_declaration1(p):
@@ -1097,12 +1106,22 @@ def p_declarator_list(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
+    if len(p) == 2 :
+        p[0].data = [p[1].data]
+    else:
+        p[0].data = p[1].data + [ p[3].data ]
+
 def p_init_declarator(p): 
     '''init_declarator : declarator initializer 
                        | declarator 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
+    if len(p) == 2:
+        p[0].data = p[1].data
+    else:
+        pass
 
 def p_initializer(p): 
     '''initializer :   EQUAL assignment_expression 
