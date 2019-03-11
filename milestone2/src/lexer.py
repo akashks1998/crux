@@ -129,16 +129,16 @@ def t_IDENTIFIER(t):
     t.type = keywords.get(t.value, 'IDENTIFIER')
     return t
 
-def t_NUMBER(t):
-    #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
-    r'\d+([eE][-+]?\d+)?'
-    t.value=float(t.value)
-    return t
-
 def t_DECIMAL(t):
     #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
     r'(\d+\.\d+)([eE][-+]?\d+)?'
     t.value=float(t.value)
+    return t
+
+def t_NUMBER(t):
+    #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
+    r'\d+([eE][-+]?\d+)?'
+    t.value=int(t.value)
     return t
 
 # Arithematic Operator

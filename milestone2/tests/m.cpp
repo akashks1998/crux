@@ -1,19 +1,16 @@
-int main(){
-    int a, b;
-    {
-        int a, b, c;
+void func(int a){
+    return;
+}
 
-    }
-    for(int i;i<k;i++){
-        int h;
-    }
-    if(g){
-        int j;
-    }else{
-        {
-            switch(a){
-                case 3: flow(); int i;
-            }
-        }
-    }
+void func(float a){
+    return;
+}
+
+void func(){
+    return;
+}
+
+int main(int a, char **b){
+   int c,d;
+    func(c);
 }

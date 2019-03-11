@@ -162,7 +162,7 @@ def p_declaration_seq(p):
     p[0].parse=f(p)
 
 def p_error(p):
-    print("Error: Line " + str(p.lineno) + ":" + filename.split('/')[-1])
+    print("Error: ine " + str(p.lineno) + ":" + filename.split('/')[-1])
     exit()
 
 def p_empty(p): 
@@ -182,6 +182,9 @@ def p_conditional_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
+
 
 def p_logical_OR_expression(p): 
     '''logical_OR_expression : logical_AND_expression 
@@ -189,6 +192,8 @@ def p_logical_OR_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
 
 def p_logical_AND_expression(p): 
     '''logical_AND_expression : inclusive_OR_expression %prec LOWER
@@ -196,6 +201,8 @@ def p_logical_AND_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
 
 def p_inclusive_OR_expression(p): 
     '''inclusive_OR_expression : exclusive_OR_expression %prec LOWER
@@ -203,13 +210,16 @@ def p_inclusive_OR_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
+    if len(p)==2:
+        p[0].data = p[1].data
 def p_exclusive_OR_expression(p): 
     '''exclusive_OR_expression : AND_expression 
                                | exclusive_OR_expression XOROP AND_expression 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
 
 def p_AND_expression(p): 
     '''AND_expression : equality_expression 
@@ -217,6 +227,8 @@ def p_AND_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
 
 def p_equality_expression(p): 
     '''equality_expression : relational_expression 
@@ -225,6 +237,8 @@ def p_equality_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
 
 def p_relational_expression(p): 
     '''relational_expression : shift_expression 
@@ -235,6 +249,9 @@ def p_relational_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
+        
 
 def p_shift_expression(p): 
     '''shift_expression : additive_expression 
@@ -243,6 +260,8 @@ def p_shift_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
 
 def p_additive_expression(p): 
     '''additive_expression : multiplicative_expression 
@@ -251,6 +270,8 @@ def p_additive_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
 
 def p_multiplicative_expression(p): 
     '''multiplicative_expression : cast_expression 
@@ -260,7 +281,17 @@ def p_multiplicative_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
 
+def p_cast_expression(p): 
+    '''cast_expression : unary_expression 
+                       | LPAREN type_name  RPAREN  cast_expression 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)  
+    if len(p)==2 :
+        p[0].data = p[1].data
 
 
 def p_expression(p): 
@@ -270,7 +301,8 @@ def p_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"type" : ""} 
+    if len(p)==2:
+        p[0].data = p[1].data 
 
 def p_throw_expression(p): 
     '''throw_expression : THROW expression 
@@ -278,6 +310,7 @@ def p_throw_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    
 
 def p_assignment_expression(p): 
     '''assignment_expression : conditional_expression 
@@ -285,6 +318,8 @@ def p_assignment_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -314,6 +349,9 @@ def p_unary_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = p[1].data
+    
 
 def p_deallocation_expression(p): 
     '''deallocation_expression : DELETE cast_expression  ''' 
@@ -372,23 +410,83 @@ def p_unary2_operator(p):
     p[0].parse=f(p)
     p[0].data = p[1].data
 
-def p_postfix_expression(p): 
-    '''postfix_expression : primary_expression 
-                          | postfix_expression     LSPAREN expression RSPAREN 
-                          | postfix_expression     LPAREN expression_list  RPAREN  
-                          | postfix_expression template_class_name  LPAREN expression_list  RPAREN 
-                          | postfix_expression     LPAREN  RPAREN 
-                          | postfix_expression     DOT name 
-                          | postfix_expression     ARROW name 
-                          | postfix_expression     DPLUSOP 
-                          | postfix_expression     DMINUSOP 
-    ''' 
-
+def p_postfix_expression_1(p): 
+    '''postfix_expression : primary_expression ''' 
                         #   | simple_type_name       LPAREN expression_list  RPAREN 
                         #   | simple_type_name       LPAREN  RPAREN 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = p[1].data
 
+def p_postfix_expression_2(p): 
+    '''postfix_expression : postfix_expression LSPAREN expression RSPAREN  ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    # expression type should be int or float
+    if(p[3].data["type"] != "float" or p[3].data["type"] != "int"):
+        report_error("Array index is not integer", p.lineno(3))
+    
+    p[0].data = {"type": p[1].data["type"] + "a"}
+
+
+
+def p_postfix_expression_3(p): 
+    '''postfix_expression : postfix_expression  LPAREN expression_list  RPAREN 
+                          | postfix_expression LPAREN  RPAREN 
+    ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+    # this must be a function call
+    # first get function sig..
+    print(p[1].data)
+    try:
+        func_sig_list = p[1].data["func_sig"]
+        func_name = p[1].data["func_name"]
+    except:
+        report_error("function not declared", p.lineno(1))
+    if len(p)==5:
+        expected_sig = func_name + "|" + p[3].data["type"] + "|"
+    else:
+        expected_sig = func_name + "|"
+    flag=0
+    for fun in func_sig_list:
+        if fun[0]==expected_sig:
+            p[0].data = {"type" : fun[1]}
+            flag=1
+    if flag==0:
+        report_error("function not declared", p.lineno(1))
+
+def p_postfix_expression_5(p): 
+    '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+
+
+
+def p_postfix_expression_6(p): 
+    '''postfix_expression : postfix_expression     DOT name  ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+def p_postfix_expression_7(p): 
+    '''postfix_expression : postfix_expression     ARROW name  ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+def p_postfix_expression_8(p): 
+    '''postfix_expression : postfix_expression     DPLUSOP 
+                          | postfix_expression     DMINUSOP 
+    ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
 
 def report_error(msg, line):
     print("Error at line : " + str(line) + " :: " + msg)
@@ -402,9 +500,11 @@ def p_primary_expression0(p):
     detail = checkVar(p[1].data)
     if detail ==  False:
         report_error( str(p[1].data) + " not declared" , p.lineno(1) )
-    else:
-        v_type = detail["var"]["type"]
-        p[0].data = {"type": v_type}
+    v_type = detail["var"]["type"]
+    p[0].data = {"type": v_type}
+    if v_type=="function_upper":
+        p[0].data["func_sig"] = detail["var"]["func_sig"]
+        p[0].data["func_name"] = p[1].data
 
 
 def p_primary_expression1(p): 
@@ -441,7 +541,13 @@ def p_literal_number(p):
     '''literal : NUMBER ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"type": "number", "value" : p[1].data}
+    p[0].data = {"type": "int", "value" : p[1].data}
+
+def p_literal_decimal(p): 
+    '''literal : DECIMAL ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = {"type": "float", "value" : p[1].data}
 
 def p_literal_char(p): 
     '''literal : SCHAR ''' 
@@ -449,12 +555,6 @@ def p_literal_char(p):
     p[0].parse=f(p)
     p[0].data = {"type": "char", "value" : p[1].data}
 
-def p_cast_expression(p): 
-    '''cast_expression : unary_expression 
-                       | LPAREN type_name  RPAREN  cast_expression 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)    
 
 # used for abstract declaration of func, int objstore_destroy(struct objfs_state*, char[]);
 # input                 abstract_class               abstract_type
@@ -579,7 +679,7 @@ def p_arg_list(p):
     if checkVar(function_name,parent) is False:
         # this function is not seen 
         pushVar(func_sig, p[0].data, scope = parent)
-        pushVar(function_name, [func_sig], scope = parent )
+        pushVar(function_name, {"type" : "function_upper", "func_sig" : [ (func_sig, return_sig) ]} ,  scope = parent )
     else:
         # this name is seen but may be overloaded
         if func_sig in checkVar(function_name, parent) :
@@ -598,7 +698,9 @@ def p_arg_list(p):
 
         else:
             pushVar(func_sig, p[0].data, scope = parent)
-            updateVar(function_name, checkVar(function_name, parent) + [func_sig], scope = parent )
+            detail = checkVar(function_name, parent)
+            print("detail : ", detail)
+            updateVar(function_name, {"type" : "function_upper", "func_sig" : detail["func_sig"] + [(func_sig, return_sig)]}, scope = parent )
 
 
 
@@ -1149,6 +1251,10 @@ def p_expression_list(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
+    if len(p)==2:
+        p[0].data = p[1].data
+    else:
+        p[0].data = {"type" : p[1].data["type"] + p[3].data["type"]}
 
 def p_push_scope(p):
     '''push_scope : '''
@@ -1166,7 +1272,7 @@ def scope_table_graph(S):
     for s in S:
         if s.parent != None:
             label_child = pp.pformat(s.table)
-            label_parent = pp.pformat(S[s.parent])
+            label_parent = pp.pformat(S[s.parent].table)
             if done.get(cnt, False)==False :
                 done[cnt]=True
                 sr = "\n" + str(cnt) + "[label=\"" + label_child + "\"]" + "\n"
