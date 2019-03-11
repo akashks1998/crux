@@ -429,7 +429,8 @@ def p_postfix_expression_2(p):
     
     p[0].data = {"type": p[1].data["type"] + "a"}
 
-
+def danda(s):
+    return s.strip("|")
 
 def p_postfix_expression_3(p): 
     '''postfix_expression : postfix_expression  LPAREN expression_list  RPAREN 
@@ -448,11 +449,12 @@ def p_postfix_expression_3(p):
     except:
         report_error("function not declared", p.lineno(1))
     if len(p)==5:
-        expected_sig = func_name + "|" + p[3].data["type"] + "|"
+        expected_sig = func_name + "|" + p[3].data["type"] 
     else:
         expected_sig = func_name + "|"
     flag=0
     for fun in func_sig_list:
+        print(danda(fun[0]), danda(expected_sig))
         if fun[0]==expected_sig:
             p[0].data = {"type" : fun[1]}
             flag=1
@@ -1148,7 +1150,7 @@ def p_declaration0(p):
     for each in decl_list:
         type_info = {"specifier" : p[1].data, "declarator" : each }
         type_string = p[1].data["type"] + "|" + each["type"]
-        to_push  = {"name" : each["name"], "type" : type_info  , "init" : None, "string": type_string  }
+        to_push  = {"name" : each["name"], "type" : type_string  , "init" : None, "string": type_string  }
         print("pushing", to_push["name"])
         if pushVar(each["name"],to_push)==False:
             print("Error:"+ str(p.lineno(1))+" redeclaration of variable")

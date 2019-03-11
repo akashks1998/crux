@@ -123,24 +123,8 @@ digraph ethane{ rankdir=LR {graph [ordering="out"];node [fontsize=20 width=0.25 
                                           'template': 0,
                                           'template_list': None,
                                           'type': 'char'}}},
-    'c': {   'init': None,
-             'name': 'c',
-             'string': 'int|',
-             'type': {   'declarator': {'meta': [], 'name': 'c', 'type': ''},
-                         'specifier': {   'class': 'simple',
-                                          'const': 0,
-                                          'template': 0,
-                                          'template_list': None,
-                                          'type': 'int'}}},
-    'd': {   'init': None,
-             'name': 'd',
-             'string': 'int|',
-             'type': {   'declarator': {'meta': [], 'name': 'd', 'type': ''},
-                         'specifier': {   'class': 'simple',
-                                          'const': 0,
-                                          'template': 0,
-                                          'template_list': None,
-                                          'type': 'int'}}}}"]
+    'c': {'init': None, 'name': 'c', 'string': 'int|', 'type': 'int|'},
+    'd': {'init': None, 'name': 'd', 'string': 'int|', 'type': 'int|'}}"]
 
 0 -> 4
 
