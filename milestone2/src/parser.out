@@ -197,21 +197,21 @@ Rule 186   complex_type_specifier -> class_key IDENTIFIER template_class_name
 Rule 187   complex_type_specifier -> TYPE IDENTIFIER
 Rule 188   complex_type_specifier -> TYPE IDENTIFIER template_class_name
 Rule 189   pure_specifier -> EQUAL NUMBER
-Rule 190   class_head -> class_key IDENTIFIER base_spec
-Rule 191   class_head -> class_key IDENTIFIER
-Rule 192   base_spec -> COLON base_list
-Rule 193   base_list -> base_specifier
-Rule 194   base_list -> base_list COMMA base_specifier
-Rule 195   base_specifier -> class_key IDENTIFIER
-Rule 196   base_specifier -> class_key IDENTIFIER template_class_name
-Rule 197   base_specifier -> IDENTIFIER
-Rule 198   base_specifier -> IDENTIFIER template_class_name
-Rule 199   base_specifier -> access_specifier class_key IDENTIFIER
-Rule 200   base_specifier -> access_specifier class_key IDENTIFIER template_class_name
-Rule 201   class_key -> CLASS
-Rule 202   class_key -> STRUCT
-Rule 203   class_define_specifier -> class_head LCPAREN member_list RCPAREN
-Rule 204   class_define_specifier -> class_head LCPAREN RCPAREN
+Rule 190   base_spec -> COLON base_list
+Rule 191   base_list -> base_specifier
+Rule 192   base_list -> base_list COMMA base_specifier
+Rule 193   base_specifier -> class_key IDENTIFIER
+Rule 194   base_specifier -> class_key IDENTIFIER template_class_name
+Rule 195   base_specifier -> IDENTIFIER
+Rule 196   base_specifier -> IDENTIFIER template_class_name
+Rule 197   base_specifier -> access_specifier class_key IDENTIFIER
+Rule 198   base_specifier -> access_specifier class_key IDENTIFIER template_class_name
+Rule 199   class_key -> CLASS
+Rule 200   class_key -> STRUCT
+Rule 201   class_head -> class_key IDENTIFIER base_spec
+Rule 202   class_head -> class_key IDENTIFIER
+Rule 203   class_define_specifier -> class_head LCPAREN RCPAREN
+Rule 204   class_define_specifier -> class_head LCPAREN member_list RCPAREN
 Rule 205   member_list -> member_access_list
 Rule 206   member_list -> access_list
 Rule 207   member_list -> member_list access_list
@@ -314,9 +314,9 @@ BREAK                : 240
 CASE                 : 251
 CATCH                : 248
 CHAR                 : 174
-CLASS                : 201
-COLON                : 14 192 211 212 251 252
-COMMA                : 47 120 160 165 194 222 273 275 280 283 285 288
+CLASS                : 199
+COLON                : 14 190 211 212 251 252
+COMMA                : 47 120 160 165 192 222 273 275 280 283 285 288
 CONST                : 168
 CONTINUE             : 241
 DECIMAL              : 105
@@ -340,7 +340,7 @@ GOTO                 : 244
 GTCOMP               : 4 30 140
 GTECOMP              : 32 155
 HASHTAG              : 3
-IDENTIFIER           : 125 126 170 171 185 186 187 188 190 191 195 196 197 198 199 200 244
+IDENTIFIER           : 125 126 170 171 185 186 187 188 193 194 195 196 197 198 201 202 244
 IF                   : 245 246
 INCLUDE              : 3
 INT                  : 176
@@ -385,7 +385,7 @@ SIGNED               : 178
 SIZEOF               : 67 68
 STRING               : 183
 STRING_L             : 4 5 103 286
-STRUCT               : 202
+STRUCT               : 200
 SWITCH               : 247
 TEMPLATE             : 271
 THIS                 : 101
@@ -405,7 +405,7 @@ Nonterminals, with rules where they appear
 AND_expression       : 21 22 24
 abstract_declarator  : 108 110 112 123 166 170
 access_list          : 206 207
-access_specifier     : 199 200 211 212
+access_specifier     : 197 198 211 212
 additive_expression  : 33 34 35 37 38
 allocation_expression : 69
 arg_list             : 225 226
@@ -414,13 +414,13 @@ argument_declaration_list : 117 120
 asm_declaration      : 265
 assignment_expression : 45 47 51 278 282 283 287 288
 assignment_operator  : 51
-base_list            : 192 194
-base_spec            : 190
-base_specifier       : 193 194
+base_list            : 190 192
+base_spec            : 201
+base_specifier       : 191 192
 cast_expression      : 39 40 41 42 44 65 66 71
 class_define_specifier : 220 268
 class_head           : 203 204
-class_key            : 185 186 190 191 195 196 199 200
+class_key            : 185 186 193 194 197 198 201 202
 complex_type_specifier : 173
 compound_statement   : 228 234 245 246 246 248 248 255 256 257
 conditional_expression : 12 14 50
@@ -460,7 +460,7 @@ member_access_list   : 205 211 213
 member_declaration   : 213 214
 member_declarator    : 221 222
 member_declarator_list : 215 216 222
-member_list          : 203 207
+member_list          : 204 207
 multiplicative_expression : 36 37 38 40 41 42
 name                 : 95 96 99 113
 new_declarator       : 76 78 80
@@ -481,7 +481,7 @@ statement            : 231 232 253 254 258
 statement_list       : 229 232 251 252
 template_arg_list    : 163 165
 template_argument_list : 271 273
-template_class_name  : 94 186 188 196 198 200
+template_class_name  : 94 186 188 194 196 198
 template_declaration : 269
 throw_expression     : 46
 translation_unit     : 6 7
@@ -521,15 +521,15 @@ state 0
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (174) simple_type_name -> . CHAR
     (175) simple_type_name -> . SHORT
     (176) simple_type_name -> . INT
@@ -545,8 +545,8 @@ state 0
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     HASHTAG         shift and go to state 8
     CONST           shift and go to state 16
@@ -616,15 +616,15 @@ state 2
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (174) simple_type_name -> . CHAR
     (175) simple_type_name -> . SHORT
     (176) simple_type_name -> . INT
@@ -640,8 +640,8 @@ state 2
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     HASHTAG         shift and go to state 8
     CONST           shift and go to state 16
@@ -729,15 +729,15 @@ state 5
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (174) simple_type_name -> . CHAR
     (175) simple_type_name -> . SHORT
     (176) simple_type_name -> . INT
@@ -753,8 +753,8 @@ state 5
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     $end            reduce using rule 8 (translation_unit -> declaration_seq .)
     CONST           shift and go to state 16
@@ -1187,8 +1187,8 @@ state 16
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CHAR            shift and go to state 25
     SHORT           shift and go to state 26
@@ -1264,8 +1264,8 @@ state 18
 
 state 19
 
-    (203) class_define_specifier -> class_head . LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> class_head . LCPAREN RCPAREN
+    (203) class_define_specifier -> class_head . LCPAREN RCPAREN
+    (204) class_define_specifier -> class_head . LCPAREN member_list RCPAREN
 
     LCPAREN         shift and go to state 58
 
@@ -1300,8 +1300,8 @@ state 21
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CONST           shift and go to state 16
     CHAR            shift and go to state 25
@@ -1417,8 +1417,8 @@ state 23
 
 state 24
 
-    (190) class_head -> class_key . IDENTIFIER base_spec
-    (191) class_head -> class_key . IDENTIFIER
+    (201) class_head -> class_key . IDENTIFIER base_spec
+    (202) class_head -> class_key . IDENTIFIER
     (185) complex_type_specifier -> class_key . IDENTIFIER
     (186) complex_type_specifier -> class_key . IDENTIFIER template_class_name
 
@@ -1930,16 +1930,16 @@ state 36
 
 state 37
 
-    (201) class_key -> CLASS .
+    (199) class_key -> CLASS .
 
-    IDENTIFIER      reduce using rule 201 (class_key -> CLASS .)
+    IDENTIFIER      reduce using rule 199 (class_key -> CLASS .)
 
 
 state 38
 
-    (202) class_key -> STRUCT .
+    (200) class_key -> STRUCT .
 
-    IDENTIFIER      reduce using rule 202 (class_key -> STRUCT .)
+    IDENTIFIER      reduce using rule 200 (class_key -> STRUCT .)
 
 
 state 39
@@ -2348,8 +2348,8 @@ state 57
 
 state 58
 
-    (203) class_define_specifier -> class_head LCPAREN . member_list RCPAREN
-    (204) class_define_specifier -> class_head LCPAREN . RCPAREN
+    (203) class_define_specifier -> class_head LCPAREN . RCPAREN
+    (204) class_define_specifier -> class_head LCPAREN . member_list RCPAREN
     (205) member_list -> . member_access_list
     (206) member_list -> . access_list
     (207) member_list -> . member_list access_list
@@ -2371,14 +2371,14 @@ state 58
     (221) member_declarator_list -> . member_declarator
     (222) member_declarator_list -> . member_declarator_list COMMA member_declarator
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
     (223) member_declarator -> . declarator pure_specifier
     (224) member_declarator -> . declarator
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (174) simple_type_name -> . CHAR
     (175) simple_type_name -> . SHORT
     (176) simple_type_name -> . INT
@@ -2398,14 +2398,14 @@ state 58
     (114) declarator -> . unary2_operator declarator
     (115) declarator -> . declarator LSPAREN constant_expression RSPAREN
     (116) declarator -> . declarator LSPAREN RSPAREN
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (88) unary2_operator -> . MULTOP
     (89) unary2_operator -> . BANDOP
 
-    RCPAREN         shift and go to state 76
+    RCPAREN         shift and go to state 75
     SEMICOLON       shift and go to state 83
     PRIVATE         shift and go to state 86
     PROTECTED       shift and go to state 87
@@ -2431,7 +2431,7 @@ state 58
     BANDOP          shift and go to state 53
 
     class_head                     shift and go to state 19
-    member_list                    shift and go to state 75
+    member_list                    shift and go to state 76
     member_access_list             shift and go to state 77
     access_list                    shift and go to state 78
     member_declaration             shift and go to state 79
@@ -2477,8 +2477,8 @@ state 59
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CONST           shift and go to state 16
     CHAR            shift and go to state 25
@@ -2527,14 +2527,14 @@ state 60
 
 state 61
 
-    (190) class_head -> class_key IDENTIFIER . base_spec
-    (191) class_head -> class_key IDENTIFIER .
+    (201) class_head -> class_key IDENTIFIER . base_spec
+    (202) class_head -> class_key IDENTIFIER .
     (185) complex_type_specifier -> class_key IDENTIFIER .
     (186) complex_type_specifier -> class_key IDENTIFIER . template_class_name
-    (192) base_spec -> . COLON base_list
+    (190) base_spec -> . COLON base_list
     (163) template_class_name -> . LTEMPLATE template_arg_list RTEMPLATE
 
-    LCPAREN         reduce using rule 191 (class_head -> class_key IDENTIFIER .)
+    LCPAREN         reduce using rule 202 (class_head -> class_key IDENTIFIER .)
     IDENTIFIER      reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
     DOUBLEBNOP      reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
     MULTOP          reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
@@ -2717,8 +2717,8 @@ state 66
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     RPAREN          reduce using rule 118 (arg_list -> .)
     CONST           shift and go to state 16
@@ -3261,7 +3261,14 @@ state 74
 
 state 75
 
-    (203) class_define_specifier -> class_head LCPAREN member_list . RCPAREN
+    (203) class_define_specifier -> class_head LCPAREN RCPAREN .
+
+    SEMICOLON       reduce using rule 203 (class_define_specifier -> class_head LCPAREN RCPAREN .)
+
+
+state 76
+
+    (204) class_define_specifier -> class_head LCPAREN member_list . RCPAREN
     (207) member_list -> member_list . access_list
     (211) access_list -> . access_specifier COLON member_access_list
     (212) access_list -> . access_specifier COLON
@@ -3276,13 +3283,6 @@ state 75
 
     access_list                    shift and go to state 156
     access_specifier               shift and go to state 80
-
-state 76
-
-    (204) class_define_specifier -> class_head LCPAREN RCPAREN .
-
-    SEMICOLON       reduce using rule 204 (class_define_specifier -> class_head LCPAREN RCPAREN .)
-
 
 state 77
 
@@ -3321,14 +3321,14 @@ state 79
     (221) member_declarator_list -> . member_declarator
     (222) member_declarator_list -> . member_declarator_list COMMA member_declarator
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
     (223) member_declarator -> . declarator pure_specifier
     (224) member_declarator -> . declarator
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (174) simple_type_name -> . CHAR
     (175) simple_type_name -> . SHORT
     (176) simple_type_name -> . INT
@@ -3348,8 +3348,8 @@ state 79
     (114) declarator -> . unary2_operator declarator
     (115) declarator -> . declarator LSPAREN constant_expression RSPAREN
     (116) declarator -> . declarator LSPAREN RSPAREN
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (88) unary2_operator -> . MULTOP
@@ -3778,9 +3778,9 @@ state 97
 
 state 98
 
-    (190) class_head -> class_key IDENTIFIER base_spec .
+    (201) class_head -> class_key IDENTIFIER base_spec .
 
-    LCPAREN         reduce using rule 190 (class_head -> class_key IDENTIFIER base_spec .)
+    LCPAREN         reduce using rule 201 (class_head -> class_key IDENTIFIER base_spec .)
 
 
 state 99
@@ -3830,17 +3830,17 @@ state 99
 
 state 100
 
-    (192) base_spec -> COLON . base_list
-    (193) base_list -> . base_specifier
-    (194) base_list -> . base_list COMMA base_specifier
-    (195) base_specifier -> . class_key IDENTIFIER
-    (196) base_specifier -> . class_key IDENTIFIER template_class_name
-    (197) base_specifier -> . IDENTIFIER
-    (198) base_specifier -> . IDENTIFIER template_class_name
-    (199) base_specifier -> . access_specifier class_key IDENTIFIER
-    (200) base_specifier -> . access_specifier class_key IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (190) base_spec -> COLON . base_list
+    (191) base_list -> . base_specifier
+    (192) base_list -> . base_list COMMA base_specifier
+    (193) base_specifier -> . class_key IDENTIFIER
+    (194) base_specifier -> . class_key IDENTIFIER template_class_name
+    (195) base_specifier -> . IDENTIFIER
+    (196) base_specifier -> . IDENTIFIER template_class_name
+    (197) base_specifier -> . access_specifier class_key IDENTIFIER
+    (198) base_specifier -> . access_specifier class_key IDENTIFIER template_class_name
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (208) access_specifier -> . PRIVATE
     (209) access_specifier -> . PROTECTED
     (210) access_specifier -> . PUBLIC
@@ -3883,8 +3883,8 @@ state 101
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CONST           shift and go to state 16
     CHAR            shift and go to state 25
@@ -4478,8 +4478,8 @@ state 126
     (74) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
     (75) allocation_expression -> . NEW LPAREN type_name RPAREN
     (71) deallocation_expression -> . DELETE cast_expression
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -5271,8 +5271,8 @@ state 139
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     LPAREN          shift and go to state 229
     CONST           shift and go to state 16
@@ -5733,8 +5733,8 @@ state 147
     (100) primary_expression -> . literal
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (19) inclusive_OR_expression -> . exclusive_OR_expression
     (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
@@ -6062,9 +6062,9 @@ state 154
 
 state 155
 
-    (203) class_define_specifier -> class_head LCPAREN member_list RCPAREN .
+    (204) class_define_specifier -> class_head LCPAREN member_list RCPAREN .
 
-    SEMICOLON       reduce using rule 203 (class_define_specifier -> class_head LCPAREN member_list RCPAREN .)
+    SEMICOLON       reduce using rule 204 (class_define_specifier -> class_head LCPAREN member_list RCPAREN .)
 
 
 state 156
@@ -6104,14 +6104,14 @@ state 158
     (221) member_declarator_list -> . member_declarator
     (222) member_declarator_list -> . member_declarator_list COMMA member_declarator
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
     (223) member_declarator -> . declarator pure_specifier
     (224) member_declarator -> . declarator
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (174) simple_type_name -> . CHAR
     (175) simple_type_name -> . SHORT
     (176) simple_type_name -> . INT
@@ -6131,8 +6131,8 @@ state 158
     (114) declarator -> . unary2_operator declarator
     (115) declarator -> . declarator LSPAREN constant_expression RSPAREN
     (116) declarator -> . declarator LSPAREN RSPAREN
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (88) unary2_operator -> . MULTOP
@@ -6351,15 +6351,15 @@ state 167
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (174) simple_type_name -> . CHAR
     (175) simple_type_name -> . SHORT
     (176) simple_type_name -> . INT
@@ -6375,8 +6375,8 @@ state 167
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CONST           shift and go to state 16
     ASM             shift and go to state 18
@@ -6437,8 +6437,8 @@ state 168
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CONST           shift and go to state 16
     CHAR            shift and go to state 25
@@ -6748,47 +6748,47 @@ state 177
 
 state 178
 
-    (192) base_spec -> COLON base_list .
-    (194) base_list -> base_list . COMMA base_specifier
+    (190) base_spec -> COLON base_list .
+    (192) base_list -> base_list . COMMA base_specifier
 
-    LCPAREN         reduce using rule 192 (base_spec -> COLON base_list .)
+    LCPAREN         reduce using rule 190 (base_spec -> COLON base_list .)
     COMMA           shift and go to state 262
 
 
 state 179
 
-    (193) base_list -> base_specifier .
+    (191) base_list -> base_specifier .
 
-    COMMA           reduce using rule 193 (base_list -> base_specifier .)
-    LCPAREN         reduce using rule 193 (base_list -> base_specifier .)
+    COMMA           reduce using rule 191 (base_list -> base_specifier .)
+    LCPAREN         reduce using rule 191 (base_list -> base_specifier .)
 
 
 state 180
 
-    (195) base_specifier -> class_key . IDENTIFIER
-    (196) base_specifier -> class_key . IDENTIFIER template_class_name
+    (193) base_specifier -> class_key . IDENTIFIER
+    (194) base_specifier -> class_key . IDENTIFIER template_class_name
 
     IDENTIFIER      shift and go to state 263
 
 
 state 181
 
-    (197) base_specifier -> IDENTIFIER .
-    (198) base_specifier -> IDENTIFIER . template_class_name
+    (195) base_specifier -> IDENTIFIER .
+    (196) base_specifier -> IDENTIFIER . template_class_name
     (163) template_class_name -> . LTEMPLATE template_arg_list RTEMPLATE
 
-    COMMA           reduce using rule 197 (base_specifier -> IDENTIFIER .)
-    LCPAREN         reduce using rule 197 (base_specifier -> IDENTIFIER .)
+    COMMA           reduce using rule 195 (base_specifier -> IDENTIFIER .)
+    LCPAREN         reduce using rule 195 (base_specifier -> IDENTIFIER .)
     LTEMPLATE       shift and go to state 101
 
     template_class_name            shift and go to state 264
 
 state 182
 
-    (199) base_specifier -> access_specifier . class_key IDENTIFIER
-    (200) base_specifier -> access_specifier . class_key IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (197) base_specifier -> access_specifier . class_key IDENTIFIER
+    (198) base_specifier -> access_specifier . class_key IDENTIFIER template_class_name
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CLASS           shift and go to state 37
     STRUCT          shift and go to state 38
@@ -7000,8 +7000,8 @@ state 188
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CONST           shift and go to state 16
     CHAR            shift and go to state 25
@@ -9750,8 +9750,8 @@ state 227
     (74) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
     (75) allocation_expression -> . NEW LPAREN type_name RPAREN
     (71) deallocation_expression -> . DELETE cast_expression
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -9929,8 +9929,8 @@ state 229
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CONST           shift and go to state 16
     CHAR            shift and go to state 25
@@ -10822,8 +10822,8 @@ state 251
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     RPAREN          reduce using rule 118 (arg_list -> .)
     CONST           shift and go to state 16
@@ -11176,15 +11176,15 @@ state 261
 
 state 262
 
-    (194) base_list -> base_list COMMA . base_specifier
-    (195) base_specifier -> . class_key IDENTIFIER
-    (196) base_specifier -> . class_key IDENTIFIER template_class_name
-    (197) base_specifier -> . IDENTIFIER
-    (198) base_specifier -> . IDENTIFIER template_class_name
-    (199) base_specifier -> . access_specifier class_key IDENTIFIER
-    (200) base_specifier -> . access_specifier class_key IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (192) base_list -> base_list COMMA . base_specifier
+    (193) base_specifier -> . class_key IDENTIFIER
+    (194) base_specifier -> . class_key IDENTIFIER template_class_name
+    (195) base_specifier -> . IDENTIFIER
+    (196) base_specifier -> . IDENTIFIER template_class_name
+    (197) base_specifier -> . access_specifier class_key IDENTIFIER
+    (198) base_specifier -> . access_specifier class_key IDENTIFIER template_class_name
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (208) access_specifier -> . PRIVATE
     (209) access_specifier -> . PROTECTED
     (210) access_specifier -> . PUBLIC
@@ -11202,28 +11202,28 @@ state 262
 
 state 263
 
-    (195) base_specifier -> class_key IDENTIFIER .
-    (196) base_specifier -> class_key IDENTIFIER . template_class_name
+    (193) base_specifier -> class_key IDENTIFIER .
+    (194) base_specifier -> class_key IDENTIFIER . template_class_name
     (163) template_class_name -> . LTEMPLATE template_arg_list RTEMPLATE
 
-    COMMA           reduce using rule 195 (base_specifier -> class_key IDENTIFIER .)
-    LCPAREN         reduce using rule 195 (base_specifier -> class_key IDENTIFIER .)
+    COMMA           reduce using rule 193 (base_specifier -> class_key IDENTIFIER .)
+    LCPAREN         reduce using rule 193 (base_specifier -> class_key IDENTIFIER .)
     LTEMPLATE       shift and go to state 101
 
     template_class_name            shift and go to state 319
 
 state 264
 
-    (198) base_specifier -> IDENTIFIER template_class_name .
+    (196) base_specifier -> IDENTIFIER template_class_name .
 
-    COMMA           reduce using rule 198 (base_specifier -> IDENTIFIER template_class_name .)
-    LCPAREN         reduce using rule 198 (base_specifier -> IDENTIFIER template_class_name .)
+    COMMA           reduce using rule 196 (base_specifier -> IDENTIFIER template_class_name .)
+    LCPAREN         reduce using rule 196 (base_specifier -> IDENTIFIER template_class_name .)
 
 
 state 265
 
-    (199) base_specifier -> access_specifier class_key . IDENTIFIER
-    (200) base_specifier -> access_specifier class_key . IDENTIFIER template_class_name
+    (197) base_specifier -> access_specifier class_key . IDENTIFIER
+    (198) base_specifier -> access_specifier class_key . IDENTIFIER template_class_name
 
     IDENTIFIER      shift and go to state 320
 
@@ -11298,8 +11298,8 @@ state 267
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
 
     CONST           shift and go to state 16
     CHAR            shift and go to state 25
@@ -11577,8 +11577,8 @@ state 272
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -11595,8 +11595,8 @@ state 272
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -11634,8 +11634,8 @@ state 272
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -13416,28 +13416,28 @@ state 317
 
 state 318
 
-    (194) base_list -> base_list COMMA base_specifier .
+    (192) base_list -> base_list COMMA base_specifier .
 
-    COMMA           reduce using rule 194 (base_list -> base_list COMMA base_specifier .)
-    LCPAREN         reduce using rule 194 (base_list -> base_list COMMA base_specifier .)
+    COMMA           reduce using rule 192 (base_list -> base_list COMMA base_specifier .)
+    LCPAREN         reduce using rule 192 (base_list -> base_list COMMA base_specifier .)
 
 
 state 319
 
-    (196) base_specifier -> class_key IDENTIFIER template_class_name .
+    (194) base_specifier -> class_key IDENTIFIER template_class_name .
 
-    COMMA           reduce using rule 196 (base_specifier -> class_key IDENTIFIER template_class_name .)
-    LCPAREN         reduce using rule 196 (base_specifier -> class_key IDENTIFIER template_class_name .)
+    COMMA           reduce using rule 194 (base_specifier -> class_key IDENTIFIER template_class_name .)
+    LCPAREN         reduce using rule 194 (base_specifier -> class_key IDENTIFIER template_class_name .)
 
 
 state 320
 
-    (199) base_specifier -> access_specifier class_key IDENTIFIER .
-    (200) base_specifier -> access_specifier class_key IDENTIFIER . template_class_name
+    (197) base_specifier -> access_specifier class_key IDENTIFIER .
+    (198) base_specifier -> access_specifier class_key IDENTIFIER . template_class_name
     (163) template_class_name -> . LTEMPLATE template_arg_list RTEMPLATE
 
-    COMMA           reduce using rule 199 (base_specifier -> access_specifier class_key IDENTIFIER .)
-    LCPAREN         reduce using rule 199 (base_specifier -> access_specifier class_key IDENTIFIER .)
+    COMMA           reduce using rule 197 (base_specifier -> access_specifier class_key IDENTIFIER .)
+    LCPAREN         reduce using rule 197 (base_specifier -> access_specifier class_key IDENTIFIER .)
     LTEMPLATE       shift and go to state 101
 
     template_class_name            shift and go to state 365
@@ -13622,8 +13622,8 @@ state 324
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -13640,8 +13640,8 @@ state 324
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -13679,8 +13679,8 @@ state 324
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -15439,10 +15439,10 @@ state 364
 
 state 365
 
-    (200) base_specifier -> access_specifier class_key IDENTIFIER template_class_name .
+    (198) base_specifier -> access_specifier class_key IDENTIFIER template_class_name .
 
-    COMMA           reduce using rule 200 (base_specifier -> access_specifier class_key IDENTIFIER template_class_name .)
-    LCPAREN         reduce using rule 200 (base_specifier -> access_specifier class_key IDENTIFIER template_class_name .)
+    COMMA           reduce using rule 198 (base_specifier -> access_specifier class_key IDENTIFIER template_class_name .)
+    LCPAREN         reduce using rule 198 (base_specifier -> access_specifier class_key IDENTIFIER template_class_name .)
 
 
 state 366
@@ -16001,8 +16001,8 @@ state 373
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -16019,8 +16019,8 @@ state 373
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -16058,8 +16058,8 @@ state 373
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -17016,8 +17016,8 @@ state 394
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -17034,8 +17034,8 @@ state 394
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -17073,8 +17073,8 @@ state 394
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -17659,8 +17659,8 @@ state 409
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -17677,8 +17677,8 @@ state 409
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -17716,8 +17716,8 @@ state 409
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -18465,8 +18465,8 @@ state 420
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -18483,8 +18483,8 @@ state 420
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -18522,8 +18522,8 @@ state 420
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -19232,8 +19232,8 @@ state 438
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -19250,8 +19250,8 @@ state 438
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -19289,8 +19289,8 @@ state 438
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -19858,8 +19858,8 @@ state 447
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -19876,8 +19876,8 @@ state 447
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -19915,8 +19915,8 @@ state 447
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -20103,8 +20103,8 @@ state 448
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -20121,8 +20121,8 @@ state 448
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -20160,8 +20160,8 @@ state 448
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name
@@ -20649,8 +20649,8 @@ state 454
     (286) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
     (225) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
     (226) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (203) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
-    (204) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (203) class_define_specifier -> . class_head LCPAREN RCPAREN
+    (204) class_define_specifier -> . class_head LCPAREN member_list RCPAREN
     (271) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
     (170) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
     (171) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
@@ -20667,8 +20667,8 @@ state 454
     (70) unary_expression -> . deallocation_expression
     (172) type_specifier -> . simple_type_name
     (173) type_specifier -> . complex_type_specifier
-    (190) class_head -> . class_key IDENTIFIER base_spec
-    (191) class_head -> . class_key IDENTIFIER
+    (201) class_head -> . class_key IDENTIFIER base_spec
+    (202) class_head -> . class_key IDENTIFIER
     (15) logical_OR_expression -> . logical_AND_expression
     (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
     (90) postfix_expression -> . primary_expression
@@ -20706,8 +20706,8 @@ state 454
     (186) complex_type_specifier -> . class_key IDENTIFIER template_class_name
     (187) complex_type_specifier -> . TYPE IDENTIFIER
     (188) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (201) class_key -> . CLASS
-    (202) class_key -> . STRUCT
+    (199) class_key -> . CLASS
+    (200) class_key -> . STRUCT
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (99) primary_expression -> . name

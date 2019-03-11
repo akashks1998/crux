@@ -1,16 +1,17 @@
-void func(int a){
-    return;
-}
+class Num  : public class A{
+    float two;
+    void Num(){
+        this->two = 2.00;
+    }
+    void ~~Num(){
+        this->two=0;
+    }
+};
 
-void func(float a){
-    return;
-}
+// class Num{
 
-void func(){
-    return;
-}
+// };
 
-int main(int a, char **b){
-   int c,d;
-    func(c);
+int main(int x, char **y){
+    class Num N;
 }

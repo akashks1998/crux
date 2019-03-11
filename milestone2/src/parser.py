@@ -454,8 +454,8 @@ def p_postfix_expression_3(p):
         expected_sig = func_name + "|"
     flag=0
     for fun in func_sig_list:
-        print(danda(fun[0]), danda(expected_sig))
-        if fun[0]==expected_sig:
+        # print(danda(fun[0]), danda(expected_sig))
+        if danda(fun[0])==danda(expected_sig):
             p[0].data = {"type" : fun[1]}
             flag=1
     if flag==0:
@@ -677,7 +677,7 @@ def p_arg_list(p):
     }
     parent=getParentScope(currentScopeTable)
     func_sig = function_name +"|" + temp[0]
-    print("sd", func_sig)
+    # print("sd", func_sig)
     if checkVar(function_name,parent) is False:
         # this function is not seen 
         pushVar(func_sig, p[0].data, scope = parent)
@@ -910,12 +910,6 @@ def p_pure_specifier(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def p_class_head(p): 
-    '''class_head : class_key IDENTIFIER base_spec 
-                  | class_key IDENTIFIER 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
 
 # use for class inhertance
 
@@ -923,6 +917,7 @@ def p_base_spec(p):
     '''base_spec : COLON base_list''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = {"base" : []}
 
 def p_base_list(p): 
     '''base_list : base_specifier
@@ -954,13 +949,35 @@ def p_class_key(p):
     p[0].parse = f(p) 
     p[0].data = p[1].data
 
-def p_class_define_specifier(p): 
-    '''class_define_specifier : class_head LCPAREN member_list RCPAREN 
-                       | class_head LCPAREN RCPAREN 
+def p_class_head(p): 
+    '''class_head : class_key IDENTIFIER base_spec 
+                  | class_key IDENTIFIER 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
- 
+    p[0].data = {
+        "class" : p[1].data,
+        "type" : p[2].data,
+        "base" : []
+        }
+    if len(p)==4:
+        p[0].data["base"] = p[3].data["base"]
+
+def p_class_define_specifier1(p): 
+    '''class_define_specifier : class_head LCPAREN RCPAREN 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = p[1].data
+    p[0].data["member"] = {}
+    checkVar(p[0].data["type"], scopeId="*")
+
+def p_class_define_specifier2(p): 
+    '''class_define_specifier : class_head LCPAREN member_list RCPAREN 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = p[1].data
 
 def p_member_list(p):
     '''member_list : member_access_list
