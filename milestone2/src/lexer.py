@@ -54,6 +54,7 @@ tokens = [
         # id and no
         'IDENTIFIER',
         'NUMBER',
+        'DECIMAL',
 
         # arithematic operator
         'PLUSOP',
@@ -130,7 +131,13 @@ def t_IDENTIFIER(t):
 
 def t_NUMBER(t):
     #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
-    r'(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
+    r'\d+([eE][-+]?\d+)?'
+    t.value=float(t.value)
+    return t
+
+def t_DECIMAL(t):
+    #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
+    r'(\d+\.\d+)([eE][-+]?\d+)?'
     t.value=float(t.value)
     return t
 
