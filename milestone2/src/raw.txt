@@ -1,0 +1,111 @@
+PLY: PARSE DEBUG START
+
+State  : 0
+Stack  : . LexToken(CLASS,'class',1,0)
+Action : Shift and goto state 37
+
+State  : 37
+Defaulted state 37: Reduce using 199
+Stack  : CLASS . None
+Action : Reduce rule [class_key -> CLASS] with ['class'] and goto state 24
+Result : <OBJ @ 0x7fd2faa60940> (<__main__.OBJ object at 0x7fd2faa60940>)
+
+State  : 24
+Stack  : class_key . LexToken(IDENTIFIER,'Num',1,6)
+Action : Shift and goto state 61
+
+State  : 61
+Stack  : class_key IDENTIFIER . LexToken(COLON,':',1,10)
+Action : Shift and goto state 85
+
+State  : 85
+Stack  : class_key IDENTIFIER COLON . LexToken(PUBLIC,'public',1,12)
+Action : Shift and goto state 149
+
+State  : 149
+Stack  : class_key IDENTIFIER COLON PUBLIC . LexToken(CLASS,'class',1,19)
+Action : Reduce rule [access_specifier -> PUBLIC] with ['public'] and goto state 166
+Result : <OBJ @ 0x7fd2faa60860> (<__main__.OBJ object at 0x7fd2faa60860>)
+
+State  : 166
+Stack  : class_key IDENTIFIER COLON access_specifier . LexToken(CLASS,'class',1,19)
+Action : Shift and goto state 37
+
+State  : 37
+Defaulted state 37: Reduce using 199
+Stack  : class_key IDENTIFIER COLON access_specifier CLASS . None
+Action : Reduce rule [class_key -> CLASS] with ['class'] and goto state 249
+Result : <OBJ @ 0x7fd2faa60a20> (<__main__.OBJ object at 0x7fd2faa60a20>)
+
+State  : 249
+Stack  : class_key IDENTIFIER COLON access_specifier class_key . LexToken(IDENTIFIER,'A',1,25)
+Action : Shift and goto state 307
+
+State  : 307
+Stack  : class_key IDENTIFIER COLON access_specifier class_key IDENTIFIER . LexToken(LCPAREN,'{',2,27)
+Action : Reduce rule [base_specifier -> access_specifier class_key IDENTIFIER] with [<OBJ @ 0x7fd2faa60860>,<OBJ @ 0x7fd2faa60a20>,'A'] and goto state 163
+Result : <OBJ @ 0x7fd2faa60ac8> (<__main__.OBJ object at 0x7fd2faa60ac8>)
+
+State  : 163
+Stack  : class_key IDENTIFIER COLON base_specifier . LexToken(LCPAREN,'{',2,27)
+Action : Reduce rule [base_list -> base_specifier] with [<OBJ @ 0x7fd2faa60ac8>] and goto state 162
+Result : <OBJ @ 0x7fd2faa609e8> (<__main__.OBJ object at 0x7fd2faa609e8>)
+
+State  : 162
+Stack  : class_key IDENTIFIER COLON base_list . LexToken(LCPAREN,'{',2,27)
+Action : Reduce rule [base_spec -> COLON base_list] with [':',<OBJ @ 0x7fd2faa609e8>] and goto state 83
+Result : <OBJ @ 0x7fd2faa60c18> (<__main__.OBJ object at 0x7fd2faa60c18>)
+
+State  : 83
+Defaulted state 83: Reduce using 201
+Stack  : class_key IDENTIFIER base_spec . LexToken(LCPAREN,'{',2,27)
+Action : Reduce rule [class_head -> class_key IDENTIFIER base_spec] with [<OBJ @ 0x7fd2faa60940>,'Num',<OBJ @ 0x7fd2faa60c18>] and goto state 19
+Result : <OBJ @ 0x7fd2faa60a58> (<__main__.OBJ object at 0x7fd2faa60a58>)
+
+State  : 19
+Defaulted state 19: Reduce using 284
+Stack  : class_head . LexToken(LCPAREN,'{',2,27)
+Action : Reduce rule [push_scope -> <empty>] with [] and goto state 58
+Result : <NoneType @ 0x7fd2fc623690> (None)
+
+State  : 58
+Stack  : class_head push_scope . LexToken(LCPAREN,'{',2,27)
+Action : Shift and goto state 75
+
+State  : 75
+Stack  : class_head push_scope LCPAREN . LexToken(FLOAT,'float',3,33)
+Action : Shift and goto state 31
+
+State  : 31
+Stack  : class_head push_scope LCPAREN FLOAT . LexToken(IDENTIFIER,'two',3,39)
+Action : Reduce rule [simple_type_name -> FLOAT] with ['float'] and goto state 22
+Result : <OBJ @ 0x7fd2faa60860> (<__main__.OBJ object at 0x7fd2faa60860>)
+
+State  : 22
+Stack  : class_head push_scope LCPAREN simple_type_name . LexToken(IDENTIFIER,'two',3,39)
+Action : Reduce rule [type_specifier -> simple_type_name] with [<OBJ @ 0x7fd2faa60860>] and goto state 17
+Result : <OBJ @ 0x7fd2faa609e8> (<__main__.OBJ object at 0x7fd2faa609e8>)
+
+State  : 17
+Stack  : class_head push_scope LCPAREN type_specifier . LexToken(IDENTIFIER,'two',3,39)
+Action : Reduce rule [type_specifier_ -> type_specifier] with [<OBJ @ 0x7fd2faa609e8>] and goto state 150
+Result : <OBJ @ 0x7fd2faa60940> (<__main__.OBJ object at 0x7fd2faa60940>)
+
+State  : 150
+Stack  : class_head push_scope LCPAREN type_specifier_ . LexToken(IDENTIFIER,'two',3,39)
+Action : Shift and goto state 50
+
+State  : 50
+Stack  : class_head push_scope LCPAREN type_specifier_ IDENTIFIER . LexToken(COMMA,',',3,42)
+Action : Reduce rule [name -> IDENTIFIER] with ['two'] and goto state 48
+Result : <OBJ @ 0x7fd2faa60b70> (<__main__.OBJ object at 0x7fd2faa60b70>)
+
+State  : 48
+Stack  : class_head push_scope LCPAREN type_specifier_ name . LexToken(COMMA,',',3,42)
+Action : Reduce rule [declarator -> name] with [<OBJ @ 0x7fd2faa60b70>] and goto state 238
+Result : <OBJ @ 0x7fd2faa60ac8> (<__main__.OBJ object at 0x7fd2faa60ac8>)
+
+State  : 238
+Stack  : class_head push_scope LCPAREN type_specifier_ declarator . LexToken(COMMA,',',3,42)
+ERROR: Error  : class_head push_scope LCPAREN type_specifier_ declarator . LexToken(COMMA,',',3,42)
+Error: ine 3:m.cpp

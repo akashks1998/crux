@@ -8,6 +8,7 @@ from lexer import tokens as lexTokens
 from symbolTable import SymbolTable
 import re
 
+pp = pprint.PrettyPrinter(indent=4)
 cnt=0
 tokens = lexTokens
 filename=""
@@ -184,6 +185,11 @@ def p_conditional_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==6:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])==danda(p[5].data["type"]):
+            p[0].data=p[3].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 
 def p_logical_OR_expression(p): 
@@ -194,6 +200,11 @@ def p_logical_OR_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_logical_AND_expression(p): 
     '''logical_AND_expression : inclusive_OR_expression %prec LOWER
@@ -203,6 +214,11 @@ def p_logical_AND_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_inclusive_OR_expression(p): 
     '''inclusive_OR_expression : exclusive_OR_expression %prec LOWER
@@ -212,6 +228,12 @@ def p_inclusive_OR_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
+
 def p_exclusive_OR_expression(p): 
     '''exclusive_OR_expression : AND_expression 
                                | exclusive_OR_expression XOROP AND_expression 
@@ -220,6 +242,11 @@ def p_exclusive_OR_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_AND_expression(p): 
     '''AND_expression : equality_expression 
@@ -229,6 +256,11 @@ def p_AND_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_equality_expression(p): 
     '''equality_expression : relational_expression 
@@ -239,6 +271,11 @@ def p_equality_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])==danda(p[3].data["type"]):
+            p[0].data["type"]="int"
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_relational_expression(p): 
     '''relational_expression : shift_expression 
@@ -251,7 +288,11 @@ def p_relational_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
-        
+    if len(p)==4:
+        if danda(p[1].data["type"])==danda(p[3].data["type"]):
+            p[0].data["type"]="int"
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_shift_expression(p): 
     '''shift_expression : additive_expression 
@@ -262,6 +303,11 @@ def p_shift_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_additive_expression(p): 
     '''additive_expression : multiplicative_expression 
@@ -272,6 +318,12 @@ def p_additive_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if p[1].data==p[3].data:
+            p[0].data=p[1].data
+            print("add")
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_multiplicative_expression(p): 
     '''multiplicative_expression : cast_expression 
@@ -283,6 +335,14 @@ def p_multiplicative_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if p[1].data==p[3].data:
+
+            p[0].data=p[1].data
+            print("mul",p[1].data)
+        else:
+            report_error("Invalid operation", p.lineno(1))
+    
 
 def p_cast_expression(p): 
     '''cast_expression : unary_expression 
@@ -319,6 +379,7 @@ def p_assignment_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
+        print("ass",p[1].data)
         p[0].data = p[1].data
 
 def p_assignment_operator(p): 
@@ -454,7 +515,7 @@ def p_postfix_expression_3(p):
         expected_sig = func_name + "|"
     flag=0
     for fun in func_sig_list:
-        # print(danda(fun[0]), danda(expected_sig))
+        print(danda(fun[0]), danda(expected_sig))
         if danda(fun[0])==danda(expected_sig):
             p[0].data = {"type" : fun[1]}
             flag=1
@@ -559,8 +620,8 @@ def p_literal_char(p):
 
 
 # used for abstract declaration of func, int objstore_destroy(struct objfs_state*, char[]);
-# input                 abstract_class               abstract_type
-# **[][5]               ppaA                         ["*", "*", "", "5"]
+# input                 type                            meta
+# **[][5]               ppaa                         ["*", "*", "", "5"]
 def p_abstract_declarator(p): 
     '''abstract_declarator : unary2_operator %prec LOWER
                            | unary2_operator abstract_declarator %prec LOWER
@@ -572,43 +633,42 @@ def p_abstract_declarator(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     def ok(s):
-        rex = r'^p*(r|[aA]*)$'
+        rex = r'^p*(r|a*)$'
         return re.fullmatch(rex, s)
     if len(p)==2:
-        p[0].data = {"abstract_class" : "p" if (p[1].data == "*") else "r" , "abstract_type" : [p[1].data]}
+        p[0].data = {"type" : "p" if (p[1].data == "*") else "r" , "meta" : [p[1].data]}
     elif len(p)==3 and p[1].data=="[":
-        p[0].data = {"abstract_class" : "a" , "abstract_type" : [""]}
+        p[0].data = {"type" : "a" , "meta" : [""]}
     elif len(p)==4 and p[1].data=="[":
-        p[0].data = {"abstract_class" : "A", "abstract_type" : [p[2].data]}
+        p[0].data = {"type" : "a", "meta" : [p[2].data]}
     elif len(p)==3:
         p[0].data = {
-            "abstract_class" : ("p" if (p[1].data == "*") else "r") + p[2].data['abstract_class'],
-            "abstract_type" : [p[1].data] + p[2].data["abstract_type"]
+            "type" : ("p" if (p[1].data == "*") else "r") + p[2].data["type"],
+            "meta" : [p[1].data] + p[2].data["meta"]
         }
     elif len(p)==4:
         p[0].data = {
-            "abstract_class" : p[1].data["abstract_class"]+"a",
-            "abstract_type" : p[1].data["abstract_type"]+[""]
+            "type" : p[1].data["type"]+"a",
+            "meta" : p[1].data["meta"]+[""]
         }
     else:
         p[0].data = {
-            "abstract_class" : p[1].data["abstract_class"]+"A",
-            "abstract_type" : p[1].data["abstract_type"]+[p[3].data]
+            "type" : p[1].data["type"]+"a",
+            "meta" : p[1].data["meta"]+[p[3].data]
         }
-    err=ok(p[0].data["abstract_class"])
+    err=ok(p[0].data["type"])
     if err == None:
-        print("Syntax Error",p.lineno(1))
-        exit()
+        report_error("Type declaration is wrong", p.lineno(1))
 
         
-def p_declarator0(p): 
+def p_declarator_0(p): 
     '''declarator : name ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = {"name" : p[1].data, "type" : "", "meta" : []}
         
         
-def p_declarator1(p): 
+def p_declarator_1(p): 
     '''declarator : unary2_operator declarator %prec HIGHER  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -619,11 +679,8 @@ def p_declarator1(p):
         "meta" : [p[1].data] + p[2].data["meta"] 
     }
 
-        
-
-   
-        
-def p_declarator3(p): 
+              
+def p_declarator_3(p): 
     '''declarator :  declarator LSPAREN constant_expression RSPAREN  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -632,9 +689,8 @@ def p_declarator3(p):
         "type" : p[1].data['type'] + "a",
         "meta" : p[1].data["meta"] + [p[3].data] 
     }
-        
-        
-def p_declarator4(p): 
+            
+def p_declarator_4(p): 
     '''declarator : declarator LSPAREN RSPAREN  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -657,27 +713,26 @@ def p_arg_list(p):
 
     return_decl = p[-2].data["type"]
     if re.fullmatch( r'^p*$', return_decl) == None:
-        print("Error: given return type not allowed at line " + str(p.lineno(1)))
-        exit()
+        report_error("Given return type not allowed for function", p.lineno(1) )
+
     
-    return_sig = p[-3].data["type"] + "|" + return_decl
-    
+    return_sig = p[-3].data["type"] + "|" + p[-2].data["type"]
     if len(p)==2:
-        temp=p[1].data
+        input_detail=p[1].data
     else:
-        temp=("",[])
-    input_sig = temp
+        input_detail=("",[])
+
     p[0].data = {
         "name" : function_name,
         "return_sig" : return_sig,
-        "input" : input_sig,
+        "input_sig" : input_detail[0],
+        "input" : input_detail[1],
         "body_scope" : currentScopeTable,
-        "declaration": True,
-        "string" :  temp[0]
+        "declaration": True
     }
     parent=getParentScope(currentScopeTable)
-    func_sig = function_name +"|" + temp[0]
-    # print("sd", func_sig)
+    func_sig = function_name +"|" + input_detail[0]
+
     if checkVar(function_name,parent) is False:
         # this function is not seen 
         pushVar(func_sig, p[0].data, scope = parent)
@@ -687,13 +742,11 @@ def p_arg_list(p):
         if func_sig in checkVar(function_name, parent) :
             func_detail = checkVar(func_sig, parent)
             if return_sig != func_detail["return_sig"]:
-                print("Error: " + str(p.lineno(1)) + ": Return type of function "+function_name+" is not correct")
-                exit()
+                report_error("Return Type differs from function declaration", p.lineno(1))
 
             if func_detail["declaration"] == False:
                 # function of same sig has been defined
-                print("Error: " + str(p.lineno(1)) + ": Redeclaration of function "+ function_name)
-                exit()
+                report_error("Redeclaration of function", p.lineno(1))
             else:
                 # function definition to be entered
                 updateVar(func_sig, p[0].data, scope = parent)
@@ -701,12 +754,7 @@ def p_arg_list(p):
         else:
             pushVar(func_sig, p[0].data, scope = parent)
             detail = checkVar(function_name, parent)
-            print("detail : ", detail)
             updateVar(function_name, {"type" : "function_upper", "func_sig" : detail["func_sig"] + [(func_sig, return_sig)]}, scope = parent )
-
-
-
-    
 
 
 def p_argument_declaration_list(p): 
@@ -716,30 +764,35 @@ def p_argument_declaration_list(p):
     p[0] = OBJ() 
     p[0].parse=f(p)  
     if(len(p) == 2 ):
-        p[0].data = ( p[1].data["string"], [p[1].data])
+        p[0].data = ( p[1].data["type"], [p[1].data])
     else:
-        p[0].data = ( p[1].data["string"] + p[3].data[0] , [ p[1].data ] + p[3].data[1] )
+        p[0].data = ( p[1].data["type"] + p[3].data[0] , [ p[1].data ] + p[3].data[1] )
 
 def p_argument_declaration_1(p): 
     '''argument_declaration : type_specifier_ declarator   ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    type_info = {"specifier" : p[1].data, "declarator" : p[2].data }
-    type_string = p[1].data["type"] + "|" + p[2].data["type"]
-    p[0].data = {"name" : p[2].data["name"], "type" : type_info  , "init" : None, "string": type_string  }
-    if pushVar(p[2].data["name"],p[0].data)==False:
-        print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
-        exit()
+    p[0].data = p[1].data
+    p[0].data["type"] = p[0].data["type"] +  p[2].data["type"]
+    p[0].data["name"] = p[2].data["name"]
+    p[0].data["meta"] = p[2].data["meta"]
+    p[0].data["init"] =  None
 
+    if pushVar(p[2].data["name"],p[0].data)==False:
+        report_error("Redeclaration of variable", p.lineno(1))
 
 def p_argument_declaration_2(p): 
     '''argument_declaration :  type_specifier_ declarator  EQUAL expression ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    type_info = {"specifier" : p[1].data, "declarator" : p[2].data }
-    type_string = p[1].data["type"] + "|" + p[2].data["type"]
-    p[0].data = {"name" : p[2].data["name"], "type" : type_info  , "init" : p[4], "string":type_string }
+    p[0].data = p[1].data
+    p[0].data["type"] = p[0].data["type"] +  p[2].data["type"]
+    p[0].data["name"] = p[2].data["name"]
+    p[0].data["meta"] = p[2].data["meta"]
+    p[0].data["init"] =  p[4]
 
+    if pushVar(p[2].data["name"],p[0].data)==False:
+        report_error("Redeclaration of variable", p.lineno(1))
 
 # these two can be removed, will be handled later if time permits
 def p_argument_declaration_3(p): 
@@ -828,7 +881,7 @@ def p_template_arg_list(p):
         p[0].data=p[1].data
         p[0].data.append(p[3].data)
 
-# input -> [class, type, template, template_list, abstract_class, abstract_type, const]
+# input -> [class, type, template, template_list, type, meta, const]
 def p_type_name(p): 
     '''type_name : type_specifier_ abstract_declarator 
                  | type_specifier_ 
@@ -836,10 +889,12 @@ def p_type_name(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==3:
-        p[0].data = {**p[1].data, **p[2].data}
+        p[0].data = p[1].data 
+        p[0].data["type"] = p[0].data["type"] + "|" + p[1].data["type"]
+        p[0].data["meta"] = p[1].data["meta"]
     else:
         p[0].data = p[1].data
-        
+        p[0].data["meta"] = []
 
 def p_type_specifier_(p): 
     '''type_specifier_ : CONST type_specifier 
@@ -886,7 +941,7 @@ def p_simple_type_name(p):
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)   
-    p[0].data = { "class" : "simple","type": p[1].data, "template" : 0, "template_list": None }
+    p[0].data = { "class" : "simple", "type": p[1].data, "template" : 0, "template_list": None }
 
 # input                 class               type        template                    template_list
 # class A<|int,char|>   "class"             A           1                           [int,char]             
@@ -906,10 +961,9 @@ def p_complex_type_specifier(p):
         p[0].data["template_list"]=p[3].data
 
 def p_pure_specifier(p): 
-    '''pure_specifier :   EQUAL NUMBER''' 
+    '''pure_specifier : EQUAL NUMBER''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
 
 # use for class inhertance
 
@@ -964,7 +1018,7 @@ def p_class_head(p):
         p[0].data["base"] = p[3].data["base"]
 
 def p_class_define_specifier1(p): 
-    '''class_define_specifier : class_head LCPAREN RCPAREN 
+    '''class_define_specifier : class_head push_scope LCPAREN RCPAREN pop_scope
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -973,16 +1027,30 @@ def p_class_define_specifier1(p):
     checkVar(p[0].data["type"], scopeId="*")
 
 def p_class_define_specifier2(p): 
-    '''class_define_specifier : class_head LCPAREN member_list RCPAREN 
+    '''class_define_specifier : class_head push_scope LCPAREN member_list RCPAREN pop_scope
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = p[1].data
+    p[0].data["member"] = p[4].data
 
-def p_member_list(p):
+def p_member_list0(p):
     '''member_list : member_access_list
-                   | access_list
-                   | member_list access_list
+    '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = p[1].data
+
+#remaining
+def p_member_list1(p):
+    '''member_list : access_list
+    '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+#remaining
+def p_member_list2(p):
+    '''member_list : member_list access_list
     '''
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -994,45 +1062,68 @@ def p_access_specifier(p):
     '''
     p[0] = OBJ()    
     p[0].parse=f(p)
+    p[0].data = p[1].data
 
+#remaining
 def p_access_list(p):
     '''access_list : access_specifier COLON member_access_list
                    | access_specifier COLON '''
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def p_member_access_list(p):
-    '''member_access_list : member_declaration member_access_list
-                          | member_declaration '''
+def p_member_access_list1(p):
+    '''member_access_list : member_declaration member_access_list'''
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = p[1].data + p[2].data
 
-def p_member_declaration(p):
+def p_member_access_list2(p):
+    '''member_access_list : member_declaration '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = p[1].data
+
+def p_member_declaration0(p):
     '''member_declaration : type_specifier_ member_declarator_list SEMICOLON
                           | member_declarator_list SEMICOLON
-                          | type_specifier_ SEMICOLON
                           | SEMICOLON
-                          | function_definition
-                          |  class_define_specifier SEMICOLON
     '''
+                        #   | class_define_specifier SEMICOLON
                         #   | function_definition SEMICOLON
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==4:
+        for each in p[2].data:
+            
+    p[0].data = []
+
+def p_member_declaration1(p):
+    '''member_declaration : function_definition
+    '''
+                        #   | class_define_specifier SEMICOLON
+                        #   | function_definition SEMICOLON
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = [p[1].data]
 
 def p_member_declarator_list(p): 
     '''member_declarator_list : member_declarator 
-                              | member_declarator_list COMMA member_declarator 
+                              | member_declarator COMMA member_declarator_list
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
+    if len(p)==4:
+        p[0].data = p[1].data + p[3].data
+    else:
+        p[0].data = p[1].data
 
 def p_member_declarator(p): 
-    '''member_declarator : declarator pure_specifier 
-                         | declarator 
-                         
+    '''member_declarator : declarator  
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = [p[1].data]
 
 def p_function_definition(p): 
     '''function_definition : type_specifier_ declarator func_push_scope arg_list  RPAREN fct_body pop_scope 
@@ -1041,7 +1132,7 @@ def p_function_definition(p):
     p[0].parse=f(p)
 
     function_name = p[2].data["name"]
-    func_sig = function_name +"|" + p[4].data["string"]
+    func_sig = function_name +"|" + p[4].data["input_sig"]
     
     func_detail = checkVar(func_sig, "*")
     # updateVar(func_sig, func_detail)    
@@ -1167,12 +1258,15 @@ def p_declaration0(p):
     for each in decl_list:
         type_info = {"specifier" : p[1].data, "declarator" : each }
         type_string = p[1].data["type"] + "|" + each["type"]
-        to_push  = {"name" : each["name"], "type" : type_string  , "init" : None, "string": type_string  }
-        print("pushing", to_push["name"])
-        if pushVar(each["name"],to_push)==False:
-            print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
-            exit()
-
+        print(each)
+        if "pred_type" not in each.keys() or danda(type_string)==danda(each["pred_type"]):
+            to_push  = {"name" : each["name"], "type" : type_string  , "init" : None, "string": type_string  }
+            print("pushing", to_push["name"])
+            if pushVar(each["name"],to_push)==False:
+                print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
+                exit()
+        else:
+            report_error("Assigned type is not same as given type",p.lineno(1))
 
 def p_declaration1(p):
     '''declaration :  asm_declaration  ''' 
@@ -1235,18 +1329,31 @@ def p_init_declarator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
-    if len(p) == 2:
-        p[0].data = p[1].data
-    else:
-        pass
+    p[0].data = p[1].data
+    if len(p) == 3:
+        print("init dec",p[2].data["type"])
+        p[0].data["pred_type"]=p[2].data["type"]
+        
+        
 
 def p_initializer(p): 
-    '''initializer :   EQUAL assignment_expression 
-                   |   EQUAL LCPAREN initializer_list RCPAREN 
-                   |   EQUAL LCPAREN initializer_list COMMA RCPAREN 
-                   | LPAREN expression_list  RPAREN 
-    ''' 
+    '''initializer :   EQUAL assignment_expression''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data=p[2].data
+
+def p_initializer1(p): 
+    '''initializer :   EQUAL LCPAREN initializer_list RCPAREN''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+
+def p_initializer2(p): 
+    '''initializer :   EQUAL LCPAREN initializer_list COMMA RCPAREN''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+
+def p_initializer3(p): 
+    '''initializer :   LPAREN expression_list  RPAREN''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
 
@@ -1284,7 +1391,6 @@ def p_pop_scope(p):
     popScope()
 
 def scope_table_graph(S):
-    pp = pprint.PrettyPrinter(indent=4)
     open('scope.gz','w').write("digraph ethane{ rankdir=LR {graph [ordering=\"out\"];node [fontsize=20 width=0.25 shape=box ]; ")
     cnt=0
     done = {}
