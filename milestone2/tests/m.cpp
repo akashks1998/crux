@@ -11,6 +11,7 @@ void func(){
 }
 
 int main(int a, char **b){
-   int c,d;
+float e;
+   int c,d=e+e;
     func(c);
 }
