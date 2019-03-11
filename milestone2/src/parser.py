@@ -292,7 +292,7 @@ def p_assignment_expression(p):
     p[0].parse=f(p)
 
 def p_assignment_operator(p): 
-    '''assignment_operator :   EQUAL 
+    '''assignment_operator : EQUAL 
                            | MULTEQOP 
                            | DIVEQOP 
                            | MODEQOP 
