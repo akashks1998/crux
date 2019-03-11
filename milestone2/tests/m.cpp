@@ -1,10 +1,12 @@
+int a;
 class Num : public class A
 {
-    float two,three,two;
+    float two,**three,twwo;
     void Num()
     {
         int h;
         this->two = 2.00;
+        a=1;
     }
     void ~~Num()
     {

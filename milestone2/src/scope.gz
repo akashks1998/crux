@@ -6,6 +6,27 @@ digraph ethane{ rankdir=LR {graph [ordering="out"];node [fontsize=20 width=0.25 
                 'input_sig': '',
                 'name': 'Num',
                 'return_sig': 'void|'},
+    'three': {   'class': 'simple',
+                 'const': 0,
+                 'meta': ['*', '*'],
+                 'name': 'three',
+                 'template': 0,
+                 'template_list': None,
+                 'type': 'float|pp'},
+    'two': {   'class': 'simple',
+               'const': 0,
+               'meta': [],
+               'name': 'two',
+               'template': 0,
+               'template_list': None,
+               'type': 'float|'},
+    'twwo': {   'class': 'simple',
+                'const': 0,
+                'meta': [],
+                'name': 'twwo',
+                'template': 0,
+                'template_list': None,
+                'type': 'float|'},
     '~~Num': {'func_sig': [('~~Num|', 'void|')], 'type': 'function_upper'},
     '~~Num|': {   'body_scope': 3,
                   'declaration': True,
@@ -14,37 +35,60 @@ digraph ethane{ rankdir=LR {graph [ordering="out"];node [fontsize=20 width=0.25 
                   'name': '~~Num',
                   'return_sig': 'void|'}}"]
 
-0[label="{   'main': {   'func_sig': [('main|intcharpp', 'int|')],
+0[label="{   'Num': {'base': [], 'class': 'class', 'scope': 1, 'type': 'Num'},
+    'a': {   'class': 'simple',
+             'const': 0,
+             'init': None,
+             'meta': [],
+             'name': 'a',
+             'template': 0,
+             'template_list': None,
+             'type': 'int|'},
+    'main': {   'func_sig': [('main|int|,char|pp', 'int|')],
                 'type': 'function_upper'},
-    'main|intcharpp': {   'body_scope': 4,
-                          'declaration': True,
-                          'input': [   {   'class': 'simple',
-                                           'const': 0,
-                                           'init': None,
-                                           'meta': [],
-                                           'name': 'a',
-                                           'template': 0,
-                                           'template_list': None,
-                                           'type': 'int'},
-                                       {   'class': 'simple',
-                                           'const': 0,
-                                           'init': None,
-                                           'meta': ['*', '*'],
-                                           'name': 'b',
-                                           'template': 0,
-                                           'template_list': None,
-                                           'type': 'charpp'}],
-                          'input_sig': 'intcharpp',
-                          'name': 'main',
-                          'return_sig': 'int|'}}"]
+    'main|int|,char|pp': {   'body_scope': 4,
+                             'declaration': True,
+                             'input': [   {   'class': 'simple',
+                                              'const': 0,
+                                              'init': None,
+                                              'meta': [],
+                                              'name': 'a',
+                                              'template': 0,
+                                              'template_list': None,
+                                              'type': 'int|'},
+                                          {   'class': 'simple',
+                                              'const': 0,
+                                              'init': None,
+                                              'meta': ['*', '*'],
+                                              'name': 'b',
+                                              'template': 0,
+                                              'template_list': None,
+                                              'type': 'char|pp'}],
+                             'input_sig': 'int|,char|pp',
+                             'name': 'main',
+                             'return_sig': 'int|'}}"]
 
 0 -> 1
 
-2[label="{'h': {'init': None, 'name': 'h', 'string': 'int|', 'type': 'int|'}}"]
+2[label="{   'h': {   'class': 'simple',
+             'const': 0,
+             'init': None,
+             'meta': [],
+             'name': 'h',
+             'template': 0,
+             'template_list': None,
+             'type': 'int|'}}"]
 
 1 -> 2
 
-3[label="{'o': {'init': None, 'name': 'o', 'string': 'int|', 'type': 'int|'}}"]
+3[label="{   'o': {   'class': 'simple',
+             'const': 0,
+             'init': None,
+             'meta': [],
+             'name': 'o',
+             'template': 0,
+             'template_list': None,
+             'type': 'int|'}}"]
 
 1 -> 3
 
@@ -55,7 +99,7 @@ digraph ethane{ rankdir=LR {graph [ordering="out"];node [fontsize=20 width=0.25 
              'name': 'a',
              'template': 0,
              'template_list': None,
-             'type': 'int'},
+             'type': 'int|'},
     'b': {   'class': 'simple',
              'const': 0,
              'init': None,
@@ -63,7 +107,7 @@ digraph ethane{ rankdir=LR {graph [ordering="out"];node [fontsize=20 width=0.25 
              'name': 'b',
              'template': 0,
              'template_list': None,
-             'type': 'charpp'}}"]
+             'type': 'char|pp'}}"]
 
 0 -> 4
 

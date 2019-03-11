@@ -78,10 +78,14 @@ def pushVar(identifier, val,scope = None):
     
     
 
-def updateVar(identifier, val,scope):
+def updateVar(identifier, val,scope=None):
     global scopeTableList
     global currentScopeTable
-    scopeTableList[scope].update(identifier, val)
+
+    if scope == None:    
+        scopeTableList[currentScopeTable].update(identifier, val)
+    else:
+        scopeTableList[scope].update(identifier, val)
     
 
 def checkVar(identifier,scopeId="**"):
@@ -184,10 +188,10 @@ def p_conditional_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = p[1].data.copy()
     if len(p)==6:
         if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])==danda(p[5].data["type"]):
-            p[0].data=p[3].data
+            p[0].data=p[3].data.copy()
         else:
             report_error("Invalid operation", p.lineno(1))
 
@@ -379,7 +383,6 @@ def p_assignment_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        print("ass",p[1].data)
         p[0].data = p[1].data
 
 def p_assignment_operator(p): 
@@ -491,7 +494,7 @@ def p_postfix_expression_2(p):
     p[0].data = {"type": p[1].data["type"] + "a"}
 
 def danda(s):
-    return s.strip("|")
+    return s
 
 def p_postfix_expression_3(p): 
     '''postfix_expression : postfix_expression  LPAREN expression_list  RPAREN 
@@ -510,13 +513,14 @@ def p_postfix_expression_3(p):
     except:
         report_error("function not declared", p.lineno(1))
     if len(p)==5:
+        print(p[3].data)
         expected_sig = func_name + "|" + p[3].data["type"] 
     else:
         expected_sig = func_name + "|"
     flag=0
     for fun in func_sig_list:
-        print(danda(fun[0]), danda(expected_sig))
-        if danda(fun[0])==danda(expected_sig):
+        print(fun[0], "::" , expected_sig)
+        if fun[0]==expected_sig:
             p[0].data = {"type" : fun[1]}
             flag=1
     if flag==0:
@@ -565,6 +569,7 @@ def p_primary_expression0(p):
         report_error( str(p[1].data) + " not declared" , p.lineno(1) )
     v_type = detail["var"]["type"]
     p[0].data = {"type": v_type}
+    print("assdsdd",v_type)
     if v_type=="function_upper":
         p[0].data["func_sig"] = detail["var"]["func_sig"]
         p[0].data["func_name"] = p[1].data
@@ -766,14 +771,14 @@ def p_argument_declaration_list(p):
     if(len(p) == 2 ):
         p[0].data = ( p[1].data["type"], [p[1].data])
     else:
-        p[0].data = ( p[1].data["type"] + p[3].data[0] , [ p[1].data ] + p[3].data[1] )
+        p[0].data = ( p[1].data["type"] +  ","  +p[3].data[0] , [ p[1].data ] + p[3].data[1] )
 
 def p_argument_declaration_1(p): 
     '''argument_declaration : type_specifier_ declarator   ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
-    p[0].data["type"] = p[0].data["type"] +  p[2].data["type"]
+    p[0].data = p[1].data.copy()
+    p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
     p[0].data["name"] = p[2].data["name"]
     p[0].data["meta"] = p[2].data["meta"]
     p[0].data["init"] =  None
@@ -785,8 +790,8 @@ def p_argument_declaration_2(p):
     '''argument_declaration :  type_specifier_ declarator  EQUAL expression ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
-    p[0].data["type"] = p[0].data["type"] +  p[2].data["type"]
+    p[0].data = p[1].data.copy()
+    p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
     p[0].data["name"] = p[2].data["name"]
     p[0].data["meta"] = p[2].data["meta"]
     p[0].data["init"] =  p[4]
@@ -1023,7 +1028,7 @@ def p_class_define_specifier1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = p[1].data
-    p[0].data["member"] = {}
+    p[0].data["scope"] = p[4].scope
     checkVar(p[0].data["type"], scopeId="*")
 
 def p_class_define_specifier2(p): 
@@ -1032,7 +1037,10 @@ def p_class_define_specifier2(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = p[1].data
-    p[0].data["member"] = p[4].data
+    p[0].data["scope"] = p[4].scope
+    if pushVar(p[0].data["type"], p[0].data)==False:
+            report_error("Redeclaration of variable", p.lineno(1))
+    
 
 def p_member_list0(p):
     '''member_list : member_access_list
@@ -1040,6 +1048,7 @@ def p_member_list0(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = p[1].data
+    p[0].scope = currentScopeTable
 
 #remaining
 def p_member_list1(p):
@@ -1047,6 +1056,7 @@ def p_member_list1(p):
     '''
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].scope = currentScopeTable
 
 #remaining
 def p_member_list2(p):
@@ -1054,6 +1064,7 @@ def p_member_list2(p):
     '''
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].scope = currentScopeTable
 
 def p_access_specifier(p):
     '''access_specifier : PRIVATE
@@ -1067,7 +1078,7 @@ def p_access_specifier(p):
 #remaining
 def p_access_list(p):
     '''access_list : access_specifier COLON member_access_list
-                   | access_specifier COLON '''
+    '''
     p[0] = OBJ() 
     p[0].parse=f(p)
 
@@ -1075,27 +1086,34 @@ def p_member_access_list1(p):
     '''member_access_list : member_declaration member_access_list'''
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data + p[2].data
+    p[0].data = [p[1].data] + p[2].data
 
 def p_member_access_list2(p):
     '''member_access_list : member_declaration '''
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data = [p[1].data]
 
 def p_member_declaration0(p):
     '''member_declaration : type_specifier_ member_declarator_list SEMICOLON
-                          | member_declarator_list SEMICOLON
                           | SEMICOLON
     '''
                         #   | class_define_specifier SEMICOLON
                         #   | function_definition SEMICOLON
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = {}
     if len(p)==4:
-        for each in p[2].data:
-            
-    p[0].data = []
+        decl_list = p[2].data
+        for each in decl_list:
+            data = p[1].data.copy()
+            data["type"] = p[1].data["type"] + "|" +  each["type"]
+            data["name"] = each["name"]
+            data["meta"] = each["meta"]
+            if pushVar(each["name"], data)==False:
+                report_error("Redeclaration of variable", p.lineno(1))
+            p[0].data[each["name"]] = data
+    pp.pprint(p[0].data)
 
 def p_member_declaration1(p):
     '''member_declaration : function_definition
@@ -1135,7 +1153,7 @@ def p_function_definition(p):
     func_sig = function_name +"|" + p[4].data["input_sig"]
     
     func_detail = checkVar(func_sig, "*")
-    # updateVar(func_sig, func_detail)    
+    updateVar(func_sig, func_detail)    
 
 
 def p_function_decl(p): 
@@ -1256,17 +1274,16 @@ def p_declaration0(p):
     p[0].parse=f(p)
     decl_list = p[2].data
     for each in decl_list:
-        type_info = {"specifier" : p[1].data, "declarator" : each }
-        type_string = p[1].data["type"] + "|" + each["type"]
-        print(each)
-        if "pred_type" not in each.keys() or danda(type_string)==danda(each["pred_type"]):
-            to_push  = {"name" : each["name"], "type" : type_string  , "init" : None, "string": type_string  }
-            print("pushing", to_push["name"])
-            if pushVar(each["name"],to_push)==False:
-                print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
-                exit()
-        else:
-            report_error("Assigned type is not same as given type",p.lineno(1))
+        data = p[1].data.copy()
+        data["type"] = p[1].data["type"] + "|" +  each["type"]
+        data["name"] = each["name"]
+        data["meta"] = each["meta"]
+        data["init"] = each["init"]
+
+        if pushVar(each["name"], data)==False:
+            report_error("Redeclaration of variable", p.lineno(1))
+
+
 
 def p_declaration1(p):
     '''declaration :  asm_declaration  ''' 
@@ -1331,8 +1348,11 @@ def p_init_declarator(p):
     p[0].parse=f(p)
     p[0].data = p[1].data
     if len(p) == 3:
-        print("init dec",p[2].data["type"])
-        p[0].data["pred_type"]=p[2].data["type"]
+        p[0].data["init_type"]=p[2].data["type"]
+        p[0].data["init"] = None
+    else:
+        p[0].data["init_type"]= None
+        p[0].data["init"] = None
         
         
 
@@ -1380,7 +1400,7 @@ def p_expression_list(p):
     if len(p)==2:
         p[0].data = p[1].data
     else:
-        p[0].data = {"type" : p[1].data["type"] + p[3].data["type"]}
+        p[0].data = {"type" : p[1].data["type"] + "," + p[3].data["type"]}
 
 def p_push_scope(p):
     '''push_scope : '''
