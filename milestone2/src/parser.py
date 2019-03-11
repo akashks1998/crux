@@ -184,6 +184,11 @@ def p_conditional_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==6:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])==danda(p[5].data["type"]):
+            p[0].data=p[3].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 
 def p_logical_OR_expression(p): 
@@ -194,6 +199,11 @@ def p_logical_OR_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_logical_AND_expression(p): 
     '''logical_AND_expression : inclusive_OR_expression %prec LOWER
@@ -203,6 +213,11 @@ def p_logical_AND_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_inclusive_OR_expression(p): 
     '''inclusive_OR_expression : exclusive_OR_expression %prec LOWER
@@ -212,6 +227,12 @@ def p_inclusive_OR_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
+
 def p_exclusive_OR_expression(p): 
     '''exclusive_OR_expression : AND_expression 
                                | exclusive_OR_expression XOROP AND_expression 
@@ -220,6 +241,11 @@ def p_exclusive_OR_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_AND_expression(p): 
     '''AND_expression : equality_expression 
@@ -229,6 +255,11 @@ def p_AND_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_equality_expression(p): 
     '''equality_expression : relational_expression 
@@ -239,6 +270,11 @@ def p_equality_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])==danda(p[3].data["type"]):
+            p[0].data["type"]="int"
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_relational_expression(p): 
     '''relational_expression : shift_expression 
@@ -251,7 +287,11 @@ def p_relational_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
-        
+    if len(p)==4:
+        if danda(p[1].data["type"])==danda(p[3].data["type"]):
+            p[0].data["type"]="int"
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_shift_expression(p): 
     '''shift_expression : additive_expression 
@@ -262,6 +302,11 @@ def p_shift_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
+            p[0].data=p[1].data
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_additive_expression(p): 
     '''additive_expression : multiplicative_expression 
@@ -272,6 +317,12 @@ def p_additive_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if p[1].data==p[3].data:
+            p[0].data=p[1].data
+            print("add")
+        else:
+            report_error("Invalid operation", p.lineno(1))
 
 def p_multiplicative_expression(p): 
     '''multiplicative_expression : cast_expression 
@@ -283,6 +334,14 @@ def p_multiplicative_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    if len(p)==4:
+        if p[1].data==p[3].data:
+
+            p[0].data=p[1].data
+            print("mul",p[1].data)
+        else:
+            report_error("Invalid operation", p.lineno(1))
+    
 
 def p_cast_expression(p): 
     '''cast_expression : unary_expression 
@@ -319,6 +378,7 @@ def p_assignment_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
+        print("ass",p[1].data)
         p[0].data = p[1].data
 
 def p_assignment_operator(p): 
@@ -1144,12 +1204,15 @@ def p_declaration0(p):
     for each in decl_list:
         type_info = {"specifier" : p[1].data, "declarator" : each }
         type_string = p[1].data["type"] + "|" + each["type"]
-        to_push  = {"name" : each["name"], "type" : type_string  , "init" : None, "string": type_string  }
-        print("pushing", to_push["name"])
-        if pushVar(each["name"],to_push)==False:
-            print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
-            exit()
-
+        print(each)
+        if "pred_type" not in each.keys() or danda(type_string)==danda(each["pred_type"]):
+            to_push  = {"name" : each["name"], "type" : type_string  , "init" : None, "string": type_string  }
+            print("pushing", to_push["name"])
+            if pushVar(each["name"],to_push)==False:
+                print("Error:"+ str(p.lineno(1))+" redeclaration of variable")
+                exit()
+        else:
+            report_error("Assigned type is not same as given type",p.lineno(1))
 
 def p_declaration1(p):
     '''declaration :  asm_declaration  ''' 
@@ -1212,18 +1275,31 @@ def p_init_declarator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
-    if len(p) == 2:
-        p[0].data = p[1].data
-    else:
-        pass
+    p[0].data = p[1].data
+    if len(p) == 3:
+        print("init dec",p[2].data["type"])
+        p[0].data["pred_type"]=p[2].data["type"]
+        
+        
 
 def p_initializer(p): 
-    '''initializer :   EQUAL assignment_expression 
-                   |   EQUAL LCPAREN initializer_list RCPAREN 
-                   |   EQUAL LCPAREN initializer_list COMMA RCPAREN 
-                   | LPAREN expression_list  RPAREN 
-    ''' 
+    '''initializer :   EQUAL assignment_expression''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data=p[2].data
+
+def p_initializer1(p): 
+    '''initializer :   EQUAL LCPAREN initializer_list RCPAREN''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+
+def p_initializer2(p): 
+    '''initializer :   EQUAL LCPAREN initializer_list COMMA RCPAREN''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+
+def p_initializer3(p): 
+    '''initializer :   LPAREN expression_list  RPAREN''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
 

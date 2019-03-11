@@ -124,7 +124,8 @@ digraph ethane{ rankdir=LR {graph [ordering="out"];node [fontsize=20 width=0.25 
                                           'template_list': None,
                                           'type': 'char'}}},
     'c': {'init': None, 'name': 'c', 'string': 'int|', 'type': 'int|'},
-    'd': {'init': None, 'name': 'd', 'string': 'int|', 'type': 'int|'}}"]
+    'd': {'init': None, 'name': 'd', 'string': 'int|', 'type': 'int|'},
+    'e': {'init': None, 'name': 'e', 'string': 'int|', 'type': 'int|'}}"]
 
 0 -> 4
 
