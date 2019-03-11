@@ -83,7 +83,7 @@ def updateVar(identifier, val,scope):
     scopeTableList[scope].update(identifier, val)
     
 
-def checkVar(identifier,scopeId):
+def checkVar(identifier,scopeId="**"):
     global scopeTableList
     global currentScopeTable
     if scopeId == "global":
@@ -253,21 +253,15 @@ def p_additive_expression(p):
     p[0].parse=f(p)
 
 def p_multiplicative_expression(p): 
-    '''multiplicative_expression : pm_expression 
-                                 | multiplicative_expression MULTOP pm_expression 
-                                 | multiplicative_expression DIVOP pm_expression 
-                                 | multiplicative_expression MODOP pm_expression 
+    '''multiplicative_expression : cast_expression 
+                                 | multiplicative_expression MULTOP cast_expression 
+                                 | multiplicative_expression DIVOP cast_expression 
+                                 | multiplicative_expression MODOP cast_expression 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def p_pm_expression(p): 
-    '''pm_expression : cast_expression 
-                     | pm_expression DOTSTAR cast_expression 
-                     | pm_expression ARROWSTAR cast_expression 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+
 
 def p_expression(p): 
     '''expression : assignment_expression 
@@ -276,6 +270,7 @@ def p_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = {"type" : ""} 
 
 def p_throw_expression(p): 
     '''throw_expression : THROW expression 
@@ -395,21 +390,29 @@ def p_postfix_expression(p):
     p[0].parse=f(p)
 
 
+def report_error(msg, line):
+    print("Error at line : " + str(line) + " :: " + msg)
+    exit()
 
 def p_primary_expression0(p): 
     '''primary_expression : name   
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    # p[0].data = {"type" : p[1].data["type"]}
+    detail = checkVar(p[1].data)
+    if detail ==  False:
+        report_error( str(p[1].data) + " not declared" , p.lineno(1) )
+    else:
+        v_type = detail["var"]["type"]
+        p[0].data = {"type": v_type}
+
 
 def p_primary_expression1(p): 
-    '''primary_expression : literal           
-    ''' 
+    ''' primary_expression : literal ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    # p[0].data = {"type" : p[1].data["type"]}
-
+    p[0].data = p[1].data
+    
     
 def p_primary_expression2(p): 
     '''primary_expression : THIS  
@@ -425,10 +428,8 @@ def p_primary_expression3(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    # p[0].data = {"type" : p[2].data["type"]}
+    p[0].data = {"type" : p[2].data["type"]}
 
-
-   
 
 def p_literal_string(p): 
     '''literal :  STRING_L ''' 
