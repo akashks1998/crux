@@ -1333,17 +1333,16 @@ def p_declaration0(p):
         data["name"] = each["name"]
         data["meta"] = each["meta"]
         data["init"] = each["init"]
-
         if(data["class"] ==  "class" or data["class"] ==  "class"):
             if(each["type"] != ""):
                 # constructor should be called
                 pass
-
-
-        if pushVar(each["name"], data)==False:
-            report_error("Redeclaration of variable", p.lineno(1))
-
-   
+        if "init_type" not in each.keys() or data["type"]==each["init_type"]:
+            if pushVar(each["name"],data)==False:
+                report_error("Redeclaration of variable", p.lineno(1))
+        else:
+            print("Type,", each["init_type"])
+            report_error("Assigned type is not same as given type",p.lineno(1))   
 
 def p_declaration1(p):
     '''declaration :  asm_declaration  ''' 
@@ -1410,9 +1409,7 @@ def p_init_declarator(p):
     if len(p) == 3:
         p[0].data["init_type"]=p[2].data["type"]
         p[0].data["init"] = None
-    else:
-        p[0].data["init_type"]= None
-        p[0].data["init"] = None
+    p[0].data["init"] = None
 
 def p_initializer(p): 
     '''initializer :   EQUAL assignment_expression''' 
