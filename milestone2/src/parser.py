@@ -34,12 +34,26 @@ def f(p):
 scopeTableList = []
 globalScopeTable = SymbolTable()
 scopeTableList.append(globalScopeTable)
+currentLabel=0
+currentTmp=0
 
 currentScopeTable = 0
 
 class OBJ:
     data = None
     pass
+
+def getnewlabel():
+    global currentLabel
+    label = "label" + str(currentLabel)
+    currentLabel = currentLabel + 1
+    return label
+
+def getnewvar():
+    global currentTmp
+    tmp = "tmp" + str(currentTmp)
+    currentTmp = currentTmp + 1
+    return tmp
 
 def pushScope():
     global scopeTableList
@@ -1391,8 +1405,6 @@ def p_init_declarator(p):
     else:
         p[0].data["init_type"]= None
         p[0].data["init"] = None
-        
-        
 
 def p_initializer(p): 
     '''initializer :   EQUAL assignment_expression''' 
