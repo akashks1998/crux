@@ -171,7 +171,7 @@ def p_declaration_seq(p):
     p[0].parse=f(p)
 
 def p_error(p):
-    print("Error: ine " + str(p.lineno) + ":" + filename.split('/')[-1])
+    print("Error: line " + str(p.lineno) + ":" + filename.split('/')[-1])
     exit()
 
 def p_empty(p): 
@@ -423,15 +423,23 @@ def p_unary_expression(p):
                         | DMINUSOP unary_expression 
                         | unary1_operator cast_expression 
                         | unary2_operator cast_expression 
-                        | SIZEOF  unary_expression 
                         | SIZEOF LPAREN type_name  RPAREN 
                         | allocation_expression 
                         | deallocation_expression 
     ''' 
+                        # | SIZEOF  unary_expression 
     p[0] = OBJ() 
+    allowed_type=["int","float","char"]
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    elif len(p)==3:
+        if p[2].data["type"] in allowed_type:
+            p[0].data=p[2].data
+        else:
+            report_error("This unary operation is not allowed with given type", p.lineno(1))
+    elif len(p)==5:
+        p[0].data["type"]="int"
     
 
 def p_deallocation_expression(p): 
