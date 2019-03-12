@@ -34,12 +34,26 @@ def f(p):
 scopeTableList = []
 globalScopeTable = SymbolTable()
 scopeTableList.append(globalScopeTable)
+currentLabel=0
+currentTmp=0
 
 currentScopeTable = 0
 
 class OBJ:
     data = None
     pass
+
+def getnewlabel():
+    global currentLabel
+    label = "label" + str(currentLabel)
+    currentLabel = currentLabel + 1
+    return label
+
+def getnewvar():
+    global currentTmp
+    tmp = "tmp" + str(currentTmp)
+    currentTmp = currentTmp + 1
+    return tmp
 
 def pushScope():
     global scopeTableList
@@ -512,11 +526,18 @@ def p_postfix_expression_2(p):
 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    # expression type should be int or float
-    if(p[3].data["type"] != "float" or p[3].data["type"] != "int"):
+
+    if(p[3].data["type"] != "float" and p[3].data["type"] != "int"):
         report_error("Array index is not integer", p.lineno(3))
     
-    p[0].data = {"type": p[1].data["type"] + "a"}
+    type_last_char = p[1].data["type"][-1]
+    if type_last_char == "p" or type_last_char == "a":
+        if(p[1].data["type"][-2] == "|"):
+            p[0].data = {"type": p[1].data["type"][:-2]}
+        else:
+            p[0].data = {"type": p[1].data["type"][:-1]}
+    else:
+        report_error("Not a array or pointer", p.lineno(0))
 
 def danda(s):
     return s
@@ -558,19 +579,22 @@ def p_postfix_expression_5(p):
     p[0].parse=f(p)
 
 
-
-
 def p_postfix_expression_6(p): 
     '''postfix_expression : postfix_expression DOT name  ''' 
 
     p[0] = OBJ() 
     p[0].parse=f(p)
 
+    # post_fix must be a object and name should be a class member
+
+
 def p_postfix_expression_7(p): 
     '''postfix_expression : postfix_expression ARROW name  ''' 
 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    # post_fix must be a object pointer and name should be a class member
+
 
 def p_postfix_expression_8(p): 
     '''postfix_expression : postfix_expression  DPLUSOP 
@@ -1310,10 +1334,16 @@ def p_declaration0(p):
         data["meta"] = each["meta"]
         data["init"] = each["init"]
 
+        if(data["class"] ==  "class" or data["class"] ==  "class"):
+            if(each["type"] != ""):
+                # constructor should be called
+                pass
+
+
         if pushVar(each["name"], data)==False:
             report_error("Redeclaration of variable", p.lineno(1))
 
-
+   
 
 def p_declaration1(p):
     '''declaration :  asm_declaration  ''' 
@@ -1383,8 +1413,6 @@ def p_init_declarator(p):
     else:
         p[0].data["init_type"]= None
         p[0].data["init"] = None
-        
-        
 
 def p_initializer(p): 
     '''initializer :   EQUAL assignment_expression''' 
