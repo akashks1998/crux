@@ -113,6 +113,10 @@ def checkVar(identifier,scopeId="**"):
             return scopeTableList[scopeId].getDetail(identifier)
         return False
 
+def report_error(msg, line):
+    print("Error at line : " + str(line) + " :: " + msg)
+    exit()
+
 start = 'program'
 
 precedence = (
@@ -189,12 +193,15 @@ def p_conditional_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data.copy()
-    if len(p)==6:
-        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])==danda(p[5].data["type"]):
-            p[0].data=p[3].data.copy()
-        else:
-            report_error("Invalid operation", p.lineno(1))
+    else:
+        allowed_type = ["int", "char", "float"]
+        if p[1].data["type"] not in allowed_type:
+            report_error("Expected integer, char or float, found something else", p.lineno(0))
+        if p[3].data["type"] != p[5].data["type"]:
+            report_error("Type mismatch between two opearands", p.lineno(0))
 
+        p[0].data = { "type" : p[3].data["type"] }
+        
 
 def p_logical_OR_expression(p): 
     '''logical_OR_expression : logical_AND_expression 
@@ -202,13 +209,15 @@ def p_logical_OR_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
-            p[0].data=p[1].data
+        allowed_type = ["int", "char", "float"]
+        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
+            report_error("Type not compatible with OR operation", p.lineno(0))
 
 def p_logical_AND_expression(p): 
     '''logical_AND_expression : inclusive_OR_expression %prec LOWER
@@ -219,24 +228,27 @@ def p_logical_AND_expression(p):
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
-            p[0].data=p[1].data
+        allowed_type = ["int", "char", "float"]
+        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
+            report_error("Type not compatible with AND operation", p.lineno(0))
+
 
 def p_inclusive_OR_expression(p): 
-    '''inclusive_OR_expression : exclusive_OR_expression %prec LOWER
-                               | inclusive_OR_expression OROP exclusive_OR_expression %prec HIGHER
+    '''inclusive_OR_expression : exclusive_OR_expression 
+                               | inclusive_OR_expression BOROP exclusive_OR_expression 
     ''' 
+    # this is bitwise or
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
-            p[0].data=p[1].data
+        if p[1].data["type"]=="int" and p[3].data["type"] =="int":
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
+            report_error("Type not compatible with bitwise or operation", p.lineno(1))
 
 def p_exclusive_OR_expression(p): 
     '''exclusive_OR_expression : AND_expression 
@@ -247,10 +259,10 @@ def p_exclusive_OR_expression(p):
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
-            p[0].data=p[1].data
+        if p[1].data["type"]=="int" and p[3].data["type"] =="int":
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
+            report_error("Type not compatible with bitwise xor operation", p.lineno(1))
 
 def p_AND_expression(p): 
     '''AND_expression : equality_expression 
@@ -261,10 +273,11 @@ def p_AND_expression(p):
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
-            p[0].data=p[1].data
+        if p[1].data["type"]=="int" and p[3].data["type"] =="int":
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
+            report_error("Type not compatible with bitwise and operation", p.lineno(1))
+
 
 def p_equality_expression(p): 
     '''equality_expression : relational_expression 
@@ -276,10 +289,11 @@ def p_equality_expression(p):
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if danda(p[1].data["type"])==danda(p[3].data["type"]):
-            p[0].data["type"]="int"
+        allowed_type = ["int", "char", "float"]
+        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
+            report_error("Type not compatible with relational operation", p.lineno(0))
 
 def p_relational_expression(p): 
     '''relational_expression : shift_expression 
@@ -293,10 +307,12 @@ def p_relational_expression(p):
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if danda(p[1].data["type"])==danda(p[3].data["type"]):
-            p[0].data["type"]="int"
+        allowed_type = ["int", "char", "float"]
+        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
+            report_error("Type not compatible with relational operation", p.lineno(0))
+
 
 def p_shift_expression(p): 
     '''shift_expression : additive_expression 
@@ -308,10 +324,11 @@ def p_shift_expression(p):
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if danda(p[1].data["type"])=="int" and danda(p[3].data["type"])=="int":
-            p[0].data=p[1].data
+        allowed_type = ["int", "char"]
+        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
+            report_error(" Type not compatible with bitwise shift operation ", p.lineno(0))
 
 def p_additive_expression(p): 
     '''additive_expression : multiplicative_expression 
@@ -323,11 +340,12 @@ def p_additive_expression(p):
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if p[1].data==p[3].data:
-            p[0].data=p[1].data
-            print("add")
+        allowed_type = ["int", "char", "float"]
+        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
+            report_error("Type not compatible with plus , minus operation", p.lineno(0))
+
 
 def p_multiplicative_expression(p): 
     '''multiplicative_expression : cast_expression 
@@ -340,13 +358,12 @@ def p_multiplicative_expression(p):
     if len(p)==2:
         p[0].data = p[1].data
     if len(p)==4:
-        if p[1].data==p[3].data:
-
-            p[0].data=p[1].data
-            print("mul",p[1].data)
+        allowed_type = ["int", "char", "float"]
+        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+            p[0].data = {"type" : "int"}
         else:
-            report_error("Invalid operation", p.lineno(1))
-    
+            report_error("Type not compatible with mult, div operation", p.lineno(0))
+
 
 def p_cast_expression(p): 
     '''cast_expression : unary_expression 
@@ -536,28 +553,25 @@ def p_postfix_expression_5(p):
 
 
 def p_postfix_expression_6(p): 
-    '''postfix_expression : postfix_expression     DOT name  ''' 
+    '''postfix_expression : postfix_expression DOT name  ''' 
 
     p[0] = OBJ() 
     p[0].parse=f(p)
 
 def p_postfix_expression_7(p): 
-    '''postfix_expression : postfix_expression     ARROW name  ''' 
+    '''postfix_expression : postfix_expression ARROW name  ''' 
 
     p[0] = OBJ() 
     p[0].parse=f(p)
 
 def p_postfix_expression_8(p): 
-    '''postfix_expression : postfix_expression     DPLUSOP 
-                          | postfix_expression     DMINUSOP 
+    '''postfix_expression : postfix_expression  DPLUSOP 
+                          | postfix_expression  DMINUSOP 
     ''' 
 
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def report_error(msg, line):
-    print("Error at line : " + str(line) + " :: " + msg)
-    exit()
 
 def p_primary_expression0(p): 
     '''primary_expression : name   
@@ -720,8 +734,11 @@ def p_arg_list(p):
     if re.fullmatch( r'^p*$', return_decl) == None:
         report_error("Given return type not allowed for function", p.lineno(1) )
 
-    
-    return_sig = p[-3].data["type"] + "|" + p[-2].data["type"]
+    if(p[-2].data["type"] == ""):
+        return_sig = p[-3].data["type"] 
+    else:
+        return_sig = p[-3].data["type"] + "|" + p[-2].data["type"]
+
     if len(p)==2:
         input_detail=p[1].data
     else:
@@ -778,10 +795,12 @@ def p_argument_declaration_1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = p[1].data.copy()
-    p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
+    if p[2].data["type"] != "":
+        p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
     p[0].data["name"] = p[2].data["name"]
     p[0].data["meta"] = p[2].data["meta"]
     p[0].data["init"] =  None
+    print(p[0].data)
 
     if pushVar(p[2].data["name"],p[0].data)==False:
         report_error("Redeclaration of variable", p.lineno(1))
@@ -791,7 +810,8 @@ def p_argument_declaration_2(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = p[1].data.copy()
-    p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
+    if p[2].data["type"] != "":
+        p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
     p[0].data["name"] = p[2].data["name"]
     p[0].data["meta"] = p[2].data["meta"]
     p[0].data["init"] =  p[4]
@@ -1107,7 +1127,8 @@ def p_member_declaration0(p):
         decl_list = p[2].data
         for each in decl_list:
             data = p[1].data.copy()
-            data["type"] = p[1].data["type"] + "|" +  each["type"]
+            if (each["type"] != ""):
+                data["type"] = p[1].data["type"] + "|" +  each["type"]
             data["name"] = each["name"]
             data["meta"] = each["meta"]
             if pushVar(each["name"], data)==False:
@@ -1275,7 +1296,8 @@ def p_declaration0(p):
     decl_list = p[2].data
     for each in decl_list:
         data = p[1].data.copy()
-        data["type"] = p[1].data["type"] + "|" +  each["type"]
+        if(each["type"] != ""):
+            data["type"] = p[1].data["type"] + "|" +  each["type"]
         data["name"] = each["name"]
         data["meta"] = each["meta"]
         data["init"] = each["init"]

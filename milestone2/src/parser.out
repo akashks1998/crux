@@ -27,7 +27,7 @@ Rule 16    logical_OR_expression -> logical_OR_expression OROP logical_AND_expre
 Rule 17    logical_AND_expression -> inclusive_OR_expression
 Rule 18    logical_AND_expression -> logical_AND_expression ANDOP inclusive_OR_expression
 Rule 19    inclusive_OR_expression -> exclusive_OR_expression
-Rule 20    inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression
+Rule 20    inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression
 Rule 21    exclusive_OR_expression -> AND_expression
 Rule 22    exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression
 Rule 23    AND_expression -> equality_expression
@@ -305,6 +305,7 @@ BANDEQOP             : 60 147
 BANDOP               : 24 89 135
 BNOP                 : 87 136
 BOREQOP              : 61
+BOROP                : 20
 BREAK                : 235
 CASE                 : 246
 CATCH                : 243
@@ -359,7 +360,7 @@ NEW                  : 72 73 74 75 127
 NOTSYM               : 86 137
 NUMBER               : 104 189
 OPERATOR             : 
-OROP                 : 16 20 157
+OROP                 : 16 157
 PLUSEQOP             : 56 141
 PLUSOP               : 37 84 129
 PRIVATE              : 208
@@ -1231,9 +1232,10 @@ state 17
     EQCOMP          reduce using rule 169 (type_specifier_ -> type_specifier .)
     NEQCOMP         reduce using rule 169 (type_specifier_ -> type_specifier .)
     XOROP           reduce using rule 169 (type_specifier_ -> type_specifier .)
-    OROP            reduce using rule 169 (type_specifier_ -> type_specifier .)
+    BOROP           reduce using rule 169 (type_specifier_ -> type_specifier .)
     ANDOP           reduce using rule 169 (type_specifier_ -> type_specifier .)
     QUESMARK        reduce using rule 169 (type_specifier_ -> type_specifier .)
+    OROP            reduce using rule 169 (type_specifier_ -> type_specifier .)
     RSPAREN         reduce using rule 169 (type_specifier_ -> type_specifier .)
     EQUAL           reduce using rule 169 (type_specifier_ -> type_specifier .)
     MULTEQOP        reduce using rule 169 (type_specifier_ -> type_specifier .)
@@ -1348,9 +1350,10 @@ state 22
     EQCOMP          reduce using rule 172 (type_specifier -> simple_type_name .)
     NEQCOMP         reduce using rule 172 (type_specifier -> simple_type_name .)
     XOROP           reduce using rule 172 (type_specifier -> simple_type_name .)
-    OROP            reduce using rule 172 (type_specifier -> simple_type_name .)
+    BOROP           reduce using rule 172 (type_specifier -> simple_type_name .)
     ANDOP           reduce using rule 172 (type_specifier -> simple_type_name .)
     QUESMARK        reduce using rule 172 (type_specifier -> simple_type_name .)
+    OROP            reduce using rule 172 (type_specifier -> simple_type_name .)
     RSPAREN         reduce using rule 172 (type_specifier -> simple_type_name .)
     EQUAL           reduce using rule 172 (type_specifier -> simple_type_name .)
     MULTEQOP        reduce using rule 172 (type_specifier -> simple_type_name .)
@@ -1393,9 +1396,10 @@ state 23
     EQCOMP          reduce using rule 173 (type_specifier -> complex_type_specifier .)
     NEQCOMP         reduce using rule 173 (type_specifier -> complex_type_specifier .)
     XOROP           reduce using rule 173 (type_specifier -> complex_type_specifier .)
-    OROP            reduce using rule 173 (type_specifier -> complex_type_specifier .)
+    BOROP           reduce using rule 173 (type_specifier -> complex_type_specifier .)
     ANDOP           reduce using rule 173 (type_specifier -> complex_type_specifier .)
     QUESMARK        reduce using rule 173 (type_specifier -> complex_type_specifier .)
+    OROP            reduce using rule 173 (type_specifier -> complex_type_specifier .)
     RSPAREN         reduce using rule 173 (type_specifier -> complex_type_specifier .)
     EQUAL           reduce using rule 173 (type_specifier -> complex_type_specifier .)
     MULTEQOP        reduce using rule 173 (type_specifier -> complex_type_specifier .)
@@ -1448,9 +1452,10 @@ state 25
     EQCOMP          reduce using rule 174 (simple_type_name -> CHAR .)
     NEQCOMP         reduce using rule 174 (simple_type_name -> CHAR .)
     XOROP           reduce using rule 174 (simple_type_name -> CHAR .)
-    OROP            reduce using rule 174 (simple_type_name -> CHAR .)
+    BOROP           reduce using rule 174 (simple_type_name -> CHAR .)
     ANDOP           reduce using rule 174 (simple_type_name -> CHAR .)
     QUESMARK        reduce using rule 174 (simple_type_name -> CHAR .)
+    OROP            reduce using rule 174 (simple_type_name -> CHAR .)
     RSPAREN         reduce using rule 174 (simple_type_name -> CHAR .)
     EQUAL           reduce using rule 174 (simple_type_name -> CHAR .)
     MULTEQOP        reduce using rule 174 (simple_type_name -> CHAR .)
@@ -1493,9 +1498,10 @@ state 26
     EQCOMP          reduce using rule 175 (simple_type_name -> SHORT .)
     NEQCOMP         reduce using rule 175 (simple_type_name -> SHORT .)
     XOROP           reduce using rule 175 (simple_type_name -> SHORT .)
-    OROP            reduce using rule 175 (simple_type_name -> SHORT .)
+    BOROP           reduce using rule 175 (simple_type_name -> SHORT .)
     ANDOP           reduce using rule 175 (simple_type_name -> SHORT .)
     QUESMARK        reduce using rule 175 (simple_type_name -> SHORT .)
+    OROP            reduce using rule 175 (simple_type_name -> SHORT .)
     RSPAREN         reduce using rule 175 (simple_type_name -> SHORT .)
     EQUAL           reduce using rule 175 (simple_type_name -> SHORT .)
     MULTEQOP        reduce using rule 175 (simple_type_name -> SHORT .)
@@ -1538,9 +1544,10 @@ state 27
     EQCOMP          reduce using rule 176 (simple_type_name -> INT .)
     NEQCOMP         reduce using rule 176 (simple_type_name -> INT .)
     XOROP           reduce using rule 176 (simple_type_name -> INT .)
-    OROP            reduce using rule 176 (simple_type_name -> INT .)
+    BOROP           reduce using rule 176 (simple_type_name -> INT .)
     ANDOP           reduce using rule 176 (simple_type_name -> INT .)
     QUESMARK        reduce using rule 176 (simple_type_name -> INT .)
+    OROP            reduce using rule 176 (simple_type_name -> INT .)
     RSPAREN         reduce using rule 176 (simple_type_name -> INT .)
     EQUAL           reduce using rule 176 (simple_type_name -> INT .)
     MULTEQOP        reduce using rule 176 (simple_type_name -> INT .)
@@ -1583,9 +1590,10 @@ state 28
     EQCOMP          reduce using rule 177 (simple_type_name -> LONG .)
     NEQCOMP         reduce using rule 177 (simple_type_name -> LONG .)
     XOROP           reduce using rule 177 (simple_type_name -> LONG .)
-    OROP            reduce using rule 177 (simple_type_name -> LONG .)
+    BOROP           reduce using rule 177 (simple_type_name -> LONG .)
     ANDOP           reduce using rule 177 (simple_type_name -> LONG .)
     QUESMARK        reduce using rule 177 (simple_type_name -> LONG .)
+    OROP            reduce using rule 177 (simple_type_name -> LONG .)
     RSPAREN         reduce using rule 177 (simple_type_name -> LONG .)
     EQUAL           reduce using rule 177 (simple_type_name -> LONG .)
     MULTEQOP        reduce using rule 177 (simple_type_name -> LONG .)
@@ -1628,9 +1636,10 @@ state 29
     EQCOMP          reduce using rule 178 (simple_type_name -> SIGNED .)
     NEQCOMP         reduce using rule 178 (simple_type_name -> SIGNED .)
     XOROP           reduce using rule 178 (simple_type_name -> SIGNED .)
-    OROP            reduce using rule 178 (simple_type_name -> SIGNED .)
+    BOROP           reduce using rule 178 (simple_type_name -> SIGNED .)
     ANDOP           reduce using rule 178 (simple_type_name -> SIGNED .)
     QUESMARK        reduce using rule 178 (simple_type_name -> SIGNED .)
+    OROP            reduce using rule 178 (simple_type_name -> SIGNED .)
     RSPAREN         reduce using rule 178 (simple_type_name -> SIGNED .)
     EQUAL           reduce using rule 178 (simple_type_name -> SIGNED .)
     MULTEQOP        reduce using rule 178 (simple_type_name -> SIGNED .)
@@ -1673,9 +1682,10 @@ state 30
     EQCOMP          reduce using rule 179 (simple_type_name -> UNSIGNED .)
     NEQCOMP         reduce using rule 179 (simple_type_name -> UNSIGNED .)
     XOROP           reduce using rule 179 (simple_type_name -> UNSIGNED .)
-    OROP            reduce using rule 179 (simple_type_name -> UNSIGNED .)
+    BOROP           reduce using rule 179 (simple_type_name -> UNSIGNED .)
     ANDOP           reduce using rule 179 (simple_type_name -> UNSIGNED .)
     QUESMARK        reduce using rule 179 (simple_type_name -> UNSIGNED .)
+    OROP            reduce using rule 179 (simple_type_name -> UNSIGNED .)
     RSPAREN         reduce using rule 179 (simple_type_name -> UNSIGNED .)
     EQUAL           reduce using rule 179 (simple_type_name -> UNSIGNED .)
     MULTEQOP        reduce using rule 179 (simple_type_name -> UNSIGNED .)
@@ -1718,9 +1728,10 @@ state 31
     EQCOMP          reduce using rule 180 (simple_type_name -> FLOAT .)
     NEQCOMP         reduce using rule 180 (simple_type_name -> FLOAT .)
     XOROP           reduce using rule 180 (simple_type_name -> FLOAT .)
-    OROP            reduce using rule 180 (simple_type_name -> FLOAT .)
+    BOROP           reduce using rule 180 (simple_type_name -> FLOAT .)
     ANDOP           reduce using rule 180 (simple_type_name -> FLOAT .)
     QUESMARK        reduce using rule 180 (simple_type_name -> FLOAT .)
+    OROP            reduce using rule 180 (simple_type_name -> FLOAT .)
     RSPAREN         reduce using rule 180 (simple_type_name -> FLOAT .)
     EQUAL           reduce using rule 180 (simple_type_name -> FLOAT .)
     MULTEQOP        reduce using rule 180 (simple_type_name -> FLOAT .)
@@ -1763,9 +1774,10 @@ state 32
     EQCOMP          reduce using rule 181 (simple_type_name -> DOUBLE .)
     NEQCOMP         reduce using rule 181 (simple_type_name -> DOUBLE .)
     XOROP           reduce using rule 181 (simple_type_name -> DOUBLE .)
-    OROP            reduce using rule 181 (simple_type_name -> DOUBLE .)
+    BOROP           reduce using rule 181 (simple_type_name -> DOUBLE .)
     ANDOP           reduce using rule 181 (simple_type_name -> DOUBLE .)
     QUESMARK        reduce using rule 181 (simple_type_name -> DOUBLE .)
+    OROP            reduce using rule 181 (simple_type_name -> DOUBLE .)
     RSPAREN         reduce using rule 181 (simple_type_name -> DOUBLE .)
     EQUAL           reduce using rule 181 (simple_type_name -> DOUBLE .)
     MULTEQOP        reduce using rule 181 (simple_type_name -> DOUBLE .)
@@ -1808,9 +1820,10 @@ state 33
     EQCOMP          reduce using rule 182 (simple_type_name -> VOID .)
     NEQCOMP         reduce using rule 182 (simple_type_name -> VOID .)
     XOROP           reduce using rule 182 (simple_type_name -> VOID .)
-    OROP            reduce using rule 182 (simple_type_name -> VOID .)
+    BOROP           reduce using rule 182 (simple_type_name -> VOID .)
     ANDOP           reduce using rule 182 (simple_type_name -> VOID .)
     QUESMARK        reduce using rule 182 (simple_type_name -> VOID .)
+    OROP            reduce using rule 182 (simple_type_name -> VOID .)
     RSPAREN         reduce using rule 182 (simple_type_name -> VOID .)
     EQUAL           reduce using rule 182 (simple_type_name -> VOID .)
     MULTEQOP        reduce using rule 182 (simple_type_name -> VOID .)
@@ -1853,9 +1866,10 @@ state 34
     EQCOMP          reduce using rule 183 (simple_type_name -> STRING .)
     NEQCOMP         reduce using rule 183 (simple_type_name -> STRING .)
     XOROP           reduce using rule 183 (simple_type_name -> STRING .)
-    OROP            reduce using rule 183 (simple_type_name -> STRING .)
+    BOROP           reduce using rule 183 (simple_type_name -> STRING .)
     ANDOP           reduce using rule 183 (simple_type_name -> STRING .)
     QUESMARK        reduce using rule 183 (simple_type_name -> STRING .)
+    OROP            reduce using rule 183 (simple_type_name -> STRING .)
     RSPAREN         reduce using rule 183 (simple_type_name -> STRING .)
     EQUAL           reduce using rule 183 (simple_type_name -> STRING .)
     MULTEQOP        reduce using rule 183 (simple_type_name -> STRING .)
@@ -1898,9 +1912,10 @@ state 35
     EQCOMP          reduce using rule 184 (simple_type_name -> AUTO .)
     NEQCOMP         reduce using rule 184 (simple_type_name -> AUTO .)
     XOROP           reduce using rule 184 (simple_type_name -> AUTO .)
-    OROP            reduce using rule 184 (simple_type_name -> AUTO .)
+    BOROP           reduce using rule 184 (simple_type_name -> AUTO .)
     ANDOP           reduce using rule 184 (simple_type_name -> AUTO .)
     QUESMARK        reduce using rule 184 (simple_type_name -> AUTO .)
+    OROP            reduce using rule 184 (simple_type_name -> AUTO .)
     RSPAREN         reduce using rule 184 (simple_type_name -> AUTO .)
     EQUAL           reduce using rule 184 (simple_type_name -> AUTO .)
     MULTEQOP        reduce using rule 184 (simple_type_name -> AUTO .)
@@ -2139,9 +2154,10 @@ state 50
     NEQCOMP         reduce using rule 125 (name -> IDENTIFIER .)
     BANDOP          reduce using rule 125 (name -> IDENTIFIER .)
     XOROP           reduce using rule 125 (name -> IDENTIFIER .)
-    OROP            reduce using rule 125 (name -> IDENTIFIER .)
+    BOROP           reduce using rule 125 (name -> IDENTIFIER .)
     ANDOP           reduce using rule 125 (name -> IDENTIFIER .)
     QUESMARK        reduce using rule 125 (name -> IDENTIFIER .)
+    OROP            reduce using rule 125 (name -> IDENTIFIER .)
     RSPAREN         reduce using rule 125 (name -> IDENTIFIER .)
     MULTEQOP        reduce using rule 125 (name -> IDENTIFIER .)
     DIVEQOP         reduce using rule 125 (name -> IDENTIFIER .)
@@ -2309,9 +2325,10 @@ state 55
     EQCOMP          reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
     NEQCOMP         reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
     XOROP           reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
-    OROP            reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
+    BOROP           reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
     ANDOP           reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
     QUESMARK        reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
+    OROP            reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
     RSPAREN         reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
     EQUAL           reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
     MULTEQOP        reduce using rule 168 (type_specifier_ -> CONST type_specifier .)
@@ -2475,9 +2492,10 @@ state 62
     EQCOMP          reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
     NEQCOMP         reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
     XOROP           reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
-    OROP            reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
+    BOROP           reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
     ANDOP           reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
     QUESMARK        reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
+    OROP            reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
     RSPAREN         reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
     EQUAL           reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
     MULTEQOP        reduce using rule 187 (complex_type_specifier -> TYPE IDENTIFIER .)
@@ -2659,7 +2677,7 @@ state 67
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (21) exclusive_OR_expression -> . AND_expression
     (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
     (23) AND_expression -> . equality_expression
@@ -2824,7 +2842,7 @@ state 69
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -2963,7 +2981,7 @@ state 70
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -3085,9 +3103,10 @@ state 72
     NEQCOMP         reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
     BANDOP          reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
     XOROP           reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
-    OROP            reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
+    BOROP           reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
     ANDOP           reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
     QUESMARK        reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
+    OROP            reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
     RSPAREN         reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
     MULTEQOP        reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
     DIVEQOP         reduce using rule 126 (name -> DOUBLEBNOP IDENTIFIER .)
@@ -3132,9 +3151,10 @@ state 73
     EQCOMP          reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
     NEQCOMP         reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
     XOROP           reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
-    OROP            reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
+    BOROP           reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
     ANDOP           reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
     QUESMARK        reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
+    OROP            reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
     RSPAREN         reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
     EQUAL           reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
     MULTEQOP        reduce using rule 185 (complex_type_specifier -> class_key IDENTIFIER .)
@@ -3339,7 +3359,7 @@ state 82
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (21) exclusive_OR_expression -> . AND_expression
     (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
     (23) AND_expression -> . equality_expression
@@ -3481,9 +3501,10 @@ state 84
     EQCOMP          reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
     NEQCOMP         reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
     XOROP           reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
-    OROP            reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
+    BOROP           reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
     ANDOP           reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
     QUESMARK        reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
+    OROP            reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
     RSPAREN         reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
     EQUAL           reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
     MULTEQOP        reduce using rule 186 (complex_type_specifier -> class_key IDENTIFIER template_class_name .)
@@ -3608,9 +3629,10 @@ state 87
     EQCOMP          reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
     NEQCOMP         reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
     XOROP           reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
-    OROP            reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
+    BOROP           reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
     ANDOP           reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
     QUESMARK        reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
+    OROP            reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
     RSPAREN         reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
     EQUAL           reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
     MULTEQOP        reduce using rule 188 (complex_type_specifier -> TYPE IDENTIFIER template_class_name .)
@@ -3768,7 +3790,7 @@ state 98
 state 99
 
     (17) logical_AND_expression -> inclusive_OR_expression .
-    (20) inclusive_OR_expression -> inclusive_OR_expression . OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> inclusive_OR_expression . BOROP exclusive_OR_expression
 
     ANDOP           reduce using rule 17 (logical_AND_expression -> inclusive_OR_expression .)
     QUESMARK        reduce using rule 17 (logical_AND_expression -> inclusive_OR_expression .)
@@ -3780,8 +3802,7 @@ state 99
     RCPAREN         reduce using rule 17 (logical_AND_expression -> inclusive_OR_expression .)
     COLON           reduce using rule 17 (logical_AND_expression -> inclusive_OR_expression .)
     RTEMPLATE       reduce using rule 17 (logical_AND_expression -> inclusive_OR_expression .)
-
-  ! OROP            [ shift and go to state 178 ]
+    BOROP           shift and go to state 178
 
 
 state 100
@@ -3789,9 +3810,10 @@ state 100
     (19) inclusive_OR_expression -> exclusive_OR_expression .
     (22) exclusive_OR_expression -> exclusive_OR_expression . XOROP AND_expression
 
-    OROP            reduce using rule 19 (inclusive_OR_expression -> exclusive_OR_expression .)
+    BOROP           reduce using rule 19 (inclusive_OR_expression -> exclusive_OR_expression .)
     ANDOP           reduce using rule 19 (inclusive_OR_expression -> exclusive_OR_expression .)
     QUESMARK        reduce using rule 19 (inclusive_OR_expression -> exclusive_OR_expression .)
+    OROP            reduce using rule 19 (inclusive_OR_expression -> exclusive_OR_expression .)
     RSPAREN         reduce using rule 19 (inclusive_OR_expression -> exclusive_OR_expression .)
     RPAREN          reduce using rule 19 (inclusive_OR_expression -> exclusive_OR_expression .)
     COMMA           reduce using rule 19 (inclusive_OR_expression -> exclusive_OR_expression .)
@@ -3808,9 +3830,10 @@ state 101
     (24) AND_expression -> AND_expression . BANDOP equality_expression
 
     XOROP           reduce using rule 21 (exclusive_OR_expression -> AND_expression .)
-    OROP            reduce using rule 21 (exclusive_OR_expression -> AND_expression .)
+    BOROP           reduce using rule 21 (exclusive_OR_expression -> AND_expression .)
     ANDOP           reduce using rule 21 (exclusive_OR_expression -> AND_expression .)
     QUESMARK        reduce using rule 21 (exclusive_OR_expression -> AND_expression .)
+    OROP            reduce using rule 21 (exclusive_OR_expression -> AND_expression .)
     RSPAREN         reduce using rule 21 (exclusive_OR_expression -> AND_expression .)
     RPAREN          reduce using rule 21 (exclusive_OR_expression -> AND_expression .)
     COMMA           reduce using rule 21 (exclusive_OR_expression -> AND_expression .)
@@ -3829,9 +3852,10 @@ state 102
 
     BANDOP          reduce using rule 23 (AND_expression -> equality_expression .)
     XOROP           reduce using rule 23 (AND_expression -> equality_expression .)
-    OROP            reduce using rule 23 (AND_expression -> equality_expression .)
+    BOROP           reduce using rule 23 (AND_expression -> equality_expression .)
     ANDOP           reduce using rule 23 (AND_expression -> equality_expression .)
     QUESMARK        reduce using rule 23 (AND_expression -> equality_expression .)
+    OROP            reduce using rule 23 (AND_expression -> equality_expression .)
     RSPAREN         reduce using rule 23 (AND_expression -> equality_expression .)
     RPAREN          reduce using rule 23 (AND_expression -> equality_expression .)
     COMMA           reduce using rule 23 (AND_expression -> equality_expression .)
@@ -3855,9 +3879,10 @@ state 103
     NEQCOMP         reduce using rule 25 (equality_expression -> relational_expression .)
     BANDOP          reduce using rule 25 (equality_expression -> relational_expression .)
     XOROP           reduce using rule 25 (equality_expression -> relational_expression .)
-    OROP            reduce using rule 25 (equality_expression -> relational_expression .)
+    BOROP           reduce using rule 25 (equality_expression -> relational_expression .)
     ANDOP           reduce using rule 25 (equality_expression -> relational_expression .)
     QUESMARK        reduce using rule 25 (equality_expression -> relational_expression .)
+    OROP            reduce using rule 25 (equality_expression -> relational_expression .)
     RSPAREN         reduce using rule 25 (equality_expression -> relational_expression .)
     RPAREN          reduce using rule 25 (equality_expression -> relational_expression .)
     COMMA           reduce using rule 25 (equality_expression -> relational_expression .)
@@ -3885,9 +3910,10 @@ state 104
     NEQCOMP         reduce using rule 28 (relational_expression -> shift_expression .)
     BANDOP          reduce using rule 28 (relational_expression -> shift_expression .)
     XOROP           reduce using rule 28 (relational_expression -> shift_expression .)
-    OROP            reduce using rule 28 (relational_expression -> shift_expression .)
+    BOROP           reduce using rule 28 (relational_expression -> shift_expression .)
     ANDOP           reduce using rule 28 (relational_expression -> shift_expression .)
     QUESMARK        reduce using rule 28 (relational_expression -> shift_expression .)
+    OROP            reduce using rule 28 (relational_expression -> shift_expression .)
     RSPAREN         reduce using rule 28 (relational_expression -> shift_expression .)
     RPAREN          reduce using rule 28 (relational_expression -> shift_expression .)
     COMMA           reduce using rule 28 (relational_expression -> shift_expression .)
@@ -3915,9 +3941,10 @@ state 105
     NEQCOMP         reduce using rule 33 (shift_expression -> additive_expression .)
     BANDOP          reduce using rule 33 (shift_expression -> additive_expression .)
     XOROP           reduce using rule 33 (shift_expression -> additive_expression .)
-    OROP            reduce using rule 33 (shift_expression -> additive_expression .)
+    BOROP           reduce using rule 33 (shift_expression -> additive_expression .)
     ANDOP           reduce using rule 33 (shift_expression -> additive_expression .)
     QUESMARK        reduce using rule 33 (shift_expression -> additive_expression .)
+    OROP            reduce using rule 33 (shift_expression -> additive_expression .)
     RSPAREN         reduce using rule 33 (shift_expression -> additive_expression .)
     RPAREN          reduce using rule 33 (shift_expression -> additive_expression .)
     COMMA           reduce using rule 33 (shift_expression -> additive_expression .)
@@ -3948,9 +3975,10 @@ state 106
     NEQCOMP         reduce using rule 36 (additive_expression -> multiplicative_expression .)
     BANDOP          reduce using rule 36 (additive_expression -> multiplicative_expression .)
     XOROP           reduce using rule 36 (additive_expression -> multiplicative_expression .)
-    OROP            reduce using rule 36 (additive_expression -> multiplicative_expression .)
+    BOROP           reduce using rule 36 (additive_expression -> multiplicative_expression .)
     ANDOP           reduce using rule 36 (additive_expression -> multiplicative_expression .)
     QUESMARK        reduce using rule 36 (additive_expression -> multiplicative_expression .)
+    OROP            reduce using rule 36 (additive_expression -> multiplicative_expression .)
     RSPAREN         reduce using rule 36 (additive_expression -> multiplicative_expression .)
     RPAREN          reduce using rule 36 (additive_expression -> multiplicative_expression .)
     COMMA           reduce using rule 36 (additive_expression -> multiplicative_expression .)
@@ -4032,9 +4060,10 @@ state 109
     NEQCOMP         reduce using rule 39 (multiplicative_expression -> cast_expression .)
     BANDOP          reduce using rule 39 (multiplicative_expression -> cast_expression .)
     XOROP           reduce using rule 39 (multiplicative_expression -> cast_expression .)
-    OROP            reduce using rule 39 (multiplicative_expression -> cast_expression .)
+    BOROP           reduce using rule 39 (multiplicative_expression -> cast_expression .)
     ANDOP           reduce using rule 39 (multiplicative_expression -> cast_expression .)
     QUESMARK        reduce using rule 39 (multiplicative_expression -> cast_expression .)
+    OROP            reduce using rule 39 (multiplicative_expression -> cast_expression .)
     RSPAREN         reduce using rule 39 (multiplicative_expression -> cast_expression .)
     RPAREN          reduce using rule 39 (multiplicative_expression -> cast_expression .)
     COMMA           reduce using rule 39 (multiplicative_expression -> cast_expression .)
@@ -4063,9 +4092,10 @@ state 110
     NEQCOMP         reduce using rule 43 (cast_expression -> unary_expression .)
     BANDOP          reduce using rule 43 (cast_expression -> unary_expression .)
     XOROP           reduce using rule 43 (cast_expression -> unary_expression .)
-    OROP            reduce using rule 43 (cast_expression -> unary_expression .)
+    BOROP           reduce using rule 43 (cast_expression -> unary_expression .)
     ANDOP           reduce using rule 43 (cast_expression -> unary_expression .)
     QUESMARK        reduce using rule 43 (cast_expression -> unary_expression .)
+    OROP            reduce using rule 43 (cast_expression -> unary_expression .)
     RSPAREN         reduce using rule 43 (cast_expression -> unary_expression .)
     EQUAL           reduce using rule 43 (cast_expression -> unary_expression .)
     MULTEQOP        reduce using rule 43 (cast_expression -> unary_expression .)
@@ -4159,7 +4189,7 @@ state 111
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -4286,9 +4316,10 @@ state 112
     NEQCOMP         reduce using rule 62 (unary_expression -> postfix_expression .)
     BANDOP          reduce using rule 62 (unary_expression -> postfix_expression .)
     XOROP           reduce using rule 62 (unary_expression -> postfix_expression .)
-    OROP            reduce using rule 62 (unary_expression -> postfix_expression .)
+    BOROP           reduce using rule 62 (unary_expression -> postfix_expression .)
     ANDOP           reduce using rule 62 (unary_expression -> postfix_expression .)
     QUESMARK        reduce using rule 62 (unary_expression -> postfix_expression .)
+    OROP            reduce using rule 62 (unary_expression -> postfix_expression .)
     RSPAREN         reduce using rule 62 (unary_expression -> postfix_expression .)
     EQUAL           reduce using rule 62 (unary_expression -> postfix_expression .)
     MULTEQOP        reduce using rule 62 (unary_expression -> postfix_expression .)
@@ -4707,9 +4738,10 @@ state 118
     NEQCOMP         reduce using rule 69 (unary_expression -> allocation_expression .)
     BANDOP          reduce using rule 69 (unary_expression -> allocation_expression .)
     XOROP           reduce using rule 69 (unary_expression -> allocation_expression .)
-    OROP            reduce using rule 69 (unary_expression -> allocation_expression .)
+    BOROP           reduce using rule 69 (unary_expression -> allocation_expression .)
     ANDOP           reduce using rule 69 (unary_expression -> allocation_expression .)
     QUESMARK        reduce using rule 69 (unary_expression -> allocation_expression .)
+    OROP            reduce using rule 69 (unary_expression -> allocation_expression .)
     RSPAREN         reduce using rule 69 (unary_expression -> allocation_expression .)
     EQUAL           reduce using rule 69 (unary_expression -> allocation_expression .)
     MULTEQOP        reduce using rule 69 (unary_expression -> allocation_expression .)
@@ -4748,9 +4780,10 @@ state 119
     NEQCOMP         reduce using rule 70 (unary_expression -> deallocation_expression .)
     BANDOP          reduce using rule 70 (unary_expression -> deallocation_expression .)
     XOROP           reduce using rule 70 (unary_expression -> deallocation_expression .)
-    OROP            reduce using rule 70 (unary_expression -> deallocation_expression .)
+    BOROP           reduce using rule 70 (unary_expression -> deallocation_expression .)
     ANDOP           reduce using rule 70 (unary_expression -> deallocation_expression .)
     QUESMARK        reduce using rule 70 (unary_expression -> deallocation_expression .)
+    OROP            reduce using rule 70 (unary_expression -> deallocation_expression .)
     RSPAREN         reduce using rule 70 (unary_expression -> deallocation_expression .)
     EQUAL           reduce using rule 70 (unary_expression -> deallocation_expression .)
     MULTEQOP        reduce using rule 70 (unary_expression -> deallocation_expression .)
@@ -4796,9 +4829,10 @@ state 120
     NEQCOMP         reduce using rule 90 (postfix_expression -> primary_expression .)
     BANDOP          reduce using rule 90 (postfix_expression -> primary_expression .)
     XOROP           reduce using rule 90 (postfix_expression -> primary_expression .)
-    OROP            reduce using rule 90 (postfix_expression -> primary_expression .)
+    BOROP           reduce using rule 90 (postfix_expression -> primary_expression .)
     ANDOP           reduce using rule 90 (postfix_expression -> primary_expression .)
     QUESMARK        reduce using rule 90 (postfix_expression -> primary_expression .)
+    OROP            reduce using rule 90 (postfix_expression -> primary_expression .)
     RSPAREN         reduce using rule 90 (postfix_expression -> primary_expression .)
     EQUAL           reduce using rule 90 (postfix_expression -> primary_expression .)
     MULTEQOP        reduce using rule 90 (postfix_expression -> primary_expression .)
@@ -4844,9 +4878,10 @@ state 121
     NEQCOMP         reduce using rule 99 (primary_expression -> name .)
     BANDOP          reduce using rule 99 (primary_expression -> name .)
     XOROP           reduce using rule 99 (primary_expression -> name .)
-    OROP            reduce using rule 99 (primary_expression -> name .)
+    BOROP           reduce using rule 99 (primary_expression -> name .)
     ANDOP           reduce using rule 99 (primary_expression -> name .)
     QUESMARK        reduce using rule 99 (primary_expression -> name .)
+    OROP            reduce using rule 99 (primary_expression -> name .)
     RSPAREN         reduce using rule 99 (primary_expression -> name .)
     EQUAL           reduce using rule 99 (primary_expression -> name .)
     MULTEQOP        reduce using rule 99 (primary_expression -> name .)
@@ -5072,9 +5107,10 @@ state 126
     NEQCOMP         reduce using rule 100 (primary_expression -> literal .)
     BANDOP          reduce using rule 100 (primary_expression -> literal .)
     XOROP           reduce using rule 100 (primary_expression -> literal .)
-    OROP            reduce using rule 100 (primary_expression -> literal .)
+    BOROP           reduce using rule 100 (primary_expression -> literal .)
     ANDOP           reduce using rule 100 (primary_expression -> literal .)
     QUESMARK        reduce using rule 100 (primary_expression -> literal .)
+    OROP            reduce using rule 100 (primary_expression -> literal .)
     RSPAREN         reduce using rule 100 (primary_expression -> literal .)
     EQUAL           reduce using rule 100 (primary_expression -> literal .)
     MULTEQOP        reduce using rule 100 (primary_expression -> literal .)
@@ -5120,9 +5156,10 @@ state 127
     NEQCOMP         reduce using rule 101 (primary_expression -> THIS .)
     BANDOP          reduce using rule 101 (primary_expression -> THIS .)
     XOROP           reduce using rule 101 (primary_expression -> THIS .)
-    OROP            reduce using rule 101 (primary_expression -> THIS .)
+    BOROP           reduce using rule 101 (primary_expression -> THIS .)
     ANDOP           reduce using rule 101 (primary_expression -> THIS .)
     QUESMARK        reduce using rule 101 (primary_expression -> THIS .)
+    OROP            reduce using rule 101 (primary_expression -> THIS .)
     RSPAREN         reduce using rule 101 (primary_expression -> THIS .)
     EQUAL           reduce using rule 101 (primary_expression -> THIS .)
     MULTEQOP        reduce using rule 101 (primary_expression -> THIS .)
@@ -5168,9 +5205,10 @@ state 128
     NEQCOMP         reduce using rule 103 (literal -> STRING_L .)
     BANDOP          reduce using rule 103 (literal -> STRING_L .)
     XOROP           reduce using rule 103 (literal -> STRING_L .)
-    OROP            reduce using rule 103 (literal -> STRING_L .)
+    BOROP           reduce using rule 103 (literal -> STRING_L .)
     ANDOP           reduce using rule 103 (literal -> STRING_L .)
     QUESMARK        reduce using rule 103 (literal -> STRING_L .)
+    OROP            reduce using rule 103 (literal -> STRING_L .)
     RSPAREN         reduce using rule 103 (literal -> STRING_L .)
     EQUAL           reduce using rule 103 (literal -> STRING_L .)
     MULTEQOP        reduce using rule 103 (literal -> STRING_L .)
@@ -5216,9 +5254,10 @@ state 129
     NEQCOMP         reduce using rule 104 (literal -> NUMBER .)
     BANDOP          reduce using rule 104 (literal -> NUMBER .)
     XOROP           reduce using rule 104 (literal -> NUMBER .)
-    OROP            reduce using rule 104 (literal -> NUMBER .)
+    BOROP           reduce using rule 104 (literal -> NUMBER .)
     ANDOP           reduce using rule 104 (literal -> NUMBER .)
     QUESMARK        reduce using rule 104 (literal -> NUMBER .)
+    OROP            reduce using rule 104 (literal -> NUMBER .)
     RSPAREN         reduce using rule 104 (literal -> NUMBER .)
     EQUAL           reduce using rule 104 (literal -> NUMBER .)
     MULTEQOP        reduce using rule 104 (literal -> NUMBER .)
@@ -5264,9 +5303,10 @@ state 130
     NEQCOMP         reduce using rule 105 (literal -> DECIMAL .)
     BANDOP          reduce using rule 105 (literal -> DECIMAL .)
     XOROP           reduce using rule 105 (literal -> DECIMAL .)
-    OROP            reduce using rule 105 (literal -> DECIMAL .)
+    BOROP           reduce using rule 105 (literal -> DECIMAL .)
     ANDOP           reduce using rule 105 (literal -> DECIMAL .)
     QUESMARK        reduce using rule 105 (literal -> DECIMAL .)
+    OROP            reduce using rule 105 (literal -> DECIMAL .)
     RSPAREN         reduce using rule 105 (literal -> DECIMAL .)
     EQUAL           reduce using rule 105 (literal -> DECIMAL .)
     MULTEQOP        reduce using rule 105 (literal -> DECIMAL .)
@@ -5312,9 +5352,10 @@ state 131
     NEQCOMP         reduce using rule 106 (literal -> SCHAR .)
     BANDOP          reduce using rule 106 (literal -> SCHAR .)
     XOROP           reduce using rule 106 (literal -> SCHAR .)
-    OROP            reduce using rule 106 (literal -> SCHAR .)
+    BOROP           reduce using rule 106 (literal -> SCHAR .)
     ANDOP           reduce using rule 106 (literal -> SCHAR .)
     QUESMARK        reduce using rule 106 (literal -> SCHAR .)
+    OROP            reduce using rule 106 (literal -> SCHAR .)
     RSPAREN         reduce using rule 106 (literal -> SCHAR .)
     EQUAL           reduce using rule 106 (literal -> SCHAR .)
     MULTEQOP        reduce using rule 106 (literal -> SCHAR .)
@@ -5408,7 +5449,7 @@ state 132
     (199) class_key -> . CLASS
     (200) class_key -> . STRUCT
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -5567,9 +5608,10 @@ state 136
     NEQCOMP         reduce using rule 43 (cast_expression -> unary_expression .)
     BANDOP          reduce using rule 43 (cast_expression -> unary_expression .)
     XOROP           reduce using rule 43 (cast_expression -> unary_expression .)
-    OROP            reduce using rule 43 (cast_expression -> unary_expression .)
+    BOROP           reduce using rule 43 (cast_expression -> unary_expression .)
     ANDOP           reduce using rule 43 (cast_expression -> unary_expression .)
     QUESMARK        reduce using rule 43 (cast_expression -> unary_expression .)
+    OROP            reduce using rule 43 (cast_expression -> unary_expression .)
     RPAREN          reduce using rule 43 (cast_expression -> unary_expression .)
     COMMA           reduce using rule 43 (cast_expression -> unary_expression .)
     SEMICOLON       reduce using rule 43 (cast_expression -> unary_expression .)
@@ -5648,7 +5690,7 @@ state 138
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -6161,7 +6203,7 @@ state 158
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (21) exclusive_OR_expression -> . AND_expression
     (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
     (23) AND_expression -> . equality_expression
@@ -6499,7 +6541,7 @@ state 171
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -6707,7 +6749,7 @@ state 175
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -6791,7 +6833,7 @@ state 176
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (21) exclusive_OR_expression -> . AND_expression
     (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
     (23) AND_expression -> . equality_expression
@@ -6900,7 +6942,7 @@ state 177
 
     (18) logical_AND_expression -> logical_AND_expression ANDOP . inclusive_OR_expression
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (21) exclusive_OR_expression -> . AND_expression
     (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
     (23) AND_expression -> . equality_expression
@@ -7006,7 +7048,7 @@ state 177
 
 state 178
 
-    (20) inclusive_OR_expression -> inclusive_OR_expression OROP . exclusive_OR_expression
+    (20) inclusive_OR_expression -> inclusive_OR_expression BOROP . exclusive_OR_expression
     (21) exclusive_OR_expression -> . AND_expression
     (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
     (23) AND_expression -> . equality_expression
@@ -8507,7 +8549,7 @@ state 198
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -8641,7 +8683,7 @@ state 199
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -8767,7 +8809,7 @@ state 200
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -8899,9 +8941,10 @@ state 204
     NEQCOMP         reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
     BANDOP          reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
     XOROP           reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
-    OROP            reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
+    BOROP           reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
     ANDOP           reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
     QUESMARK        reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
+    OROP            reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
     RSPAREN         reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
     EQUAL           reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
     MULTEQOP        reduce using rule 97 (postfix_expression -> postfix_expression DPLUSOP .)
@@ -8947,9 +8990,10 @@ state 205
     NEQCOMP         reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
     BANDOP          reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
     XOROP           reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
-    OROP            reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
+    BOROP           reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
     ANDOP           reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
     QUESMARK        reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
+    OROP            reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
     RSPAREN         reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
     EQUAL           reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
     MULTEQOP        reduce using rule 98 (postfix_expression -> postfix_expression DMINUSOP .)
@@ -8988,9 +9032,10 @@ state 206
     NEQCOMP         reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
     BANDOP          reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
     XOROP           reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
-    OROP            reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
+    BOROP           reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
     ANDOP           reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
     QUESMARK        reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
+    OROP            reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
     RSPAREN         reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
     EQUAL           reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
     MULTEQOP        reduce using rule 63 (unary_expression -> DPLUSOP unary_expression .)
@@ -9060,7 +9105,7 @@ state 207
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -9157,9 +9202,10 @@ state 208
     NEQCOMP         reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
     BANDOP          reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
     XOROP           reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
-    OROP            reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
+    BOROP           reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
     ANDOP           reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
     QUESMARK        reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
+    OROP            reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
     RSPAREN         reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
     EQUAL           reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
     MULTEQOP        reduce using rule 64 (unary_expression -> DMINUSOP unary_expression .)
@@ -9198,9 +9244,10 @@ state 209
     NEQCOMP         reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
     BANDOP          reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
     XOROP           reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
-    OROP            reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
+    BOROP           reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
     ANDOP           reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
     QUESMARK        reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
+    OROP            reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
     RSPAREN         reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
     EQUAL           reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
     MULTEQOP        reduce using rule 65 (unary_expression -> unary1_operator cast_expression .)
@@ -9239,9 +9286,10 @@ state 210
     NEQCOMP         reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
     BANDOP          reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
     XOROP           reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
-    OROP            reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
+    BOROP           reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
     ANDOP           reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
     QUESMARK        reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
+    OROP            reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
     RSPAREN         reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
     EQUAL           reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
     MULTEQOP        reduce using rule 66 (unary_expression -> unary2_operator cast_expression .)
@@ -9280,9 +9328,10 @@ state 211
     NEQCOMP         reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
     BANDOP          reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
     XOROP           reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
-    OROP            reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
+    BOROP           reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
     ANDOP           reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
     QUESMARK        reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
+    OROP            reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
     RSPAREN         reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
     EQUAL           reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
     MULTEQOP        reduce using rule 67 (unary_expression -> SIZEOF unary_expression .)
@@ -9376,7 +9425,7 @@ state 212
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -9497,9 +9546,10 @@ state 213
     NEQCOMP         reduce using rule 73 (allocation_expression -> NEW new_type_name .)
     BANDOP          reduce using rule 73 (allocation_expression -> NEW new_type_name .)
     XOROP           reduce using rule 73 (allocation_expression -> NEW new_type_name .)
-    OROP            reduce using rule 73 (allocation_expression -> NEW new_type_name .)
+    BOROP           reduce using rule 73 (allocation_expression -> NEW new_type_name .)
     ANDOP           reduce using rule 73 (allocation_expression -> NEW new_type_name .)
     QUESMARK        reduce using rule 73 (allocation_expression -> NEW new_type_name .)
+    OROP            reduce using rule 73 (allocation_expression -> NEW new_type_name .)
     RSPAREN         reduce using rule 73 (allocation_expression -> NEW new_type_name .)
     EQUAL           reduce using rule 73 (allocation_expression -> NEW new_type_name .)
     MULTEQOP        reduce using rule 73 (allocation_expression -> NEW new_type_name .)
@@ -9597,9 +9647,10 @@ state 215
     NEQCOMP         reduce using rule 77 (new_type_name -> type_specifier_ .)
     BANDOP          reduce using rule 77 (new_type_name -> type_specifier_ .)
     XOROP           reduce using rule 77 (new_type_name -> type_specifier_ .)
-    OROP            reduce using rule 77 (new_type_name -> type_specifier_ .)
+    BOROP           reduce using rule 77 (new_type_name -> type_specifier_ .)
     ANDOP           reduce using rule 77 (new_type_name -> type_specifier_ .)
     QUESMARK        reduce using rule 77 (new_type_name -> type_specifier_ .)
+    OROP            reduce using rule 77 (new_type_name -> type_specifier_ .)
     RSPAREN         reduce using rule 77 (new_type_name -> type_specifier_ .)
     EQUAL           reduce using rule 77 (new_type_name -> type_specifier_ .)
     MULTEQOP        reduce using rule 77 (new_type_name -> type_specifier_ .)
@@ -9643,9 +9694,10 @@ state 216
     NEQCOMP         reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
     BANDOP          reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
     XOROP           reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
-    OROP            reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
+    BOROP           reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
     ANDOP           reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
     QUESMARK        reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
+    OROP            reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
     RSPAREN         reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
     EQUAL           reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
     MULTEQOP        reduce using rule 71 (deallocation_expression -> DELETE cast_expression .)
@@ -9718,7 +9770,7 @@ state 218
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -9838,7 +9890,7 @@ state 219
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -10213,7 +10265,7 @@ state 230
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -10611,7 +10663,7 @@ state 244
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -10858,9 +10910,10 @@ state 253
     EQCOMP          reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
     NEQCOMP         reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
     XOROP           reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
-    OROP            reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
+    BOROP           reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
     ANDOP           reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
     QUESMARK        reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
+    OROP            reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
     RSPAREN         reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
     EQUAL           reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
     MULTEQOP        reduce using rule 163 (template_class_name -> LTEMPLATE template_arg_list RTEMPLATE .)
@@ -11247,7 +11300,7 @@ state 259
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -11414,7 +11467,7 @@ state 262
 state 263
 
     (18) logical_AND_expression -> logical_AND_expression ANDOP inclusive_OR_expression .
-    (20) inclusive_OR_expression -> inclusive_OR_expression . OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> inclusive_OR_expression . BOROP exclusive_OR_expression
 
     ANDOP           reduce using rule 18 (logical_AND_expression -> logical_AND_expression ANDOP inclusive_OR_expression .)
     QUESMARK        reduce using rule 18 (logical_AND_expression -> logical_AND_expression ANDOP inclusive_OR_expression .)
@@ -11426,25 +11479,25 @@ state 263
     RCPAREN         reduce using rule 18 (logical_AND_expression -> logical_AND_expression ANDOP inclusive_OR_expression .)
     COLON           reduce using rule 18 (logical_AND_expression -> logical_AND_expression ANDOP inclusive_OR_expression .)
     RTEMPLATE       reduce using rule 18 (logical_AND_expression -> logical_AND_expression ANDOP inclusive_OR_expression .)
-
-  ! OROP            [ shift and go to state 178 ]
+    BOROP           shift and go to state 178
 
 
 state 264
 
-    (20) inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .
+    (20) inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .
     (22) exclusive_OR_expression -> exclusive_OR_expression . XOROP AND_expression
 
-    OROP            reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
-    ANDOP           reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
-    QUESMARK        reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
-    RSPAREN         reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
-    RPAREN          reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
-    COMMA           reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
-    SEMICOLON       reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
-    RCPAREN         reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
-    COLON           reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
-    RTEMPLATE       reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression OROP exclusive_OR_expression .)
+    BOROP           reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    ANDOP           reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    QUESMARK        reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    OROP            reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    RSPAREN         reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    RPAREN          reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    COMMA           reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    SEMICOLON       reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    RCPAREN         reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    COLON           reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
+    RTEMPLATE       reduce using rule 20 (inclusive_OR_expression -> inclusive_OR_expression BOROP exclusive_OR_expression .)
     XOROP           shift and go to state 179
 
 
@@ -11454,9 +11507,10 @@ state 265
     (24) AND_expression -> AND_expression . BANDOP equality_expression
 
     XOROP           reduce using rule 22 (exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .)
-    OROP            reduce using rule 22 (exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .)
+    BOROP           reduce using rule 22 (exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .)
     ANDOP           reduce using rule 22 (exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .)
     QUESMARK        reduce using rule 22 (exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .)
+    OROP            reduce using rule 22 (exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .)
     RSPAREN         reduce using rule 22 (exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .)
     RPAREN          reduce using rule 22 (exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .)
     COMMA           reduce using rule 22 (exclusive_OR_expression -> exclusive_OR_expression XOROP AND_expression .)
@@ -11475,9 +11529,10 @@ state 266
 
     BANDOP          reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
     XOROP           reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
-    OROP            reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
+    BOROP           reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
     ANDOP           reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
     QUESMARK        reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
+    OROP            reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
     RSPAREN         reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
     RPAREN          reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
     COMMA           reduce using rule 24 (AND_expression -> AND_expression BANDOP equality_expression .)
@@ -11501,9 +11556,10 @@ state 267
     NEQCOMP         reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
     BANDOP          reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
     XOROP           reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
-    OROP            reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
+    BOROP           reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
     ANDOP           reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
     QUESMARK        reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
+    OROP            reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
     RSPAREN         reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
     RPAREN          reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
     COMMA           reduce using rule 26 (equality_expression -> equality_expression EQCOMP relational_expression .)
@@ -11529,9 +11585,10 @@ state 268
     NEQCOMP         reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
     BANDOP          reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
     XOROP           reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
-    OROP            reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
+    BOROP           reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
     ANDOP           reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
     QUESMARK        reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
+    OROP            reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
     RSPAREN         reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
     RPAREN          reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
     COMMA           reduce using rule 27 (equality_expression -> equality_expression NEQCOMP relational_expression .)
@@ -11559,9 +11616,10 @@ state 269
     NEQCOMP         reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
     BANDOP          reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
     XOROP           reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
-    OROP            reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
+    BOROP           reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
     ANDOP           reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
     QUESMARK        reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
+    OROP            reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
     RSPAREN         reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
     RPAREN          reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
     COMMA           reduce using rule 29 (relational_expression -> relational_expression LTCOMP shift_expression .)
@@ -11587,9 +11645,10 @@ state 270
     NEQCOMP         reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
     BANDOP          reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
     XOROP           reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
-    OROP            reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
+    BOROP           reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
     ANDOP           reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
     QUESMARK        reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
+    OROP            reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
     RSPAREN         reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
     RPAREN          reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
     COMMA           reduce using rule 30 (relational_expression -> relational_expression GTCOMP shift_expression .)
@@ -11615,9 +11674,10 @@ state 271
     NEQCOMP         reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
     BANDOP          reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
     XOROP           reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
-    OROP            reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
+    BOROP           reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
     ANDOP           reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
     QUESMARK        reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
+    OROP            reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
     RSPAREN         reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
     RPAREN          reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
     COMMA           reduce using rule 31 (relational_expression -> relational_expression LTECOMP shift_expression .)
@@ -11643,9 +11703,10 @@ state 272
     NEQCOMP         reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
     BANDOP          reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
     XOROP           reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
-    OROP            reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
+    BOROP           reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
     ANDOP           reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
     QUESMARK        reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
+    OROP            reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
     RSPAREN         reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
     RPAREN          reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
     COMMA           reduce using rule 32 (relational_expression -> relational_expression GTECOMP shift_expression .)
@@ -11673,9 +11734,10 @@ state 273
     NEQCOMP         reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
     BANDOP          reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
     XOROP           reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
-    OROP            reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
+    BOROP           reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
     ANDOP           reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
     QUESMARK        reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
+    OROP            reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
     RSPAREN         reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
     RPAREN          reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
     COMMA           reduce using rule 34 (shift_expression -> shift_expression LSHIFT additive_expression .)
@@ -11703,9 +11765,10 @@ state 274
     NEQCOMP         reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
     BANDOP          reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
     XOROP           reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
-    OROP            reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
+    BOROP           reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
     ANDOP           reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
     QUESMARK        reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
+    OROP            reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
     RSPAREN         reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
     RPAREN          reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
     COMMA           reduce using rule 35 (shift_expression -> shift_expression RSHIFT additive_expression .)
@@ -11736,9 +11799,10 @@ state 275
     NEQCOMP         reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
     BANDOP          reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
     XOROP           reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
-    OROP            reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
+    BOROP           reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
     ANDOP           reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
     QUESMARK        reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
+    OROP            reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
     RSPAREN         reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
     RPAREN          reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
     COMMA           reduce using rule 37 (additive_expression -> additive_expression PLUSOP multiplicative_expression .)
@@ -11770,9 +11834,10 @@ state 276
     NEQCOMP         reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
     BANDOP          reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
     XOROP           reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
-    OROP            reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
+    BOROP           reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
     ANDOP           reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
     QUESMARK        reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
+    OROP            reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
     RSPAREN         reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
     RPAREN          reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
     COMMA           reduce using rule 38 (additive_expression -> additive_expression MINUSOP multiplicative_expression .)
@@ -11804,9 +11869,10 @@ state 277
     NEQCOMP         reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
     BANDOP          reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
     XOROP           reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
-    OROP            reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
+    BOROP           reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
     ANDOP           reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
     QUESMARK        reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
+    OROP            reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
     RSPAREN         reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
     RPAREN          reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
     COMMA           reduce using rule 40 (multiplicative_expression -> multiplicative_expression MULTOP cast_expression .)
@@ -11835,9 +11901,10 @@ state 278
     NEQCOMP         reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
     BANDOP          reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
     XOROP           reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
-    OROP            reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
+    BOROP           reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
     ANDOP           reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
     QUESMARK        reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
+    OROP            reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
     RSPAREN         reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
     RPAREN          reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
     COMMA           reduce using rule 41 (multiplicative_expression -> multiplicative_expression DIVOP cast_expression .)
@@ -11866,9 +11933,10 @@ state 279
     NEQCOMP         reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
     BANDOP          reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
     XOROP           reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
-    OROP            reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
+    BOROP           reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
     ANDOP           reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
     QUESMARK        reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
+    OROP            reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
     RSPAREN         reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
     RPAREN          reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
     COMMA           reduce using rule 42 (multiplicative_expression -> multiplicative_expression MODOP cast_expression .)
@@ -11980,9 +12048,10 @@ state 281
     NEQCOMP         reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
     BANDOP          reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
     XOROP           reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
-    OROP            reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
+    BOROP           reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
     ANDOP           reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
     QUESMARK        reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
+    OROP            reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
     RSPAREN         reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
     EQUAL           reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
     MULTEQOP        reduce using rule 102 (primary_expression -> LPAREN expression RPAREN .)
@@ -12047,7 +12116,7 @@ state 282
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -12182,9 +12251,10 @@ state 286
     NEQCOMP         reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
     BANDOP          reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
     XOROP           reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
-    OROP            reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
+    BOROP           reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
     ANDOP           reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
     QUESMARK        reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
+    OROP            reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
     RSPAREN         reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
     EQUAL           reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
     MULTEQOP        reduce using rule 93 (postfix_expression -> postfix_expression LPAREN RPAREN .)
@@ -12251,7 +12321,7 @@ state 287
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -12353,9 +12423,10 @@ state 288
     NEQCOMP         reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
     BANDOP          reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
     XOROP           reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
-    OROP            reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
+    BOROP           reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
     ANDOP           reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
     QUESMARK        reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
+    OROP            reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
     RSPAREN         reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
     EQUAL           reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
     MULTEQOP        reduce using rule 95 (postfix_expression -> postfix_expression DOT name .)
@@ -12401,9 +12472,10 @@ state 289
     NEQCOMP         reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
     BANDOP          reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
     XOROP           reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
-    OROP            reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
+    BOROP           reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
     ANDOP           reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
     QUESMARK        reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
+    OROP            reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
     RSPAREN         reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
     EQUAL           reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
     MULTEQOP        reduce using rule 96 (postfix_expression -> postfix_expression ARROW name .)
@@ -12449,9 +12521,10 @@ state 291
     NEQCOMP         reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
     BANDOP          reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
     XOROP           reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
-    OROP            reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
+    BOROP           reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
     ANDOP           reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
     QUESMARK        reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
+    OROP            reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
     RSPAREN         reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
     EQUAL           reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
     MULTEQOP        reduce using rule 72 (allocation_expression -> NEW new_type_name new_initializer .)
@@ -12521,7 +12594,7 @@ state 292
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -12629,9 +12702,10 @@ state 294
     NEQCOMP         reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
     BANDOP          reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
     XOROP           reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
-    OROP            reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
+    BOROP           reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
     ANDOP           reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
     QUESMARK        reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
+    OROP            reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
     RSPAREN         reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
     EQUAL           reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
     MULTEQOP        reduce using rule 76 (new_type_name -> type_specifier_ new_declarator .)
@@ -12676,9 +12750,10 @@ state 295
     NEQCOMP         reduce using rule 79 (new_declarator -> MULTOP .)
     BANDOP          reduce using rule 79 (new_declarator -> MULTOP .)
     XOROP           reduce using rule 79 (new_declarator -> MULTOP .)
-    OROP            reduce using rule 79 (new_declarator -> MULTOP .)
+    BOROP           reduce using rule 79 (new_declarator -> MULTOP .)
     ANDOP           reduce using rule 79 (new_declarator -> MULTOP .)
     QUESMARK        reduce using rule 79 (new_declarator -> MULTOP .)
+    OROP            reduce using rule 79 (new_declarator -> MULTOP .)
     RSPAREN         reduce using rule 79 (new_declarator -> MULTOP .)
     EQUAL           reduce using rule 79 (new_declarator -> MULTOP .)
     MULTEQOP        reduce using rule 79 (new_declarator -> MULTOP .)
@@ -12748,7 +12823,7 @@ state 296
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -12911,7 +12986,7 @@ state 301
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -13435,7 +13510,7 @@ state 316
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -14278,7 +14353,7 @@ state 335
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -14442,7 +14517,7 @@ state 339
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (21) exclusive_OR_expression -> . AND_expression
     (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
     (23) AND_expression -> . equality_expression
@@ -14568,9 +14643,10 @@ state 340
     NEQCOMP         reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
     BANDOP          reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
     XOROP           reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
-    OROP            reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
+    BOROP           reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
     ANDOP           reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
     QUESMARK        reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
+    OROP            reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
     RSPAREN         reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
     RPAREN          reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
     COMMA           reduce using rule 44 (cast_expression -> LPAREN type_name RPAREN cast_expression .)
@@ -14628,9 +14704,10 @@ state 342
     NEQCOMP         reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
     BANDOP          reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
     XOROP           reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
-    OROP            reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
+    BOROP           reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
     ANDOP           reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
     QUESMARK        reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
+    OROP            reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
     RSPAREN         reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
     EQUAL           reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
     MULTEQOP        reduce using rule 91 (postfix_expression -> postfix_expression LSPAREN expression RSPAREN .)
@@ -14676,9 +14753,10 @@ state 343
     NEQCOMP         reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
     BANDOP          reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
     XOROP           reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
-    OROP            reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
+    BOROP           reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
     ANDOP           reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
     QUESMARK        reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
+    OROP            reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
     RSPAREN         reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
     EQUAL           reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
     MULTEQOP        reduce using rule 92 (postfix_expression -> postfix_expression LPAREN expression_list RPAREN .)
@@ -14726,9 +14804,10 @@ state 345
     NEQCOMP         reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
     BANDOP          reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
     XOROP           reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
-    OROP            reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
+    BOROP           reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
     ANDOP           reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
     QUESMARK        reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
+    OROP            reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
     RSPAREN         reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
     EQUAL           reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
     MULTEQOP        reduce using rule 68 (unary_expression -> SIZEOF LPAREN type_name RPAREN .)
@@ -14776,9 +14855,10 @@ state 347
     NEQCOMP         reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
     BANDOP          reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
     XOROP           reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
-    OROP            reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
+    BOROP           reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
     ANDOP           reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
     QUESMARK        reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
+    OROP            reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
     RSPAREN         reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
     EQUAL           reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
     MULTEQOP        reduce using rule 83 (new_initializer -> LPAREN RPAREN .)
@@ -14820,9 +14900,10 @@ state 348
     NEQCOMP         reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
     BANDOP          reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
     XOROP           reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
-    OROP            reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
+    BOROP           reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
     ANDOP           reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
     QUESMARK        reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
+    OROP            reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
     RSPAREN         reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
     EQUAL           reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
     MULTEQOP        reduce using rule 75 (allocation_expression -> NEW LPAREN type_name RPAREN .)
@@ -14865,9 +14946,10 @@ state 349
     NEQCOMP         reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
     BANDOP          reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
     XOROP           reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
-    OROP            reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
+    BOROP           reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
     ANDOP           reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
     QUESMARK        reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
+    OROP            reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
     RSPAREN         reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
     EQUAL           reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
     MULTEQOP        reduce using rule 78 (new_declarator -> new_declarator MULTOP .)
@@ -14937,7 +15019,7 @@ state 350
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -15079,7 +15161,7 @@ state 353
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -15500,7 +15582,7 @@ state 364
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -15628,7 +15710,7 @@ state 365
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -15827,7 +15909,7 @@ state 367
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -16248,9 +16330,10 @@ state 376
     NEQCOMP         reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
     BANDOP          reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
     XOROP           reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
-    OROP            reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
+    BOROP           reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
     ANDOP           reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
     QUESMARK        reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
+    OROP            reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
     RSPAREN         reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
     EQUAL           reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
     MULTEQOP        reduce using rule 94 (postfix_expression -> postfix_expression template_class_name LPAREN expression_list RPAREN .)
@@ -16289,9 +16372,10 @@ state 377
     NEQCOMP         reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
     BANDOP          reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
     XOROP           reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
-    OROP            reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
+    BOROP           reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
     ANDOP           reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
     QUESMARK        reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
+    OROP            reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
     RSPAREN         reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
     EQUAL           reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
     MULTEQOP        reduce using rule 82 (new_initializer -> LPAREN initializer_list RPAREN .)
@@ -16356,7 +16440,7 @@ state 378
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -16450,9 +16534,10 @@ state 379
     NEQCOMP         reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
     BANDOP          reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
     XOROP           reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
-    OROP            reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
+    BOROP           reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
     ANDOP           reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
     QUESMARK        reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
+    OROP            reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
     RSPAREN         reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
     EQUAL           reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
     MULTEQOP        reduce using rule 74 (allocation_expression -> NEW LPAREN type_name RPAREN new_initializer .)
@@ -16502,9 +16587,10 @@ state 381
     NEQCOMP         reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
     BANDOP          reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
     XOROP           reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
-    OROP            reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
+    BOROP           reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
     ANDOP           reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
     QUESMARK        reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
+    OROP            reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
     RSPAREN         reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
     EQUAL           reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
     MULTEQOP        reduce using rule 81 (new_declarator -> LSPAREN expression RSPAREN .)
@@ -16673,7 +16759,7 @@ state 387
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -16854,7 +16940,7 @@ state 389
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -17115,9 +17201,10 @@ state 393
     NEQCOMP         reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
     BANDOP          reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
     XOROP           reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
-    OROP            reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
+    BOROP           reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
     ANDOP           reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
     QUESMARK        reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
+    OROP            reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
     RSPAREN         reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
     EQUAL           reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
     MULTEQOP        reduce using rule 80 (new_declarator -> new_declarator LSPAREN expression RSPAREN .)
@@ -17225,7 +17312,7 @@ state 398
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -17497,7 +17584,7 @@ state 404
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -17676,7 +17763,7 @@ state 405
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -17815,7 +17902,7 @@ state 407
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -18101,7 +18188,7 @@ state 413
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -18303,7 +18390,7 @@ state 415
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -18536,7 +18623,7 @@ state 420
     (17) logical_AND_expression -> . inclusive_OR_expression
     (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (21) exclusive_OR_expression -> . AND_expression
     (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
     (23) AND_expression -> . equality_expression
@@ -19070,7 +19157,7 @@ state 433
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -19696,7 +19783,7 @@ state 442
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -19941,7 +20028,7 @@ state 443
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L
@@ -20487,7 +20574,7 @@ state 449
     (101) primary_expression -> . THIS
     (102) primary_expression -> . LPAREN expression RPAREN
     (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression OROP exclusive_OR_expression
+    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
     (125) name -> . IDENTIFIER
     (126) name -> . DOUBLEBNOP IDENTIFIER
     (103) literal -> . STRING_L

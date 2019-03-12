@@ -73,6 +73,7 @@ tokens = [
         'XOROP',
         'XOREQOP',
         'BNOP',
+        'BOROP',
 
         #comparison operator, =
         'EQCOMP',
@@ -152,6 +153,7 @@ t_XOROP     = r'\^'
 t_BOREQOP   = r'\|\='
 t_OROP      = r'\|\|'
 t_BANDOP    = r'\&'
+t_BOROP     = r'\|'
 t_ANDOP     = r'\&\&'
 
 t_PLUSEQOP  = r'\+='
