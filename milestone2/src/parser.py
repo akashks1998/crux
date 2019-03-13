@@ -201,7 +201,7 @@ def p_declaration_seq(p):
         p[0].code=p[1].code+p[2].code
 
 def p_error(p):
-    print("Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], "near", p.value)
+    print("Syntax Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], "near", p.value)
     exit()
 
 def p_empty(p): 
@@ -508,7 +508,6 @@ def p_assignment_expression(p):
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
         p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]  
-    print("asdfgfds", p[0].place)
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -540,7 +539,6 @@ def p_unary_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = assigner(p,1)
-        print("Unary",p[0].data["type"])
         p[0].place = p[1].place
         p[0].code = p[1].code 
     elif len(p)==3:
@@ -556,7 +554,7 @@ def p_unary_expression(p):
     elif len(p)==5:
         p[0].data["type"]="int"
         p[0].place=getnewvar()
-        p[0].code=p[3].code+[p[0].place+"= sizeof("+p[1].data["type"]+")"]
+        p[0].code=p[3].code+[p[0].place+"= sizeof("+p[1].data+")"]
 
 def p_unary_expression1(p): 
     '''unary_expression : unary1_operator cast_expression''' 
@@ -635,7 +633,6 @@ def p_allocation_expression0(p):
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         p[0].place=getnewvar()
         p[0].code = ["PushParam " + byte_size(tpe), "PushParam constructor", p[0].place + " = call alloc"]
-    # print("yo", p[0].data)
 
 def p_allocation_expression1(p): 
     '''allocation_expression : NEW new_type_name LSPAREN expression RSPAREN new_initializer 
@@ -646,7 +643,6 @@ def p_allocation_expression1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==6:
-        print("exp", p[4].data, p[4].code, p[4].place, p[4].data.keys())
         if "type" not in p[4].data.keys() or p[4].data["type"]!="int":
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[2].data}
@@ -675,7 +671,6 @@ def p_allocation_expression1(p):
         tmp1 = getnewvar()
         p[0].place=getnewvar()
         p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
-    # print("yo", p[0].data)
 
 
 def p_new_type_name(p): 
@@ -775,7 +770,6 @@ def p_postfix_expression_3(p):
     except:
         report_error("Calling function on non function type", p.lineno(1))
     if len(p)==5:
-        print(p[3].data)
         expected_sig = func_name + "|" + p[3].data["type"] 
         expr_code = p[3].code
     else:
@@ -827,7 +821,6 @@ def p_postfix_expression_6(p):
         x=checkVar(p[3].data, details["var"]["scope"])
         if x!=False:
             p[0].data["type"]=x["type"]
-            print("printing x",x["type"])
             if(p[0].data["type"] == "function_upper"):
                 p[0].data["func_sig"] = x["func_sig"]
                 p[0].data["func_name"] = p[3].data
@@ -881,10 +874,6 @@ def p_postfix_expression_7(p):
     else:
         report_error(p[1].data["type"][:-2] +" is not a class",p.lineno(0))
     # post_fix must be a object and name should be a class member
-
-    
-    
-    print(p[0].code)
 
 def p_postfix_expression_8(p): 
     '''postfix_expression : postfix_expression  DPLUSOP 
@@ -1532,8 +1521,6 @@ def p_compound_statement(p):
     else:
         p[0].code = {}
         p[0].place = getnewvar()
-
-    # print(p[0].code)
     x=1
     for i in p[0].code:
         if i !="":
@@ -1727,7 +1714,6 @@ def p_declaration0(p):
         else:
             if isinstance( each["place"], list):
                 report_error("Constructor is not defined for "+data["type"],p.lineno(1))
-            print("Type,", each["init_type"])
             report_error("Assigned type is not same as given type",p.lineno(1))   
 
 # def p_declaration1(p):
