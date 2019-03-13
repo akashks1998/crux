@@ -1,6 +1,6 @@
-<<<<<<< HEAD
 class A{
     int a;
+    char x;
     char hi(char a){
         int c = 1;
         return 0;
@@ -12,12 +12,7 @@ class A{
 };
 int main()
 {
-    class A b,c, c;
- 
-    int c, d;
-    b.hi('c',c+d);
-
+    class A *b;
+    b->x=b->hi('a');
     return 1;
 }
-=======
->>>>>>> 8a138a928727e8a2447ec887adf1dbc724b2d2e3
