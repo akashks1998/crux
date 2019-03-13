@@ -1,12 +1,14 @@
-class employee
+class e
 {
-    private:
-    void sal();
-    void employee(int a, int b){
-        return;
-    }
+    int b[3][3];
 };
 
+// int main(){
+//     class employee E(1,2);
+// }
+
 int main(){
-    class employee E(1,2);
+    int a[2][3];
+    class e c;
+    c.b[1] =3;
 }
