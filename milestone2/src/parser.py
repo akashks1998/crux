@@ -193,7 +193,7 @@ def p_declaration_seq(p):
     p[0].parse=f(p)
 
 def p_error(p):
-    print("Error: line " + str(p.lineno) + ":" + filename.split('/')[-1])
+    print("Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], p)
     exit()
 
 def p_empty(p): 
@@ -484,11 +484,10 @@ def p_throw_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    
 
 def p_assignment_expression(p): 
     '''assignment_expression : conditional_expression 
-                             | unary_expression  assignment_operator assignment_expression 
+                             | unary_expression assignment_operator assignment_expression 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -584,15 +583,42 @@ def p_deallocation_expression(p):
     p[0].parse=f(p)
 
 # New Allocation
-
-def p_allocation_expression(p): 
+def p_allocation_expression0(p): 
     '''allocation_expression : NEW new_type_name new_initializer 
                              | NEW new_type_name 
-                             | NEW LPAREN type_name  RPAREN  new_initializer 
+                             | NEW LPAREN type_name  RPAREN new_initializer 
                              | NEW LPAREN type_name  RPAREN 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==3:
+        p[0].data = {"type" : p[2].data}
+    elif len(p)==4:
+        p[0].data = {"type" : p[2].data, "init" : p[3].data}
+    elif len(p)==5:
+        p[0].data = {"type" : p[3].data}
+    elif len(p)==6:
+        p[0].data = {"type" : p[3].data, "init" : p[5].data}
+    print("yo", p[0].data)
+
+def p_allocation_expression1(p): 
+    '''allocation_expression : NEW new_type_name LSPAREN expression RSPAREN new_initializer 
+                             | NEW new_type_name LSPAREN expression RSPAREN
+                             | NEW LPAREN type_name RPAREN LSPAREN expression RSPAREN new_initializer 
+                             | NEW LPAREN type_name RPAREN LSPAREN expression RSPAREN
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    if len(p)==6:
+        p[0].data = {"type" : p[2].data}
+    elif len(p)==7:
+        p[0].data = {"type" : p[2].data, "init" : p[3].data}
+    elif len(p)==8:
+        p[0].data = {"type" : p[3].data}
+    elif len(p)==9:
+        p[0].data = {"type" : p[3].data, "init" : p[5].data}
+    print("yo", p[0].data)
+
 
 def p_new_type_name(p): 
     '''new_type_name : type_specifier_ new_declarator 
@@ -600,16 +626,22 @@ def p_new_type_name(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = p[1].data["type"]
+    if len(p)==3:
+        p[0].data = p[0].data + "|" + p[2].data
 
 def p_new_declarator(p): 
     '''new_declarator : new_declarator MULTOP
                       | MULTOP 
-                      | new_declarator LSPAREN expression RSPAREN 
-                      | LSPAREN expression RSPAREN 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
+    if len(p)==2:
+        p[0].data = "p"
+    elif len(p)==3:
+        p[0].data = p[1].data + "p"
+    
+#Remaining
 def p_new_initializer(p): 
     '''new_initializer : LPAREN initializer_list  RPAREN 
                        | LPAREN  RPAREN 
@@ -1418,11 +1450,11 @@ def p_compound_statement(p):
         p[0].code = {}
         p[0].place = getnewvar()
 
-    print(p[0].code)
+    #print(p[0].code)
     x=1
     for i in p[0].code:
         if i !="":
-            print(x,"::",i)
+            #print(x,"::",i)
             x=x+1
 
 def p_statement_list(p): 
