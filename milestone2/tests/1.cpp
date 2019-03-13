@@ -8,6 +8,7 @@ class student
 int main()
 {
      int n, num, digit, rev = 0;
+     j =0;
 
      cout << "Enter a positive number: ";
      cin >> num;

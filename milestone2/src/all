@@ -1,14 +1,16 @@
 #!/bin/bash
 for i in $(ls ../tests);
 do
-	x=$(python3 parser.py 0 ../tests/$i d)
-	f=${x/error/er}
+	cat ../tests/$i|grep -v "cout">temp
+	cat temp|grep -v "cin">temp1
+	x=$(python3 parser.py 0 temp1 )
+	f=${x/Error/er}
 	if [[ "$f" != "$x" ]];
 	then
 		echo "----------------------------------"
 		echo "Test ../tests/$i"
 		echo "Error :"
-		echo "$x"
+		echo -e $x
 	else
 		echo "----------------------------------"
 		echo "Test ../tests/$i passed"

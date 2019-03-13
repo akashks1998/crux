@@ -1,18 +1,12 @@
-class A{
-    int a;
-    char x;
-    char hi(char a){
-        int c = 1;
-        return 0;
-    }
-    int hi(char a, int c){
-        c = 1;
-        return 0;
+class employee
+{
+    private:
+    void sal();
+    void employee(int a, int b){
+        return;
     }
 };
-int main()
-{
-    class A *b;
-    b->x=b->hi('a');
-    return 1;
+
+int main(){
+    class employee E(1,2);
 }

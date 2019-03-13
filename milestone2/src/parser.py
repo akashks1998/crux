@@ -195,6 +195,10 @@ def p_declaration_seq(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].code=p[1].code.copy()
+    else:
+        p[0].code=p[1].code+p[2].code
 
 def p_error(p):
     print("Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], "near", p.value)
@@ -697,7 +701,7 @@ def p_new_declarator(p):
     
 #Remaining
 def p_new_initializer(p): 
-    '''new_initializer : LPAREN initializer_list  RPAREN 
+    '''new_initializer : LPAREN expression_list  RPAREN 
                        | LPAREN  RPAREN 
     ''' 
     p[0] = OBJ() 
@@ -1461,6 +1465,7 @@ def p_member_declaration0(p):
 
 def p_member_declaration1(p):
     '''member_declaration : function_definition
+                            | function_decl 
     '''
                         #   | class_define_specifier SEMICOLON
                         #   | function_definition SEMICOLON
@@ -1681,6 +1686,7 @@ def p_declaration_statement(p):
     '''declaration_statement : declaration''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].code=p[1].code.copy()
 
 def p_declaration0(p):
     '''declaration : type_specifier_ declarator_list SEMICOLON ''' 
@@ -1688,6 +1694,7 @@ def p_declaration0(p):
     p[0] = OBJ()
     p[0].parse=f(p)
     decl_list = p[2].data
+    p[0].code=p[2].code
     for each in decl_list:
         data = p[1].data.copy()
         if(each["type"] != ""):
@@ -1695,22 +1702,39 @@ def p_declaration0(p):
         data["name"] = each["name"]
         data["meta"] = each["meta"]
         data["init"] = each["init"]
-        if(data["class"] ==  "class" or data["class"] ==  "class"):
-            if(each["type"] != ""):
-                # constructor should be called
-                pass
-        if "init_type" not in each.keys() or data["type"]==each["init_type"]:
+        if(data["class"] ==  "class"):
+            x = checkVar(data["type"])
+            if x==False:
+                report_error("Class " + data["type"]+" doesn't exist",p.lineno(0))
+            t=checkVar( data["type"] ,x["var"]["scope"])
+            if(each["type"] == ""):
+                if "init_type" not in each.keys():
+                    if t!=False:
+                        report_error("Constructor is not called for class "+data["type"],p.lineno(0))
+                else:
+                    if isinstance( each["place"], list):
+                        if t==False:
+                            report_error("Constructor is not defined for "+data["type"],p.lineno(1))
+                        if (data["type"]+"|"+each["init_type"],"void") in t["func_sig"]:
+                            report_error("Constructor is called",p.lineno(0))
+                        else:
+                            report_error("Constructor is not correct for "+data["type"],p.lineno(1))
+        if "init_type" not in each.keys() or ( (not isinstance( each["place"], list)) and data["type"]==each["init_type"]):
             if pushVar(each["name"],data)==False:
                 report_error("Redeclaration of variable", p.lineno(1))
+            if "init_type" in each.keys():
+                p[0].code=p[0].code + [each["name"]+" = "+ each["place"] ]
         else:
+            if isinstance( each["place"], list):
+                report_error("Constructor is not defined for "+data["type"],p.lineno(1))
             print("Type,", each["init_type"])
             report_error("Assigned type is not same as given type",p.lineno(1))   
 
-def p_declaration1(p):
-    '''declaration :  asm_declaration  ''' 
+# def p_declaration1(p):
+#     '''declaration :  asm_declaration  ''' 
         
-    p[0] = OBJ()
-    p[0].parse=f(p)
+#     p[0] = OBJ()
+#     p[0].parse=f(p)
 
 
 def p_declaration2(p):
@@ -1758,8 +1782,10 @@ def p_declarator_list(p):
 
     if len(p) == 2 :
         p[0].data = [assigner(p,1)]
+        p[0].code = p[1].code.copy()
     else:
         p[0].data = p[1].data + [ p[3].data ]
+        p[0].code = p[1].code + p[3].code
 
 def p_init_declarator(p): 
     '''init_declarator : declarator initializer 
@@ -1770,14 +1796,19 @@ def p_init_declarator(p):
     p[0].data = assigner(p,1)
     if len(p) == 3:
         p[0].data["init_type"]=p[2].data["type"]
+        p[0].data["place"] = p[2].place
         p[0].data["init"] = None
-    p[0].data["init"] = None
+        p[0].code = p[1].code.copy()
+    else:
+        p[0].data["init"] = None
 
 def p_initializer_1(p): 
     '''initializer :   EQUAL assignment_expression''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data=p[2].data.copy()
+    p[0].place=p[2].place
+    p[0].code=p[2].code.copy()
 
 # def p_initializer1(p): 
 #     '''initializer :   EQUAL LCPAREN initializer_list RCPAREN''' 
@@ -1789,23 +1820,9 @@ def p_initializer_2(p):
     '''initializer :   LPAREN expression_list  RPAREN''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[2].data
-
-
-
-def p_initializer_list(p): 
-    '''initializer_list : assignment_expression 
-                        | initializer_list COMMA assignment_expression 
-                        | LCPAREN initializer_list RCPAREN 
-                        | LCPAREN initializer_list COMMA RCPAREN 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
-def p_asm_declaration(p): 
-    '''asm_declaration : ASM LPAREN STRING_L  RPAREN  SEMICOLON''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+    p[0].data["type"]= p[2].data["type"]
+    p[0].place = p[2].place
+    p[0].code = p[2].code 
 
 def p_expression_list(p): 
     '''expression_list : assignment_expression 
@@ -1821,6 +1838,21 @@ def p_expression_list(p):
         p[0].data = {"type" : p[1].data["type"] + "," + p[3].data["type"]}
         p[0].place =  [ p[3].place ] +  p[1].place
         p[0].code = p[1].code + p[3].code
+
+
+# def p_initializer_list(p): 
+#     '''initializer_list : assignment_expression 
+#                         | initializer_list COMMA assignment_expression 
+#                         | LCPAREN initializer_list RCPAREN 
+#                         | LCPAREN initializer_list COMMA RCPAREN 
+#     ''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
+
+# def p_asm_declaration(p): 
+#     '''asm_declaration : ASM LPAREN STRING_L  RPAREN  SEMICOLON''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
 
 def p_push_scope(p):
     '''push_scope : '''
