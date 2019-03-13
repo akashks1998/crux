@@ -535,6 +535,7 @@ def p_unary_expression(p):
         p[0].data["type"]="int"
     
 
+
 def p_deallocation_expression(p): 
     '''deallocation_expression : DELETE cast_expression  ''' 
     p[0] = OBJ() 
@@ -674,9 +675,24 @@ def p_postfix_expression_6(p):
     p[0].parse=f(p)
 
     p[0].place = getnewvar()
-    p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
+    if "|" in p[1].data["type"]:
+        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
+    details=checkVar(p[1].data["type"],"**")
+    if details==False:
+        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
+    if "class" in details["var"].keys() and details["var"]["class"]=="class":
+        x=checkVar(p[3].data, details["var"]["scope"])
+        print("x",x)
+        if x!=False:
 
-
+            print("class data",p[1].data)
+            print(details)
+            p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
+            p[0].data["type"]=x["type"]
+        else:
+            report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
+    else:
+        report_error(p[1].data["type"]+" is not a class",p.lineno(0))
     # post_fix must be a object and name should be a class member
 
 
@@ -883,7 +899,6 @@ def p_arg_list(p):
         "name" : function_name,
         "return_sig" : return_sig,
         "input_sig" : input_detail[0],
-        "input" : input_detail[1],
         "body_scope" : currentScopeTable,
         "declaration": True
     }
