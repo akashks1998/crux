@@ -1,6 +1,14 @@
 
+class c{
+    int* value;
+    void c(){
+        return;
+    }
+};
+
 int main()
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
     class a{
         int b;
@@ -25,4 +33,8 @@ int main()
     // a = new int*;
 >>>>>>> new<type>
 >>>>>>> new<type>
+=======
+    class c* C;
+    C->value = new int[6];
+>>>>>>> new + code + size - initialize
 }

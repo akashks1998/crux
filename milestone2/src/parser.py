@@ -36,7 +36,7 @@ globalScopeTable = SymbolTable()
 scopeTableList.append(globalScopeTable)
 currentLabel=0
 currentTmp=0
-
+new_pointer_size = 8
 currentScopeTable = 0
 
 def code(*rest):
@@ -193,7 +193,7 @@ def p_declaration_seq(p):
     p[0].parse=f(p)
 
 def p_error(p):
-    print("Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], p)
+    print("Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], "near", p.value)
     exit()
 
 def p_empty(p): 
@@ -496,10 +496,10 @@ def p_assignment_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code 
     else:
+        print(p[3].data, p[1].data)
         if p[1].data["type"]!=p[3].data["type"]:
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
-
         p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]  
 
 def p_assignment_operator(p): 
@@ -548,7 +548,7 @@ def p_unary_expression(p):
         p[0].data["type"]="int"
         p[0].place=getnewvar()
         p[0].code=p[3].code+[p[0].place+"= sizeof("+p[1].data["type"]+")"]
-    
+
 def p_unary_expression1(p): 
     '''unary_expression : unary1_operator cast_expression''' 
     p[0] = OBJ() 
@@ -582,7 +582,22 @@ def p_deallocation_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
+
+def byte_size(s):
+    return str("sizeof("+s+")")
+    size = {
+        "int" : 4,
+        "float" : 8,
+        "char" : 1,
+        "bool" : 1
+    }
+    if s in size.keys():
+        return str(size[s])
+    else:
+        return str(8)
+
 # New Allocation
+# Extra * new_type_name me added hain
 def p_allocation_expression0(p): 
     '''allocation_expression : NEW new_type_name new_initializer 
                              | NEW new_type_name 
@@ -593,13 +608,25 @@ def p_allocation_expression0(p):
     p[0].parse=f(p)
     if len(p)==3:
         p[0].data = {"type" : p[2].data}
+        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
+        p[0].place=getnewvar()
+        p[0].code = ["PushParam " + byte_size(tpe), "PushParam 0", p[0].place + " = call alloc"]
     elif len(p)==4:
         p[0].data = {"type" : p[2].data, "init" : p[3].data}
+        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
+        p[0].place=getnewvar()
+        p[0].code = ["PushParam " + byte_size(tpe), "PushParam constructor", p[0].place + " = call alloc"]
     elif len(p)==5:
         p[0].data = {"type" : p[3].data}
+        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
+        p[0].place=getnewvar()
+        p[0].code = ["PushParam " + byte_size(tpe), "PushParam 0", p[0].place + " = call alloc"]
     elif len(p)==6:
         p[0].data = {"type" : p[3].data, "init" : p[5].data}
-    print("yo", p[0].data)
+        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
+        p[0].place=getnewvar()
+        p[0].code = ["PushParam " + byte_size(tpe), "PushParam constructor", p[0].place + " = call alloc"]
+    # print("yo", p[0].data)
 
 def p_allocation_expression1(p): 
     '''allocation_expression : NEW new_type_name LSPAREN expression RSPAREN new_initializer 
@@ -610,14 +637,36 @@ def p_allocation_expression1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==6:
+        print("exp", p[4].data, p[4].code, p[4].place, p[4].data.keys())
+        if "type" not in p[4].data.keys() or p[4].data["type"]!="int":
+            report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[2].data}
+        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
+        tmp1 = getnewvar()
+        p[0].place=getnewvar()
+        p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
     elif len(p)==7:
+        if "type" not in p[4].data.keys() or p[4].data["type"]!="int":
+            report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[2].data, "init" : p[3].data}
+        tmp1 = getnewvar()
+        p[0].place=getnewvar()
+        p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
     elif len(p)==8:
+        if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
+            report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[3].data}
+        tmp1 = getnewvar()
+        p[0].place=getnewvar()
+        p[0].code = p[6].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[6].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
     elif len(p)==9:
+        if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
+            report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[3].data, "init" : p[5].data}
-    print("yo", p[0].data)
+        tmp1 = getnewvar()
+        p[0].place=getnewvar()
+        p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
+    # print("yo", p[0].data)
 
 
 def p_new_type_name(p): 
@@ -626,9 +675,9 @@ def p_new_type_name(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data["type"]
+    p[0].data = p[1].data["type"] + "|p"
     if len(p)==3:
-        p[0].data = p[0].data + "|" + p[2].data
+        p[0].data = p[0].data + p[2].data
 
 def p_new_declarator(p): 
     '''new_declarator : new_declarator MULTOP
@@ -1450,11 +1499,11 @@ def p_compound_statement(p):
         p[0].code = {}
         p[0].place = getnewvar()
 
-    #print(p[0].code)
+    # print(p[0].code)
     x=1
     for i in p[0].code:
         if i !="":
-            #print(x,"::",i)
+            print(x,"::",i)
             x=x+1
 
 def p_statement_list(p): 
