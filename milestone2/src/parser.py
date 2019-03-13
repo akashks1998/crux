@@ -830,7 +830,7 @@ def p_postfix_expression_6(p):
                 p[0].data["class_name"] = p[1].data["type"]
                 p[0].data["class_obj"] = p[0].place 
 
-                p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place ]
+                p[0].code = p[1].code + [  p[0].place + " = *(" +  p[1].place + ")" ]
                 
             else:
                 p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
@@ -867,6 +867,11 @@ def p_postfix_expression_7(p):
                 p[0].data["func_name"] = p[3].data
                 p[0].data["class_name"] = p[1].data["type"][:-2]
                 p[0].data["class_obj"] = class_obj
+                p[0].code = p[1].code + [ class_obj + " = " + p[1].place  ] 
+
+            else:
+                p[0].code = p[1].code + [ class_obj + " = *(" +  p[1].place + ")" ]  + [ p[0].place + " = " + class_obj + "." + p[3].data ]
+
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
     else:
@@ -875,7 +880,6 @@ def p_postfix_expression_7(p):
 
     
     
-    p[0].code = p[1].code + [ class_obj + " = *(" +  p[1].place + ")" ]  + [ p[0].place + " = " + class_obj + "." + p[3].data ]
     print(p[0].code)
 
 def p_postfix_expression_8(p): 
