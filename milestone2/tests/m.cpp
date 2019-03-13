@@ -11,11 +11,10 @@ class A{
 };
 int main()
 {
-    class A **a,b;
-    // a.a = 1;
-    (*a)->a = 1;
+    class A b;
+ 
     int c;
-    a->hi(c);
+    b.hi(c);
 
     return 1;
 }

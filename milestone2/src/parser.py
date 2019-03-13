@@ -253,7 +253,7 @@ def p_logical_OR_expression(p):
         p[0].place = getnewvar()
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
-    
+   
 def p_logical_AND_expression(p): 
     '''logical_AND_expression : inclusive_OR_expression %prec LOWER
                               | logical_AND_expression ANDOP inclusive_OR_expression %prec HIGHER
@@ -453,6 +453,14 @@ def p_cast_expression(p):
         p[0].data = p[1].data
         p[0].place = p[1].place
         p[0].code = p[1].code
+    if len(p)==5:
+        rex = r'\|p*a+$'
+        x= re.fullmatch(rex, p[2].data["type"])
+        if x!=None:
+            report_error("Type casting to "+p[2].data["type"]+" is not allowed",p.lineno(0))
+        p[0].data["type"]=p[2].data["type"]
+        p[0].place=getnewvar()
+        p[0].code=p[4].code+[p[0].place+"="+ p[4].data["type"]+"_to_"+p[2].data["type"]+"("+p[4].place+")" ]
 
 
 def p_expression(p): 
@@ -489,8 +497,12 @@ def p_assignment_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code 
     else:
+        if p[1].data["type"]!=p[3].data["type"]:
+            report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
+
         p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]  
+    print("asdfgfds", p[0].place)
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -512,8 +524,6 @@ def p_unary_expression(p):
     '''unary_expression : postfix_expression 
                         | DPLUSOP unary_expression 
                         | DMINUSOP unary_expression 
-                        | unary1_operator cast_expression 
-                        | unary2_operator cast_expression 
                         | SIZEOF LPAREN type_name  RPAREN 
                         | allocation_expression 
                         | deallocation_expression 
@@ -529,12 +539,45 @@ def p_unary_expression(p):
     elif len(p)==3:
         if p[2].data["type"] in allowed_type:
             p[0].data=p[2].data
+            p[0].place=getnewvar()
+            if p[1].data=="++":
+                p[0].code=p[1].code+[p[0].place+"="+p[1].place+"+1"]
+            else:
+                p[0].code=p[1].code+[p[0].place+"="+p[1].place+"-1"]
         else:
             report_error("This unary operation is not allowed with given type", p.lineno(1))
     elif len(p)==5:
         p[0].data["type"]="int"
+        p[0].place=getnewvar()
+        p[0].code=p[3].code+[p[0].place+"= sizeof("+p[1].data["type"]+")"]
     
+def p_unary_expression1(p): 
+    '''unary_expression : unary1_operator cast_expression''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = p[2].data
+    p[0].place = getnewvar()
+    p[0].code = p[2].code+[p[0].place+"="+ p[1].data +p[2].place ] 
 
+def p_unary_expression2(p): 
+    '''unary_expression : unary2_operator cast_expression 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    if p[1].data=="*":
+        if p[2].data["type"][-1] in ["a","p"]  and "|" in p[2].data["type"]:
+            p[0].data["type"]=p[2].data["type"][:-1]
+            if p[0].data["type"][-1]=="|":
+                p[0].data["type"]=p[0].data["type"][:-1]
+        else:
+            report_error("Cannot dereference non-pointer element",p.lineno(0))
+    else:
+        if "|" in p[2].data["type"]:
+            p[0].data["type"]=p[2].data["type"]+"p"
+        else:
+            p[0].data["type"]=p[2].data["type"]+"|p"
+    p[0].place = getnewvar()
+    p[0].code = p[2].code+[p[0].place+"="+ p[1].data +p[2].place ]
 
 def p_deallocation_expression(p): 
     '''deallocation_expression : DELETE cast_expression  ''' 
@@ -645,8 +688,10 @@ def p_postfix_expression_3(p):
     if len(p)==5:
         print(p[3].data)
         expected_sig = func_name + "|" + p[3].data["type"] 
+        expr_code = p[3].code
     else:
         expected_sig = func_name + "|"
+        expr_code = []
 
     flag=0
     for fun in func_sig_list:
@@ -662,11 +707,11 @@ def p_postfix_expression_3(p):
     for each in p[3].place:
         code.append("PushParam " + each )
 
-
-
+    if "class_obj" in p[1].data.keys():
+        code.append("PushParam " + p[1].data["class_obj"] )
 
     p[0].place = getnewvar()
-    p[0].code = code + [ p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
+    p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
 
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
@@ -680,6 +725,8 @@ def p_postfix_expression_6(p):
 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].place = getnewvar()
+
 
     if "|" in p[1].data["type"]:
         report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
@@ -695,21 +742,29 @@ def p_postfix_expression_6(p):
                 p[0].data["func_sig"] = x["func_sig"]
                 p[0].data["func_name"] = p[3].data
                 p[0].data["class_name"] = p[1].data["type"]
+                p[0].data["class_obj"] = p[0].place 
+
+                p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place ]
+                
+            else:
+                p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
+                
+
+                
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
     else:
         report_error(p[1].data["type"]+" is not a class",p.lineno(0))
     # post_fix must be a object and name should be a class member
 
-    p[0].place = getnewvar()
-    p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
 
 
 def p_postfix_expression_7(p): 
     '''postfix_expression : postfix_expression ARROW name  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    print("sasa",p[1].data)
+    p[0].place = getnewvar()
+    class_obj = getnewvar()
 
     if p[1].data["type"][-2:] != "|a" and p[1].data["type"][-2:] != "|p":
         report_error("request for member "+p[3].data+" in ptr to non-class type "+p[1].data["type"],p.lineno(0))
@@ -725,6 +780,7 @@ def p_postfix_expression_7(p):
                 p[0].data["func_sig"] = x["func_sig"]
                 p[0].data["func_name"] = p[3].data
                 p[0].data["class_name"] = p[1].data["type"][:-2]
+                p[0].data["class_obj"] = class_obj
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
     else:
@@ -732,9 +788,8 @@ def p_postfix_expression_7(p):
     # post_fix must be a object and name should be a class member
 
     
-    p[0].place = getnewvar()
-    new_tmp = getnewvar()
-    p[0].code = p[1].code + [ new_tmp + " = *(" +  p[1].place + ")" ]  + [ p[0].place + " = " + new_tmp + "." + p[3].data ]
+    
+    p[0].code = p[1].code + [ class_obj + " = *(" +  p[1].place + ")" ]  + [ p[0].place + " = " + class_obj + "." + p[3].data ]
     print(p[0].code)
 
 def p_postfix_expression_8(p): 
@@ -1671,10 +1726,11 @@ def p_expression_list(p):
     if len(p)==2:
         p[0].data = p[1].data
         p[0].place = [ p[1].place ] 
+        
         p[0].code = p[1].code 
     else:
         p[0].data = {"type" : p[1].data["type"] + "," + p[3].data["type"]}
-        p[0].place = p[2].place +  [ p[1].place ] 
+        p[0].place =  [ p[3].place ] +  p[1].place
         p[0].code = p[1].code + p[3].code
 
 def p_push_scope(p):
