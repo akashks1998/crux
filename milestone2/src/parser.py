@@ -526,9 +526,19 @@ def p_assignment_operator(p):
     p[0].parse=f(p)
     p[0].data=p[1].data
 
+def p_unary_expression_0(p): 
+    '''unary_expression : postfix_expression  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+   
+    p[0].data = assigner(p,1)
+    if(p[0].data["type"][-1] == "a"):
+        report_error("Array not called upto end", p.lineno(0))
+    p[0].place = p[1].place
+    p[0].code = p[1].code 
+
 def p_unary_expression(p): 
-    '''unary_expression : postfix_expression 
-                        | DPLUSOP unary_expression 
+    '''unary_expression : DPLUSOP unary_expression 
                         | DMINUSOP unary_expression 
                         | SIZEOF LPAREN type_name  RPAREN 
                         | allocation_expression 
@@ -540,9 +550,9 @@ def p_unary_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = assigner(p,1)
-        print("Unary",p[0].data["type"])
         p[0].place = p[1].place
         p[0].code = p[1].code 
+
     elif len(p)==3:
         if p[2].data["type"] in allowed_type:
             p[0].data=assigner(p,2)
@@ -557,6 +567,246 @@ def p_unary_expression(p):
         p[0].data["type"]="int"
         p[0].place=getnewvar()
         p[0].code=p[3].code+[p[0].place+"= sizeof("+p[1].data["type"]+")"]
+
+def p_postfix_expression_1(p): 
+    '''postfix_expression : primary_expression ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = assigner(p,1)
+    p[0].place = p[1].place
+    p[0].code = p[1].code
+
+def p_postfix_expression_2(p): 
+    '''postfix_expression : postfix_expression LSPAREN expression RSPAREN  ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+    if( p[3].data["type"] != "int" ):
+        report_error("Array index is not integer", p.lineno(3))
+    print(p[1].data)
+    type_last_char = p[1].data["type"][-1]
+    if type_last_char == "a":
+        p[0].data = p[1].data.copy()
+        to_add_var = getnewvar()
+        index = p[1].data["index"]
+        to_mult =  p[1].data["meta"][index] if ( index < len(p[1].data["meta"]) ) else 1
+        to_add = str(to_mult) + " * " + p[3].place
+        to_add_ = getnewvar()
+        p[0].code = p[1].code + p[3].code + [ to_add_ +  " = " +  to_add ] + [ to_add_var + " = " + p[1].data["to_add"] + " + " + to_add_  ]
+        p[0].place = p[1].place
+        p[0].data["type"] =  p[1].data["type"][:-1]
+        p[0].data["index"] = p[1].data["index"] + 1
+        p[0].data["to_add"] = to_add_var
+
+        if(p[1].data["type"][-2] != "a"):
+            # end of array
+            if(p[1].data["type"][-2] == "|"):
+                p[0].data = {"type": p[1].data["type"][:-2]}
+            else:
+                p[0].data = {"type": p[1].data["type"][:-1]} 
+            new_addr = getnewvar()
+            p[0].code = p[0].code + [ new_addr + " = " + p[0].place + " + " + to_add_var ]
+            p[0].place = "*(" + new_addr + ")"
+
+    elif type_last_char == "p":
+        if(p[1].data["type"][-2] == "|"):
+            p[0].data = {"type": p[1].data["type"][:-2]}
+        else:
+            p[0].data = {"type": p[1].data["type"][:-1]}
+
+        p[0].place = getnewvar()
+        p[0].code = p[1].code +  p[3].code  + [ p[0].place + " = "  + "*( " + p[1].place + " + " +  p[3].place + ")" ]
+
+    else:
+        report_error("Not a array or pointer", p.lineno(0))
+
+   
+
+def danda(s):
+    return s
+
+def p_postfix_expression_3(p): 
+    '''postfix_expression : postfix_expression  LPAREN expression_list  RPAREN 
+                          | postfix_expression LPAREN  RPAREN 
+    ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+    # this must be a function call
+    # first get function sig..
+    try:
+        func_sig_list = p[1].data["func_sig"]
+        func_name = p[1].data["func_name"]
+    except:
+        report_error("Calling function on non function type", p.lineno(1))
+    if len(p)==5:
+        print(p[3].data)
+        expected_sig = func_name + "|" + p[3].data["type"] 
+        expr_code = p[3].code
+    else:
+        expected_sig = func_name + "|"
+        expr_code = []
+
+    flag=0
+    for fun in func_sig_list:
+        print(fun[0], "::" , expected_sig)
+        if fun[0]==expected_sig:
+            p[0].data = {"type" : fun[1]}
+            flag=1
+    if flag==0:
+        report_error("Function not declared", p.lineno(1))
+
+    class_name = "" if "class_name" not in p[1].data.keys() else p[1].data["class_name"]
+    code = [ ]
+    for each in p[3].place:
+        code.append("PushParam " + each )
+
+    if "class_obj" in p[1].data.keys():
+        code.append("PushParam " + p[1].data["class_obj"] )
+
+    p[0].place = getnewvar()
+    p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
+
+def p_postfix_expression_5(p): 
+    '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+
+def p_postfix_expression_6(p): 
+    '''postfix_expression : postfix_expression DOT name  ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].place = getnewvar()
+    # post_fix must be a object and name should be a class member
+
+    if "|" in p[1].data["type"]:
+        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
+
+    details=checkVar(p[1].data["type"],"**")
+    if details==False:
+        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
+    if "class" in details["var"].keys() and details["var"]["class"]=="class":
+        x=checkVar(p[3].data, details["var"]["scope"])
+        if x!=False:
+            p[0].data = x.copy()
+
+            if(p[0].data["type"] == "function_upper"):
+                p[0].data["func_sig"] = x["func_sig"]
+                p[0].data["func_name"] = p[3].data
+                p[0].data["class_name"] = p[1].data["type"]
+                p[0].data["class_obj"] = p[0].place 
+
+                p[0].code = p[1].code + [  p[0].place + " = *(" +  p[1].place + ")" ]
+            else:
+                p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
+
+        else:
+            report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
+    else:
+        report_error(p[1].data["type"]+" is not a class",p.lineno(0))
+    
+
+
+def p_postfix_expression_7(p): 
+    '''postfix_expression : postfix_expression ARROW name  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].place = getnewvar()
+    class_obj = getnewvar()
+
+    if p[1].data["type"][-2:] != "|a" and p[1].data["type"][-2:] != "|p":
+        report_error("request for member "+p[3].data+" in ptr to non-class type "+p[1].data["type"],p.lineno(0))
+
+    details=checkVar(p[1].data["type"][:-2],"**")
+    if details==False:
+        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"][:-2],p.lineno(0))
+    if "class" in details["var"].keys() and details["var"]["class"]=="class":
+        x=checkVar(p[3].data, details["var"]["scope"])
+        if x!=False:
+            p[0].data["type"]=x["type"]
+            if(p[0].data["type"] == "function_upper"):
+                p[0].data["func_sig"] = x["func_sig"]
+                p[0].data["func_name"] = p[3].data
+                p[0].data["class_name"] = p[1].data["type"][:-2]
+                p[0].data["class_obj"] = class_obj
+                p[0].code = p[1].code + [ class_obj + " = " + p[1].place  ] 
+
+            else:
+                p[0].code = p[1].code + [ class_obj + " = *(" +  p[1].place + ")" ]  + [ p[0].place + " = " + class_obj + "." + p[3].data ]
+
+        else:
+            report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
+    else:
+        report_error(p[1].data["type"][:-2] +" is not a class",p.lineno(0))
+    # post_fix must be a object and name should be a class member
+
+    
+    
+    print(p[0].code)
+
+def p_postfix_expression_8(p): 
+    '''postfix_expression : postfix_expression  DPLUSOP 
+                          | postfix_expression  DMINUSOP 
+    ''' 
+
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].place = p[1].place
+    p[0].code = p[1].code + [ p[0].place + " = " + p[0].place + " + 1"  ]
+
+def p_primary_expression0(p): 
+    '''primary_expression : name   
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+    detail = checkVar(p[1].data)
+    if detail ==  False:
+        report_error( str(p[1].data) + " not declared" , p.lineno(1) )
+
+    v_type = detail["var"]["type"]
+    
+    p[0].data = {"type": v_type, "name" : assigner(p,1)}
+    
+    if v_type=="function_upper":
+        p[0].data["func_sig"] = detail["var"]["func_sig"]
+        p[0].data["func_name"] = p[1].data
+
+    p[0].place = p[1].data
+    p[0].code = [ "" ]
+
+def p_primary_expression1(p): 
+    ''' primary_expression : literal ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+    p[0].data = assigner(p,1)
+    p[0].place = getnewvar()
+    p[0].code = [ p[0].place + " = " + str(p[1].data["value"]) ] 
+    
+    
+def p_primary_expression2(p): 
+    '''primary_expression : THIS  
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+    
+    # p[0].data = {"type" : "class"} # use symbol table to determine
+
+
+def p_primary_expression3(p): 
+    '''primary_expression : LPAREN expression  RPAREN   
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+    p[0].data = {"type" : p[2].data["type"], "name" : None}
+    p[0].place = p[2].place
+    p[0].code = p[2].code
+
 
 def p_unary_expression1(p): 
     '''unary_expression : unary1_operator cast_expression''' 
@@ -712,6 +962,7 @@ def p_unary1_operator(p):
                       | MINUSOP 
                       | NOTSYM 
                       | BNOP 
+                      | BANDOP 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -719,229 +970,13 @@ def p_unary1_operator(p):
 
 def p_unary2_operator(p): 
     '''unary2_operator : MULTOP 
-                      | BANDOP 
+                     
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = assigner(p,1)
 
-def p_postfix_expression_1(p): 
-    '''postfix_expression : primary_expression ''' 
-                        #   | simple_type_name       LPAREN expression_list  RPAREN 
-                        #   | simple_type_name       LPAREN  RPAREN 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data = assigner(p,1)
-    p[0].place = p[1].place
-    p[0].code = p[1].code
 
-def p_postfix_expression_2(p): 
-    '''postfix_expression : postfix_expression LSPAREN expression RSPAREN  ''' 
-
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
-    if(p[3].data["type"] != "float" and p[3].data["type"] != "int"):
-        report_error("Array index is not integer", p.lineno(3))
-    
-    type_last_char = p[1].data["type"][-1]
-    if type_last_char == "p" or type_last_char == "a":
-        if(p[1].data["type"][-2] == "|"):
-            p[0].data = {"type": p[1].data["type"][:-2]}
-        else:
-            p[0].data = {"type": p[1].data["type"][:-1]}
-    else:
-        report_error("Not a array or pointer", p.lineno(0))
-
-    p[0].place = getnewvar()
-    p[0].code = p[1].code +  p[3].code  + [ p[0].place + " = "  + p[1].place + "[" + p[3].place + "]" ]
-
-def danda(s):
-    return s
-
-def p_postfix_expression_3(p): 
-    '''postfix_expression : postfix_expression  LPAREN expression_list  RPAREN 
-                          | postfix_expression LPAREN  RPAREN 
-    ''' 
-
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
-    # this must be a function call
-    # first get function sig..
-    try:
-        func_sig_list = p[1].data["func_sig"]
-        func_name = p[1].data["func_name"]
-    except:
-        report_error("Calling function on non function type", p.lineno(1))
-    if len(p)==5:
-        print(p[3].data)
-        expected_sig = func_name + "|" + p[3].data["type"] 
-        expr_code = p[3].code
-    else:
-        expected_sig = func_name + "|"
-        expr_code = []
-
-    flag=0
-    for fun in func_sig_list:
-        print(fun[0], "::" , expected_sig)
-        if fun[0]==expected_sig:
-            p[0].data = {"type" : fun[1]}
-            flag=1
-    if flag==0:
-        report_error("Function not declared", p.lineno(1))
-
-    class_name = "" if "class_name" not in p[1].data.keys() else p[1].data["class_name"]
-    code = [ ]
-    for each in p[3].place:
-        code.append("PushParam " + each )
-
-    if "class_obj" in p[1].data.keys():
-        code.append("PushParam " + p[1].data["class_obj"] )
-
-    p[0].place = getnewvar()
-    p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
-
-def p_postfix_expression_5(p): 
-    '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
-
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
-
-def p_postfix_expression_6(p): 
-    '''postfix_expression : postfix_expression DOT name  ''' 
-
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].place = getnewvar()
-
-
-    if "|" in p[1].data["type"]:
-        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
-
-    details=checkVar(p[1].data["type"],"**")
-    if details==False:
-        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
-    if "class" in details["var"].keys() and details["var"]["class"]=="class":
-        x=checkVar(p[3].data, details["var"]["scope"])
-        if x!=False:
-            p[0].data["type"]=x["type"]
-            print("printing x",x["type"])
-            if(p[0].data["type"] == "function_upper"):
-                p[0].data["func_sig"] = x["func_sig"]
-                p[0].data["func_name"] = p[3].data
-                p[0].data["class_name"] = p[1].data["type"]
-                p[0].data["class_obj"] = p[0].place 
-
-                p[0].code = p[1].code + [  p[0].place + " = *(" +  p[1].place + ")" ]
-                
-            else:
-                p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
-                
-
-                
-        else:
-            report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
-    else:
-        report_error(p[1].data["type"]+" is not a class",p.lineno(0))
-    # post_fix must be a object and name should be a class member
-
-
-
-def p_postfix_expression_7(p): 
-    '''postfix_expression : postfix_expression ARROW name  ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].place = getnewvar()
-    class_obj = getnewvar()
-
-    if p[1].data["type"][-2:] != "|a" and p[1].data["type"][-2:] != "|p":
-        report_error("request for member "+p[3].data+" in ptr to non-class type "+p[1].data["type"],p.lineno(0))
-
-    details=checkVar(p[1].data["type"][:-2],"**")
-    if details==False:
-        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"][:-2],p.lineno(0))
-    if "class" in details["var"].keys() and details["var"]["class"]=="class":
-        x=checkVar(p[3].data, details["var"]["scope"])
-        if x!=False:
-            p[0].data["type"]=x["type"]
-            if(p[0].data["type"] == "function_upper"):
-                p[0].data["func_sig"] = x["func_sig"]
-                p[0].data["func_name"] = p[3].data
-                p[0].data["class_name"] = p[1].data["type"][:-2]
-                p[0].data["class_obj"] = class_obj
-                p[0].code = p[1].code + [ class_obj + " = " + p[1].place  ] 
-
-            else:
-                p[0].code = p[1].code + [ class_obj + " = *(" +  p[1].place + ")" ]  + [ p[0].place + " = " + class_obj + "." + p[3].data ]
-
-        else:
-            report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
-    else:
-        report_error(p[1].data["type"][:-2] +" is not a class",p.lineno(0))
-    # post_fix must be a object and name should be a class member
-
-    
-    
-    print(p[0].code)
-
-def p_postfix_expression_8(p): 
-    '''postfix_expression : postfix_expression  DPLUSOP 
-                          | postfix_expression  DMINUSOP 
-    ''' 
-
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].place = p[1].place
-    p[0].code = p[1].code + [ p[0].place + " = " + p[0].place + " + 1"  ]
-
-def p_primary_expression0(p): 
-    '''primary_expression : name   
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p) 
-    detail = checkVar(p[1].data)
-    if detail ==  False:
-        report_error( str(p[1].data) + " not declared" , p.lineno(1) )
-
-    v_type = detail["var"]["type"]
-    
-    p[0].data = {"type": v_type, "name" : assigner(p,1)}
-    
-    if v_type=="function_upper":
-        p[0].data["func_sig"] = detail["var"]["func_sig"]
-        p[0].data["func_name"] = p[1].data
-
-    p[0].place = p[1].data
-    p[0].code = [ "" ]
-
-def p_primary_expression1(p): 
-    ''' primary_expression : literal ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p) 
-    p[0].data = assigner(p,1)
-    p[0].place = getnewvar()
-    p[0].code = [ p[0].place + " = " + str(p[1].data["value"]) ] 
-    
-    
-def p_primary_expression2(p): 
-    '''primary_expression : THIS  
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p) 
-    
-    # p[0].data = {"type" : "class"} # use symbol table to determine
-
-
-def p_primary_expression3(p): 
-    '''primary_expression : LPAREN expression  RPAREN   
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p) 
-    p[0].data = {"type" : p[2].data["type"], "name" : None}
-    p[0].place = p[2].place
-    p[0].code = p[2].code
 
 def p_literal_string(p): 
     '''literal :  STRING_L ''' 
@@ -1024,13 +1059,13 @@ def p_declarator_1(p):
 
     p[0].data = {
         "name" : p[2].data["name"], 
-        "type" : ("p" if (p[1].data == "*") else "r") + p[2].data['type'],
-        "meta" : [p[1].data] + p[2].data["meta"] 
+        "type" : "p" + p[2].data['type'],
+        "meta" : p[2].data["meta"] 
     }
 
               
-def p_declarator_3(p): 
-    '''declarator :  declarator LSPAREN constant_expression RSPAREN  ''' 
+def p_declarator_2(p): 
+    '''declarator :  declarator LSPAREN NUMBER RSPAREN  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = {
@@ -1038,17 +1073,8 @@ def p_declarator_3(p):
         "type" : p[1].data['type'] + "a",
         "meta" : p[1].data["meta"] + [p[3].data] 
     }
-            
-def p_declarator_4(p): 
-    '''declarator : declarator LSPAREN RSPAREN  ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data = {
-        "name" : p[1].data["name"], 
-        "type" : p[1].data['type'] + "a",
-        "meta" : p[1].data["meta"] + [""] 
-    }
-        
+
+
 def p_arg_list(p):
     ''' arg_list : argument_declaration_list 
                   |
@@ -1339,8 +1365,7 @@ def p_base_specifier(p):
                       | class_key  IDENTIFIER template_class_name
                       | IDENTIFIER 
                       | IDENTIFIER template_class_name
-                      | access_specifier class_key IDENTIFIER
-                      | access_specifier class_key IDENTIFIER template_class_name
+
     '''
                     #   | access_specifier  IDENTIFIER
                     #   | access_specifier  IDENTIFIER template_class_name 
@@ -1390,7 +1415,7 @@ def p_class_define_specifier2(p):
             report_error("Redeclaration of variable", p.lineno(1))
     
 
-def p_member_list0(p):
+def p_member_list(p):
     '''member_list : member_access_list
     '''
     p[0] = OBJ() 
@@ -1398,37 +1423,6 @@ def p_member_list0(p):
     p[0].data = assigner(p,1)
     p[0].scope = currentScopeTable
 
-#remaining
-def p_member_list1(p):
-    '''member_list : access_list
-    '''
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].scope = currentScopeTable
-
-#remaining
-def p_member_list2(p):
-    '''member_list : member_list access_list
-    '''
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].scope = currentScopeTable
-
-def p_access_specifier(p):
-    '''access_specifier : PRIVATE
-                        | PROTECTED
-                        | PUBLIC
-    '''
-    p[0] = OBJ()    
-    p[0].parse=f(p)
-    p[0].data = assigner(p,1)
-
-#remaining
-def p_access_list(p):
-    '''access_list : access_specifier COLON member_access_list
-    '''
-    p[0] = OBJ() 
-    p[0].parse=f(p)
 
 def p_member_access_list1(p):
     '''member_access_list : member_declaration member_access_list'''
@@ -1443,25 +1437,33 @@ def p_member_access_list2(p):
     p[0].data = [assigner(p,1)]
 
 def p_member_declaration0(p):
-    '''member_declaration : type_specifier_ member_declarator_list SEMICOLON
-                          | SEMICOLON
-    '''
-                        #   | class_define_specifier SEMICOLON
-                        #   | function_definition SEMICOLON
-    p[0] = OBJ() 
+    '''member_declaration : type_specifier_ member_declarator_list SEMICOLON '''
+    
+    p[0] = OBJ()
     p[0].parse=f(p)
-    p[0].data = {}
-    if len(p)==4:
-        decl_list = p[2].data
-        for each in decl_list:
-            data = p[1].data.copy()
-            if (each["type"] != ""):
-                data["type"] = p[1].data["type"] + "|" +  each["type"]
-            data["name"] = each["name"]
-            data["meta"] = each["meta"]
-            if pushVar(each["name"], data)==False:
-                report_error("Redeclaration of variable", p.lineno(1))
-            p[0].data[each["name"]] = data
+    decl_list = p[2].data
+    for each in decl_list:
+        data = p[1].data.copy()
+        if(each["type"] != ""):
+            data["type"] = p[1].data["type"] + "|" +  each["type"]
+        data["name"] = each["name"]
+        data["meta"] = each["meta"]
+        
+        # handle array type
+        if len(data["meta"]) != 0:
+            element_type = data["type"].rstrip("a")
+            data["is_array"] = 1
+            data["element_type"] = element_type
+            data["index"] = 0
+            data["to_add"] = "0"
+
+            size = 1
+            for n in data["meta"]:
+                size = size * n
+            data["size"] = get_size(element_type) * size
+
+        if pushVar(data["name"],data)==False:
+            report_error("Redeclaration of variable", p.lineno(1))
 
 def p_member_declaration1(p):
     '''member_declaration : function_definition
@@ -1474,23 +1476,16 @@ def p_member_declaration1(p):
     p[0].data = [assigner(p,1)]
 
 def p_member_declarator_list(p): 
-    '''member_declarator_list : member_declarator 
-                              | member_declarator COMMA member_declarator_list
+    '''member_declarator_list : declarator 
+                              | declarator COMMA member_declarator_list
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
     if len(p)==4:
-        p[0].data = p[1].data + p[3].data
+        p[0].data = [ p[1].data ] + p[3].data
     else:
-        p[0].data = p[1].data
+        p[0].data = [ p[1].data ]
 
-def p_member_declarator(p): 
-    '''member_declarator : declarator  
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    if len(p)==2:
-        p[0].data = [assigner(p,1)]
 
 def p_function_definition(p): 
     '''function_definition : type_specifier_ declarator func_push_scope arg_list  RPAREN fct_body pop_scope 
@@ -1688,9 +1683,12 @@ def p_declaration_statement(p):
     p[0].parse=f(p)
     p[0].code=p[1].code.copy()
 
+def get_size(data_type):
+    return 4
+
 def p_declaration0(p):
     '''declaration : type_specifier_ declarator_list SEMICOLON ''' 
-                #    | type_specifier_ SEMICOLON
+
     p[0] = OBJ()
     p[0].parse=f(p)
     decl_list = p[2].data
@@ -1701,34 +1699,51 @@ def p_declaration0(p):
             data["type"] = p[1].data["type"] + "|" +  each["type"]
         data["name"] = each["name"]
         data["meta"] = each["meta"]
-        data["init"] = each["init"]
-        if(data["class"] ==  "class"):
-            x = checkVar(data["type"])
-            if x==False:
-                report_error("Class " + data["type"]+" doesn't exist",p.lineno(0))
-            t=checkVar( data["type"] ,x["var"]["scope"])
-            if(each["type"] == ""):
-                if "init_type" not in each.keys():
-                    if t!=False:
-                        report_error("Constructor is not called for class "+data["type"],p.lineno(0))
-                else:
-                    if isinstance( each["place"], list):
-                        if t==False:
-                            report_error("Constructor is not defined for "+data["type"],p.lineno(1))
-                        if (data["type"]+"|"+each["init_type"],"void") in t["func_sig"]:
-                            report_error("Constructor is called",p.lineno(0))
-                        else:
-                            report_error("Constructor is not correct for "+data["type"],p.lineno(1))
-        if "init_type" not in each.keys() or ( (not isinstance( each["place"], list)) and data["type"]==each["init_type"]):
-            if pushVar(each["name"],data)==False:
+        
+        # handle array type
+        if len(data["meta"]) != 0:
+            element_type = data["type"].rstrip("a")
+            data["is_array"] = 1
+            data["element_type"] = element_type
+            data["index"] = 0
+            data["to_add"] = "0"
+
+            size = 1
+            for n in data["meta"]:
+                size = size * n
+            data["size"] = get_size(element_type) * size
+            print(data)
+            if pushVar(data["name"],data)==False:
                 report_error("Redeclaration of variable", p.lineno(1))
-            if "init_type" in each.keys():
-                p[0].code=p[0].code + [each["name"]+" = "+ each["place"] ]
+
         else:
-            if isinstance( each["place"], list):
-                report_error("Constructor is not defined for "+data["type"],p.lineno(1))
-            print("Type,", each["init_type"])
-            report_error("Assigned type is not same as given type",p.lineno(1))   
+            if(data["class"] ==  "class"):
+                x = checkVar(data["type"])
+                if x==False:
+                    report_error("Class " + data["type"]+" doesn't exist",p.lineno(0))
+                t=checkVar( data["type"] ,x["var"]["scope"])
+                if(each["type"] == ""):
+                    if "init_type" not in each.keys():
+                        if t!=False:
+                            report_error("Constructor is not called for class "+data["type"],p.lineno(0))
+                    else:
+                        if isinstance( each["place"], list):
+                            if t==False:
+                                report_error("Constructor is not defined for "+data["type"],p.lineno(1))
+                            if (data["type"]+"|"+each["init_type"],"void") in t["func_sig"]:
+                                report_error("Constructor is called",p.lineno(0))
+                            else:
+                                report_error("Constructor is not correct for "+data["type"],p.lineno(1))
+            if "init_type" not in each.keys() or ( (not isinstance( each["place"], list)) and data["type"]==each["init_type"]):
+                if pushVar(each["name"],data)==False:
+                    report_error("Redeclaration of variable", p.lineno(1))
+                if "init_type" in each.keys():
+                    p[0].code=p[0].code + [each["name"]+" = "+ each["place"] ]
+            else:
+                if isinstance( each["place"], list):
+                    report_error("Constructor is not defined for "+data["type"],p.lineno(1))
+                print("Type,", each["init_type"])
+                report_error("Assigned type is not same as given type",p.lineno(1))   
 
 # def p_declaration1(p):
 #     '''declaration :  asm_declaration  ''' 
@@ -1795,12 +1810,13 @@ def p_init_declarator(p):
     p[0].parse=f(p)
     p[0].data = assigner(p,1)
     if len(p) == 3:
+        if len(p[0].data["meta"]) != 0:
+            # its a array, can not be init
+            report_error("Array can be initialized while declaration", p.lineno(1))
+
         p[0].data["init_type"]=p[2].data["type"]
         p[0].data["place"] = p[2].place
-        p[0].data["init"] = None
         p[0].code = p[1].code.copy()
-    else:
-        p[0].data["init"] = None
 
 def p_initializer_1(p): 
     '''initializer :   EQUAL assignment_expression''' 
