@@ -254,12 +254,12 @@ Rule 243   labeled_statement_list -> labeled_statement
 Rule 244   labeled_statement_list -> labeled_statement_list labeled_statement
 Rule 245   labeled_statement -> CASE constant_expression COLON statement_list
 Rule 246   labeled_statement -> DEFAULT COLON statement_list
-Rule 247   iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope
-Rule 248   iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+Rule 247   iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope
+Rule 248   iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
 Rule 249   iteration_statement -> FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
 Rule 250   iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
 Rule 251   iteration_statement -> FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-Rule 252   iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
+Rule 252   iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope
 Rule 253   for_init_statement -> expression_statement
 Rule 254   for_init_statement -> declaration_statement
 Rule 255   expression_statement -> expression SEMICOLON
@@ -416,7 +416,7 @@ class_define_specifier : 261
 class_head           : 202 203
 class_key            : 184 185 192 193 196 197 200 201
 complex_type_specifier : 172
-compound_statement   : 222 228 239 240 240 242 242 249 250 251
+compound_statement   : 222 228 239 240 240 242 242 247 248 249 250 251 252
 conditional_expression : 12 14 50
 constant_expression  : 108 109 114 245
 control_line         : 1 6
@@ -471,7 +471,7 @@ relational_expression : 25 26 27 29 30 31 32
 selection_statement  : 229
 shift_expression     : 28 29 30 31 32 34 35
 simple_type_name     : 171
-statement            : 225 226 247 248 252
+statement            : 225 226
 statement_list       : 223 226 245 246
 template_arg_list    : 162 164
 template_argument_list : 264 266
@@ -10926,12 +10926,12 @@ state 258
     (239) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope
     (240) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope
     (241) selection_statement -> . SWITCH LPAREN expression RPAREN push_scope LCPAREN labeled_statement_list RCPAREN pop_scope
-    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN statement pop_scope
-    (248) iteration_statement -> . DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope
+    (248) iteration_statement -> . DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
     (249) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope
     (234) jump_statement -> . BREAK SEMICOLON
     (235) jump_statement -> . CONTINUE SEMICOLON
     (236) jump_statement -> . RETURN expression SEMICOLON
@@ -13127,12 +13127,12 @@ state 315
     (239) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope
     (240) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope
     (241) selection_statement -> . SWITCH LPAREN expression RPAREN push_scope LCPAREN labeled_statement_list RCPAREN pop_scope
-    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN statement pop_scope
-    (248) iteration_statement -> . DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope
+    (248) iteration_statement -> . DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
     (249) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope
     (234) jump_statement -> . BREAK SEMICOLON
     (235) jump_statement -> . CONTINUE SEMICOLON
     (236) jump_statement -> . RETURN expression SEMICOLON
@@ -13860,7 +13860,7 @@ state 327
 
 state 328
 
-    (247) iteration_statement -> WHILE . push_scope LPAREN expression RPAREN statement pop_scope
+    (247) iteration_statement -> WHILE . push_scope LPAREN expression RPAREN compound_statement pop_scope
     (282) push_scope -> .
 
     LPAREN          reduce using rule 282 (push_scope -> .)
@@ -13869,57 +13869,9 @@ state 328
 
 state 329
 
-    (248) iteration_statement -> DO . push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+    (248) iteration_statement -> DO . push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
     (282) push_scope -> .
 
-    IF              reduce using rule 282 (push_scope -> .)
-    SWITCH          reduce using rule 282 (push_scope -> .)
-    WHILE           reduce using rule 282 (push_scope -> .)
-    DO              reduce using rule 282 (push_scope -> .)
-    FOR             reduce using rule 282 (push_scope -> .)
-    BREAK           reduce using rule 282 (push_scope -> .)
-    CONTINUE        reduce using rule 282 (push_scope -> .)
-    RETURN          reduce using rule 282 (push_scope -> .)
-    GOTO            reduce using rule 282 (push_scope -> .)
-    TRY             reduce using rule 282 (push_scope -> .)
-    THROW           reduce using rule 282 (push_scope -> .)
-    CONST           reduce using rule 282 (push_scope -> .)
-    ASM             reduce using rule 282 (push_scope -> .)
-    TEMPLATE        reduce using rule 282 (push_scope -> .)
-    TYPEDEF         reduce using rule 282 (push_scope -> .)
-    DPLUSOP         reduce using rule 282 (push_scope -> .)
-    DMINUSOP        reduce using rule 282 (push_scope -> .)
-    SIZEOF          reduce using rule 282 (push_scope -> .)
-    PLUSOP          reduce using rule 282 (push_scope -> .)
-    MINUSOP         reduce using rule 282 (push_scope -> .)
-    NOTSYM          reduce using rule 282 (push_scope -> .)
-    BNOP            reduce using rule 282 (push_scope -> .)
-    MULTOP          reduce using rule 282 (push_scope -> .)
-    BANDOP          reduce using rule 282 (push_scope -> .)
-    NEW             reduce using rule 282 (push_scope -> .)
-    DELETE          reduce using rule 282 (push_scope -> .)
-    CHAR            reduce using rule 282 (push_scope -> .)
-    SHORT           reduce using rule 282 (push_scope -> .)
-    INT             reduce using rule 282 (push_scope -> .)
-    LONG            reduce using rule 282 (push_scope -> .)
-    SIGNED          reduce using rule 282 (push_scope -> .)
-    UNSIGNED        reduce using rule 282 (push_scope -> .)
-    FLOAT           reduce using rule 282 (push_scope -> .)
-    DOUBLE          reduce using rule 282 (push_scope -> .)
-    VOID            reduce using rule 282 (push_scope -> .)
-    STRING          reduce using rule 282 (push_scope -> .)
-    AUTO            reduce using rule 282 (push_scope -> .)
-    TYPE            reduce using rule 282 (push_scope -> .)
-    CLASS           reduce using rule 282 (push_scope -> .)
-    STRUCT          reduce using rule 282 (push_scope -> .)
-    THIS            reduce using rule 282 (push_scope -> .)
-    LPAREN          reduce using rule 282 (push_scope -> .)
-    IDENTIFIER      reduce using rule 282 (push_scope -> .)
-    DOUBLEBNOP      reduce using rule 282 (push_scope -> .)
-    STRING_L        reduce using rule 282 (push_scope -> .)
-    NUMBER          reduce using rule 282 (push_scope -> .)
-    DECIMAL         reduce using rule 282 (push_scope -> .)
-    SCHAR           reduce using rule 282 (push_scope -> .)
     LCPAREN         reduce using rule 282 (push_scope -> .)
 
     push_scope                     shift and go to state 365
@@ -13929,7 +13881,7 @@ state 330
     (249) iteration_statement -> FOR . LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> FOR . LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> FOR . LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> FOR . LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> FOR . LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope
 
     LPAREN          shift and go to state 366
 
@@ -15428,257 +15380,27 @@ state 363
 
 state 364
 
-    (247) iteration_statement -> WHILE push_scope . LPAREN expression RPAREN statement pop_scope
+    (247) iteration_statement -> WHILE push_scope . LPAREN expression RPAREN compound_statement pop_scope
 
     LPAREN          shift and go to state 385
 
 
 state 365
 
-    (248) iteration_statement -> DO push_scope . statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
-    (227) statement -> . expression_statement
-    (228) statement -> . push_scope compound_statement pop_scope
-    (229) statement -> . selection_statement
-    (230) statement -> . iteration_statement
-    (231) statement -> . jump_statement
-    (232) statement -> . declaration_statement
-    (233) statement -> . try_block
-    (255) expression_statement -> . expression SEMICOLON
-    (282) push_scope -> .
-    (239) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope
-    (240) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope
-    (241) selection_statement -> . SWITCH LPAREN expression RPAREN push_scope LCPAREN labeled_statement_list RCPAREN pop_scope
-    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN statement pop_scope
-    (248) iteration_statement -> . DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
-    (249) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
-    (250) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
-    (251) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
-    (234) jump_statement -> . BREAK SEMICOLON
-    (235) jump_statement -> . CONTINUE SEMICOLON
-    (236) jump_statement -> . RETURN expression SEMICOLON
-    (237) jump_statement -> . RETURN SEMICOLON
-    (238) jump_statement -> . GOTO IDENTIFIER SEMICOLON
-    (256) declaration_statement -> . declaration
-    (242) try_block -> . TRY push_scope compound_statement pop_scope CATCH push_scope compound_statement pop_scope
-    (45) expression -> . assignment_expression
-    (46) expression -> . throw_expression
-    (47) expression -> . expression COMMA assignment_expression
-    (257) declaration -> . type_specifier_ declarator_list SEMICOLON
-    (258) declaration -> . asm_declaration
-    (259) declaration -> . function_definition
-    (260) declaration -> . function_decl
-    (261) declaration -> . class_define_specifier SEMICOLON
-    (262) declaration -> . template_declaration
-    (263) declaration -> . typedef_declarator
-    (50) assignment_expression -> . conditional_expression
-    (51) assignment_expression -> . unary_expression assignment_operator assignment_expression
-    (48) throw_expression -> . THROW expression
-    (49) throw_expression -> . THROW
-    (167) type_specifier_ -> . CONST type_specifier
-    (168) type_specifier_ -> . type_specifier
-    (279) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
-    (219) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
-    (220) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (202) class_define_specifier -> . class_head push_scope LCPAREN RCPAREN pop_scope
-    (203) class_define_specifier -> . class_head push_scope LCPAREN member_list RCPAREN pop_scope
-    (264) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
-    (169) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
-    (170) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
-    (13) conditional_expression -> . logical_OR_expression
-    (14) conditional_expression -> . logical_OR_expression QUESMARK expression COLON conditional_expression
-    (62) unary_expression -> . postfix_expression
-    (63) unary_expression -> . DPLUSOP unary_expression
-    (64) unary_expression -> . DMINUSOP unary_expression
-    (65) unary_expression -> . unary1_operator cast_expression
-    (66) unary_expression -> . unary2_operator cast_expression
-    (67) unary_expression -> . SIZEOF LPAREN type_name RPAREN
-    (68) unary_expression -> . allocation_expression
-    (69) unary_expression -> . deallocation_expression
-    (171) type_specifier -> . simple_type_name
-    (172) type_specifier -> . complex_type_specifier
-    (200) class_head -> . class_key IDENTIFIER base_spec
-    (201) class_head -> . class_key IDENTIFIER
-    (15) logical_OR_expression -> . logical_AND_expression
-    (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
-    (89) postfix_expression -> . primary_expression
-    (90) postfix_expression -> . postfix_expression LSPAREN expression RSPAREN
-    (91) postfix_expression -> . postfix_expression LPAREN expression_list RPAREN
-    (92) postfix_expression -> . postfix_expression LPAREN RPAREN
-    (93) postfix_expression -> . postfix_expression template_class_name LPAREN expression_list RPAREN
-    (94) postfix_expression -> . postfix_expression DOT name
-    (95) postfix_expression -> . postfix_expression ARROW name
-    (96) postfix_expression -> . postfix_expression DPLUSOP
-    (97) postfix_expression -> . postfix_expression DMINUSOP
-    (83) unary1_operator -> . PLUSOP
-    (84) unary1_operator -> . MINUSOP
-    (85) unary1_operator -> . NOTSYM
-    (86) unary1_operator -> . BNOP
-    (87) unary2_operator -> . MULTOP
-    (88) unary2_operator -> . BANDOP
-    (71) allocation_expression -> . NEW new_type_name new_initializer
-    (72) allocation_expression -> . NEW new_type_name
-    (73) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
-    (74) allocation_expression -> . NEW LPAREN type_name RPAREN
-    (70) deallocation_expression -> . DELETE cast_expression
-    (173) simple_type_name -> . CHAR
-    (174) simple_type_name -> . SHORT
-    (175) simple_type_name -> . INT
-    (176) simple_type_name -> . LONG
-    (177) simple_type_name -> . SIGNED
-    (178) simple_type_name -> . UNSIGNED
-    (179) simple_type_name -> . FLOAT
-    (180) simple_type_name -> . DOUBLE
-    (181) simple_type_name -> . VOID
-    (182) simple_type_name -> . STRING
-    (183) simple_type_name -> . AUTO
-    (184) complex_type_specifier -> . class_key IDENTIFIER
-    (185) complex_type_specifier -> . class_key IDENTIFIER template_class_name
-    (186) complex_type_specifier -> . TYPE IDENTIFIER
-    (187) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (198) class_key -> . CLASS
-    (199) class_key -> . STRUCT
-    (17) logical_AND_expression -> . inclusive_OR_expression
-    (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
-    (98) primary_expression -> . name
-    (99) primary_expression -> . literal
-    (100) primary_expression -> . THIS
-    (101) primary_expression -> . LPAREN expression RPAREN
-    (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
-    (124) name -> . IDENTIFIER
-    (125) name -> . DOUBLEBNOP IDENTIFIER
-    (102) literal -> . STRING_L
-    (103) literal -> . NUMBER
-    (104) literal -> . DECIMAL
-    (105) literal -> . SCHAR
-    (21) exclusive_OR_expression -> . AND_expression
-    (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
-    (23) AND_expression -> . equality_expression
-    (24) AND_expression -> . AND_expression BANDOP equality_expression
-    (25) equality_expression -> . relational_expression
-    (26) equality_expression -> . equality_expression EQCOMP relational_expression
-    (27) equality_expression -> . equality_expression NEQCOMP relational_expression
-    (28) relational_expression -> . shift_expression
-    (29) relational_expression -> . relational_expression LTCOMP shift_expression
-    (30) relational_expression -> . relational_expression GTCOMP shift_expression
-    (31) relational_expression -> . relational_expression LTECOMP shift_expression
-    (32) relational_expression -> . relational_expression GTECOMP shift_expression
-    (33) shift_expression -> . additive_expression
-    (34) shift_expression -> . shift_expression LSHIFT additive_expression
-    (35) shift_expression -> . shift_expression RSHIFT additive_expression
-    (36) additive_expression -> . multiplicative_expression
-    (37) additive_expression -> . additive_expression PLUSOP multiplicative_expression
-    (38) additive_expression -> . additive_expression MINUSOP multiplicative_expression
-    (39) multiplicative_expression -> . cast_expression
-    (40) multiplicative_expression -> . multiplicative_expression MULTOP cast_expression
-    (41) multiplicative_expression -> . multiplicative_expression DIVOP cast_expression
-    (42) multiplicative_expression -> . multiplicative_expression MODOP cast_expression
-    (43) cast_expression -> . unary_expression
-    (44) cast_expression -> . LPAREN type_name RPAREN cast_expression
+    (248) iteration_statement -> DO push_scope . compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+    (223) compound_statement -> . LCPAREN statement_list RCPAREN
+    (224) compound_statement -> . LCPAREN RCPAREN
 
-    LCPAREN         reduce using rule 282 (push_scope -> .)
-    IF              shift and go to state 326
-    SWITCH          shift and go to state 327
-    WHILE           shift and go to state 328
-    DO              shift and go to state 329
-    FOR             shift and go to state 330
-    BREAK           shift and go to state 331
-    CONTINUE        shift and go to state 332
-    RETURN          shift and go to state 333
-    GOTO            shift and go to state 334
-    TRY             shift and go to state 336
-    THROW           shift and go to state 198
-    CONST           shift and go to state 16
-    ASM             shift and go to state 18
-    TEMPLATE        shift and go to state 20
-    TYPEDEF         shift and go to state 21
-    DPLUSOP         shift and go to state 113
-    DMINUSOP        shift and go to state 114
-    SIZEOF          shift and go to state 117
-    PLUSOP          shift and go to state 107
-    MINUSOP         shift and go to state 108
-    NOTSYM          shift and go to state 122
-    BNOP            shift and go to state 123
-    MULTOP          shift and go to state 52
-    BANDOP          shift and go to state 53
-    NEW             shift and go to state 124
-    DELETE          shift and go to state 125
-    CHAR            shift and go to state 25
-    SHORT           shift and go to state 26
-    INT             shift and go to state 27
-    LONG            shift and go to state 28
-    SIGNED          shift and go to state 29
-    UNSIGNED        shift and go to state 30
-    FLOAT           shift and go to state 31
-    DOUBLE          shift and go to state 32
-    VOID            shift and go to state 33
-    STRING          shift and go to state 34
-    AUTO            shift and go to state 35
-    TYPE            shift and go to state 36
-    CLASS           shift and go to state 37
-    STRUCT          shift and go to state 38
-    THIS            shift and go to state 127
-    LPAREN          shift and go to state 132
-    IDENTIFIER      shift and go to state 50
-    DOUBLEBNOP      shift and go to state 51
-    STRING_L        shift and go to state 128
-    NUMBER          shift and go to state 129
-    DECIMAL         shift and go to state 130
-    SCHAR           shift and go to state 131
+    LCPAREN         shift and go to state 258
 
-    push_scope                     shift and go to state 319
-    statement                      shift and go to state 386
-    expression                     shift and go to state 325
-    expression_statement           shift and go to state 318
-    selection_statement            shift and go to state 320
-    iteration_statement            shift and go to state 321
-    jump_statement                 shift and go to state 322
-    declaration_statement          shift and go to state 323
-    try_block                      shift and go to state 324
-    declaration                    shift and go to state 335
-    assignment_expression          shift and go to state 196
-    throw_expression               shift and go to state 197
-    type_specifier_                shift and go to state 9
-    asm_declaration                shift and go to state 10
-    function_definition            shift and go to state 11
-    function_decl                  shift and go to state 12
-    class_define_specifier         shift and go to state 13
-    template_declaration           shift and go to state 14
-    typedef_declarator             shift and go to state 15
-    conditional_expression         shift and go to state 135
-    unary_expression               shift and go to state 136
-    type_specifier                 shift and go to state 17
-    class_head                     shift and go to state 19
-    logical_OR_expression          shift and go to state 97
-    postfix_expression             shift and go to state 112
-    unary1_operator                shift and go to state 115
-    cast_expression                shift and go to state 109
-    unary2_operator                shift and go to state 116
-    allocation_expression          shift and go to state 118
-    deallocation_expression        shift and go to state 119
-    simple_type_name               shift and go to state 22
-    complex_type_specifier         shift and go to state 23
-    class_key                      shift and go to state 24
-    logical_AND_expression         shift and go to state 98
-    primary_expression             shift and go to state 120
-    name                           shift and go to state 121
-    inclusive_OR_expression        shift and go to state 99
-    literal                        shift and go to state 126
-    exclusive_OR_expression        shift and go to state 100
-    AND_expression                 shift and go to state 101
-    equality_expression            shift and go to state 102
-    relational_expression          shift and go to state 103
-    shift_expression               shift and go to state 104
-    additive_expression            shift and go to state 105
-    multiplicative_expression      shift and go to state 106
+    compound_statement             shift and go to state 386
 
 state 366
 
     (249) iteration_statement -> FOR LPAREN . push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> FOR LPAREN . push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> FOR LPAREN . push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> FOR LPAREN . push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> FOR LPAREN . push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope
     (282) push_scope -> .
 
     THROW           reduce using rule 282 (push_scope -> .)
@@ -16340,7 +16062,7 @@ state 384
 
 state 385
 
-    (247) iteration_statement -> WHILE push_scope LPAREN . expression RPAREN statement pop_scope
+    (247) iteration_statement -> WHILE push_scope LPAREN . expression RPAREN compound_statement pop_scope
     (45) expression -> . assignment_expression
     (46) expression -> . throw_expression
     (47) expression -> . expression COMMA assignment_expression
@@ -16467,7 +16189,7 @@ state 385
 
 state 386
 
-    (248) iteration_statement -> DO push_scope statement . WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+    (248) iteration_statement -> DO push_scope compound_statement . WHILE LPAREN expression RPAREN SEMICOLON pop_scope
 
     WHILE           shift and go to state 395
 
@@ -16477,7 +16199,7 @@ state 387
     (249) iteration_statement -> FOR LPAREN push_scope . for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> FOR LPAREN push_scope . for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> FOR LPAREN push_scope . for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> FOR LPAREN push_scope . for_init_statement SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> FOR LPAREN push_scope . for_init_statement SEMICOLON RPAREN compound_statement pop_scope
     (253) for_init_statement -> . expression_statement
     (254) for_init_statement -> . declaration_statement
     (255) expression_statement -> . expression SEMICOLON
@@ -16868,7 +16590,7 @@ state 393
 
 state 394
 
-    (247) iteration_statement -> WHILE push_scope LPAREN expression . RPAREN statement pop_scope
+    (247) iteration_statement -> WHILE push_scope LPAREN expression . RPAREN compound_statement pop_scope
     (47) expression -> expression . COMMA assignment_expression
 
     RPAREN          shift and go to state 402
@@ -16877,7 +16599,7 @@ state 394
 
 state 395
 
-    (248) iteration_statement -> DO push_scope statement WHILE . LPAREN expression RPAREN SEMICOLON pop_scope
+    (248) iteration_statement -> DO push_scope compound_statement WHILE . LPAREN expression RPAREN SEMICOLON pop_scope
 
     LPAREN          shift and go to state 403
 
@@ -16887,7 +16609,7 @@ state 396
     (249) iteration_statement -> FOR LPAREN push_scope for_init_statement . expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> FOR LPAREN push_scope for_init_statement . SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> FOR LPAREN push_scope for_init_statement . expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement . SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement . SEMICOLON RPAREN compound_statement pop_scope
     (45) expression -> . assignment_expression
     (46) expression -> . throw_expression
     (47) expression -> . expression COMMA assignment_expression
@@ -17094,247 +16816,17 @@ state 401
 
 state 402
 
-    (247) iteration_statement -> WHILE push_scope LPAREN expression RPAREN . statement pop_scope
-    (227) statement -> . expression_statement
-    (228) statement -> . push_scope compound_statement pop_scope
-    (229) statement -> . selection_statement
-    (230) statement -> . iteration_statement
-    (231) statement -> . jump_statement
-    (232) statement -> . declaration_statement
-    (233) statement -> . try_block
-    (255) expression_statement -> . expression SEMICOLON
-    (282) push_scope -> .
-    (239) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope
-    (240) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope
-    (241) selection_statement -> . SWITCH LPAREN expression RPAREN push_scope LCPAREN labeled_statement_list RCPAREN pop_scope
-    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN statement pop_scope
-    (248) iteration_statement -> . DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
-    (249) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
-    (250) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
-    (251) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
-    (234) jump_statement -> . BREAK SEMICOLON
-    (235) jump_statement -> . CONTINUE SEMICOLON
-    (236) jump_statement -> . RETURN expression SEMICOLON
-    (237) jump_statement -> . RETURN SEMICOLON
-    (238) jump_statement -> . GOTO IDENTIFIER SEMICOLON
-    (256) declaration_statement -> . declaration
-    (242) try_block -> . TRY push_scope compound_statement pop_scope CATCH push_scope compound_statement pop_scope
-    (45) expression -> . assignment_expression
-    (46) expression -> . throw_expression
-    (47) expression -> . expression COMMA assignment_expression
-    (257) declaration -> . type_specifier_ declarator_list SEMICOLON
-    (258) declaration -> . asm_declaration
-    (259) declaration -> . function_definition
-    (260) declaration -> . function_decl
-    (261) declaration -> . class_define_specifier SEMICOLON
-    (262) declaration -> . template_declaration
-    (263) declaration -> . typedef_declarator
-    (50) assignment_expression -> . conditional_expression
-    (51) assignment_expression -> . unary_expression assignment_operator assignment_expression
-    (48) throw_expression -> . THROW expression
-    (49) throw_expression -> . THROW
-    (167) type_specifier_ -> . CONST type_specifier
-    (168) type_specifier_ -> . type_specifier
-    (279) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
-    (219) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
-    (220) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (202) class_define_specifier -> . class_head push_scope LCPAREN RCPAREN pop_scope
-    (203) class_define_specifier -> . class_head push_scope LCPAREN member_list RCPAREN pop_scope
-    (264) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
-    (169) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
-    (170) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
-    (13) conditional_expression -> . logical_OR_expression
-    (14) conditional_expression -> . logical_OR_expression QUESMARK expression COLON conditional_expression
-    (62) unary_expression -> . postfix_expression
-    (63) unary_expression -> . DPLUSOP unary_expression
-    (64) unary_expression -> . DMINUSOP unary_expression
-    (65) unary_expression -> . unary1_operator cast_expression
-    (66) unary_expression -> . unary2_operator cast_expression
-    (67) unary_expression -> . SIZEOF LPAREN type_name RPAREN
-    (68) unary_expression -> . allocation_expression
-    (69) unary_expression -> . deallocation_expression
-    (171) type_specifier -> . simple_type_name
-    (172) type_specifier -> . complex_type_specifier
-    (200) class_head -> . class_key IDENTIFIER base_spec
-    (201) class_head -> . class_key IDENTIFIER
-    (15) logical_OR_expression -> . logical_AND_expression
-    (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
-    (89) postfix_expression -> . primary_expression
-    (90) postfix_expression -> . postfix_expression LSPAREN expression RSPAREN
-    (91) postfix_expression -> . postfix_expression LPAREN expression_list RPAREN
-    (92) postfix_expression -> . postfix_expression LPAREN RPAREN
-    (93) postfix_expression -> . postfix_expression template_class_name LPAREN expression_list RPAREN
-    (94) postfix_expression -> . postfix_expression DOT name
-    (95) postfix_expression -> . postfix_expression ARROW name
-    (96) postfix_expression -> . postfix_expression DPLUSOP
-    (97) postfix_expression -> . postfix_expression DMINUSOP
-    (83) unary1_operator -> . PLUSOP
-    (84) unary1_operator -> . MINUSOP
-    (85) unary1_operator -> . NOTSYM
-    (86) unary1_operator -> . BNOP
-    (87) unary2_operator -> . MULTOP
-    (88) unary2_operator -> . BANDOP
-    (71) allocation_expression -> . NEW new_type_name new_initializer
-    (72) allocation_expression -> . NEW new_type_name
-    (73) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
-    (74) allocation_expression -> . NEW LPAREN type_name RPAREN
-    (70) deallocation_expression -> . DELETE cast_expression
-    (173) simple_type_name -> . CHAR
-    (174) simple_type_name -> . SHORT
-    (175) simple_type_name -> . INT
-    (176) simple_type_name -> . LONG
-    (177) simple_type_name -> . SIGNED
-    (178) simple_type_name -> . UNSIGNED
-    (179) simple_type_name -> . FLOAT
-    (180) simple_type_name -> . DOUBLE
-    (181) simple_type_name -> . VOID
-    (182) simple_type_name -> . STRING
-    (183) simple_type_name -> . AUTO
-    (184) complex_type_specifier -> . class_key IDENTIFIER
-    (185) complex_type_specifier -> . class_key IDENTIFIER template_class_name
-    (186) complex_type_specifier -> . TYPE IDENTIFIER
-    (187) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (198) class_key -> . CLASS
-    (199) class_key -> . STRUCT
-    (17) logical_AND_expression -> . inclusive_OR_expression
-    (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
-    (98) primary_expression -> . name
-    (99) primary_expression -> . literal
-    (100) primary_expression -> . THIS
-    (101) primary_expression -> . LPAREN expression RPAREN
-    (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
-    (124) name -> . IDENTIFIER
-    (125) name -> . DOUBLEBNOP IDENTIFIER
-    (102) literal -> . STRING_L
-    (103) literal -> . NUMBER
-    (104) literal -> . DECIMAL
-    (105) literal -> . SCHAR
-    (21) exclusive_OR_expression -> . AND_expression
-    (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
-    (23) AND_expression -> . equality_expression
-    (24) AND_expression -> . AND_expression BANDOP equality_expression
-    (25) equality_expression -> . relational_expression
-    (26) equality_expression -> . equality_expression EQCOMP relational_expression
-    (27) equality_expression -> . equality_expression NEQCOMP relational_expression
-    (28) relational_expression -> . shift_expression
-    (29) relational_expression -> . relational_expression LTCOMP shift_expression
-    (30) relational_expression -> . relational_expression GTCOMP shift_expression
-    (31) relational_expression -> . relational_expression LTECOMP shift_expression
-    (32) relational_expression -> . relational_expression GTECOMP shift_expression
-    (33) shift_expression -> . additive_expression
-    (34) shift_expression -> . shift_expression LSHIFT additive_expression
-    (35) shift_expression -> . shift_expression RSHIFT additive_expression
-    (36) additive_expression -> . multiplicative_expression
-    (37) additive_expression -> . additive_expression PLUSOP multiplicative_expression
-    (38) additive_expression -> . additive_expression MINUSOP multiplicative_expression
-    (39) multiplicative_expression -> . cast_expression
-    (40) multiplicative_expression -> . multiplicative_expression MULTOP cast_expression
-    (41) multiplicative_expression -> . multiplicative_expression DIVOP cast_expression
-    (42) multiplicative_expression -> . multiplicative_expression MODOP cast_expression
-    (43) cast_expression -> . unary_expression
-    (44) cast_expression -> . LPAREN type_name RPAREN cast_expression
+    (247) iteration_statement -> WHILE push_scope LPAREN expression RPAREN . compound_statement pop_scope
+    (223) compound_statement -> . LCPAREN statement_list RCPAREN
+    (224) compound_statement -> . LCPAREN RCPAREN
 
-    LCPAREN         reduce using rule 282 (push_scope -> .)
-    IF              shift and go to state 326
-    SWITCH          shift and go to state 327
-    WHILE           shift and go to state 328
-    DO              shift and go to state 329
-    FOR             shift and go to state 330
-    BREAK           shift and go to state 331
-    CONTINUE        shift and go to state 332
-    RETURN          shift and go to state 333
-    GOTO            shift and go to state 334
-    TRY             shift and go to state 336
-    THROW           shift and go to state 198
-    CONST           shift and go to state 16
-    ASM             shift and go to state 18
-    TEMPLATE        shift and go to state 20
-    TYPEDEF         shift and go to state 21
-    DPLUSOP         shift and go to state 113
-    DMINUSOP        shift and go to state 114
-    SIZEOF          shift and go to state 117
-    PLUSOP          shift and go to state 107
-    MINUSOP         shift and go to state 108
-    NOTSYM          shift and go to state 122
-    BNOP            shift and go to state 123
-    MULTOP          shift and go to state 52
-    BANDOP          shift and go to state 53
-    NEW             shift and go to state 124
-    DELETE          shift and go to state 125
-    CHAR            shift and go to state 25
-    SHORT           shift and go to state 26
-    INT             shift and go to state 27
-    LONG            shift and go to state 28
-    SIGNED          shift and go to state 29
-    UNSIGNED        shift and go to state 30
-    FLOAT           shift and go to state 31
-    DOUBLE          shift and go to state 32
-    VOID            shift and go to state 33
-    STRING          shift and go to state 34
-    AUTO            shift and go to state 35
-    TYPE            shift and go to state 36
-    CLASS           shift and go to state 37
-    STRUCT          shift and go to state 38
-    THIS            shift and go to state 127
-    LPAREN          shift and go to state 132
-    IDENTIFIER      shift and go to state 50
-    DOUBLEBNOP      shift and go to state 51
-    STRING_L        shift and go to state 128
-    NUMBER          shift and go to state 129
-    DECIMAL         shift and go to state 130
-    SCHAR           shift and go to state 131
+    LCPAREN         shift and go to state 258
 
-    push_scope                     shift and go to state 319
-    expression                     shift and go to state 325
-    statement                      shift and go to state 409
-    expression_statement           shift and go to state 318
-    selection_statement            shift and go to state 320
-    iteration_statement            shift and go to state 321
-    jump_statement                 shift and go to state 322
-    declaration_statement          shift and go to state 323
-    try_block                      shift and go to state 324
-    declaration                    shift and go to state 335
-    assignment_expression          shift and go to state 196
-    throw_expression               shift and go to state 197
-    type_specifier_                shift and go to state 9
-    asm_declaration                shift and go to state 10
-    function_definition            shift and go to state 11
-    function_decl                  shift and go to state 12
-    class_define_specifier         shift and go to state 13
-    template_declaration           shift and go to state 14
-    typedef_declarator             shift and go to state 15
-    conditional_expression         shift and go to state 135
-    unary_expression               shift and go to state 136
-    type_specifier                 shift and go to state 17
-    class_head                     shift and go to state 19
-    logical_OR_expression          shift and go to state 97
-    postfix_expression             shift and go to state 112
-    unary1_operator                shift and go to state 115
-    cast_expression                shift and go to state 109
-    unary2_operator                shift and go to state 116
-    allocation_expression          shift and go to state 118
-    deallocation_expression        shift and go to state 119
-    simple_type_name               shift and go to state 22
-    complex_type_specifier         shift and go to state 23
-    class_key                      shift and go to state 24
-    logical_AND_expression         shift and go to state 98
-    primary_expression             shift and go to state 120
-    name                           shift and go to state 121
-    inclusive_OR_expression        shift and go to state 99
-    literal                        shift and go to state 126
-    exclusive_OR_expression        shift and go to state 100
-    AND_expression                 shift and go to state 101
-    equality_expression            shift and go to state 102
-    relational_expression          shift and go to state 103
-    shift_expression               shift and go to state 104
-    additive_expression            shift and go to state 105
-    multiplicative_expression      shift and go to state 106
+    compound_statement             shift and go to state 409
 
 state 403
 
-    (248) iteration_statement -> DO push_scope statement WHILE LPAREN . expression RPAREN SEMICOLON pop_scope
+    (248) iteration_statement -> DO push_scope compound_statement WHILE LPAREN . expression RPAREN SEMICOLON pop_scope
     (45) expression -> . assignment_expression
     (46) expression -> . throw_expression
     (47) expression -> . expression COMMA assignment_expression
@@ -17472,7 +16964,7 @@ state 404
 state 405
 
     (250) iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON . expression RPAREN compound_statement pop_scope
-    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON . RPAREN statement pop_scope
+    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON . RPAREN compound_statement pop_scope
     (45) expression -> . assignment_expression
     (46) expression -> . throw_expression
     (47) expression -> . expression COMMA assignment_expression
@@ -17685,7 +17177,7 @@ state 408
 
 state 409
 
-    (247) iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement . pop_scope
+    (247) iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement . pop_scope
     (283) pop_scope -> .
 
     RCPAREN         reduce using rule 283 (pop_scope -> .)
@@ -17745,7 +17237,7 @@ state 409
 
 state 410
 
-    (248) iteration_statement -> DO push_scope statement WHILE LPAREN expression . RPAREN SEMICOLON pop_scope
+    (248) iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression . RPAREN SEMICOLON pop_scope
     (47) expression -> expression . COMMA assignment_expression
 
     RPAREN          shift and go to state 421
@@ -17892,243 +17384,13 @@ state 412
 
 state 413
 
-    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN . statement pop_scope
-    (227) statement -> . expression_statement
-    (228) statement -> . push_scope compound_statement pop_scope
-    (229) statement -> . selection_statement
-    (230) statement -> . iteration_statement
-    (231) statement -> . jump_statement
-    (232) statement -> . declaration_statement
-    (233) statement -> . try_block
-    (255) expression_statement -> . expression SEMICOLON
-    (282) push_scope -> .
-    (239) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope
-    (240) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope
-    (241) selection_statement -> . SWITCH LPAREN expression RPAREN push_scope LCPAREN labeled_statement_list RCPAREN pop_scope
-    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN statement pop_scope
-    (248) iteration_statement -> . DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
-    (249) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
-    (250) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
-    (251) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
-    (234) jump_statement -> . BREAK SEMICOLON
-    (235) jump_statement -> . CONTINUE SEMICOLON
-    (236) jump_statement -> . RETURN expression SEMICOLON
-    (237) jump_statement -> . RETURN SEMICOLON
-    (238) jump_statement -> . GOTO IDENTIFIER SEMICOLON
-    (256) declaration_statement -> . declaration
-    (242) try_block -> . TRY push_scope compound_statement pop_scope CATCH push_scope compound_statement pop_scope
-    (45) expression -> . assignment_expression
-    (46) expression -> . throw_expression
-    (47) expression -> . expression COMMA assignment_expression
-    (257) declaration -> . type_specifier_ declarator_list SEMICOLON
-    (258) declaration -> . asm_declaration
-    (259) declaration -> . function_definition
-    (260) declaration -> . function_decl
-    (261) declaration -> . class_define_specifier SEMICOLON
-    (262) declaration -> . template_declaration
-    (263) declaration -> . typedef_declarator
-    (50) assignment_expression -> . conditional_expression
-    (51) assignment_expression -> . unary_expression assignment_operator assignment_expression
-    (48) throw_expression -> . THROW expression
-    (49) throw_expression -> . THROW
-    (167) type_specifier_ -> . CONST type_specifier
-    (168) type_specifier_ -> . type_specifier
-    (279) asm_declaration -> . ASM LPAREN STRING_L RPAREN SEMICOLON
-    (219) function_definition -> . type_specifier_ declarator func_push_scope arg_list RPAREN fct_body pop_scope
-    (220) function_decl -> . type_specifier_ declarator func_push_scope arg_list RPAREN SEMICOLON pop_scope
-    (202) class_define_specifier -> . class_head push_scope LCPAREN RCPAREN pop_scope
-    (203) class_define_specifier -> . class_head push_scope LCPAREN member_list RCPAREN pop_scope
-    (264) template_declaration -> . TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration
-    (169) typedef_declarator -> . TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
-    (170) typedef_declarator -> . TYPEDEF type_specifier_ IDENTIFIER SEMICOLON
-    (13) conditional_expression -> . logical_OR_expression
-    (14) conditional_expression -> . logical_OR_expression QUESMARK expression COLON conditional_expression
-    (62) unary_expression -> . postfix_expression
-    (63) unary_expression -> . DPLUSOP unary_expression
-    (64) unary_expression -> . DMINUSOP unary_expression
-    (65) unary_expression -> . unary1_operator cast_expression
-    (66) unary_expression -> . unary2_operator cast_expression
-    (67) unary_expression -> . SIZEOF LPAREN type_name RPAREN
-    (68) unary_expression -> . allocation_expression
-    (69) unary_expression -> . deallocation_expression
-    (171) type_specifier -> . simple_type_name
-    (172) type_specifier -> . complex_type_specifier
-    (200) class_head -> . class_key IDENTIFIER base_spec
-    (201) class_head -> . class_key IDENTIFIER
-    (15) logical_OR_expression -> . logical_AND_expression
-    (16) logical_OR_expression -> . logical_OR_expression OROP logical_AND_expression
-    (89) postfix_expression -> . primary_expression
-    (90) postfix_expression -> . postfix_expression LSPAREN expression RSPAREN
-    (91) postfix_expression -> . postfix_expression LPAREN expression_list RPAREN
-    (92) postfix_expression -> . postfix_expression LPAREN RPAREN
-    (93) postfix_expression -> . postfix_expression template_class_name LPAREN expression_list RPAREN
-    (94) postfix_expression -> . postfix_expression DOT name
-    (95) postfix_expression -> . postfix_expression ARROW name
-    (96) postfix_expression -> . postfix_expression DPLUSOP
-    (97) postfix_expression -> . postfix_expression DMINUSOP
-    (83) unary1_operator -> . PLUSOP
-    (84) unary1_operator -> . MINUSOP
-    (85) unary1_operator -> . NOTSYM
-    (86) unary1_operator -> . BNOP
-    (87) unary2_operator -> . MULTOP
-    (88) unary2_operator -> . BANDOP
-    (71) allocation_expression -> . NEW new_type_name new_initializer
-    (72) allocation_expression -> . NEW new_type_name
-    (73) allocation_expression -> . NEW LPAREN type_name RPAREN new_initializer
-    (74) allocation_expression -> . NEW LPAREN type_name RPAREN
-    (70) deallocation_expression -> . DELETE cast_expression
-    (173) simple_type_name -> . CHAR
-    (174) simple_type_name -> . SHORT
-    (175) simple_type_name -> . INT
-    (176) simple_type_name -> . LONG
-    (177) simple_type_name -> . SIGNED
-    (178) simple_type_name -> . UNSIGNED
-    (179) simple_type_name -> . FLOAT
-    (180) simple_type_name -> . DOUBLE
-    (181) simple_type_name -> . VOID
-    (182) simple_type_name -> . STRING
-    (183) simple_type_name -> . AUTO
-    (184) complex_type_specifier -> . class_key IDENTIFIER
-    (185) complex_type_specifier -> . class_key IDENTIFIER template_class_name
-    (186) complex_type_specifier -> . TYPE IDENTIFIER
-    (187) complex_type_specifier -> . TYPE IDENTIFIER template_class_name
-    (198) class_key -> . CLASS
-    (199) class_key -> . STRUCT
-    (17) logical_AND_expression -> . inclusive_OR_expression
-    (18) logical_AND_expression -> . logical_AND_expression ANDOP inclusive_OR_expression
-    (98) primary_expression -> . name
-    (99) primary_expression -> . literal
-    (100) primary_expression -> . THIS
-    (101) primary_expression -> . LPAREN expression RPAREN
-    (19) inclusive_OR_expression -> . exclusive_OR_expression
-    (20) inclusive_OR_expression -> . inclusive_OR_expression BOROP exclusive_OR_expression
-    (124) name -> . IDENTIFIER
-    (125) name -> . DOUBLEBNOP IDENTIFIER
-    (102) literal -> . STRING_L
-    (103) literal -> . NUMBER
-    (104) literal -> . DECIMAL
-    (105) literal -> . SCHAR
-    (21) exclusive_OR_expression -> . AND_expression
-    (22) exclusive_OR_expression -> . exclusive_OR_expression XOROP AND_expression
-    (23) AND_expression -> . equality_expression
-    (24) AND_expression -> . AND_expression BANDOP equality_expression
-    (25) equality_expression -> . relational_expression
-    (26) equality_expression -> . equality_expression EQCOMP relational_expression
-    (27) equality_expression -> . equality_expression NEQCOMP relational_expression
-    (28) relational_expression -> . shift_expression
-    (29) relational_expression -> . relational_expression LTCOMP shift_expression
-    (30) relational_expression -> . relational_expression GTCOMP shift_expression
-    (31) relational_expression -> . relational_expression LTECOMP shift_expression
-    (32) relational_expression -> . relational_expression GTECOMP shift_expression
-    (33) shift_expression -> . additive_expression
-    (34) shift_expression -> . shift_expression LSHIFT additive_expression
-    (35) shift_expression -> . shift_expression RSHIFT additive_expression
-    (36) additive_expression -> . multiplicative_expression
-    (37) additive_expression -> . additive_expression PLUSOP multiplicative_expression
-    (38) additive_expression -> . additive_expression MINUSOP multiplicative_expression
-    (39) multiplicative_expression -> . cast_expression
-    (40) multiplicative_expression -> . multiplicative_expression MULTOP cast_expression
-    (41) multiplicative_expression -> . multiplicative_expression DIVOP cast_expression
-    (42) multiplicative_expression -> . multiplicative_expression MODOP cast_expression
-    (43) cast_expression -> . unary_expression
-    (44) cast_expression -> . LPAREN type_name RPAREN cast_expression
+    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN . compound_statement pop_scope
+    (223) compound_statement -> . LCPAREN statement_list RCPAREN
+    (224) compound_statement -> . LCPAREN RCPAREN
 
-    LCPAREN         reduce using rule 282 (push_scope -> .)
-    IF              shift and go to state 326
-    SWITCH          shift and go to state 327
-    WHILE           shift and go to state 328
-    DO              shift and go to state 329
-    FOR             shift and go to state 330
-    BREAK           shift and go to state 331
-    CONTINUE        shift and go to state 332
-    RETURN          shift and go to state 333
-    GOTO            shift and go to state 334
-    TRY             shift and go to state 336
-    THROW           shift and go to state 198
-    CONST           shift and go to state 16
-    ASM             shift and go to state 18
-    TEMPLATE        shift and go to state 20
-    TYPEDEF         shift and go to state 21
-    DPLUSOP         shift and go to state 113
-    DMINUSOP        shift and go to state 114
-    SIZEOF          shift and go to state 117
-    PLUSOP          shift and go to state 107
-    MINUSOP         shift and go to state 108
-    NOTSYM          shift and go to state 122
-    BNOP            shift and go to state 123
-    MULTOP          shift and go to state 52
-    BANDOP          shift and go to state 53
-    NEW             shift and go to state 124
-    DELETE          shift and go to state 125
-    CHAR            shift and go to state 25
-    SHORT           shift and go to state 26
-    INT             shift and go to state 27
-    LONG            shift and go to state 28
-    SIGNED          shift and go to state 29
-    UNSIGNED        shift and go to state 30
-    FLOAT           shift and go to state 31
-    DOUBLE          shift and go to state 32
-    VOID            shift and go to state 33
-    STRING          shift and go to state 34
-    AUTO            shift and go to state 35
-    TYPE            shift and go to state 36
-    CLASS           shift and go to state 37
-    STRUCT          shift and go to state 38
-    THIS            shift and go to state 127
-    LPAREN          shift and go to state 132
-    IDENTIFIER      shift and go to state 50
-    DOUBLEBNOP      shift and go to state 51
-    STRING_L        shift and go to state 128
-    NUMBER          shift and go to state 129
-    DECIMAL         shift and go to state 130
-    SCHAR           shift and go to state 131
+    LCPAREN         shift and go to state 258
 
-    push_scope                     shift and go to state 319
-    statement                      shift and go to state 425
-    expression_statement           shift and go to state 318
-    selection_statement            shift and go to state 320
-    iteration_statement            shift and go to state 321
-    jump_statement                 shift and go to state 322
-    declaration_statement          shift and go to state 323
-    try_block                      shift and go to state 324
-    expression                     shift and go to state 325
-    declaration                    shift and go to state 335
-    assignment_expression          shift and go to state 196
-    throw_expression               shift and go to state 197
-    type_specifier_                shift and go to state 9
-    asm_declaration                shift and go to state 10
-    function_definition            shift and go to state 11
-    function_decl                  shift and go to state 12
-    class_define_specifier         shift and go to state 13
-    template_declaration           shift and go to state 14
-    typedef_declarator             shift and go to state 15
-    conditional_expression         shift and go to state 135
-    unary_expression               shift and go to state 136
-    type_specifier                 shift and go to state 17
-    class_head                     shift and go to state 19
-    logical_OR_expression          shift and go to state 97
-    postfix_expression             shift and go to state 112
-    unary1_operator                shift and go to state 115
-    cast_expression                shift and go to state 109
-    unary2_operator                shift and go to state 116
-    allocation_expression          shift and go to state 118
-    deallocation_expression        shift and go to state 119
-    simple_type_name               shift and go to state 22
-    complex_type_specifier         shift and go to state 23
-    class_key                      shift and go to state 24
-    logical_AND_expression         shift and go to state 98
-    primary_expression             shift and go to state 120
-    name                           shift and go to state 121
-    inclusive_OR_expression        shift and go to state 99
-    literal                        shift and go to state 126
-    exclusive_OR_expression        shift and go to state 100
-    AND_expression                 shift and go to state 101
-    equality_expression            shift and go to state 102
-    relational_expression          shift and go to state 103
-    shift_expression               shift and go to state 104
-    additive_expression            shift and go to state 105
-    multiplicative_expression      shift and go to state 106
+    compound_statement             shift and go to state 425
 
 state 414
 
@@ -18349,65 +17611,65 @@ state 419
 
 state 420
 
-    (247) iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .
+    (247) iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .
 
-    RCPAREN         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    IF              reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    SWITCH          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    WHILE           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    DO              reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    FOR             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    BREAK           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    CONTINUE        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    RETURN          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    GOTO            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    TRY             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    THROW           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    CONST           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    ASM             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    TEMPLATE        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    TYPEDEF         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    DPLUSOP         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    DMINUSOP        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    SIZEOF          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    PLUSOP          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    MINUSOP         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    NOTSYM          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    BNOP            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    MULTOP          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    BANDOP          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    NEW             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    DELETE          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    CHAR            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    SHORT           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    INT             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    LONG            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    SIGNED          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    UNSIGNED        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    FLOAT           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    DOUBLE          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    VOID            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    STRING          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    AUTO            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    TYPE            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    CLASS           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    STRUCT          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    THIS            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    LPAREN          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    IDENTIFIER      reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    DOUBLEBNOP      reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    STRING_L        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    NUMBER          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    DECIMAL         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    SCHAR           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    LCPAREN         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    CASE            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
-    DEFAULT         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN statement pop_scope .)
+    RCPAREN         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    IF              reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    SWITCH          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    WHILE           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    DO              reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    FOR             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    BREAK           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    CONTINUE        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    RETURN          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    GOTO            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    TRY             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    THROW           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    CONST           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    ASM             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    TEMPLATE        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    TYPEDEF         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    DPLUSOP         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    DMINUSOP        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    SIZEOF          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    PLUSOP          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    MINUSOP         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    NOTSYM          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    BNOP            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    MULTOP          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    BANDOP          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    NEW             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    DELETE          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    CHAR            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    SHORT           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    INT             reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    LONG            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    SIGNED          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    UNSIGNED        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    FLOAT           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    DOUBLE          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    VOID            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    STRING          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    AUTO            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    TYPE            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    CLASS           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    STRUCT          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    THIS            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    LPAREN          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    IDENTIFIER      reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    DOUBLEBNOP      reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    STRING_L        reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    NUMBER          reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    DECIMAL         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    SCHAR           reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    LCPAREN         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    CASE            reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
+    DEFAULT         reduce using rule 247 (iteration_statement -> WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope .)
 
 
 state 421
 
-    (248) iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN . SEMICOLON pop_scope
+    (248) iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN . SEMICOLON pop_scope
 
     SEMICOLON       shift and go to state 432
 
@@ -18443,7 +17705,7 @@ state 424
 
 state 425
 
-    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement . pop_scope
+    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement . pop_scope
     (283) pop_scope -> .
 
     RCPAREN         reduce using rule 283 (pop_scope -> .)
@@ -18663,12 +17925,12 @@ state 431
     (239) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope
     (240) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope
     (241) selection_statement -> . SWITCH LPAREN expression RPAREN push_scope LCPAREN labeled_statement_list RCPAREN pop_scope
-    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN statement pop_scope
-    (248) iteration_statement -> . DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope
+    (248) iteration_statement -> . DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
     (249) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope
     (234) jump_statement -> . BREAK SEMICOLON
     (235) jump_statement -> . CONTINUE SEMICOLON
     (236) jump_statement -> . RETURN expression SEMICOLON
@@ -18891,7 +18153,7 @@ state 431
 
 state 432
 
-    (248) iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON . pop_scope
+    (248) iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON . pop_scope
     (283) pop_scope -> .
 
     RCPAREN         reduce using rule 283 (pop_scope -> .)
@@ -19081,60 +18343,60 @@ state 435
 
 state 436
 
-    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .
+    (252) iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .
 
-    RCPAREN         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    IF              reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    SWITCH          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    WHILE           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    DO              reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    FOR             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    BREAK           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    CONTINUE        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    RETURN          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    GOTO            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    TRY             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    THROW           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    CONST           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    ASM             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    TEMPLATE        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    TYPEDEF         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    DPLUSOP         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    DMINUSOP        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    SIZEOF          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    PLUSOP          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    MINUSOP         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    NOTSYM          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    BNOP            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    MULTOP          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    BANDOP          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    NEW             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    DELETE          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    CHAR            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    SHORT           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    INT             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    LONG            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    SIGNED          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    UNSIGNED        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    FLOAT           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    DOUBLE          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    VOID            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    STRING          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    AUTO            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    TYPE            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    CLASS           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    STRUCT          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    THIS            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    LPAREN          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    IDENTIFIER      reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    DOUBLEBNOP      reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    STRING_L        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    NUMBER          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    DECIMAL         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    SCHAR           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    LCPAREN         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    CASE            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
-    DEFAULT         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope .)
+    RCPAREN         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    IF              reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    SWITCH          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    WHILE           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    DO              reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    FOR             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    BREAK           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    CONTINUE        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    RETURN          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    GOTO            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    TRY             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    THROW           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    CONST           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    ASM             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    TEMPLATE        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    TYPEDEF         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    DPLUSOP         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    DMINUSOP        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    SIZEOF          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    PLUSOP          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    MINUSOP         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    NOTSYM          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    BNOP            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    MULTOP          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    BANDOP          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    NEW             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    DELETE          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    CHAR            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    SHORT           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    INT             reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    LONG            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    SIGNED          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    UNSIGNED        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    FLOAT           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    DOUBLE          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    VOID            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    STRING          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    AUTO            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    TYPE            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    CLASS           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    STRUCT          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    THIS            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    LPAREN          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    IDENTIFIER      reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    DOUBLEBNOP      reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    STRING_L        reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    NUMBER          reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    DECIMAL         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    SCHAR           reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    LCPAREN         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    CASE            reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
+    DEFAULT         reduce using rule 252 (iteration_statement -> FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope .)
 
 
 state 437
@@ -19280,12 +18542,12 @@ state 440
     (239) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope
     (240) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope
     (241) selection_statement -> . SWITCH LPAREN expression RPAREN push_scope LCPAREN labeled_statement_list RCPAREN pop_scope
-    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN statement pop_scope
-    (248) iteration_statement -> . DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope
+    (248) iteration_statement -> . DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
     (249) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope
     (234) jump_statement -> . BREAK SEMICOLON
     (235) jump_statement -> . CONTINUE SEMICOLON
     (236) jump_statement -> . RETURN expression SEMICOLON
@@ -19522,12 +18784,12 @@ state 441
     (239) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope
     (240) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope
     (241) selection_statement -> . SWITCH LPAREN expression RPAREN push_scope LCPAREN labeled_statement_list RCPAREN pop_scope
-    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN statement pop_scope
-    (248) iteration_statement -> . DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope
+    (248) iteration_statement -> . DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
     (249) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope
     (234) jump_statement -> . BREAK SEMICOLON
     (235) jump_statement -> . CONTINUE SEMICOLON
     (236) jump_statement -> . RETURN expression SEMICOLON
@@ -19752,60 +19014,60 @@ state 441
 
 state 442
 
-    (248) iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .
+    (248) iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .
 
-    RCPAREN         reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    IF              reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    SWITCH          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    WHILE           reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    DO              reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    FOR             reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    BREAK           reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    CONTINUE        reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    RETURN          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    GOTO            reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    TRY             reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    THROW           reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    CONST           reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    ASM             reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    TEMPLATE        reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    TYPEDEF         reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    DPLUSOP         reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    DMINUSOP        reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    SIZEOF          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    PLUSOP          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    MINUSOP         reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    NOTSYM          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    BNOP            reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    MULTOP          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    BANDOP          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    NEW             reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    DELETE          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    CHAR            reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    SHORT           reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    INT             reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    LONG            reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    SIGNED          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    UNSIGNED        reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    FLOAT           reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    DOUBLE          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    VOID            reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    STRING          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    AUTO            reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    TYPE            reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    CLASS           reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    STRUCT          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    THIS            reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    LPAREN          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    IDENTIFIER      reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    DOUBLEBNOP      reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    STRING_L        reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    NUMBER          reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    DECIMAL         reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    SCHAR           reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    LCPAREN         reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    CASE            reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
-    DEFAULT         reduce using rule 248 (iteration_statement -> DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    RCPAREN         reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    IF              reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    SWITCH          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    WHILE           reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    DO              reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    FOR             reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    BREAK           reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    CONTINUE        reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    RETURN          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    GOTO            reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    TRY             reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    THROW           reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    CONST           reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    ASM             reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    TEMPLATE        reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    TYPEDEF         reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    DPLUSOP         reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    DMINUSOP        reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    SIZEOF          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    PLUSOP          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    MINUSOP         reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    NOTSYM          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    BNOP            reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    MULTOP          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    BANDOP          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    NEW             reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    DELETE          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    CHAR            reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    SHORT           reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    INT             reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    LONG            reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    SIGNED          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    UNSIGNED        reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    FLOAT           reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    DOUBLE          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    VOID            reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    STRING          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    AUTO            reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    TYPE            reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    CLASS           reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    STRUCT          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    THIS            reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    LPAREN          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    IDENTIFIER      reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    DOUBLEBNOP      reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    STRING_L        reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    NUMBER          reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    DECIMAL         reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    SCHAR           reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    LCPAREN         reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    CASE            reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
+    DEFAULT         reduce using rule 248 (iteration_statement -> DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope .)
 
 
 state 443
@@ -20060,12 +19322,12 @@ state 447
     (239) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope
     (240) selection_statement -> . IF LPAREN expression RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope
     (241) selection_statement -> . SWITCH LPAREN expression RPAREN push_scope LCPAREN labeled_statement_list RCPAREN pop_scope
-    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN statement pop_scope
-    (248) iteration_statement -> . DO push_scope statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
+    (247) iteration_statement -> . WHILE push_scope LPAREN expression RPAREN compound_statement pop_scope
+    (248) iteration_statement -> . DO push_scope compound_statement WHILE LPAREN expression RPAREN SEMICOLON pop_scope
     (249) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON expression RPAREN compound_statement pop_scope
     (250) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON expression RPAREN compound_statement pop_scope
     (251) iteration_statement -> . FOR LPAREN push_scope for_init_statement expression SEMICOLON RPAREN compound_statement pop_scope
-    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN statement pop_scope
+    (252) iteration_statement -> . FOR LPAREN push_scope for_init_statement SEMICOLON RPAREN compound_statement pop_scope
     (234) jump_statement -> . BREAK SEMICOLON
     (235) jump_statement -> . CONTINUE SEMICOLON
     (236) jump_statement -> . RETURN expression SEMICOLON

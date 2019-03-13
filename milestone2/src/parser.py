@@ -48,6 +48,7 @@ def code(*rest):
 class OBJ:
     data = {}
     code = []
+    place = "noplace"
     pass
 
 def getnewlabel():
@@ -1330,6 +1331,14 @@ def p_compound_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p) == 4:
+        p[0].code = p[2].code
+        p[0].place = p[2].place
+    else:
+        p[0].code = {}
+        p[0].place = getnewvar()
+
+    print(p[0].code)
 
 def p_statement_list(p): 
     '''statement_list : statement 
@@ -1337,6 +1346,14 @@ def p_statement_list(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+
+    if len(p) == 2:
+        p[0].code = p[1].code
+        p[0].place = p[1].place
+    else:
+        p[0].code = p[1].code + p[2].code
+        p[0].place = p[2].place
+
 
 def p_statement(p): 
     '''statement : expression_statement 
@@ -1349,6 +1366,13 @@ def p_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p) == 2:
+        p[0].code = p[1].code
+        p[0].place = p[1].place
+    else:
+        p[0].code = p[2].code
+        p[0].place = p[2].place
+
 
 def p_jump_statement(p): 
     '''jump_statement : BREAK SEMICOLON 
@@ -1361,14 +1385,31 @@ def p_jump_statement(p):
     p[0].parse=f(p)
   
 
-def p_selection_statement(p): 
-    '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope
-                           | IF LPAREN expression  RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope 
-                           | SWITCH LPAREN expression  RPAREN push_scope  LCPAREN labeled_statement_list RCPAREN pop_scope
-    ''' 
+def p_selection_statement_1(p): 
+    '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)  
+
+    p[0].after = getnewlabel()
+
+    p[0].code = p[3].code + ["if " + p[3].place + "==0 goto " + p[0].after] + p[6].code +  [p[0].after + " : "]
   
+
+def p_selection_statement_2(p): 
+    '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)  
+    p[0].else_ = getnewlabel()
+    p[0].after = getnewlabel()
+
+    p[0].code = p[3].code + ["if " + p[3].place + "==0 goto " + p[0].else_] + p[6].code + ["goto " + p[0].after] + \
+        [p[0].else_ + " : "] + p[10].code + [p[0].after + " : "]
+
+
+def p_selection_statement_3(p): 
+    '''selection_statement :  SWITCH LPAREN expression  RPAREN push_scope  LCPAREN labeled_statement_list RCPAREN pop_scope ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)  
 
 def p_try_block(p): 
     '''try_block : TRY push_scope compound_statement pop_scope CATCH  push_scope compound_statement pop_scope''' 
@@ -1390,16 +1431,41 @@ def p_labeled_statement(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def p_iteration_statement(p): 
-    '''iteration_statement : WHILE push_scope LPAREN expression  RPAREN  statement pop_scope 
-                           | DO push_scope statement WHILE LPAREN expression  RPAREN  SEMICOLON pop_scope 
-                           | FOR LPAREN push_scope for_init_statement expression SEMICOLON expression  RPAREN  compound_statement pop_scope 
-                           | FOR LPAREN push_scope for_init_statement SEMICOLON expression  RPAREN  compound_statement pop_scope 
-                           | FOR LPAREN push_scope for_init_statement expression SEMICOLON  RPAREN  compound_statement pop_scope 
-                           | FOR LPAREN push_scope for_init_statement SEMICOLON  RPAREN  statement pop_scope 
-    ''' 
+def p_iteration_statement_1(p): 
+    '''iteration_statement : WHILE push_scope LPAREN expression  RPAREN  compound_statement pop_scope ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code =  [p[0].begin + " : "] + p[4].code + [ "if " + p[4].place + "== 0 goto " + p[0].after ] \
+         + p[6].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
+
+
+def p_iteration_statement_2(p): 
+    '''iteration_statement : DO push_scope compound_statement WHILE LPAREN expression  RPAREN  SEMICOLON pop_scope  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+
+def p_iteration_statement_3(p): 
+    '''iteration_statement : FOR LPAREN push_scope for_init_statement expression SEMICOLON expression  RPAREN  compound_statement pop_scope  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+
+def p_iteration_statement_4(p): 
+    '''iteration_statement : FOR LPAREN push_scope for_init_statement SEMICOLON expression  RPAREN  compound_statement pop_scope   ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+
+def p_iteration_statement_5(p): 
+    '''iteration_statement :  FOR LPAREN push_scope for_init_statement expression SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+
+def p_iteration_statement_6(p): 
+    '''iteration_statement :  FOR LPAREN push_scope for_init_statement SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p) 
+
 
 def p_for_init_statement(p): 
     '''for_init_statement : expression_statement 
