@@ -637,7 +637,6 @@ def p_postfix_expression_3(p):
 
     # this must be a function call
     # first get function sig..
-   
     try:
         func_sig_list = p[1].data["func_sig"]
         func_name = p[1].data["func_name"]
@@ -659,8 +658,15 @@ def p_postfix_expression_3(p):
         report_error("Function not declared", p.lineno(1))
 
     class_name = "" if "class_name" not in p[1].data.keys() else p[1].data["class_name"]
+    code = [ ]
+    for each in p[3].place:
+        code.append("PushParam " + each )
+
+
+
+
     p[0].place = getnewvar()
-    p[0].code = ["PushParam _", p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
+    p[0].code = code + [ p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
 
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
@@ -703,6 +709,7 @@ def p_postfix_expression_7(p):
     '''postfix_expression : postfix_expression ARROW name  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    print("sasa",p[1].data)
 
     if p[1].data["type"][-2:] != "|a" and p[1].data["type"][-2:] != "|p":
         report_error("request for member "+p[3].data+" in ptr to non-class type "+p[1].data["type"],p.lineno(0))
@@ -1621,26 +1628,25 @@ def p_init_declarator(p):
         p[0].data["init"] = None
     p[0].data["init"] = None
 
-def p_initializer(p): 
+def p_initializer_1(p): 
     '''initializer :   EQUAL assignment_expression''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data=p[2].data
 
-def p_initializer1(p): 
-    '''initializer :   EQUAL LCPAREN initializer_list RCPAREN''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p) 
+# def p_initializer1(p): 
+#     '''initializer :   EQUAL LCPAREN initializer_list RCPAREN''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p) 
 
-def p_initializer2(p): 
-    '''initializer :   EQUAL LCPAREN initializer_list COMMA RCPAREN''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p) 
 
-def p_initializer3(p): 
+def p_initializer_2(p): 
     '''initializer :   LPAREN expression_list  RPAREN''' 
     p[0] = OBJ() 
-    p[0].parse=f(p) 
+    p[0].parse=f(p)
+    p[0].data = p[2].data
+
+
 
 def p_initializer_list(p): 
     '''initializer_list : assignment_expression 
@@ -1664,11 +1670,11 @@ def p_expression_list(p):
     p[0].parse=f(p) 
     if len(p)==2:
         p[0].data = p[1].data
-        p[0].place = p[1].place
+        p[0].place = [ p[1].place ] 
         p[0].code = p[1].code 
     else:
         p[0].data = {"type" : p[1].data["type"] + "," + p[3].data["type"]}
-        p[0].place = p[1].place
+        p[0].place = p[2].place +  [ p[1].place ] 
         p[0].code = p[1].code + p[3].code
 
 def p_push_scope(p):
