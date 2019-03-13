@@ -39,8 +39,14 @@ currentTmp=0
 
 currentScopeTable = 0
 
+def code(*rest):
+    s = ""
+    for r in rest:
+        s = s + " " + str(r)
+    print(s)
+
 class OBJ:
-    data = None
+    data = {}
     pass
 
 def getnewlabel():
@@ -213,7 +219,6 @@ def p_conditional_expression(p):
             report_error("Expected integer, char or float, found something else", p.lineno(0))
         if p[3].data["type"] != p[5].data["type"]:
             report_error("Type mismatch between two opearands", p.lineno(0))
-
         p[0].data = { "type" : p[3].data["type"] }
         
 
@@ -229,7 +234,7 @@ def p_logical_OR_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error("Type not compatible with OR operation", p.lineno(0))
 
@@ -244,7 +249,7 @@ def p_logical_AND_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error("Type not compatible with AND operation", p.lineno(0))
 
@@ -260,7 +265,7 @@ def p_inclusive_OR_expression(p):
         p[0].data = p[1].data
     if len(p)==4:
         if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error("Type not compatible with bitwise or operation", p.lineno(1))
 
@@ -274,7 +279,7 @@ def p_exclusive_OR_expression(p):
         p[0].data = p[1].data
     if len(p)==4:
         if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error("Type not compatible with bitwise xor operation", p.lineno(1))
 
@@ -288,7 +293,7 @@ def p_AND_expression(p):
         p[0].data = p[1].data
     if len(p)==4:
         if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error("Type not compatible with bitwise and operation", p.lineno(1))
 
@@ -305,7 +310,7 @@ def p_equality_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error("Type not compatible with relational operation", p.lineno(0))
 
@@ -323,7 +328,7 @@ def p_relational_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error("Type not compatible with relational operation", p.lineno(0))
 
@@ -340,7 +345,7 @@ def p_shift_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error(" Type not compatible with bitwise shift operation ", p.lineno(0))
 
@@ -356,7 +361,12 @@ def p_additive_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
+            if "codename" not in p[3].data:
+                print(p[3].data)
+                code(p[0].data["codename"], p[2].data, p[3].data["value"])
+            else:
+                code(p[0].data["codename"], p[2].data, p[3].data["codename"])
         else:
             report_error("Type not compatible with plus , minus operation", p.lineno(0))
 
@@ -374,7 +384,7 @@ def p_multiplicative_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
+            p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error("Type not compatible with mult, div operation", p.lineno(0))
 
@@ -415,6 +425,17 @@ def p_assignment_expression(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = p[1].data
+    else:
+        p[0].data["codename"] = getnewvar()
+        var=checkVar(p[1].data["name"])["var"]
+        if "3acname" not in var:
+            var["3acname"] = getnewvar()
+        if "codename" not in p[3].data:
+            print(p[3].data)
+            code(var["3acname"], p[2].data, p[3].data["value"])
+        else:
+            code(var["3acname"], p[2].data, p[3].data["codename"])
+        updateVar(p[1].data["name"], var)
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -430,6 +451,7 @@ def p_assignment_operator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = p[1].data
 
 def p_unary_expression(p): 
     '''unary_expression : postfix_expression 
@@ -604,7 +626,6 @@ def p_postfix_expression_8(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-
 def p_primary_expression0(p): 
     '''primary_expression : name   
     ''' 
@@ -614,8 +635,7 @@ def p_primary_expression0(p):
     if detail ==  False:
         report_error( str(p[1].data) + " not declared" , p.lineno(1) )
     v_type = detail["var"]["type"]
-    p[0].data = {"type": v_type}
-    print("assdsdd",v_type)
+    p[0].data = {"type": v_type, "name" : p[1].data}
     if v_type=="function_upper":
         p[0].data["func_sig"] = detail["var"]["func_sig"]
         p[0].data["func_name"] = p[1].data
@@ -642,32 +662,32 @@ def p_primary_expression3(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    p[0].data = {"type" : p[2].data["type"]}
+    p[0].data = {"type" : p[2].data["type"], "name" : None}
 
 
 def p_literal_string(p): 
     '''literal :  STRING_L ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"type": "string", "value" : p[1].data}
+    p[0].data = {"type": "string", "value" : p[1].data, "name" : None}
 
 def p_literal_number(p): 
     '''literal : NUMBER ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"type": "int", "value" : p[1].data}
+    p[0].data = {"type": "int", "value" : p[1].data, "name" : None}
 
 def p_literal_decimal(p): 
     '''literal : DECIMAL ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"type": "float", "value" : p[1].data}
+    p[0].data = {"type": "float", "value" : p[1].data, "name" : None}
 
 def p_literal_char(p): 
     '''literal : SCHAR ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"type": "char", "value" : p[1].data}
+    p[0].data = {"type": "char", "value" : p[1].data, "name" : None}
 
 
 # used for abstract declaration of func, int objstore_destroy(struct objfs_state*, char[]);
@@ -832,7 +852,6 @@ def p_argument_declaration_1(p):
     p[0].data["name"] = p[2].data["name"]
     p[0].data["meta"] = p[2].data["meta"]
     p[0].data["init"] =  None
-    print(p[0].data)
 
     if pushVar(p[2].data["name"],p[0].data)==False:
         report_error("Redeclaration of variable", p.lineno(1))
@@ -1166,7 +1185,6 @@ def p_member_declaration0(p):
             if pushVar(each["name"], data)==False:
                 report_error("Redeclaration of variable", p.lineno(1))
             p[0].data[each["name"]] = data
-    pp.pprint(p[0].data)
 
 def p_member_declaration1(p):
     '''member_declaration : function_definition
