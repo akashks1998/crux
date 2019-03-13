@@ -97,7 +97,11 @@ def pushVar(identifier, val,scope = None):
             return True
         else:
             return False
-    
+def assigner(p,x):
+    if isinstance(p[x].data,str):
+        return p[x].data
+    else:
+        return p[x].data.copy()
     
 
 def updateVar(identifier, val,scope=None):
@@ -205,7 +209,7 @@ def p_constant_expression(p):
     '''constant_expression : conditional_expression''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data.copy()
+    p[0].data =assigner(p,1)
     p[0].place = p[1].place
     p[0].code = p[1].code 
     
@@ -217,7 +221,7 @@ def p_conditional_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data.copy()
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
         
@@ -241,7 +245,7 @@ def p_logical_OR_expression(p):
     p[0].parse=f(p)
 
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
@@ -261,7 +265,7 @@ def p_logical_AND_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
@@ -283,7 +287,7 @@ def p_inclusive_OR_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
@@ -302,7 +306,7 @@ def p_exclusive_OR_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
@@ -321,7 +325,7 @@ def p_AND_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
@@ -341,7 +345,7 @@ def p_equality_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code  
     if len(p)==4:
@@ -365,7 +369,7 @@ def p_relational_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
@@ -386,7 +390,7 @@ def p_shift_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
@@ -407,7 +411,7 @@ def p_additive_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
@@ -429,7 +433,7 @@ def p_multiplicative_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
@@ -450,7 +454,7 @@ def p_cast_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)  
     if len(p)==2 :
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==5:
@@ -471,7 +475,7 @@ def p_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data 
+        p[0].data = assigner(p,1) 
         p[0].place = p[1].place
         p[0].code = p[1].code 
     else:
@@ -492,11 +496,10 @@ def p_assignment_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
     else:
-        print(p[3].data, p[1].data)
         if p[1].data["type"]!=p[3].data["type"]:
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
@@ -517,7 +520,7 @@ def p_assignment_operator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data=p[1].data
 
 def p_unary_expression(p): 
     '''unary_expression : postfix_expression 
@@ -532,12 +535,13 @@ def p_unary_expression(p):
     allowed_type=["int","float","char"]
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
+        print("Unary",p[0].data["type"])
         p[0].place = p[1].place
         p[0].code = p[1].code 
     elif len(p)==3:
         if p[2].data["type"] in allowed_type:
-            p[0].data=p[2].data
+            p[0].data=assigner(p,2)
             p[0].place=getnewvar()
             if p[1].data=="++":
                 p[0].code=p[1].code+[p[0].place+"="+p[1].place+"+1"]
@@ -554,7 +558,7 @@ def p_unary_expression1(p):
     '''unary_expression : unary1_operator cast_expression''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[2].data
+    p[0].data = assigner(p,2)
     p[0].place = getnewvar()
     p[0].code = p[2].code+[p[0].place+"="+ p[1].data +p[2].place ] 
 
@@ -707,7 +711,7 @@ def p_unary1_operator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
 
 def p_unary2_operator(p): 
     '''unary2_operator : MULTOP 
@@ -715,7 +719,7 @@ def p_unary2_operator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
 
 def p_postfix_expression_1(p): 
     '''postfix_expression : primary_expression ''' 
@@ -723,7 +727,7 @@ def p_postfix_expression_1(p):
                         #   | simple_type_name       LPAREN  RPAREN 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
     p[0].place = p[1].place
     p[0].code = p[1].code
 
@@ -819,6 +823,7 @@ def p_postfix_expression_6(p):
         x=checkVar(p[3].data, details["var"]["scope"])
         if x!=False:
             p[0].data["type"]=x["type"]
+            print("printing x",x["type"])
             if(p[0].data["type"] == "function_upper"):
                 p[0].data["func_sig"] = x["func_sig"]
                 p[0].data["func_name"] = p[3].data
@@ -894,7 +899,7 @@ def p_primary_expression0(p):
 
     v_type = detail["var"]["type"]
     
-    p[0].data = {"type": v_type, "name" : p[1].data}
+    p[0].data = {"type": v_type, "name" : assigner(p,1)}
     
     if v_type=="function_upper":
         p[0].data["func_sig"] = detail["var"]["func_sig"]
@@ -907,7 +912,7 @@ def p_primary_expression1(p):
     ''' primary_expression : literal ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
     p[0].place = getnewvar()
     p[0].code = [ p[0].place + " = " + str(p[1].data["value"]) ] 
     
@@ -1001,7 +1006,7 @@ def p_declarator_0(p):
     '''declarator : name ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"name" : p[1].data, "type" : "", "meta" : []}
+    p[0].data = {"name" : assigner(p,1), "type" : "", "meta" : []}
         
         
 def p_declarator_1(p): 
@@ -1110,7 +1115,7 @@ def p_argument_declaration_1(p):
     '''argument_declaration : type_specifier_ declarator   ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data.copy()
+    p[0].data = assigner(p,1)
     if p[2].data["type"] != "":
         p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
     p[0].data["name"] = p[2].data["name"]
@@ -1124,7 +1129,7 @@ def p_argument_declaration_2(p):
     '''argument_declaration :  type_specifier_ declarator  EQUAL expression ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data.copy()
+    p[0].data = assigner(p,1)
     if p[2].data["type"] != "":
         p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
     p[0].data["name"] = p[2].data["name"]
@@ -1207,7 +1212,7 @@ def p_template_class_name(p):
     '''template_class_name : LTEMPLATE template_arg_list RTEMPLATE''' 
     p[0] = OBJ()
     p[0].parse=f(p)
-    p[0].data=p[2].data
+    p[0].data=assigner(p,2)
 
 def p_template_arg_list(p): 
     '''template_arg_list : type_name 
@@ -1216,9 +1221,9 @@ def p_template_arg_list(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data=[p[1].data]
+        p[0].data=[assigner(p,1)]
     else:
-        p[0].data=p[1].data
+        p[0].data=assigner(p,1)
         p[0].data.append(p[3].data)
 
 # input -> [class, type, template, template_list, type, meta, const]
@@ -1229,11 +1234,11 @@ def p_type_name(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==3:
-        p[0].data = p[1].data 
+        p[0].data = assigner(p,1)
         p[0].data["type"] = p[0].data["type"] + "|" + p[1].data["type"]
         p[0].data["meta"] = p[1].data["meta"]
     else:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].data["meta"] = []
 
 def p_type_specifier_(p): 
@@ -1243,10 +1248,10 @@ def p_type_specifier_(p):
     p[0] = OBJ() 
     p[0].parse=f(p)  
     if len(p)==3:
-        p[0].data = p[2].data
+        p[0].data = assigner(p,2)
         p[0].data["const"]=1
     else:
-        p[0].data = p[1].data
+        p[0].data = assigner(p,1)
         p[0].data["const"]=0
 
 def p_typedef_declarator(p):
@@ -1262,8 +1267,8 @@ def p_type_specifier(p):
     ''' 
                     #   | class_define_specifier 
     p[0] = OBJ()
-    p[0].parse=f(p)   
-    p[0].data=p[1].data
+    p[0].parse=f(p)
+    p[0].data = assigner(p,1)
 
 def p_simple_type_name(p): 
     '''simple_type_name : CHAR 
@@ -1341,7 +1346,7 @@ def p_class_key(p):
     ''' 
     p[0] = OBJ()
     p[0].parse = f(p) 
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
 
 def p_class_head(p): 
     '''class_head : class_key IDENTIFIER base_spec 
@@ -1362,7 +1367,7 @@ def p_class_define_specifier1(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
     p[0].data["scope"] = p[4].scope
     checkVar(p[0].data["type"], scopeId="*")
 
@@ -1371,7 +1376,7 @@ def p_class_define_specifier2(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
     p[0].data["scope"] = p[4].scope
     if pushVar(p[0].data["type"], p[0].data)==False:
             report_error("Redeclaration of variable", p.lineno(1))
@@ -1382,7 +1387,7 @@ def p_member_list0(p):
     '''
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
     p[0].scope = currentScopeTable
 
 #remaining
@@ -1408,7 +1413,7 @@ def p_access_specifier(p):
     '''
     p[0] = OBJ()    
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
 
 #remaining
 def p_access_list(p):
@@ -1421,13 +1426,13 @@ def p_member_access_list1(p):
     '''member_access_list : member_declaration member_access_list'''
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = [p[1].data] + p[2].data
+    p[0].data = [assigner(p,1)] + assigner(p,2)
 
 def p_member_access_list2(p):
     '''member_access_list : member_declaration '''
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = [p[1].data]
+    p[0].data = [assigner(p,1)]
 
 def p_member_declaration0(p):
     '''member_declaration : type_specifier_ member_declarator_list SEMICOLON
@@ -1457,7 +1462,7 @@ def p_member_declaration1(p):
                         #   | function_definition SEMICOLON
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = [p[1].data]
+    p[0].data = [assigner(p,1)]
 
 def p_member_declarator_list(p): 
     '''member_declarator_list : member_declarator 
@@ -1476,7 +1481,7 @@ def p_member_declarator(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
-        p[0].data = [p[1].data]
+        p[0].data = [assigner(p,1)]
 
 def p_function_definition(p): 
     '''function_definition : type_specifier_ declarator func_push_scope arg_list  RPAREN fct_body pop_scope 
@@ -1748,7 +1753,7 @@ def p_declarator_list(p):
     p[0].parse=f(p)
 
     if len(p) == 2 :
-        p[0].data = [p[1].data]
+        p[0].data = [assigner(p,1)]
     else:
         p[0].data = p[1].data + [ p[3].data ]
 
@@ -1758,7 +1763,7 @@ def p_init_declarator(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data
+    p[0].data = assigner(p,1)
     if len(p) == 3:
         p[0].data["init_type"]=p[2].data["type"]
         p[0].data["init"] = None
@@ -1768,7 +1773,7 @@ def p_initializer_1(p):
     '''initializer :   EQUAL assignment_expression''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data=p[2].data
+    p[0].data=p[2].data.copy()
 
 # def p_initializer1(p): 
 #     '''initializer :   EQUAL LCPAREN initializer_list RCPAREN''' 
@@ -1805,9 +1810,8 @@ def p_expression_list(p):
     p[0] = OBJ() 
     p[0].parse=f(p) 
     if len(p)==2:
-        p[0].data = p[1].data
+        p[0].data = p[1].data.copy()
         p[0].place = [ p[1].place ] 
-        
         p[0].code = p[1].code 
     else:
         p[0].data = {"type" : p[1].data["type"] + "," + p[3].data["type"]}

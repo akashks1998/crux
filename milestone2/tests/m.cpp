@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 class A{
     int a;
     char hi(char a){
@@ -18,3 +19,5 @@ int main()
 
     return 1;
 }
+=======
+>>>>>>> 8a138a928727e8a2447ec887adf1dbc724b2d2e3
