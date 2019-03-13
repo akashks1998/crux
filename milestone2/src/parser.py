@@ -453,6 +453,14 @@ def p_cast_expression(p):
         p[0].data = p[1].data
         p[0].place = p[1].place
         p[0].code = p[1].code
+    if len(p)==5:
+        rex = r'\|p*a+$'
+        x= re.fullmatch(rex, p[2].data["type"])
+        if x!=None:
+            report_error("Type casting to "+p[2].data["type"]+" is not allowed",p.lineno(0))
+        p[0].data["type"]=p[2].data["type"]
+        p[0].place=getnewvar()
+        p[0].code=p[4].code+[p[0].place+"="+ p[4].data["type"]+"_to_"+p[2].data["type"]+"("+p[4].place+")" ]
 
 
 def p_expression(p): 
@@ -489,7 +497,10 @@ def p_assignment_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code 
     else:
+        if p[1].data["type"]!=p[3].data["type"]:
+            report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
+
         p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]  
 
 def p_assignment_operator(p): 
@@ -512,8 +523,6 @@ def p_unary_expression(p):
     '''unary_expression : postfix_expression 
                         | DPLUSOP unary_expression 
                         | DMINUSOP unary_expression 
-                        | unary1_operator cast_expression 
-                        | unary2_operator cast_expression 
                         | SIZEOF LPAREN type_name  RPAREN 
                         | allocation_expression 
                         | deallocation_expression 
@@ -529,12 +538,45 @@ def p_unary_expression(p):
     elif len(p)==3:
         if p[2].data["type"] in allowed_type:
             p[0].data=p[2].data
+            p[0].place=getnewvar()
+            if p[1].data=="++":
+                p[0].code=p[1].code+[p[0].place+"="+p[1].place+"+1"]
+            else:
+                p[0].code=p[1].code+[p[0].place+"="+p[1].place+"-1"]
         else:
             report_error("This unary operation is not allowed with given type", p.lineno(1))
     elif len(p)==5:
         p[0].data["type"]="int"
+        p[0].place=getnewvar()
+        p[0].code=p[3].code+[p[0].place+"= sizeof("+p[1].data["type"]+")"]
     
+def p_unary_expression1(p): 
+    '''unary_expression : unary1_operator cast_expression''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].data = p[2].data
+    p[0].place = getnewvar()
+    p[0].code = p[2].code+[p[0].place+"="+ p[1].data +p[2].place ] 
 
+def p_unary_expression2(p): 
+    '''unary_expression : unary2_operator cast_expression 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    if p[1].data=="*":
+        if p[2].data["type"][-1] in ["a","p"]  and "|" in p[2].data["type"]:
+            p[0].data["type"]=p[2].data["type"][:-1]
+            if p[0].data["type"][-1]=="|":
+                p[0].data["type"]=p[0].data["type"][:-1]
+        else:
+            report_error("Cannot dereference non-pointer element",p.lineno(0))
+    else:
+        if "|" in p[2].data["type"]:
+            p[0].data["type"]=p[2].data["type"]+"p"
+        else:
+            p[0].data["type"]=p[2].data["type"]+"|p"
+    p[0].place = getnewvar()
+    p[0].code = p[2].code+[p[0].place+"="+ p[1].data +p[2].place ]
 
 def p_deallocation_expression(p): 
     '''deallocation_expression : DELETE cast_expression  ''' 

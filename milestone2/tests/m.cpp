@@ -3,6 +3,6 @@ class a{
 };
 int main()
 {
-    class a* b;
-    (b).b=5;
+    class a b,*c;
+    c=&b;
 }
