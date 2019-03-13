@@ -1,20 +1,19 @@
 
 int main(int a, char **b)
 {
-<<<<<<< HEAD
-    float d;
-    int c=d;
-    return 1;
-=======
     int x;
-    int y;
+    int y,z;
     x=1;
     y=3;
-    a = x + y;
-    {
-        int x;
-        s=2;
-        a = x + y;
+    a = x + y+z;
+    if(x>y){
+        int **x;
+        int s;s=2;
+        a = x[1][2] + y;
+        if(x[1][2]<y){
+            a=a;
+        }
+    }else{
+        int i;i=0;
     }
->>>>>>> 3ac
 }

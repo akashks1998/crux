@@ -1339,6 +1339,11 @@ def p_compound_statement(p):
         p[0].place = getnewvar()
 
     print(p[0].code)
+    x=1
+    for i in p[0].code:
+        if i !="":
+            print(x,"::",i)
+            x=x+1
 
 def p_statement_list(p): 
     '''statement_list : statement 
@@ -1481,7 +1486,6 @@ def p_expression_statement(p):
     p[0].parse=f(p)
     p[0].place = p[1].place
     p[0].code = p[1].code 
-    print(p[1].code)
 
 def p_declaration_statement(p): 
     '''declaration_statement : declaration''' 
