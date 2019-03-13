@@ -679,12 +679,12 @@ def p_postfix_expression_3(p):
 
     # this must be a function call
     # first get function sig..
-    print(p[1].data)
+   
     try:
         func_sig_list = p[1].data["func_sig"]
         func_name = p[1].data["func_name"]
     except:
-        report_error("function not declared", p.lineno(1))
+        report_error("Calling function on non function type", p.lineno(1))
     if len(p)==5:
         print(p[3].data)
         expected_sig = func_name + "|" + p[3].data["type"] 
@@ -698,10 +698,11 @@ def p_postfix_expression_3(p):
             p[0].data = {"type" : fun[1]}
             flag=1
     if flag==0:
-        report_error("function not declared", p.lineno(1))
+        report_error("Function not declared", p.lineno(1))
 
+    class_name = "" if "class_name" not in p[1].data.keys() else p[1].data["class_name"]
     p[0].place = getnewvar()
-    p[0].code = ["PushParam _", p[0].place + " = " + "Fcall" + expected_sig , "PopParams"]
+    p[0].code = ["PushParam _", p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
 
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
@@ -716,38 +717,60 @@ def p_postfix_expression_6(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-    p[0].place = getnewvar()
     if "|" in p[1].data["type"]:
         report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
+
     details=checkVar(p[1].data["type"],"**")
     if details==False:
         report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
     if "class" in details["var"].keys() and details["var"]["class"]=="class":
         x=checkVar(p[3].data, details["var"]["scope"])
-        print("x",x)
         if x!=False:
-
-            print("class data",p[1].data)
-            print(details)
-            p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
             p[0].data["type"]=x["type"]
+            if(p[0].data["type"] == "function_upper"):
+                p[0].data["func_sig"] = x["func_sig"]
+                p[0].data["func_name"] = p[3].data
+                p[0].data["class_name"] = p[1].data["type"]
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
     else:
         report_error(p[1].data["type"]+" is not a class",p.lineno(0))
     # post_fix must be a object and name should be a class member
 
+    p[0].place = getnewvar()
+    p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
+
 
 def p_postfix_expression_7(p): 
     '''postfix_expression : postfix_expression ARROW name  ''' 
-
     p[0] = OBJ() 
     p[0].parse=f(p)
-    # post_fix must be a object pointer and name should be a class member
 
+    if p[1].data["type"][-2:] != "|a" and p[1].data["type"][-2:] != "|p":
+        report_error("request for member "+p[3].data+" in ptr to non-class type "+p[1].data["type"],p.lineno(0))
+
+    details=checkVar(p[1].data["type"][:-2],"**")
+    if details==False:
+        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"][:-2],p.lineno(0))
+    if "class" in details["var"].keys() and details["var"]["class"]=="class":
+        x=checkVar(p[3].data, details["var"]["scope"])
+        if x!=False:
+            p[0].data["type"]=x["type"]
+            if(p[0].data["type"] == "function_upper"):
+                p[0].data["func_sig"] = x["func_sig"]
+                p[0].data["func_name"] = p[3].data
+                p[0].data["class_name"] = p[1].data["type"][:-2]
+        else:
+            report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
+    else:
+        report_error(p[1].data["type"][:-2] +" is not a class",p.lineno(0))
+    # post_fix must be a object and name should be a class member
+
+    
     p[0].place = getnewvar()
-    p[0].code = p[1].code + [  p[0].place + " = " + "(*" +  p[1].place + ")." + p[3].data ]
-
+    new_tmp = getnewvar()
+    p[0].code = p[1].code + [ new_tmp + " = *(" +  p[1].place + ")" ]  + [ p[0].place + " = " + new_tmp + "." + p[3].data ]
+    print(p[0].code)
 
 def p_postfix_expression_8(p): 
     '''postfix_expression : postfix_expression  DPLUSOP 
