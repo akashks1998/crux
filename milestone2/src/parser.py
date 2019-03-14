@@ -143,6 +143,9 @@ def pushVar(identifier, val,scope = None):
             return True
         else:
             return False
+def popVar(identifier, scope):
+    global scopeTableList
+    scopeTableList[scope].delete(identifier)
 
 def assigner(p,x):
     if isinstance(p[x].data,str):
@@ -1515,6 +1518,8 @@ def p_class_head(p):
     if len(p)==4:
         p[0].data["base"] = p[3].data["base"]
 
+    pushVar(p[2].data + "@|@", "")
+
     pushOffset()
 
 
@@ -1570,6 +1575,7 @@ def p_member_declaration_0(p):
     p[0] = OBJ()
     p[0].parse=f(p)
     decl_list = p[2].data
+    p[0].data = {}
     for each in decl_list:
         data = p[1].data.copy()
         if(each["type"] != ""):
@@ -1588,17 +1594,45 @@ def p_member_declaration_0(p):
             size = 1
             for n in data["meta"]:
                 size = size * n
+
+            # check the basic data_type_exist or not
+            if "|" in element_type:
+                meta_ = checkVar(element_type.rstrip("p").rstrip("|") + "@|@")
+                if  meta_ == False:
+                    get_size(element_type.rstrip("p").rstrip("|"))
+                else:
+                    popVar(element_type.rstrip("p").rstrip("|") + "@|@" , meta_["scope"])
+            else:
+                get_size(element_type.rstrip("p").rstrip("|"))
+
+
             data["size"] = get_size(element_type) * size
             data["offset"] = get_offset()
             add_to_offset(data["size"])
+            if pushVar(data["name"],data)==False:
+                add_to_offset(-data["size"])
+                report_error("Redeclaration of variable", p.lineno(1))
         else:
-            data["size"] = get_size(data["type"]) 
+            basic_type = data["type"].rstrip("p").rstrip("|")
+        
+            # check the basic data_type_exist or not
+            if "|" in data["type"]:
+                meta_ = checkVar(basic_type + "@|@")
+                if  meta_ == False:
+                    get_size(basic_type)
+                else:
+                    popVar(basic_type+ "@|@" , meta_["scope"])
+            else:
+                get_size(basic_type)
+
+
+            data["size"] = get_size(data["type"])
             data["offset"] = get_offset()
             add_to_offset(data["size"])
 
-        if pushVar(data["name"],data)==False:
-            add_to_offset( - data["size"])
-            report_error("Redeclaration of variable", p.lineno(1))
+            if pushVar(each["name"],data)==False:
+                report_error("Redeclaration of variable", p.lineno(1))
+                    
 
 def p_member_declaration_1(p):
     '''member_declaration : function_definition
@@ -1904,7 +1938,7 @@ def get_size(data_type):
     # it has to be class
     get_class = checkVar(data_type, "global")
     if get_class ==  False:
-        print(" Error :: Geting size of a type that is not defined")
+        print(" Error :: Class " + data_type + " is not defined")
         exit()
     return get_class["size"]
 
@@ -1937,6 +1971,9 @@ def p_declaration0(p):
             for n in data["meta"]:
                 size = size * n
 
+            # check the basic data_type_exist or not
+            get_size(element_type.rstrip("p").rstrip("|"))
+
             data["size"] = get_size(element_type) * size
             data["offset"] = get_offset()
             add_to_offset(data["size"])
@@ -1944,49 +1981,22 @@ def p_declaration0(p):
                 add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
         else:
-            if(data["class"] ==  "class"):
-                x = checkVar(data["type"])
-                if x==False:
-                    report_error("Class " + data["type"]+" doesn't exist",p.lineno(0))
-                t=checkVar( data["type"] ,x["var"]["scope"])
-                if(each["type"] == ""):
-                    if "init_type" not in each.keys():
-                        if t!=False:
-                            report_error("Constructor is not called for class "+data["type"],p.lineno(0))
-                    else:
-                        if isinstance( each["place"], list):
-                            if t==False:
-                                report_error("Constructor is not defined for "+data["type"],p.lineno(1))
-                            if (data["type"]+"|"+each["init_type"],"void") in t["func_sig"]:
-                                if pushVar(each["name"],data)==False:
-                                    report_error("Redeclaration of variable", p.lineno(1))
-                                push_code = []
-                                for each_place in each["place"]:
-                                    push_code = push_code + ["Pushparam " + each_place]
-                                push_code = push_code + ["pushParam " + each["name"] ] 
+            basic_type = data["type"].rstrip("p").rstrip("|")
+            get_size(basic_type)
+            data["size"] = get_size(data["type"])
+            data["offset"] = get_offset()
+            add_to_offset(data["size"])
 
-                                p[0].code = p[2].code  + push_code + [ "Fcall " + data["type"] + ":" + data["type"]+"|"+each["init_type"] , "PopParams"]
-                                return 
+            if pushVar(each["name"],data)==False:
+                report_error("Redeclaration of variable", p.lineno(1))
+            
+            if "init_type" in each.keys():
+                if  not allowed_type(each["init_type"],data["type"]):
+                    report_error("type_mismatch in initialization", p.lineno(0))
+                x=cast_string(each["place"],each["init_type"],data["type"])
+                p[0].code=p[0].code + x["code"]+[each["name"]+ "@" + str(currentScopeTable) +" = "+ x["place"] ]            
 
-                            else:
-                                report_error("Constructor is not correct for "+data["type"],p.lineno(1))
-            if "init_type" not in each.keys() or ( (not isinstance( each["place"], list))):
-                data["size"] = get_size(data["type"])
-                data["offset"] = get_offset()
-                add_to_offset(data["size"])
 
-                if pushVar(each["name"],data)==False:
-                    report_error("Redeclaration of variable", p.lineno(1))
-
-                if "init_type" in each.keys():
-                    if  data["type"]!=each["init_type"]:
-                        report_error("type_mismatch in initialization", p.lineno(0))
-                    p[0].code=p[0].code + [each["name"]+ "@" + str(currentScopeTable) +" = "+ each["place"] ]
-            else:
-                if isinstance( each["place"], list):
-                    report_error("Constructor is not defined for "+data["type"],p.lineno(1))
-                # print("Type,", each["init_type"])
-                report_error("Assigned type is not same as given type",p.lineno(1))   
 
 
 # def p_declaration1(p):
@@ -2073,19 +2083,6 @@ def p_initializer_1(p):
     p[0].place=p[2].place
     p[0].code=p[2].code.copy()
 
-# def p_initializer1(p): 
-#     '''initializer :   EQUAL LCPAREN initializer_list RCPAREN''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p) 
-
-
-def p_initializer_2(p): 
-    '''initializer :   LPAREN expression_list  RPAREN''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data["type"]= p[2].data["type"]
-    p[0].place = p[2].place
-    p[0].code = p[2].code 
 
 def p_expression_list(p): 
     '''expression_list : assignment_expression 

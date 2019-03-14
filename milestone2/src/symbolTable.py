@@ -5,6 +5,9 @@ class SymbolTable:
 
     def lookUp(self, name):
         return (name in self.table)
+    
+    def delete(self, name):
+        (self.table).pop(name, None)
 
     def insert(self, name, value):
         if (not self.lookUp(name)):
@@ -26,6 +29,8 @@ class SymbolTable:
 
     def setParent(self, parent):
         self.parent = parent
+
+    
 
 
 
