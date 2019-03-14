@@ -44,10 +44,10 @@ offsetParent = [None]
 currentOffset = 0
 
 allowed_types={}
-allowed_types["float"]=["int","long long int", "long int" ,"float" ]
+allowed_types["float"]=["int","long long int", "long int" ,"float","char" ]
 allowed_types["int"]=["float", "char","int"]
 allowed_types["char"]=["int", "char"]
-
+allowed_types["pointer"]=["int","float"]
 def get_offset():
     global offsetList
     global currentOffset
@@ -153,16 +153,52 @@ def assigner(p,x):
 def allowed_type(converted_from,converted_to):
     global allowed_types
     if "|" in converted_from or "|" in converted_to:
+        if "|" in converted_from and converted_from[-1]=='p' and (converted_to[-1]=="p" or converted_to in allowed_types["pointer"]):
+            return True
         return False
     return (converted_from in allowed_types[converted_to])
 
-def cast_string(place, converted_from,converted_to):
+def cast_string(place, converted_from,converted_to,t=None):
+    
     if converted_from==converted_to:
         return {"place":place,"code":[]}
     if allowed_type(converted_from,converted_to)==True:
-        t=getnewvar(converted_to)
+        if t==None:
+            t=getnewvar(converted_to)
         return {"place":t,"code":[ t +" = " + converted_from+"_to_"+converted_to+"("+place+")" ]}
     return False
+def operator(op, op1 ,op2 ,typ=None):
+    
+    prec={
+        "char":1,
+        "int":2,
+        "long int":3,
+        "long long int":4,
+        "float":5,
+        "double":6
+    }
+    
+    if op1.data["type"] == op2.data["type"]:
+        if typ==None:
+            typ=op1.data["type"]
+        t=getnewvar(typ)
+        return {"place":t,"code":[ t +" = " + op1.place +" "+op1.data["type"]+"_"+ op+" "+op2.place ],"type":typ}
+    elif prec[ op1.data["type"] ]>prec[ op2.data["type"] ]:
+        y=cast_string( op2.place, op2.data["type"],op1.data["type"] )
+        if typ==None:
+            typ=op1.data["type"]
+        t=getnewvar(typ)
+        if y==False:
+            return False
+        return {"place":t,"code":y["code"]+[ t +" = "+ op1.place+" "+op1.data["type"]+"_"+op +" "+ y["place"] ],"type":typ}
+    else:
+        y=cast_string( op1.place, op1.data["type"],op2.data["type"] )
+        if y==False:
+            return False
+        if typ==None:
+            typ=op2.data["type"]
+        t=getnewvar(typ)
+        return {"place":t,"code":y["code"]+[ t +" = " + y["place"] +" "+op2.data["type"]+"_"+op+" "+ op2.place ],"type":typ}
 
 def updateVar(identifier, val,scope=None):
     global scopeTableList
@@ -309,7 +345,13 @@ def p_conditional_expression(p):
             report_error("Type mismatch between two opearands", p.lineno(0))
         p[0].data = { "type" : p[3].data["type"] }
         p[0].place = getnewvar(p[3].data["type"])
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        p[0].after=getnewlabel()
+        p[0].else_=getnewlabel()
+        t=cast_string(p[1].place,p[1].data["type"],"int")
+
+        p[0].code = p[1].code + t["code"] + [ "if "+t["place"] +"==0: goto "+ p[0].else_ ]\
+           + p[3].code+ [ p[0].place + " = " + p[3].place] +[ p[0].begin+":" ]\
+            + [ p[0].else_+":" ]+ p[5].code+ [ p[0].place + " = " + p[5].place]
 
         
 
@@ -331,7 +373,9 @@ def p_logical_OR_expression(p):
         else:
             report_error("Type not compatible with OR operation", p.lineno(0))
         p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        t=cast_string(p[1].place,p[1].data["type"],"int")
+        t1=cast_string(p[3].place,p[3].data["type"],"int")
+        p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"] ]
 
    
 def p_logical_AND_expression(p): 
@@ -351,7 +395,9 @@ def p_logical_AND_expression(p):
         else:
             report_error("Type not compatible with AND operation", p.lineno(0))
         p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        t=cast_string(p[1].place,p[1].data["type"],"int")
+        t1=cast_string(p[3].place,p[3].data["type"],"int")
+        p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"] ]
 
 
 
@@ -368,7 +414,7 @@ def p_inclusive_OR_expression(p):
         p[0].code = p[1].code 
     if len(p)==4:
         if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-            p[0].data = {"type" : "int", "codename" : getnewvar()}
+            p[0].data = {"type" : "int"}
         else:
             report_error("Type not compatible with bitwise or operation", p.lineno(1))
         p[0].place = getnewvar("int")
@@ -425,14 +471,12 @@ def p_equality_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code  
     if len(p)==4:
-        allowed_type = ["int", "char", "float"]
-        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
-        else:
+        x=operator( p[2].data, p[1], p[3],"int" )
+        if x==False:
             report_error("Type not compatible with relational operation", p.lineno(0))
-        
-        p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        p[0].place = x["place"]
+        p[0].code = p[1].code + p[3].code + x["code"]
+        p[0].data["type"]="int"
     
 
 def p_relational_expression(p): 
@@ -454,9 +498,9 @@ def p_relational_expression(p):
             p[0].data = {"type" : "int"}
         else:
             report_error("Type not compatible with relational operation", p.lineno(0))
-        
-        p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        x=operator(p[2].data,p[1],p[2],"int")
+        p[0].place = x["place"]
+        p[0].code = p[1].code + p[3].code + x["code"]
 
 def p_shift_expression(p): 
     '''shift_expression : additive_expression 
@@ -470,7 +514,7 @@ def p_shift_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
-        allowed_type = ["int", "char"]
+        allowed_type = ["int"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
             p[0].data = {"type" : "int"}
         else:
@@ -492,13 +536,12 @@ def p_additive_expression(p):
         p[0].code = p[1].code
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
-        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
-        else:
+        if p[1].data["type"] not in allowed_type or p[3].data["type"] not in allowed_type:
             report_error("Type not compatible with plus , minus operation", p.lineno(0))
-
-        p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        x=operator(p[2].data,p[1],p[3])
+        p[0].place = x["place"]
+        p[0].code = p[1].code + p[3].code + x["code"]
+        p[0].data["type"]=x["type"]
 
 def p_multiplicative_expression(p): 
     '''multiplicative_expression : cast_expression 
@@ -514,14 +557,12 @@ def p_multiplicative_expression(p):
         p[0].code = p[1].code
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
-        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
-        else:
+        if p[1].data["type"] not in allowed_type or p[3].data["type"] not in allowed_type:
             report_error("Type not compatible with mult, div operation", p.lineno(0))
-
-        p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
-
+        x=operator(p[2].data,p[1],p[3])
+        p[0].place = x["place"]
+        p[0].code = p[1].code + p[3].code + x["code"]
+        p[0].data["type"]=x["type"]
 
 def p_cast_expression(p): 
     '''cast_expression : unary_expression 
@@ -536,7 +577,7 @@ def p_cast_expression(p):
     if len(p)==5:
         rex = r'\|p*a+$'
         x= re.fullmatch(rex, p[2].data["type"])
-        if x!=None:
+        if x!=None or not allowed_type(p[4].data["type"], p[2].data["type"]):
             report_error("Type casting to "+p[2].data["type"]+" is not allowed",p.lineno(0))
         p[0].data = {}
         p[0].data["type"]=p[2].data["type"]
@@ -578,13 +619,15 @@ def p_assignment_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code 
     else:
-        if p[1].data["type"]!=p[3].data["type"]:
-            report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
+        t=cast_string(p[3].place,p[3].data["type"],p[1].data["type"])
+        if t==False:
+            report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         if p[2].data == "=":
-            p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]
+            p[0].code = p[3].code + p[1].code + t["code"] +[ p[1].place + p[2].data + t["place"] ]
         else:
-            p[0].code = p[3].code + p[1].code + [ p[1].place + " = " + p[1].place + " " + p[2].data[0] + " " + p[3].place ]
+            p[0].code = p[3].code + p[1].code + t["code"]+[ p[1].place + " = " \
+                + p[1].place + " " +p[1].data["type"]+"_" +p[2].data[0] + " " + t["place"] ]
 
 
 def p_assignment_operator(p): 
@@ -605,7 +648,7 @@ def p_unary_expression_0(p):
     p[0].parse=f(p)
    
     p[0].data = assigner(p,1)
-    if(p[0].data["type"][-1] == "a"):
+    if("|" in p[0].data["type"] and p[0].data["type"][-1] == "a"):
         report_error("Array not called upto end", p.lineno(0))
     p[0].place = p[1].place
     p[0].code = p[1].code 
@@ -1715,7 +1758,7 @@ def p_selection_statement_2(p):
     p[0].else_ = getnewlabel()
     p[0].after = getnewlabel()
     p[0].data = {}
-    retTypeCheckAndAssign(p,6,10)
+    retType(p,6,10)
     p[0].code = p[3].code + ["if " + p[3].place + "==0 goto " + p[0].else_] + p[6].code + ["goto " + p[0].after] + \
         [p[0].else_ + " : "] + p[10].code + [p[0].after + " : "]
 
