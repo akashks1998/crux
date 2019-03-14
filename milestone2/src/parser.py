@@ -30,11 +30,10 @@ def f(p):
         open('dot.gz','a').write("    " + str(out[1])  +  " -> " + str(p[each+1].parse[1]))
     return out
         
-
+labeldict = {}
 scopeTableList = []
 globalScopeTable = SymbolTable()
 scopeTableList.append(globalScopeTable)
-currentLabel=0
 currentTmp=0
 new_pointer_size = 8
 currentScopeTable = 0
@@ -87,10 +86,10 @@ class OBJ:
         self.code = []
         self.place = "NOP"
 
-def getnewlabel():
-    global currentLabel
-    label = "label#" + str(currentLabel)
-    currentLabel = currentLabel + 1
+def getnewlabel(s="label"):
+
+    labeldict[s] = labeldict[s]+1 if s in labeldict.keys() else 0
+    label = s + "#" + str(labeldict[s])
     return label
 
 def getnewvar(type_):
@@ -100,11 +99,9 @@ def getnewvar(type_):
     size = get_size(type_)
     offset = get_offset()
     add_to_offset(size)
-
     data = {"type" :  type_ , "class" : "temp",
             "size" : size, "offset" : offset }
     pushVar(tmp, data)
-
     return tmp
 
 def pushScope():
@@ -180,7 +177,8 @@ def operator(op, op1 ,op2 ,typ=None):
         "float":5,
         "double":6
     }
-    
+    print(op1.data)
+    print(op2.data)
     if op1.data["type"] == op2.data["type"]:
         if typ==None:
             typ=op1.data["type"]
@@ -250,6 +248,9 @@ def retType(p,i,j):
             p[0].data["ret_type"]=p[j].data["ret_type"]
 
 def report_error(msg, line):
+    if line=="break" or line=="continue":
+        print("Error : " + msg + ", Check your " + line + "s")
+        exit()
     print("Error at line : " + str(line) + " :: " + msg)
     exit()
 
@@ -296,6 +297,11 @@ def p_program(p):
     for l in range(len(p)):
         p[0].code = p[0].code + p[l].code.copy()
     x=1
+    for i in p[0].code:
+        if re.fullmatch('[ ]*break', i) != None:
+            report_error("break should be inside for/do-while/while/switch-case !!", "break")
+        elif re.fullmatch('[ ]*continue', i) != None:
+            report_error("continue should be inside for/do-while/while !!", "continue")
     for i in p[0].code:
         if re.fullmatch('[ ]*', i) == None:
             print('{0:3}'.format(x),"::",i)
@@ -501,7 +507,7 @@ def p_relational_expression(p):
             p[0].data = {"type" : "int"}
         else:
             report_error("Type not compatible with relational operation", p.lineno(0))
-        x=operator(p[2].data,p[1],p[2],"int")
+        x=operator(p[2].data,p[1],p[3],"int")
         p[0].place = x["place"]
         p[0].code = p[1].code + p[3].code + x["code"]
 
@@ -1723,7 +1729,6 @@ def p_statement_list(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
     if len(p) == 2:
         p[0].data=assigner(p,1)
         p[0].code = p[1].code
@@ -1761,6 +1766,7 @@ def p_jump_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].code = [p[1].data]
 
 def p_jump_statement1(p):
     '''jump_statement : RETURN expression SEMICOLON 
@@ -1779,23 +1785,20 @@ def p_selection_statement_1(p):
     '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)  
-
-    p[0].after = getnewlabel()
-    p[0].data=assigner(p,6 )
-    p[0].code = p[3].code + ["if " + p[3].place + "==0 goto " + p[0].after] + p[6].code +  [p[0].after + " : "]
-  
+    p[0].after = getnewlabel("single_if_after")
+    p[0].data=assigner(p,6)
+    p[0].code = p[3].code + ["ifnz " + p[3].place + " goto->" + p[0].after] + p[6].code +  [p[0].after + " : "]
 
 def p_selection_statement_2(p): 
     '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)  
-    p[0].else_ = getnewlabel()
-    p[0].after = getnewlabel()
-    p[0].data = {}
+    p[0].before = getnewlabel("ifelse_before")
+    p[0].else_ = getnewlabel("ifelse_else_")
+    p[0].after = getnewlabel("ifelse_after")
     retType(p,6,10)
-    p[0].code = p[3].code + ["if " + p[3].place + "==0 goto " + p[0].else_] + p[6].code + ["goto " + p[0].after] + \
-        [p[0].else_ + " : "] + p[10].code + [p[0].after + " : "]
-
+    l = ["ifnz " + p[3].place + " goto->" + p[0].else_] + p[6].code + ["goto->" + p[0].after]
+    p[0].code = p[3].code + [p[0].before + ":"] + ["    " + i for i in l] + [p[0].else_ + ":"] + ["    " + i for i in p[10].code] + [p[0].after + ":"]
 
 def p_selection_statement_3(p): 
     '''selection_statement :  SWITCH LPAREN expression  RPAREN push_scope  LCPAREN labeled_statement_list RCPAREN pop_scope ''' 
@@ -1803,13 +1806,50 @@ def p_selection_statement_3(p):
     p[0].parse=f(p)
     p[0].data=assigner(p,7)
 
+    if p[3].data["type"] not in ["int", "char"]:
+        report_error("switch case variable should be one of int/char", p.lineno(1))
+    if len(set([t["value"] for t in p[7].code])) != len(p[7].code):
+        report_error("same value not allowed in 2 case clauses", p.lineno(1))
+    p[0].test = getnewlabel("switch_test")
+    p[0].next = getnewlabel("switch_body")
+    p[0].after = getnewlabel("switch_end")
+    nextcode = []
+    testcode = []
+    # pp.pprint(p[7].code)
+    # print(list(set([t["value"] for t in p[7].code])))
+    place = p[3].place
+    if p[3].data["type"] == "char":
+        tmp = getnewvar("int")
+        p[0].code = [tmp + " = char-to-int " + place]
+        place = tmp
+    default = []
+    for idx,v in enumerate([t["value"] for t in p[7].code]):
+        if v == None:
+            continue
+        if p[7].code[idx]["type"] =="char":
+            tmp3 = getnewvar("char")
+            tmp = getnewvar("int")
+            tmp2 = getnewvar("int")
+            testcode = testcode + [tmp3+" = "+str(v)] + [tmp+" = char-to-int "+tmp3] + [tmp2+" = "+place+" - "+tmp, "ifz "+tmp2+" goto->"+p[7].code[idx]["label"]]
+        else:
+            tmp = getnewvar("int")
+            tmp2 = getnewvar("int")
+            # print(v, p[7].code[idx]["value"], p[7].code[idx]["type"], tmp)
+            testcode = testcode + [tmp+" = "+str(v)] + [tmp2+" = "+place+" - "+tmp, "ifz "+tmp2+" goto->"+p[7].code[idx]["label"]]
+    testcode = testcode + ["goto->" + p[0].after]
+    for idx,c in enumerate(p[7].code):
+        # print(idx)
+        l = c["statement"]
+        l = ["goto->"+p[0].after if re.fullmatch('[ ]*break', i) else i for i in l]
+        nextcode = nextcode + [c["label"] + ":"] + ["    " + i for i in l] # + ["    goto->"+p[0].after]
+    p[0].code = p[3].code + [p[0].test + ":"] + ["    " + i for i in testcode ] + [p[0].next + ":"] + ["    " + i for i in nextcode ] + [p[0].after + ":"]
+
 def p_try_block(p): 
     '''try_block : TRY push_scope compound_statement pop_scope CATCH  push_scope compound_statement pop_scope''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = {}
     retType(p, 3, 7 )
-
 
 def p_labeled_statement_list(p): 
     '''labeled_statement_list : labeled_statement
@@ -1819,9 +1859,11 @@ def p_labeled_statement_list(p):
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data=assigner(p,1)
+        p[0].code = [p[1].code.copy()]
     else:
         p[0].data = {}
-        retType(p,1,2 )
+        retType(p,1,2)
+        p[0].code = p[1].code + [p[2].code.copy()]
 
 def p_labeled_statement(p): 
     '''labeled_statement : CASE NUMBER COLON statement_list
@@ -1830,69 +1872,105 @@ def p_labeled_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    if len(p)==4:
-        p[0].data=assigner(p,3)
+    label = getnewlabel()
+    if len(p)==5:
+        p[0].code = {
+            "class" : "case", 
+            "type" : "int" if isinstance(p[2].parse[0], int) else "char",
+            "value" : p[2].data,
+            "statement" : p[4].code,
+            "label" : label
+        }
     else:
-        p[0].data=assigner(p, 4)
+        p[0].data=assigner(p,3)
+        p[0].code = {
+            "class" : "default", 
+            "type" : None, 
+            "value" : None,
+            "statement" : p[3].code,
+            "label" : label
+        }
 
 def p_iteration_statement_1(p): 
     '''iteration_statement : WHILE push_scope LPAREN expression  RPAREN  compound_statement pop_scope ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    p[0].begin = getnewlabel()
-    p[0].after = getnewlabel()
+    p[0].begin = getnewlabel("while_begin")
+    p[0].after = getnewlabel("while_after")
     p[0].data=assigner(p,6)
-    p[0].code =  [p[0].begin + " : "] + p[4].code + [ "if " + p[4].place + "== 0 goto " + p[0].after ] \
-         + p[6].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
-
+    l = p[4].code + [ "ifz " + p[4].place + " goto->" + p[0].after ] + p[6].code + ["goto->" + p[0].begin ]
+    l = ["goto->"+p[0].after if re.fullmatch('[ ]*break', i) else i for i in l]
+    l = ["goto->"+p[0].begin if re.fullmatch('[ ]*continue', i) else i for i in l]
+    p[0].code =  [p[0].begin + " : "] + ["    " + i for i in l] + [ p[0].after + " : "]
 
 def p_iteration_statement_2(p): 
     '''iteration_statement : DO push_scope compound_statement WHILE LPAREN expression  RPAREN  SEMICOLON pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data=assigner(p,3)
-    p[0].begin = getnewlabel()
-    p[0].after = getnewlabel()
-    p[0].code =  [p[0].begin + " : "] +p[3].code + p[6].code + [ "if " + p[6].place + "!= 0 goto " + p[0].begin ] + [ p[0].after + " : "]
+    p[0].begin = getnewlabel("do_begin")
+    p[0].after = getnewlabel("do_after")
+    l = p[3].code + p[6].code + [ "ifnotz " + p[6].place + " goto->" + p[0].begin ]
+    l = ["goto->"+p[0].after if re.fullmatch('[ ]*break', i) else i for i in l]
+    l = ["goto->"+p[0].begin if re.fullmatch('[ ]*continue', i) else i for i in l]
+    p[0].code =  [p[0].begin + " : "] + ["    " + i for i in l] + [ p[0].after + " : "]
 
 def p_iteration_statement_3(p): 
     '''iteration_statement : FOR LPAREN push_scope for_init_statement expression SEMICOLON expression  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].begin = getnewlabel()
     p[0].data=assigner(p,9)
-    p[0].after = getnewlabel()
-    p[0].code = p[4].code + [p[0].begin + " : "] + p[5].code + [ "if " + p[5].place + "== 0 goto " + p[0].after ] \
-         + p[9].code + p[7].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
+    p[0].begin = getnewlabel("for_begin1")
+    p[0].cont = getnewlabel("for_continue1")
+    p[0].after = getnewlabel("for_after1")
+    print("compound : ", p[9].code)
+    l = p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[9].code + p[7].code + ["goto->" + p[0].begin ]
+    l = ["goto->"+p[0].after if re.fullmatch('[ ]*break', i) else i for i in l]
+    l = ["goto->"+p[0].cont if re.fullmatch('[ ]*continue', i) else i for i in l]
+    p[0].code = p[4].code + [p[0].begin + " : "] + ["    " + i for i in l[:len(p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[9].code)]] \
+        + [ p[0].cont + " : "] + ["    " + i for i in l[len(p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[9].code):]] \
+        + [ p[0].after + " : "]
 
 def p_iteration_statement_4(p): 
     '''iteration_statement : FOR LPAREN push_scope for_init_statement SEMICOLON expression  RPAREN  compound_statement pop_scope   ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].begin = getnewlabel()
     p[0].data=assigner(p,8)
-    p[0].after = getnewlabel()
-    p[0].code = p[4].code + [p[0].begin + " : "] + p[8].code + p[6].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
+    p[0].begin = getnewlabel("for_begin2")
+    p[0].cont = getnewlabel("for_continue2")
+    p[0].after = getnewlabel("for_after2")
+    l = p[8].code + p[6].code + ["goto->" + p[0].begin ]
+    l = ["goto->"+p[0].after if re.fullmatch('[ ]*break', i) else i for i in l]
+    l = ["goto->"+p[0].cont if re.fullmatch('[ ]*continue', i) else i for i in l]
+    p[0].code = p[4].code + [p[0].begin + " : "] + ["    " + i for i in l[:len(p[8].code)]] \
+        + [ p[0].after + " : "] + ["    " + i for i in l[len(p[8].code):]] \
+        + [ p[0].after + " : "]
 
 def p_iteration_statement_5(p): 
     '''iteration_statement :  FOR LPAREN push_scope for_init_statement expression SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].begin = getnewlabel()
-    p[0].after = getnewlabel()
+    p[0].begin = getnewlabel("for_begin3")
+    p[0].cont = p[0].begin.copy()
+    p[0].after = getnewlabel("for_after3")
     p[0].data=assigner(p,8)
-    p[0].code = p[4].code + [p[0].begin + " : "] + p[5].code + [ "if " + p[5].place + "== 0 goto " + p[0].after ] \
-         + p[8].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
-
+    l = p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[8].code + ["goto->" + p[0].begin ]
+    l = ["goto->"+p[0].after if re.fullmatch('[ ]*break', i) else i for i in l]
+    l = ["goto->"+p[0].cont if re.fullmatch('[ ]*continue', i) else i for i in l]
+    p[0].code = p[4].code + [p[0].begin + " : "] + ["    " + i for i in l] + [ p[0].after + " : "]
 
 def p_iteration_statement_6(p): 
     '''iteration_statement :  FOR LPAREN push_scope for_init_statement SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    p[0].begin = getnewlabel()
     p[0].data=assigner(p,7)
-    p[0].after = getnewlabel()
-    p[0].code = p[4].code + [p[0].begin + " : "] + p[7].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
+    p[0].begin = getnewlabel("for_begin4")
+    p[0].cont = p[0].begin.copy()
+    p[0].after = getnewlabel("for_after4")
+    l = p[7].code + ["goto->" + p[0].begin ]
+    l = ["goto->"+p[0].after if re.fullmatch('[ ]*break', i) else i for i in l]
+    l = ["goto->"+p[0].cont if re.fullmatch('[ ]*continue', i) else i for i in l]
+    p[0].code = p[4].code + [p[0].begin + " : "] + ["    " + i for i in l] + [ p[0].after + " : "]
 
 
 def p_for_init_statement(p): 
