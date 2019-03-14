@@ -39,6 +39,37 @@ currentTmp=0
 new_pointer_size = 8
 currentScopeTable = 0
 
+offsetList = [0]
+offsetParent = [None]
+currentOffset = 0
+
+def get_offset():
+    global offsetList
+    global currentOffset
+    return offsetList[currentOffset]
+
+def add_to_offset(val):
+    global offsetList
+    global currentOffset
+    offsetList[currentOffset] = offsetList[currentOffset] + val 
+
+
+def pushOffset():
+    global offsetList
+    global currentOffset
+    global offsetParent
+    newOffset = 0
+    offsetList.append(newOffset)
+    offsetParent.append(currentOffset)
+    currentOffset = len(offsetList) - 1
+
+def popOffset():
+    global offsetList
+    global currentOffset
+    global offsetParent
+    currentOffset = offsetParent[currentOffset]
+
+
 def code(*rest):
     s = ""
     for r in rest:
@@ -1114,7 +1145,8 @@ def p_arg_list(p):
         "return_sig" : return_sig,
         "input_sig" : input_detail[0],
         "body_scope" : currentScopeTable,
-        "declaration": True
+        "declaration": True,
+        "stack_space" : get_offset()
     }
     parent=getParentScope(currentScopeTable)
     func_sig = function_name +"|" + input_detail[0]
@@ -1125,14 +1157,13 @@ def p_arg_list(p):
         pushVar(function_name, {"type" : "function_upper", "func_sig" : [ (func_sig, return_sig) ]} ,  scope = parent )
     else:
         # this name is seen but may be overloaded
-        if func_sig in checkVar(function_name, parent) :
+        if (func_sig, return_sig) in checkVar(function_name, parent)["func_sig"] :
             func_detail = checkVar(func_sig, parent)
             if return_sig != func_detail["return_sig"]:
-                report_error("Return Type differs from function declaration", p.lineno(1))
-
+                report_error("Return Type differs from function declaration", p.lineno(0))
             if func_detail["declaration"] == False:
                 # function of same sig has been defined
-                report_error("Redeclaration of function", p.lineno(1))
+                report_error("Redeclaration of function", p.lineno(0))
             else:
                 # function definition to be entered
                 updateVar(func_sig, p[0].data, scope = parent)
@@ -1412,24 +1443,21 @@ def p_class_head(p):
     if len(p)==4:
         p[0].data["base"] = p[3].data["base"]
 
-def p_class_define_specifier1(p): 
-    '''class_define_specifier : class_head push_scope LCPAREN RCPAREN pop_scope
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data = assigner(p,1)
-    p[0].data["scope"] = p[4].scope
-    checkVar(p[0].data["type"], scopeId="*")
+    pushOffset()
 
-def p_class_define_specifier2(p): 
+
+def p_class_define_specifier(p): 
     '''class_define_specifier : class_head push_scope LCPAREN member_list RCPAREN pop_scope
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = assigner(p,1)
     p[0].data["scope"] = p[4].scope
+    p[0].data["size"] = get_offset()
     if pushVar(p[0].data["type"], p[0].data)==False:
             report_error("Redeclaration of variable", p.lineno(1))
+
+    popOffset()
     
 
 def p_member_list(p):
@@ -1478,8 +1506,15 @@ def p_member_declaration_0(p):
             for n in data["meta"]:
                 size = size * n
             data["size"] = get_size(element_type) * size
+            data["offset"] = get_offset()
+            add_to_offset(data["size"])
+        else:
+            data["size"] = get_size(data["type"]) 
+            data["offset"] = get_offset()
+            add_to_offset(data["size"])
 
         if pushVar(data["name"],data)==False:
+            add_to_offset( - data["size"])
             report_error("Redeclaration of variable", p.lineno(1))
 
 def p_member_declaration_1(p):
@@ -1512,17 +1547,23 @@ def p_function_definition(p):
     func_sig = function_name +"|" + p[4].data["input_sig"]
     
     func_detail = checkVar(func_sig, "*")
+    func_detail['declaration'] = False
+    func_detail["stack_space"] = get_offset()
     updateVar(func_sig, func_detail)    
+    popOffset()
 
 
 def p_function_decl(p): 
     '''function_decl : type_specifier_ declarator func_push_scope arg_list  RPAREN SEMICOLON pop_scope ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
+    popOffset()
+
 
 def p_func_push_scope(p):
     ''' func_push_scope : LPAREN '''
     pushScope()
+    pushOffset()
 
 
 def p_fct_body(p): 
@@ -1697,7 +1738,16 @@ def p_declaration_statement(p):
     p[0].code=p[1].code.copy()
 
 def get_size(data_type):
-    return 4
+    size = {
+        "int" : 4,
+        "float" : 8,
+        "char" : 1,
+    }
+    if data_type in size.keys():
+        return size[data_type]
+    else:
+        return 8
+
 
 def p_declaration0(p):
     '''declaration : type_specifier_ declarator_list SEMICOLON ''' 
@@ -1724,9 +1774,14 @@ def p_declaration0(p):
             size = 1
             for n in data["meta"]:
                 size = size * n
+
             data["size"] = get_size(element_type) * size
-            print(data)
+            data["offset"] = get_offset()
+            add_to_offset(data["size"])
+
+        
             if pushVar(data["name"],data)==False:
+                add_to_offset(- data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
         else:
             if(data["class"] ==  "class"):
@@ -1756,6 +1811,10 @@ def p_declaration0(p):
                             else:
                                 report_error("Constructor is not correct for "+data["type"],p.lineno(1))
             if "init_type" not in each.keys() or ( (not isinstance( each["place"], list))):
+                data["size"] = get_size(data["type"])
+                data["offset"] = get_offset()
+                add_to_offset(data["size"])
+
                 if pushVar(each["name"],data)==False:
                     report_error("Redeclaration of variable", p.lineno(1))
                 if "init_type" in each.keys():
@@ -1765,7 +1824,6 @@ def p_declaration0(p):
             else:
                 if isinstance( each["place"], list):
                     report_error("Constructor is not defined for "+data["type"],p.lineno(1))
-                print("Type,", each["init_type"])
                 report_error("Assigned type is not same as given type",p.lineno(1))   
 
 # def p_declaration1(p):
@@ -1938,3 +1996,6 @@ if __name__ == "__main__":
     p = parser.parse(file_o,lexer = lexer,debug=debug,tracking=True)  
     open('dot.gz','a').write("\n}\n")
     scope_table_graph(scopeTableList)
+    for each in scopeTableList:
+        pp.pprint(each.table)
+    print(offsetList, offsetParent)
