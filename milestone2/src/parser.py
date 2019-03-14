@@ -539,9 +539,7 @@ def p_cast_expression(p):
         if x!=None:
             report_error("Type casting to "+p[2].data["type"]+" is not allowed",p.lineno(0))
         p[0].data = {}
-        print("cast1", p[0].data)
         p[0].data["type"]=p[2].data["type"]
-        print("cast2", p[0].data)
         p[0].place=getnewvar(p[0].data["type"])
         p[0].code=p[4].code+[p[0].place+"="+ p[4].data["type"]+"_to_"+p[2].data["type"]+"("+p[4].place+")" ]
 
@@ -588,7 +586,6 @@ def p_assignment_expression(p):
         else:
             p[0].code = p[3].code + p[1].code + [ p[1].place + " = " + p[1].place + " " + p[2].data[0] + " " + p[3].place ]
 
-    print("equal", p[0].data,p[1].data)
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -739,7 +736,7 @@ def p_postfix_expression_3(p):
 
     p[0].place = getnewvar(p[0].data["type"])
     p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
-    print("dsjs", p[0].data)
+
 
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
@@ -972,7 +969,6 @@ def p_allocation_expression1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==6:
-        print("exp", p[4].data, p[4].code, p[4].place, p[4].data.keys())
         if "type" not in p[4].data.keys() or p[4].data["type"]!="int":
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[2].data}
@@ -1109,7 +1105,6 @@ def p_abstract_declarator(p):
             "meta" : p[1].data["meta"]+[p[3].data]
         }
     
-    print(p[0].data)
     err=ok(p[0].data["type"])
     if err == None:
         report_error("Type declaration is wrong", p.lineno(1))
@@ -1359,7 +1354,6 @@ def p_type_name(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==3:
-        print(p[1].data)
         p[0].data = assigner(p,1)
         p[0].data["type"] = p[0].data["type"] + "|" + p[2].data["type"]
         p[0].data["meta"] = p[2].data["meta"]
@@ -1492,6 +1486,12 @@ def p_class_define_specifier(p):
     if pushVar(p[0].data["type"], p[0].data)==False:
             report_error("Redeclaration of variable", p.lineno(1))
 
+    p[0].code = []
+    for each in p[4].code:
+        if(len(each)) > 0:
+            each[0] = p[0].data["type"] + ":" + each[0]
+        p[0].code = p[0].code + each
+
     popOffset()
     
 
@@ -1502,6 +1502,7 @@ def p_member_list(p):
     p[0].parse=f(p)
     p[0].data = assigner(p,1)
     p[0].scope = currentScopeTable
+    p[0].code = p[1].code.copy()
 
 
 def p_member_access_list1(p):
@@ -1509,12 +1510,16 @@ def p_member_access_list1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = [assigner(p,1)] + assigner(p,2)
+    p[0].code = [ p[1].code.copy() ] + p[2].code
 
 def p_member_access_list2(p):
     '''member_access_list : member_declaration '''
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = [assigner(p,1)]
+    p[0].code = [ p[1].code.copy() ]  
+
+
 
 def p_member_declaration_0(p):
     '''member_declaration : type_specifier_ member_declarator_list SEMICOLON '''
@@ -1559,6 +1564,9 @@ def p_member_declaration_1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = [assigner(p,1)]
+    p[0].code = p[1].code.copy()
+
+
 
 def p_member_declarator_list(p): 
     '''member_declarator_list : declarator 
@@ -1594,7 +1602,7 @@ def p_function_definition(p):
     popOffset()
    
 
-    p[0].code = [func_detail["name"] + "|" + func_detail["return_sig"] + ":", "    BeginFunc " + str(func_detail["stack_space"]) ] + [ "    " + i for i in p[6].code] + ["    EndFunc"]
+    p[0].code = [func_detail["name"] + "|" + func_detail["input_sig"] + ":", "    BeginFunc " + str(func_detail["stack_space"]) ] + [ "    " + i for i in p[6].code] + ["    EndFunc"]
 
 
 def p_function_decl(p): 
@@ -1643,10 +1651,8 @@ def p_statement_list(p):
         p[0].data=assigner(p,1)
         p[0].code = p[1].code
         p[0].place = p[1].place
-        print("state sing", p[1].data, p.lineno(1))
     else:
         p[0].data = {}
-        print("state", p[1].data, p[2].data, p.lineno(1), p.lineno(2))
         retType(p,1,2)
         p[0].code = p[1].code + p[2].code
         p[0].place = p[2].place
@@ -1672,7 +1678,6 @@ def p_statement(p):
         p[0].code = p[2].code
         p[0].place = p[2].place
 
-    print("expr", p[0].data)
 def p_jump_statement(p): 
     '''jump_statement : BREAK SEMICOLON 
                       | CONTINUE SEMICOLON 
@@ -1940,7 +1945,6 @@ def p_declaration0(p):
                 # print("Type,", each["init_type"])
                 report_error("Assigned type is not same as given type",p.lineno(1))   
 
-    print(p[0].data)
 
 # def p_declaration1(p):
 #     '''declaration :  asm_declaration  ''' 
@@ -1961,6 +1965,7 @@ def p_declaration3(p):
     '''declaration : class_define_specifier SEMICOLON ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
+    p[0].code = p[1].code.copy()
 
 
 def p_declaration4(p):
@@ -2024,7 +2029,6 @@ def p_initializer_1(p):
     p[0].data=p[2].data.copy()
     p[0].place=p[2].place
     p[0].code=p[2].code.copy()
-    print("init",p[0].data)
 
 # def p_initializer1(p): 
 #     '''initializer :   EQUAL LCPAREN initializer_list RCPAREN''' 
