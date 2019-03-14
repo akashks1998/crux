@@ -169,6 +169,17 @@ def checkVar(identifier,scopeId="**"):
         if scopeTableList[scopeId].lookUp(identifier):
             return scopeTableList[scopeId].getDetail(identifier)
         return False
+def retType(p,i,j):
+    if "ret_type" in p[i].data.keys() and "ret_type" in p[j].data.keys():
+        if p[i].data["ret_type"]==p[j].data["ret_type"]:
+            p[0].data["ret_type"]=p[i].data["ret_type"]
+        else:
+            report_error("Return type is not same",p.lineno(0))
+    else:
+        if "ret_type" in p[i].data.keys():
+            p[0].data["ret_type"]=p[i].data["ret_type"]
+        if "ret_type" in p[j].data.keys():
+            p[0].data["ret_type"]=p[j].data["ret_type"]
 
 def report_error(msg, line):
     print("Error at line : " + str(line) + " :: " + msg)
@@ -1544,19 +1555,24 @@ def p_function_definition(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
+    print(p[6].data)
     function_name = p[2].data["name"]
     func_sig = function_name +"|" + p[4].data["input_sig"]
+    if p[4].data["return_sig"]=="void":
+        if "ret_type" in p[6].data.keys() and p[6].data["ret_type"]!="":
+            report_error("Return type is not same",p.lineno(0))
+    elif "ret_type" in p[6].data.keys():
+        if p[4].data["return_sig"]!=p[6].data["ret_type"]:
+            report_error("Return type is not same",p.lineno(0))
+    else:
+        report_error("No return statement",p.lineno(0))
     func_detail = checkVar(func_sig, "*")
     func_detail['declaration'] = False
     func_detail["stack_space"] = get_offset()
     updateVar(func_sig, func_detail)    
     popOffset()
-    # print("func_detail :", func_detail)
-    # print("declarator :",p[2].data, p[2].code)
-    # print("arg_list :", p[4].data, p[4].code)
-    # print("body : ", p[6].data, p[6].code)
     p[0].code = [func_detail["name"] + "|" + func_detail["return_sig"] + ":", "    BeginFunc __func_size__" ] + [ "    " + i for i in p[6].code] + ["    EndFunc"]
+
 
 def p_function_decl(p): 
     '''function_decl : type_specifier_ declarator func_push_scope arg_list  RPAREN SEMICOLON pop_scope ''' 
@@ -1576,6 +1592,7 @@ def p_fct_body(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].code = p[1].code.copy()
+    p[0].data=assigner(p,1)
 
 def p_func_compound_statement(p): 
     '''func_compound_statement : LCPAREN statement_list RCPAREN 
@@ -1586,9 +1603,11 @@ def p_func_compound_statement(p):
     if len(p) == 4:
         p[0].code = p[2].code
         p[0].place = p[2].place
+        p[0].data=assigner(p,2)
     else:
         p[0].code = {}
         p[0].place = getnewvar()
+    
 
 def p_compound_statement(p): 
     '''compound_statement : LCPAREN statement_list RCPAREN 
@@ -1599,6 +1618,7 @@ def p_compound_statement(p):
     if len(p) == 4:
         p[0].code = p[2].code
         p[0].place = p[2].place
+        p[0].data=assigner(p,2)
     else:
         p[0].code = {}
         p[0].place = getnewvar()
@@ -1611,9 +1631,11 @@ def p_statement_list(p):
     p[0].parse=f(p)
 
     if len(p) == 2:
+        p[0].data=assigner(p,1)
         p[0].code = p[1].code
         p[0].place = p[1].place
     else:
+        retType(p,1,2)
         p[0].code = p[1].code + p[2].code
         p[0].place = p[2].place
 
@@ -1630,9 +1652,11 @@ def p_statement(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p) == 2:
+        p[0].data=assigner(p,1)
         p[0].code = p[1].code
         p[0].place = p[1].place
     else:
+        p[0].data=assigner(p,2)
         p[0].code = p[2].code
         p[0].place = p[2].place
 
@@ -1640,13 +1664,22 @@ def p_statement(p):
 def p_jump_statement(p): 
     '''jump_statement : BREAK SEMICOLON 
                       | CONTINUE SEMICOLON 
-                      | RETURN expression SEMICOLON 
-                      | RETURN SEMICOLON 
-                      | GOTO IDENTIFIER SEMICOLON 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-  
+
+def p_jump_statement1(p):
+    '''jump_statement : RETURN expression SEMICOLON 
+                      | RETURN SEMICOLON 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    if len(p)==4:
+        p[0].data["ret_type"]=p[2].data["type"]
+        p[0].code=p[2].code+["return "+p[2].place]
+    else:
+        p[0].data["ret_type"]=""
+        p[0].code=p[2].code+["return "]
 
 def p_selection_statement_1(p): 
     '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope  ''' 
@@ -1654,7 +1687,7 @@ def p_selection_statement_1(p):
     p[0].parse=f(p)  
 
     p[0].after = getnewlabel()
-
+    p[0].data=assigner(p,6 )
     p[0].code = p[3].code + ["if " + p[3].place + "==0 goto " + p[0].after] + p[6].code +  [p[0].after + " : "]
   
 
@@ -1664,7 +1697,7 @@ def p_selection_statement_2(p):
     p[0].parse=f(p)  
     p[0].else_ = getnewlabel()
     p[0].after = getnewlabel()
-
+    retType(p,6,10)
     p[0].code = p[3].code + ["if " + p[3].place + "==0 goto " + p[0].else_] + p[6].code + ["goto " + p[0].after] + \
         [p[0].else_ + " : "] + p[10].code + [p[0].after + " : "]
 
@@ -1672,12 +1705,14 @@ def p_selection_statement_2(p):
 def p_selection_statement_3(p): 
     '''selection_statement :  SWITCH LPAREN expression  RPAREN push_scope  LCPAREN labeled_statement_list RCPAREN pop_scope ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)  
+    p[0].parse=f(p)
+    p[0].data=assigner(p,7)
 
 def p_try_block(p): 
     '''try_block : TRY push_scope compound_statement pop_scope CATCH  push_scope compound_statement pop_scope''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    retType(p, 3, 7 )
 
 
 def p_labeled_statement_list(p): 
@@ -1686,6 +1721,10 @@ def p_labeled_statement_list(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data=assigner(p,1)
+    else:
+        retType(p,1,2 )
 
 def p_labeled_statement(p): 
     '''labeled_statement : CASE constant_expression COLON statement_list
@@ -1693,6 +1732,10 @@ def p_labeled_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if len(p)==4:
+        p[0].data=assigner(p,3)
+    else:
+        p[0].data=assigner(p, 4)
 
 def p_iteration_statement_1(p): 
     '''iteration_statement : WHILE push_scope LPAREN expression  RPAREN  compound_statement pop_scope ''' 
@@ -1700,6 +1743,7 @@ def p_iteration_statement_1(p):
     p[0].parse=f(p) 
     p[0].begin = getnewlabel()
     p[0].after = getnewlabel()
+    p[0].data=assigner(p,6)
     p[0].code =  [p[0].begin + " : "] + p[4].code + [ "if " + p[4].place + "== 0 goto " + p[0].after ] \
          + p[6].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
@@ -1707,13 +1751,18 @@ def p_iteration_statement_1(p):
 def p_iteration_statement_2(p): 
     '''iteration_statement : DO push_scope compound_statement WHILE LPAREN expression  RPAREN  SEMICOLON pop_scope  ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p) 
+    p[0].parse=f(p)
+    p[0].data=assigner(p,3)
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code =  [p[0].begin + " : "] +p[3].code + p[6].code + [ "if " + p[6].place + "!= 0 goto " + p[0].begin ] + [ p[0].after + " : "]
 
 def p_iteration_statement_3(p): 
     '''iteration_statement : FOR LPAREN push_scope for_init_statement expression SEMICOLON expression  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].begin = getnewlabel()
+    p[0].data=assigner(p,9)
     p[0].after = getnewlabel()
     p[0].code = p[4].code + [p[0].begin + " : "] + p[5].code + [ "if " + p[5].place + "== 0 goto " + p[0].after ] \
          + p[9].code + p[7].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
@@ -1723,6 +1772,7 @@ def p_iteration_statement_4(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].begin = getnewlabel()
+    p[0].data=assigner(p,8)
     p[0].after = getnewlabel()
     p[0].code = p[4].code + [p[0].begin + " : "] + p[8].code + p[6].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
@@ -1732,8 +1782,9 @@ def p_iteration_statement_5(p):
     p[0].parse=f(p)
     p[0].begin = getnewlabel()
     p[0].after = getnewlabel()
+    p[0].data=assigner(p,8)
     p[0].code = p[4].code + [p[0].begin + " : "] + p[5].code + [ "if " + p[5].place + "== 0 goto " + p[0].after ] \
-         + p[9].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
+         + p[8].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
 
 def p_iteration_statement_6(p): 
@@ -1741,6 +1792,7 @@ def p_iteration_statement_6(p):
     p[0] = OBJ() 
     p[0].parse=f(p) 
     p[0].begin = getnewlabel()
+    p[0].data=assigner(p,7)
     p[0].after = getnewlabel()
     p[0].code = p[4].code + [p[0].begin + " : "] + p[7].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
