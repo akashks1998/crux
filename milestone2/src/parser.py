@@ -84,13 +84,13 @@ class OBJ:
 
 def getnewlabel():
     global currentLabel
-    label = "label" + str(currentLabel)
+    label = "label#" + str(currentLabel)
     currentLabel = currentLabel + 1
     return label
 
 def getnewvar():
     global currentTmp
-    tmp = "tmp" + str(currentTmp)
+    tmp = "tmp#" + str(currentTmp)
     currentTmp = currentTmp + 1
     return tmp
 
@@ -806,7 +806,7 @@ def p_primary_expression0(p):
         p[0].data["func_sig"] = detail["var"]["func_sig"]
         p[0].data["func_name"] = p[1].data
 
-    p[0].place = p[1].data
+    p[0].place = p[1].data + "#" + str(detail["scope"])
     p[0].code = [ "" ]
 
 def p_primary_expression1(p): 
@@ -1846,10 +1846,11 @@ def p_declaration0(p):
 
                 if pushVar(each["name"],data)==False:
                     report_error("Redeclaration of variable", p.lineno(1))
+
                 if "init_type" in each.keys():
                     if  data["type"]!=each["init_type"]:
                         report_error("type_mismatch in initialization", p.lineno(0))
-                    p[0].code=p[0].code + [each["name"]+" = "+ each["place"] ]
+                    p[0].code=p[0].code + [each["name"]+ "#" + str(currentScopeTable) +" = "+ each["place"] ]
             else:
                 if isinstance( each["place"], list):
                     report_error("Constructor is not defined for "+data["type"],p.lineno(1))
@@ -2027,6 +2028,6 @@ if __name__ == "__main__":
     p = parser.parse(file_o,lexer = lexer,debug=debug,tracking=True)  
     open('dot.gz','a').write("\n}\n")
     scope_table_graph(scopeTableList)
-    for each in scopeTableList:
-        pp.pprint(each.table)
-    print(offsetList, offsetParent)
+    # for each in scopeTableList:
+    #     pp.pprint(each.table)
+    # print(offsetList, offsetParent)
