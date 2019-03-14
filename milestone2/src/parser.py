@@ -239,6 +239,34 @@ def operator(op, op1 ,op2 ,typ=None):
         t=getnewvar(typ)
         return {"place":t,"code":y["code"]+[ t +" = " + y["place"] +" "+op2.data["type"]+"_"+op+" "+ op2.place ],"type":typ}
 
+def get_size(data_type):
+    data_type = data_type[:-1] if data_type[-1] == "|" else data_type
+    size = {
+        "int" : 4,
+        "float" : 8,
+        "char" : 1,
+        "void" :  0
+    }
+    if("|" in data_type):
+        basic_type = data_type.rstrip("p").rstrip("|")
+        if basic_type in size.keys():
+            return 8
+        get_class = checkVar(basic_type, "global")
+        if get_class ==  False:
+            print(" Error :: Class " + basic_type + " is not defined")
+            exit()
+        return 8
+    
+    if data_type in size.keys():
+        return size[data_type]
+
+
+    # it has to be class
+    get_class = checkVar(data_type, "global")
+    if get_class ==  False:
+        print(" Error :: Class " + data_type + " is not defined")
+        exit()
+    return get_class["size"]
 
 def updateVar(identifier, val,scope=None):
     global scopeTableList
@@ -1863,7 +1891,6 @@ def p_selection_statement_3(p):
         tmp = getnewvar("int")
         p[0].code = [tmp + " = char-to-int " + place]
         place = tmp
-    default = []
     for idx,v in enumerate([t["value"] for t in p[7].code]):
         if v == None:
             continue
@@ -2033,37 +2060,6 @@ def p_declaration_statement(p):
     p[0].parse=f(p)
     p[0].code=p[1].code.copy()
     p[0].data = assigner(p,1)
-
-def get_size(data_type):
-    data_type = data_type[:-1] if data_type[-1] == "|" else data_type
-    size = {
-        "int" : 4,
-        "float" : 8,
-        "char" : 1,
-        "void" :  0
-    }
-    if("|" in data_type):
-        basic_type = data_type.rstrip("p").rstrip("|")
-        if basic_type in size.keys():
-            return 8
-        get_class = checkVar(basic_type, "global")
-        if get_class ==  False:
-            print(" Error :: Class " + basic_type + " is not defined")
-            exit()
-        return 8
-    
-    if data_type in size.keys():
-        return size[data_type]
-
-
-    # it has to be class
-    get_class = checkVar(data_type, "global")
-    if get_class ==  False:
-        print(" Error :: Class " + data_type + " is not defined")
-        exit()
-    return get_class["size"]
-
-
 
 def p_declaration0(p):
     '''declaration : type_specifier_ declarator_list SEMICOLON ''' 
