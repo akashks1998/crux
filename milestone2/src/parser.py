@@ -43,6 +43,11 @@ offsetList = [0]
 offsetParent = [None]
 currentOffset = 0
 
+allowed_types={}
+allowed_types["float"]=["int","long long int", "long int" ,"float" ]
+allowed_types["int"]=["float", "char","int"]
+allowed_types["char"]=["int", "char"]
+
 def get_offset():
     global offsetList
     global currentOffset
@@ -112,6 +117,8 @@ def getParentScope(scopeId):
         return scopeTableList[scopeId].parent 
     else:
         return False
+
+
 def pushVar(identifier, val,scope = None):
     global scopeTableList
     global currentScopeTable
@@ -128,12 +135,26 @@ def pushVar(identifier, val,scope = None):
             return True
         else:
             return False
+
 def assigner(p,x):
     if isinstance(p[x].data,str):
         return p[x].data
     else:
         return p[x].data.copy()
-    
+
+def allowed_type(converted_from,converted_to):
+    global allowed_types
+    if "|" in converted_from or "|" in converted_to:
+        return False
+    return (converted_from in allowed_types[converted_to])
+
+def cast_string(place, converted_from,converted_to):
+    if converted_from==converted_to:
+        return {"place":place,"code":[]}
+    if allowed_type(converted_from,converted_to)==True:
+        t=getnewvar()
+        return {"place":t,"code":[ t +" = " + converted_from+"_to_"+converted_to+"("+place+")" ]}
+    return False
 
 def updateVar(identifier, val,scope=None):
     global scopeTableList
@@ -259,13 +280,7 @@ def p_error(p):
 #     p[0]=OBJ()
 #     p[0].data=None
 
-def p_constant_expression(p): 
-    '''constant_expression : conditional_expression''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data =assigner(p,1)
-    p[0].place = p[1].place
-    p[0].code = p[1].code.copy() 
+
     
 
 def p_conditional_expression(p): 
@@ -1727,7 +1742,8 @@ def p_labeled_statement_list(p):
         retType(p,1,2 )
 
 def p_labeled_statement(p): 
-    '''labeled_statement : CASE constant_expression COLON statement_list
+    '''labeled_statement : CASE NUMBER COLON statement_list
+                         | CASE SCHAR COLON statement_list
                          | DEFAULT COLON statement_list
     ''' 
     p[0] = OBJ() 
