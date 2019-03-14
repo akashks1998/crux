@@ -92,6 +92,7 @@ tokens = [
         'DOT',
         'SEMICOLON',
         'COLON',
+        'DOUBLECOLON',
         'SCHAR',
         'STRING_L',
         'HASHTAG',
@@ -191,6 +192,7 @@ t_COMMA         = r','
 t_DOT           = r'\.'
 t_SEMICOLON     = r';'
 t_COLON         = r':'
+t_DOUBLECOLON   = r'::'
 t_SCHAR         = r'\'.\''
 t_STRING_L      = r'\".*\"'
 t_HASHTAG       = r'\#'

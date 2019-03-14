@@ -1580,8 +1580,7 @@ def p_class_key(p):
     p[0].data = "class"
 
 def p_class_head(p): 
-    '''class_head : class_key IDENTIFIER base_spec 
-                  | class_key IDENTIFIER 
+    '''class_head :  class_key IDENTIFIER 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -1597,10 +1596,32 @@ def p_class_head(p):
 
     pushOffset()
 
+def p_class_function_specifier(p):
+    ''' class_function_specifier : class_key IDENTIFIER change_scope DOUBLECOLON function_definition pop_scope '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    
+def p_change_scope(p):
+    ''' change_scope : '''
+    class_name  = p[-1]
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+
+    class_detail = checkVar(class_name)
+    if class_detail == False:
+        report_error("Class " + class_name + " does not exist", p.lineno(0) )
+    if "class" in class_detail["var"].keys() and class_detail["var"]["class"] == "class":
+        pass
+    else:
+        report_error( class_name + " is not a class, give a class name", p.lineno(0))
+
+    global currentScopeTable
+    currentScopeTable = class_detail["var"]["scope"]
+   
+
 
 def p_class_define_specifier(p): 
-    '''class_define_specifier : class_head push_scope LCPAREN member_list RCPAREN pop_scope
-    ''' 
+    '''class_define_specifier : class_head push_scope LCPAREN member_list RCPAREN pop_scope ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = assigner(p,1)
@@ -1645,7 +1666,7 @@ def p_member_access_list2(p):
 
 
 def p_member_declaration_0(p):
-    '''member_declaration : type_specifier_ member_declarator_list SEMICOLON '''
+    ''' member_declaration : type_specifier_ member_declarator_list SEMICOLON '''
     
     p[0] = OBJ()
     p[0].parse=f(p)
@@ -2139,13 +2160,18 @@ def p_declaration3(p):
 
 
 def p_declaration4(p):
-    '''declaration :  template_declaration ''' 
+    '''declaration :  class_function_specifier ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
 
 
 def p_declaration5(p):
     '''declaration : typedef_declarator ''' 
+    p[0] = OBJ()
+    p[0].parse=f(p)
+
+def p_declaration6(p):
+    '''declaration :  template_declaration ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
 
