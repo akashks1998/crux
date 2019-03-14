@@ -81,11 +81,11 @@ def code(*rest):
         s = s + " " + str(r)
     print(s)
 
-class OBJ:
-    data = {}
-    code = []
-    place = "noplace"
-    pass
+class OBJ:    
+    def __init__(self):
+        self.data = {}
+        self.code = []
+        self.place = "NOP"
 
 def getnewlabel():
     global currentLabel
@@ -583,7 +583,10 @@ def p_assignment_expression(p):
         if p[1].data["type"]!=p[3].data["type"]:
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
-        p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ] 
+        p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]
+         
+
+    print("equal", p[0].data,p[1].data)
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -1718,7 +1721,7 @@ def p_selection_statement_2(p):
     p[0].else_ = getnewlabel()
     p[0].after = getnewlabel()
     p[0].data = {}
-    retType(p,6,10)
+    retTypeCheckAndAssign(p,6,10)
     p[0].code = p[3].code + ["if " + p[3].place + "==0 goto " + p[0].else_] + p[6].code + ["goto " + p[0].after] + \
         [p[0].else_ + " : "] + p[10].code + [p[0].after + " : "]
 
@@ -1838,6 +1841,7 @@ def p_expression_statement(p):
     p[0].parse=f(p)
     p[0].place = p[1].place
     p[0].code = p[1].code.copy()
+    p[0].data = assigner(p,1)
 
 def p_declaration_statement(p): 
     '''declaration_statement : declaration''' 
