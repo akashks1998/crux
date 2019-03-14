@@ -95,7 +95,7 @@ def getnewlabel():
 
 def getnewvar(type_):
     global currentTmp
-    tmp = "tmp#" + str(currentTmp)
+    tmp = "tmp@" + str(currentTmp)
     currentTmp = currentTmp + 1
     size = get_size(type_)
     offset = get_offset()
@@ -160,7 +160,7 @@ def cast_string(place, converted_from,converted_to):
     if converted_from==converted_to:
         return {"place":place,"code":[]}
     if allowed_type(converted_from,converted_to)==True:
-        t=getnewvar()
+        t=getnewvar(converted_to)
         return {"place":t,"code":[ t +" = " + converted_from+"_to_"+converted_to+"("+place+")" ]}
     return False
 
@@ -583,8 +583,10 @@ def p_assignment_expression(p):
         if p[1].data["type"]!=p[3].data["type"]:
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
-        p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]
-         
+        if p[2].data == "=":
+            p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]
+        else:
+            p[0].code = p[3].code + p[1].code + [ p[1].place + " = " + p[1].place + " " + p[2].data[0] + " " + p[3].place ]
 
     print("equal", p[0].data,p[1].data)
 
@@ -595,11 +597,6 @@ def p_assignment_operator(p):
                            | MODEQOP 
                            | PLUSEQOP 
                            | MINUSEQOP 
-                           | LSHIFTEQOP 
-                           | RSHIFTEQOP 
-                           | BANDEQOP 
-                           | BOREQOP
-                           | XOREQOP
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -850,7 +847,7 @@ def p_primary_expression0(p):
         p[0].data["func_sig"] = detail["var"]["func_sig"]
         p[0].data["func_name"] = p[1].data
 
-    p[0].place = p[1].data + "#" + str(detail["scope"])
+    p[0].place = p[1].data + "@" + str(detail["scope"])
     p[0].code = [ "" ]
 
 def p_primary_expression1(p): 
@@ -1401,17 +1398,9 @@ def p_type_specifier(p):
 
 def p_simple_type_name(p): 
     '''simple_type_name : CHAR 
-                        | SHORT 
-                        | INT 
-                        | LONG 
-                        | SIGNED 
-                        | UNSIGNED 
-                        | FLOAT 
-                        | DOUBLE 
+                        | INT  
+                        | FLOAT  
                         | VOID
-                        | STRING
-                        | AUTO
-
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)   
@@ -1605,7 +1594,7 @@ def p_function_definition(p):
     popOffset()
    
 
-    p[0].code = [func_detail["name"] + "|" + func_detail["return_sig"] + ":", "    BeginFunc __func_size__" ] + [ "    " + i for i in p[6].code] + ["    EndFunc"]
+    p[0].code = [func_detail["name"] + "|" + func_detail["return_sig"] + ":", "    BeginFunc " + str(func_detail["stack_space"]) ] + [ "    " + i for i in p[6].code] + ["    EndFunc"]
 
 
 def p_function_decl(p): 
@@ -1851,15 +1840,26 @@ def p_declaration_statement(p):
     p[0].data = assigner(p,1)
 
 def get_size(data_type):
+    data_type = data_type[:-1] if data_type[-1] == "|" else data_type
     size = {
         "int" : 4,
         "float" : 8,
         "char" : 1,
+        "void" :  0
     }
+    if("|" in data_type):
+        return 8
+    
     if data_type in size.keys():
         return size[data_type]
-    else:
-        return 8
+
+    # it has to be class
+    get_class = checkVar(data_type, "global")
+    if get_class ==  False:
+        print(" Error :: Geting size of a type that is not defined")
+        exit()
+    return get_class["size"]
+
 
 
 def p_declaration0(p):
@@ -1933,7 +1933,7 @@ def p_declaration0(p):
                 if "init_type" in each.keys():
                     if  data["type"]!=each["init_type"]:
                         report_error("type_mismatch in initialization", p.lineno(0))
-                    p[0].code=p[0].code + [each["name"]+ "#" + str(currentScopeTable) +" = "+ each["place"] ]
+                    p[0].code=p[0].code + [each["name"]+ "@" + str(currentScopeTable) +" = "+ each["place"] ]
             else:
                 if isinstance( each["place"], list):
                     report_error("Constructor is not defined for "+data["type"],p.lineno(1))
