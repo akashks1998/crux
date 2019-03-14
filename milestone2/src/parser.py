@@ -183,11 +183,19 @@ def p_program(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    for l in range(len(p)):
+        p[0].code = p[0].code + p[l].code.copy()
+    x=1
+    for i in p[0].code:
+        if re.fullmatch('[ ]*', i) == None:
+            print('{0:3}'.format(x),"::",i)
+            x=x+1
 
 def p_translation_unit(p):
     '''translation_unit : declaration_seq''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].code = p[1].code.copy()
 
 def p_declaration_seq(p):
     ''' declaration_seq : declaration_seq declaration
@@ -198,7 +206,7 @@ def p_declaration_seq(p):
     if len(p)==2:
         p[0].code=p[1].code.copy()
     else:
-        p[0].code=p[1].code+p[2].code
+        p[0].code=p[1].code.copy()+p[2].code.copy()
 
 def p_error(p):
     print("Syntax Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], "near", p.value)
@@ -585,7 +593,7 @@ def p_postfix_expression_2(p):
 
     if( p[3].data["type"] != "int" ):
         report_error("Array index is not integer", p.lineno(3))
-    print(p[1].data)
+    # print(p[1].data)
     type_last_char = p[1].data["type"][-1]
     if type_last_char == "a":
         p[0].data = p[1].data.copy()
@@ -837,7 +845,6 @@ def p_deallocation_expression(p):
     '''deallocation_expression : DELETE cast_expression  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
 
 def byte_size(s):
     return str("sizeof("+s+")")
@@ -1505,10 +1512,13 @@ def p_function_definition(p):
 
     function_name = p[2].data["name"]
     func_sig = function_name +"|" + p[4].data["input_sig"]
-    
     func_detail = checkVar(func_sig, "*")
     updateVar(func_sig, func_detail)    
-
+    # print("func_detail :", func_detail)
+    # print("declarator :",p[2].data, p[2].code)
+    # print("arg_list :", p[4].data, p[4].code)
+    # print("body : ", p[6].data, p[6].code)
+    p[0].code = [func_detail["name"] + "|" + func_detail["return_sig"] + ":", "    BeginFunc __func_size__" ] + [ "    " + i for i in p[6].code] + ["    EndFunc"]
 
 def p_function_decl(p): 
     '''function_decl : type_specifier_ declarator func_push_scope arg_list  RPAREN SEMICOLON pop_scope ''' 
@@ -1521,9 +1531,23 @@ def p_func_push_scope(p):
 
 
 def p_fct_body(p): 
-    '''fct_body : compound_statement''' 
+    '''fct_body : func_compound_statement''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].code = p[1].code.copy()
+
+def p_func_compound_statement(p): 
+    '''func_compound_statement : LCPAREN statement_list RCPAREN 
+                          | LCPAREN RCPAREN 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    if len(p) == 4:
+        p[0].code = p[2].code
+        p[0].place = p[2].place
+    else:
+        p[0].code = {}
+        p[0].place = getnewvar()
 
 def p_compound_statement(p): 
     '''compound_statement : LCPAREN statement_list RCPAREN 
@@ -1537,11 +1561,6 @@ def p_compound_statement(p):
     else:
         p[0].code = {}
         p[0].place = getnewvar()
-    x=1
-    for i in p[0].code:
-        if i !="":
-            print(x,"::",i)
-            x=x+1
 
 def p_statement_list(p): 
     '''statement_list : statement 
@@ -1737,7 +1756,7 @@ def p_declaration0(p):
             for n in data["meta"]:
                 size = size * n
             data["size"] = get_size(element_type) * size
-            print(data)
+            # print(data)
             if pushVar(data["name"],data)==False:
                 report_error("Redeclaration of variable", p.lineno(1))
         else:
@@ -1777,7 +1796,7 @@ def p_declaration0(p):
             else:
                 if isinstance( each["place"], list):
                     report_error("Constructor is not defined for "+data["type"],p.lineno(1))
-                print("Type,", each["init_type"])
+                # print("Type,", each["init_type"])
                 report_error("Assigned type is not same as given type",p.lineno(1))   
 # def p_declaration1(p):
 #     '''declaration :  asm_declaration  ''' 
@@ -1792,6 +1811,7 @@ def p_declaration2(p):
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
+    p[0].code = p[1].code.copy()
 
 def p_declaration3(p):
     '''declaration : class_define_specifier SEMICOLON ''' 
