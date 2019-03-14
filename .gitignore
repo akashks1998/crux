@@ -1,7 +1,0 @@
-*.gz
-*.out
-*.ps
-*parsetab.py
-*__pycache__*
-*m.cpp
-
