@@ -1,17 +1,28 @@
 from ply import lex
+from ply import yacc
 import re
 import sys
-lineno = 0
+
 #Personal Groups
+op='-+/*&|%!~^' # pattern to detect operators for separation b/n nos
 
 keywords = {
-    'include':'INCLUDE',
+    'and':'AND',
+    'and_eq':'AND_EQ',
+    'asm':'ASM',
     'auto':'AUTO',
+    'bitand':'BITAND',
+    'bitor':'BITOR',
+    'bool':'BOOL',
     'break':'BREAK',
     'case':'CASE',
     'catch':'CATCH',
     'char':'CHAR',
+    'char8_t':'CHAR8_T',
+    'char16_t':'CHAR16_T',
+    'char32_t':'CHAR32_T',
     'class':'CLASS',
+    'compl':'COMPL',
     'const':'CONST',
     'continue':'CONTINUE',
     'default':'DEFAULT',
@@ -19,29 +30,47 @@ keywords = {
     'do':'DO',
     'double':'DOUBLE',
     'else':'ELSE',
+    'enum':'ENUM',
+    'extern':'EXTERN',
+    'false':'FALSE',
     'float':'FLOAT',
     'for':'FOR',
     'goto':'GOTO',
     'if':'IF',
+    'inline':'INLINE',
     'int':'INT',
     'long':'LONG',
+    'namespace':'NAMESPACE',
     'new':'NEW',
+    'not':'NOT',
+    'not_eq':'NOT_EQ',
+    'nullptr':'NULLPTR',
+    'or':'OR',
+    'or_eq':'OR_EQ',
+    'private':'PRIVATE',
+    'protected':'PROTECTED',
+    'public':'PUBLIC',
     'return':'RETURN',
     'short':'SHORT',
     'signed':'SIGNED',
     'sizeof':'SIZEOF',
+    'static':'STATIC',
+    'std' : 'STD',
     'switch':'SWITCH',
-    'struct' : 'STRUCT',
-    'string' : 'STRING',
     'this':'THIS',
     'throw':'THROW',
+    'true':'TRUE',
     'try':'TRY',
     'typedef':'TYPEDEF',
-    'type' : 'TYPE',
-    'template' : 'TEMPLATE',
+    'union':'UNION',
     'unsigned':'UNSIGNED',
+    'using' : 'USING',
+    'virtual':'VIRTUAL',
     'void':'VOID',
+    'volatile':'VOLATILE',
     'while':'WHILE',
+    'xor':'XOR',
+    'xor_eq':'XOR_EQ',
 }
 
 # List of token names. 
@@ -49,13 +78,13 @@ tokens = [
         # id and no
         'IDENTIFIER',
         'NUMBER',
-        'DECIMAL',
 
         # arithematic operator
         'PLUSOP',
         'MINUSOP',
         'DIVOP',
         'MULTOP',
+        'BOROP',
         'OROP',
         'BANDOP',
         'ANDOP',
@@ -67,8 +96,10 @@ tokens = [
         'BANDEQOP',
         'XOROP',
         'XOREQOP',
+        'UPLUSOP',
+        'UMINUSOP',
+        'EXPOP',
         'BNOP',
-        'BOROP',
 
         #comparison operator, =
         'EQCOMP',
@@ -80,40 +111,31 @@ tokens = [
         'EQUAL',
 
         # Parenthesis
-        'LPAREN',
-        'RPAREN',
+        'LRPAREN',
+        'RRPAREN',
         'LCPAREN',
         'RCPAREN',
         'LSPAREN',
         'RSPAREN',
 
+        # Quotes
+        'SQUOTE',
+        'DQUOTE',
+
         # OTHER
         'COMMA',
         'DOT',
         'SEMICOLON',
+        'DOUBLECOLON',
         'COLON',
+        'COMMENT',
         'SCHAR',
-        'STRING_L',
+        'STRING',
         'HASHTAG',
         'NOTSYM',
-        'QUESMARK',
-        'ARROW',
-        'LSHIFTEQOP',
-        'RSHIFTEQOP',
-        'BOREQOP',
-        'MODEQOP',
-        'DPLUSOP',
-        'LSHIFT',
-        'RSHIFT',
-        'DMINUSOP',
-        'LTEMPLATE',
-        'RTEMPLATE',
-
-        # SPECIAL
-        'DOUBLEBNOP'
-        
-
+        'QUESMARK'  
 ] + list(keywords.values())
+
 
 # Regular expression rules for simple tokens
 
@@ -123,16 +145,9 @@ def t_IDENTIFIER(t):
     t.type = keywords.get(t.value, 'IDENTIFIER')
     return t
 
-def t_DECIMAL(t):
-    #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
-    r'(\d+\.\d+)([eE][-+]?\d+)?'
-    t.value=float(t.value)
-    return t
-
 def t_NUMBER(t):
     #r'((\d+\.\d+[eE]([+-])?\d+)|(\d+[eE]([+-])?\d+)|(\d+\.\d+)|(\.\d+)|(\d+))'
-    r'\d+([eE][-+]?\d+)?'
-    t.value=int(t.value)
+    r'(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
     return t
 
 # Arithematic Operator
@@ -140,34 +155,22 @@ t_PLUSOP    = r'\+'
 t_MINUSOP   = r'-'
 t_DIVOP     = r'/'
 t_MULTOP    = r'\*'
-t_MODOP     = r'\%'
-t_XOROP     = r'\^'
-
-t_BOREQOP   = r'\|\='
+t_BOROP     = r'\|'
 t_OROP      = r'\|\|'
 t_BANDOP    = r'\&'
-t_BOROP     = r'\|'
 t_ANDOP     = r'\&\&'
-
+t_MODOP     = r'\%'
 t_PLUSEQOP  = r'\+='
-t_MODEQOP   = r'\%\='
 t_MINUSEQOP = r'-='
 t_MULTEQOP  = r'\*='
 t_DIVEQOP   = r'/='
 t_BANDEQOP  = r'\&\='
-
+t_XOROP     = r'\^'
 t_XOREQOP   = r'\^='
-t_DPLUSOP   = r'\+\+'
-t_DMINUSOP  = r'--'
+t_UPLUSOP   = r'\+\+'
+t_UMINUSOP  = r'--'
+t_EXPOP     = r'\*\*'
 t_BNOP      = r'\~'
-t_LSHIFT    = r'\<\<'
-t_RSHIFT    = r'\>\>'
-t_LSHIFTEQOP= r'\<\<='
-t_RSHIFTEQOP= r'\>\>='
-
-t_LTEMPLATE = r'<\|'
-t_RTEMPLATE = r'\|>'
-
 
 # Comparison Operator
 t_EQCOMP    = r'=='
@@ -179,40 +182,41 @@ t_LTECOMP   = r'<='
 t_EQUAL     = r'='
 
 # Parenthesis
-t_LPAREN   = r'\('
-t_RPAREN   = r'\)'
+t_LRPAREN   = r'\('
+t_RRPAREN   = r'\)'
 t_LCPAREN   = r'\{'
 t_RCPAREN   = r'\}'
 t_LSPAREN   = r'\['
 t_RSPAREN   = r'\]'
 
+# Quotes
+t_SQUOTE    = r'\''
+t_DQUOTE    = r'\"'
+
 # Other
 t_COMMA         = r','
 t_DOT           = r'\.'
 t_SEMICOLON     = r';'
+t_DOUBLECOLON   = r'::'
 t_COLON         = r':'
 t_SCHAR         = r'\'.\''
-t_STRING_L      = r'\".*\"'
+t_STRING        = r'\".*\"'
 t_HASHTAG       = r'\#'
 t_NOTSYM        = r'\!'
-t_QUESMARK      = r'\?'
-t_ARROW         = r'-\>'
-t_DOUBLEBNOP    = r'\~\~'
+t_QUESMARK       = r'\?'
 
 
 # track line no.
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
-    global lineno
-    lineno = lineno + 1
 
 # comment
 def t_COMMENT(t):
     r'( (//)[^\n\r]* ) |(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)'
     t.value = str(t.value)
     t.type = 'COMMENT'
-    pass
+    return t
 
 
 # A string containing ignored characters (spaces and tabs)
@@ -225,16 +229,18 @@ def t_error(t):
     t.lexer.skip(len(tk))
 
 # Build the lexer
-lexer = lex.lex(debug = 0)
-
-
+lexer = lex.lex()
 
 def find_column(input, token):
     line_start = input.rfind('\n', 0, token.lexpos) + 1
     return (token.lexpos - line_start) + 1
     
 if __name__ == "__main__":
+    if(len(sys.argv) != 4):
+        print("Usage python3.7 src/lex.py --cfg=path/to/cfg path/to/input --output=/path/to/output")
+        exit()
     
+    arglist = sys.argv
 
     for arg in arglist[1:]:
         if arg.split('=')[0] == "--cfg" :

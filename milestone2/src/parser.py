@@ -214,11 +214,19 @@ def p_program(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    for l in range(len(p)):
+        p[0].code = p[0].code + p[l].code.copy()
+    x=1
+    for i in p[0].code:
+        if re.fullmatch('[ ]*', i) == None:
+            print('{0:3}'.format(x),"::",i)
+            x=x+1
 
 def p_translation_unit(p):
     '''translation_unit : declaration_seq''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].code = p[1].code.copy()
 
 def p_declaration_seq(p):
     ''' declaration_seq : declaration_seq declaration
@@ -229,16 +237,16 @@ def p_declaration_seq(p):
     if len(p)==2:
         p[0].code=p[1].code.copy()
     else:
-        p[0].code=p[1].code+p[2].code
+        p[0].code=p[1].code.copy()+p[2].code.copy()
 
 def p_error(p):
     print("Syntax Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], "near", p.value)
     exit()
 
-def p_empty(p): 
-    'empty :' 
-    p[0]=OBJ()
-    p[0].data=None
+# def p_empty(p): 
+#     'empty :' 
+#     p[0]=OBJ()
+#     p[0].data=None
 
 def p_constant_expression(p): 
     '''constant_expression : conditional_expression''' 
@@ -259,7 +267,6 @@ def p_conditional_expression(p):
         p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
-        
     else:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] not in allowed_type:
@@ -538,7 +545,7 @@ def p_assignment_expression(p):
         if p[1].data["type"]!=p[3].data["type"]:
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
-        p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]  
+        p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ] 
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -550,7 +557,8 @@ def p_assignment_operator(p):
                            | LSHIFTEQOP 
                            | RSHIFTEQOP 
                            | BANDEQOP 
-                           | BOREQOP 
+                           | BOREQOP
+                           | XOREQOP
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -586,11 +594,11 @@ def p_unary_expression(p):
     elif len(p)==3:
         if p[2].data["type"] in allowed_type:
             p[0].data=assigner(p,2)
-            p[0].place=getnewvar()
+            p[0].place=p[2].place
             if p[1].data=="++":
-                p[0].code=p[1].code+[p[0].place+"="+p[1].place+"+1"]
+                p[0].code=p[1].code+[p[0].place+"="+p[2].place+"+1"]
             else:
-                p[0].code=p[1].code+[p[0].place+"="+p[1].place+"-1"]
+                p[0].code=p[1].code+[p[0].place+"="+p[2].place+"-1"]
         else:
             report_error("This unary operation is not allowed with given type", p.lineno(1))
     elif len(p)==5:
@@ -605,7 +613,8 @@ def p_postfix_expression_1(p):
     p[0].parse=f(p)
     p[0].data = assigner(p,1)
     p[0].place = p[1].place
-    p[0].code = p[1].code
+    p[0].code = p[1].code.copy()
+
 
 def p_postfix_expression_2(p): 
     '''postfix_expression : postfix_expression LSPAREN expression RSPAREN  ''' 
@@ -615,7 +624,7 @@ def p_postfix_expression_2(p):
 
     if( p[3].data["type"] != "int" ):
         report_error("Array index is not integer", p.lineno(3))
-    print(p[1].data)
+    # print(p[1].data)
     type_last_char = p[1].data["type"][-1]
     if type_last_char == "a":
         p[0].data = p[1].data.copy()
@@ -652,16 +661,10 @@ def p_postfix_expression_2(p):
     else:
         report_error("Not a array or pointer", p.lineno(0))
 
-   
-
-def danda(s):
-    return s
-
 def p_postfix_expression_3(p): 
     '''postfix_expression : postfix_expression  LPAREN expression_list  RPAREN 
                           | postfix_expression LPAREN  RPAREN 
     ''' 
-
     p[0] = OBJ() 
     p[0].parse=f(p)
 
@@ -784,6 +787,7 @@ def p_postfix_expression_8(p):
     p[0].parse=f(p)
     p[0].place = p[1].place
     p[0].code = p[1].code + [ p[0].place + " = " + p[0].place + " + 1"  ]
+    p[0].data=assigner(p,1)
 
 def p_primary_expression0(p): 
     '''primary_expression : name   
@@ -872,7 +876,6 @@ def p_deallocation_expression(p):
     '''deallocation_expression : DELETE cast_expression  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
 
 def byte_size(s):
     return str("sizeof("+s+")")
@@ -1014,7 +1017,7 @@ def p_literal_string(p):
     '''literal :  STRING_L ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"type": "string", "value" : p[1].data, "name" : None}
+    p[0].data = {"type": "char|p", "value" : p[1].data, "name" : None}
 
 def p_literal_number(p): 
     '''literal : NUMBER ''' 
@@ -1246,49 +1249,48 @@ def p_name(p):
 
 
 
-def p_operator_name(p): 
-    '''operator_name : NEW 
-                     | DELETE 
-                     | PLUSOP 
-                     | MINUSOP 
-                     | MULTOP 
-                     | DIVOP 
-                     | MODOP 
-                     | XOROP 
-                     | BANDOP 
-                     | BNOP 
-                     | NOTSYM 
-                     | EQUAL 
-                     | LTCOMP 
-                     | GTCOMP 
-                     | PLUSEQOP 
-                     | MINUSEQOP 
-                     | MULTEQOP 
-                     | DIVEQOP 
-                     | MODEQOP 
-                     | XOREQOP 
-                     | BANDEQOP 
-                     | LSHIFT 
-                     | RSHIFT 
-                     | RSHIFTEQOP 
-                     | LSHIFTEQOP 
-                     | EQCOMP 
-                     | NEQCOMP 
-                     | LTECOMP 
-                     | GTECOMP 
-                     | ANDOP 
-                     | OROP 
-                     | DPLUSOP 
-                     | DMINUSOP 
-                     | COMMA 
-                     | ARROWSTAR 
-                     | ARROW 
-    ''' 
-                    #  | LPAREN  RPAREN 
-                    #  | LSPAREN RSPAREN 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data = p[1].data
+# def p_operator_name(p): 
+#     '''operator_name : NEW 
+#                      | DELETE 
+#                      | PLUSOP 
+#                      | MINUSOP 
+#                      | MULTOP 
+#                      | DIVOP 
+#                      | MODOP 
+#                      | XOROP 
+#                      | BANDOP 
+#                      | BNOP 
+#                      | NOTSYM 
+#                      | EQUAL 
+#                      | LTCOMP 
+#                      | GTCOMP 
+#                      | PLUSEQOP 
+#                      | MINUSEQOP 
+#                      | MULTEQOP 
+#                      | DIVEQOP 
+#                      | MODEQOP 
+#                      | XOREQOP 
+#                      | BANDEQOP 
+#                      | LSHIFT 
+#                      | RSHIFT 
+#                      | RSHIFTEQOP 
+#                      | LSHIFTEQOP 
+#                      | EQCOMP 
+#                      | NEQCOMP 
+#                      | LTECOMP 
+#                      | GTECOMP 
+#                      | ANDOP 
+#                      | OROP 
+#                      | DPLUSOP 
+#                      | DMINUSOP 
+#                      | COMMA 
+#                      | ARROW 
+#     ''' 
+#                     #  | LPAREN  RPAREN 
+#                     #  | LSPAREN RSPAREN 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
+#     p[0].data = p[1].data
 
 def p_template_class_name(p): 
     '''template_class_name : LTEMPLATE template_arg_list RTEMPLATE''' 
@@ -1388,10 +1390,10 @@ def p_complex_type_specifier(p):
         p[0].data["template"]=1
         p[0].data["template_list"]=p[3].data
 
-def p_pure_specifier(p): 
-    '''pure_specifier : EQUAL NUMBER''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+# def p_pure_specifier(p): 
+#     '''pure_specifier : EQUAL NUMBER''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
 
 # use for class inhertance
 
@@ -1545,13 +1547,16 @@ def p_function_definition(p):
 
     function_name = p[2].data["name"]
     func_sig = function_name +"|" + p[4].data["input_sig"]
-    
     func_detail = checkVar(func_sig, "*")
     func_detail['declaration'] = False
     func_detail["stack_space"] = get_offset()
     updateVar(func_sig, func_detail)    
     popOffset()
-
+    # print("func_detail :", func_detail)
+    # print("declarator :",p[2].data, p[2].code)
+    # print("arg_list :", p[4].data, p[4].code)
+    # print("body : ", p[6].data, p[6].code)
+    p[0].code = [func_detail["name"] + "|" + func_detail["return_sig"] + ":", "    BeginFunc __func_size__" ] + [ "    " + i for i in p[6].code] + ["    EndFunc"]
 
 def p_function_decl(p): 
     '''function_decl : type_specifier_ declarator func_push_scope arg_list  RPAREN SEMICOLON pop_scope ''' 
@@ -1567,9 +1572,23 @@ def p_func_push_scope(p):
 
 
 def p_fct_body(p): 
-    '''fct_body : compound_statement''' 
+    '''fct_body : func_compound_statement''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].code = p[1].code.copy()
+
+def p_func_compound_statement(p): 
+    '''func_compound_statement : LCPAREN statement_list RCPAREN 
+                          | LCPAREN RCPAREN 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    if len(p) == 4:
+        p[0].code = p[2].code
+        p[0].place = p[2].place
+    else:
+        p[0].code = {}
+        p[0].place = getnewvar()
 
 def p_compound_statement(p): 
     '''compound_statement : LCPAREN statement_list RCPAREN 
@@ -1583,11 +1602,6 @@ def p_compound_statement(p):
     else:
         p[0].code = {}
         p[0].place = getnewvar()
-    x=1
-    for i in p[0].code:
-        if i !="":
-            print(x,"::",i)
-            x=x+1
 
 def p_statement_list(p): 
     '''statement_list : statement 
@@ -1698,22 +1712,37 @@ def p_iteration_statement_2(p):
 def p_iteration_statement_3(p): 
     '''iteration_statement : FOR LPAREN push_scope for_init_statement expression SEMICOLON expression  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p) 
+    p[0].parse=f(p)
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code = p[4].code + [p[0].begin + " : "] + p[5].code + [ "if " + p[5].place + "== 0 goto " + p[0].after ] \
+         + p[9].code + p[7].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
 def p_iteration_statement_4(p): 
     '''iteration_statement : FOR LPAREN push_scope for_init_statement SEMICOLON expression  RPAREN  compound_statement pop_scope   ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p) 
+    p[0].parse=f(p)
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code = p[4].code + [p[0].begin + " : "] + p[8].code + p[6].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
 def p_iteration_statement_5(p): 
     '''iteration_statement :  FOR LPAREN push_scope for_init_statement expression SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p) 
+    p[0].parse=f(p)
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code = p[4].code + [p[0].begin + " : "] + p[5].code + [ "if " + p[5].place + "== 0 goto " + p[0].after ] \
+         + p[9].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
+
 
 def p_iteration_statement_6(p): 
     '''iteration_statement :  FOR LPAREN push_scope for_init_statement SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code = p[4].code + [p[0].begin + " : "] + p[7].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
 
 def p_for_init_statement(p): 
@@ -1722,6 +1751,8 @@ def p_for_init_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].code=p[1].code.copy()
+    p[0].place=p[1].place
 
 def p_expression_statement(p): 
     '''expression_statement : expression SEMICOLON 
@@ -1729,7 +1760,7 @@ def p_expression_statement(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].place = p[1].place
-    p[0].code = p[1].code 
+    p[0].code = p[1].code.copy()
 
 def p_declaration_statement(p): 
     '''declaration_statement : declaration''' 
@@ -1755,7 +1786,7 @@ def p_declaration0(p):
     p[0] = OBJ()
     p[0].parse=f(p)
     decl_list = p[2].data
-    p[0].code=p[2].code
+    p[0].code=p[2].code.copy()
     for each in decl_list:
         data = p[1].data.copy()
         if(each["type"] != ""):
@@ -1778,10 +1809,8 @@ def p_declaration0(p):
             data["size"] = get_size(element_type) * size
             data["offset"] = get_offset()
             add_to_offset(data["size"])
-
-        
             if pushVar(data["name"],data)==False:
-                add_to_offset(- data["size"])
+                add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
         else:
             if(data["class"] ==  "class"):
@@ -1824,8 +1853,8 @@ def p_declaration0(p):
             else:
                 if isinstance( each["place"], list):
                     report_error("Constructor is not defined for "+data["type"],p.lineno(1))
+                # print("Type,", each["init_type"])
                 report_error("Assigned type is not same as given type",p.lineno(1))   
-
 # def p_declaration1(p):
 #     '''declaration :  asm_declaration  ''' 
         
@@ -1839,6 +1868,7 @@ def p_declaration2(p):
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
+    p[0].code = p[1].code.copy()
 
 def p_declaration3(p):
     '''declaration : class_define_specifier SEMICOLON ''' 
@@ -1879,6 +1909,7 @@ def p_declarator_list(p):
     if len(p) == 2 :
         p[0].data = [assigner(p,1)]
         p[0].code = p[1].code.copy()
+        
     else:
         p[0].data = p[1].data + [ p[3].data ]
         p[0].code = p[1].code + p[3].code
@@ -1897,7 +1928,7 @@ def p_init_declarator(p):
 
         p[0].data["init_type"]=p[2].data["type"]
         p[0].data["place"] = p[2].place
-        p[0].code = p[1].code.copy()
+        p[0].code = p[2].code.copy()
 
 def p_initializer_1(p): 
     '''initializer :   EQUAL assignment_expression''' 
