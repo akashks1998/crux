@@ -48,6 +48,27 @@ allowed_types["float"]=["int","long long int", "long int" ,"float","char" ]
 allowed_types["int"]=["float", "char","int"]
 allowed_types["char"]=["int", "char"]
 allowed_types["pointer"]=["int","float"]
+
+operator_allowed={}
+operator_allowed["+"]=["int","float","char"]
+operator_allowed["-"]=["int","float","char"]
+operator_allowed["*"]=["int","float","char"]
+operator_allowed["/"]=["int","float","char"]
+operator_allowed["%"]=["int"]
+operator_allowed["||"]=["int","float","char"]
+operator_allowed["&&"]=["int","float","char"]
+operator_allowed["!"]=["int","float","char"]
+operator_allowed["|"]=["int"]
+operator_allowed["&"]=["int"]
+operator_allowed["~"]=["int"]
+operator_allowed["^"]=["int"]
+operator_allowed[">"]=["int","float","char"]
+operator_allowed[">="]=["int","float","char"]
+operator_allowed["<"]=["int","float","char"]
+operator_allowed["<="]=["int","float","char"]
+operator_allowed["<<"]=["int"]
+operator_allowed[">>"]=["int"]
+
 def get_offset():
     global offsetList
     global currentOffset
@@ -152,9 +173,13 @@ def assigner(p,x):
 
 def allowed_type(converted_from,converted_to):
     global allowed_types
+    if converted_from==converted_to:
+        return True
     if "|" in converted_from or "|" in converted_to:
         if "|" in converted_from and converted_from[-1]=='p' and (converted_to[-1]=="p" or converted_to in allowed_types["pointer"]):
             return True
+        return False
+    if converted_to not in allowed_types.keys():
         return False
     return (converted_from in allowed_types[converted_to])
 
@@ -167,8 +192,16 @@ def cast_string(place, converted_from,converted_to,t=None):
             t=getnewvar(converted_to)
         return {"place":t,"code":[ t +" = " + converted_from+"_to_"+converted_to+"("+place+")" ]}
     return False
+
+def op_allowed(op, typ):
+    global operator_allowed
+    if op not in operator_allowed.keys():
+        return True
+    return typ in operator_allowed[op]
+
 def operator(op, op1 ,op2 ,typ=None):
-    
+    if (not op_allowed(op,op2.data["type"]) )or (not op_allowed(op,op2.data["type"])) :
+        return False
     prec={
         "char":1,
         "int":2,
@@ -199,6 +232,7 @@ def operator(op, op1 ,op2 ,typ=None):
             typ=op2.data["type"]
         t=getnewvar(typ)
         return {"place":t,"code":y["code"]+[ t +" = " + y["place"] +" "+op2.data["type"]+"_"+op+" "+ op2.place ],"type":typ}
+
 
 def updateVar(identifier, val,scope=None):
     global scopeTableList
@@ -542,6 +576,7 @@ def p_additive_expression(p):
         p[0].place = x["place"]
         p[0].code = p[1].code + p[3].code + x["code"]
         p[0].data["type"]=x["type"]
+        print(x["type"])
 
 def p_multiplicative_expression(p): 
     '''multiplicative_expression : cast_expression 
@@ -662,7 +697,6 @@ def p_unary_expression(p):
     ''' 
                         # | SIZEOF  unary_expression 
     p[0] = OBJ() 
-    allowed_type=["int","float","char"]
     p[0].parse=f(p)
     if len(p)==2:
         p[0].data = assigner(p,1)
@@ -670,13 +704,18 @@ def p_unary_expression(p):
         p[0].code = p[1].code 
 
     elif len(p)==3:
-        if p[2].data["type"] in allowed_type:
-            p[0].data=assigner(p,2)
-            p[0].place=p[2].place
-            if p[1].data=="++":
-                p[0].code=p[1].code+[p[0].place+"="+p[2].place+"+1"]
+        p[0].data=assigner(p,2)
+        p[0].place=p[2].place
+        if op_allowed(p[1].data[0],p[2].data["type"]):
+            one=OBJ()
+            one.data["type"]="int"
+            one.place=getnewvar("int")
+            x=operator(p[1].data[0],p[2],one)
+            if p[2].data["type"]=="char":
+                y=cast_string(x["place"],"int",p[2].data["type"])
             else:
-                p[0].code=p[1].code+[p[0].place+"="+p[2].place+"-1"]
+                y=x
+            p[0].code=p[2].code+[one.place+" = 1"]+y["code"]+[p[0].place+"="+y["place"]]
         else:
             report_error("This unary operation is not allowed with given type", p.lineno(1))
     elif len(p)==5:
@@ -867,7 +906,20 @@ def p_postfix_expression_8(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].place = p[1].place
-    p[0].code = p[1].code + [ p[0].place + " = " + p[0].place + " + 1"  ]
+    p[0].data=assigner(p,1)
+    p[0].place=p[1].place
+    if op_allowed(p[2].data[0],p[1].data["type"]):
+        one=OBJ()
+        one.data["type"]="int"
+        one.place=getnewvar("int")
+        x=operator(p[2].data[0],p[1],one)
+        if p[1].data["type"]=="char":
+            y=cast_string(x["place"],"int",p[1].data["type"])
+        else:
+            y=x
+        p[0].code=p[1].code+[one.place+" = 1"]+y["code"]+[p[0].place+"="+y["place"]]
+    else:
+        report_error("This unary operation is not allowed with given type", p.lineno(1))
     p[0].data=assigner(p,1)
 
 def p_primary_expression0(p): 
@@ -1979,9 +2031,10 @@ def p_declaration0(p):
                     report_error("Redeclaration of variable", p.lineno(1))
 
                 if "init_type" in each.keys():
-                    if  data["type"]!=each["init_type"]:
+                    if  not allowed_type(each["init_type"],data["type"]):
                         report_error("type_mismatch in initialization", p.lineno(0))
-                    p[0].code=p[0].code + [each["name"]+ "@" + str(currentScopeTable) +" = "+ each["place"] ]
+                    x=cast_string(each["place"],each["init_type"],data["type"])
+                    p[0].code=p[0].code + x["code"]+[each["name"]+ "@" + str(currentScopeTable) +" = "+ x["place"] ]
             else:
                 if isinstance( each["place"], list):
                     report_error("Constructor is not defined for "+data["type"],p.lineno(1))
