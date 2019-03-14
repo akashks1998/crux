@@ -591,9 +591,9 @@ def p_postfix_expression_2(p):
         to_add_var = getnewvar()
         index = p[1].data["index"]
         to_mult =  p[1].data["meta"][index] if ( index < len(p[1].data["meta"]) ) else 1
-        to_add = str(to_mult) + " * " + p[3].place
-        to_add_ = getnewvar()
-        p[0].code = p[1].code + p[3].code + [ to_add_ +  " = " +  to_add ] + [ to_add_var + " = " + p[1].data["to_add"] + " + " + to_add_  ]
+        to_add_var_temp  = getnewvar()
+        to_add = to_add_var_temp + " * " + str(to_mult)
+        p[0].code = p[1].code + p[3].code  + [ to_add_var_temp + " = " + p[1].data["to_add"] + " + " + p[3].place  ] + [ to_add_var +  " = " +  to_add ]
         p[0].place = p[1].place
         p[0].data["type"] =  p[1].data["type"][:-1]
         p[0].data["index"] = p[1].data["index"] + 1
@@ -1740,7 +1740,6 @@ def p_declaration0(p):
             print(data)
             if pushVar(data["name"],data)==False:
                 report_error("Redeclaration of variable", p.lineno(1))
-
         else:
             if(data["class"] ==  "class"):
                 x = checkVar(data["type"])
@@ -1756,13 +1755,24 @@ def p_declaration0(p):
                             if t==False:
                                 report_error("Constructor is not defined for "+data["type"],p.lineno(1))
                             if (data["type"]+"|"+each["init_type"],"void") in t["func_sig"]:
-                                report_error("Constructor is called",p.lineno(0))
+                                if pushVar(each["name"],data)==False:
+                                    report_error("Redeclaration of variable", p.lineno(1))
+                                push_code = []
+                                for each_place in each["place"]:
+                                    push_code = push_code + ["Pushparam " + each_place]
+                                push_code = push_code + ["pushParam " + each["name"] ] 
+
+                                p[0].code = p[2].code  + push_code + [ "Fcall " + data["type"] + ":" + data["type"]+"|"+each["init_type"] , "PopParams"]
+                                return 
+
                             else:
                                 report_error("Constructor is not correct for "+data["type"],p.lineno(1))
-            if "init_type" not in each.keys() or ( (not isinstance( each["place"], list)) and data["type"]==each["init_type"]):
+            if "init_type" not in each.keys() or ( (not isinstance( each["place"], list))):
                 if pushVar(each["name"],data)==False:
                     report_error("Redeclaration of variable", p.lineno(1))
                 if "init_type" in each.keys():
+                    if  data["type"]!=each["init_type"]:
+                        report_error("type_mismatch in initialization", p.lineno(0))
                     p[0].code=p[0].code + [each["name"]+" = "+ each["place"] ]
             else:
                 if isinstance( each["place"], list):
