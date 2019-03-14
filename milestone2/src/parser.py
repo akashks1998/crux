@@ -591,9 +591,9 @@ def p_postfix_expression_2(p):
         to_add_var = getnewvar()
         index = p[1].data["index"]
         to_mult =  p[1].data["meta"][index] if ( index < len(p[1].data["meta"]) ) else 1
-        to_add = str(to_mult) + " * " + p[3].place
-        to_add_ = getnewvar()
-        p[0].code = p[1].code + p[3].code + [ to_add_ +  " = " +  to_add ] + [ to_add_var + " = " + p[1].data["to_add"] + " + " + to_add_  ]
+        to_add_var_temp  = getnewvar()
+        to_add = to_add_var_temp + " * " + str(to_mult)
+        p[0].code = p[1].code + p[3].code  + [ to_add_var_temp + " = " + p[1].data["to_add"] + " + " + p[3].place  ] + [ to_add_var +  " = " +  to_add ]
         p[0].place = p[1].place
         p[0].data["type"] =  p[1].data["type"][:-1]
         p[0].data["index"] = p[1].data["index"] + 1
