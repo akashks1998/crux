@@ -239,7 +239,7 @@ def operator(op, op1 ,op2 ,typ=None):
         t=getnewvar(typ)
         return {"place":t,"code":y["code"]+[ t +" = " + y["place"] +" "+op2.data["type"]+"_"+op+" "+ op2.place ],"type":typ}
 
-def get_size(data_type):
+def get_size(data_type, basic = True):
     data_type = data_type[:-1] if data_type[-1] == "|" else data_type
     size = {
         "int" : 4,
@@ -248,14 +248,17 @@ def get_size(data_type):
         "void" :  0
     }
     if("|" in data_type):
-        basic_type = data_type.rstrip("p").rstrip("|")
-        if basic_type in size.keys():
+        if basic == True:
+            basic_type = data_type.rstrip("p").rstrip("|")
+            if basic_type in size.keys():
+                return 8
+            get_class = checkVar(basic_type, "global")
+            if get_class ==  False:
+                print(" Error :: Class " + basic_type + " is not defined")
+                exit()
             return 8
-        get_class = checkVar(basic_type, "global")
-        if get_class ==  False:
-            print(" Error :: Class " + basic_type + " is not defined")
-            exit()
-        return 8
+        else:
+            return 8
     
     if data_type in size.keys():
         return size[data_type]
@@ -1317,7 +1320,10 @@ def p_arg_list(p):
         pushVar(function_name, {"type" : "function_upper", "func_sig" : [ (func_sig, return_sig) ]} ,  scope = parent )
     else:
         # this name is seen but may be overloaded
-        if (func_sig, return_sig) in checkVar(function_name, parent)["func_sig"] :
+        x=checkVar(function_name, parent)
+        if "func_sig" not in x.keys():
+            report_error("Already decleared as a non function type",p.lineno(0))
+        if (func_sig, return_sig) in x["func_sig"] :
             func_detail = checkVar(func_sig, parent)
             if return_sig != func_detail["return_sig"]:
                 report_error("Return Type differs from function declaration", p.lineno(0))
@@ -1600,6 +1606,10 @@ def p_class_function_specifier(p):
     ''' class_function_specifier : class_key IDENTIFIER change_scope DOUBLECOLON function_definition pop_scope '''
     p[0] = OBJ() 
     p[0].parse=f(p)
+
+    p[0].code = p[5].code.copy()
+    p[0].code[0] = p[2].data + ":" + p[0].code[0]
+
     
 def p_change_scope(p):
     ''' change_scope : '''
@@ -1702,7 +1712,7 @@ def p_member_declaration_0(p):
                 get_size(element_type.rstrip("p").rstrip("|"))
 
 
-            data["size"] = get_size(element_type) * size
+            data["size"] = get_size(element_type, basic=False) * size
             data["offset"] = get_offset()
             add_to_offset(data["size"])
             if pushVar(data["name"],data)==False:
@@ -1722,7 +1732,7 @@ def p_member_declaration_0(p):
                 get_size(basic_type)
 
 
-            data["size"] = get_size(data["type"])
+            data["size"] = get_size(data["type"], basic = False)
             data["offset"] = get_offset()
             add_to_offset(data["size"])
 
@@ -2082,6 +2092,7 @@ def p_declaration_statement(p):
     p[0].code=p[1].code.copy()
     p[0].data = assigner(p,1)
 
+
 def p_declaration0(p):
     '''declaration : type_specifier_ declarator_list SEMICOLON ''' 
 
@@ -2163,6 +2174,7 @@ def p_declaration4(p):
     '''declaration :  class_function_specifier ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
+    p[0].code = p[1].code.copy()
 
 
 def p_declaration5(p):
