@@ -1592,7 +1592,6 @@ def p_fct_body(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].code = p[1].code.copy()
-    print(p[1].data)
     p[0].data=assigner(p,1)
 
 def p_func_compound_statement(p): 
