@@ -372,9 +372,6 @@ def p_error(p):
 #     p[0]=OBJ()
 #     p[0].data=None
 
-
-    
-
 def p_conditional_expression(p): 
     '''conditional_expression : logical_OR_expression 
                               | logical_OR_expression QUESMARK expression COLON conditional_expression 
@@ -735,7 +732,7 @@ def p_unary_expression(p):
     elif len(p)==5:
         p[0].data["type"]="int"
         p[0].place=getnewvar("int")
-        p[0].code=p[3].code+[p[0].place+"= sizeof("+p[1].data+")"]
+        p[0].code=p[3].code+[p[0].place+"= "+str(get_size(p[3].data["type"]))]
 
 def p_postfix_expression_1(p): 
     '''postfix_expression : primary_expression ''' 
@@ -1024,19 +1021,6 @@ def p_deallocation_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-def byte_size(s):
-    return str("sizeof("+s+")")
-    size = {
-        "int" : 4,
-        "float" : 8,
-        "char" : 1,
-        "bool" : 1
-    }
-    if s in size.keys():
-        return str(size[s])
-    else:
-        return str(8)
-
 # New Allocation
 # Extra * new_type_name me added hain
 def p_allocation_expression0(p): 
@@ -1051,22 +1035,22 @@ def p_allocation_expression0(p):
         p[0].data = {"type" : p[2].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = ["PushParam " + byte_size(tpe), "PushParam 0", p[0].place + " = call alloc"]
+        p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam 0", p[0].place + " = call alloc"]
     elif len(p)==4:
         p[0].data = {"type" : p[2].data, "init" : p[3].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = ["PushParam " + byte_size(tpe), "PushParam constructor", p[0].place + " = call alloc"]
+        p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam constructor", p[0].place + " = call alloc"]
     elif len(p)==5:
         p[0].data = {"type" : p[3].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = ["PushParam " + byte_size(tpe), "PushParam 0", p[0].place + " = call alloc"]
+        p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam 0", p[0].place + " = call alloc"]
     elif len(p)==6:
         p[0].data = {"type" : p[3].data, "init" : p[5].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = ["PushParam " + byte_size(tpe), "PushParam constructor", p[0].place + " = call alloc"]
+        p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam constructor", p[0].place + " = call alloc"]
     # print("yo", p[0].data)
 
 def p_allocation_expression1(p): 
@@ -1084,28 +1068,28 @@ def p_allocation_expression1(p):
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         tmp1 = getnewvar("int")
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
+        p[0].code = p[4].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
     elif len(p)==7:
         if "type" not in p[4].data.keys() or p[4].data["type"]!="int":
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[2].data, "init" : p[3].data}
         tmp1 = getnewvar("int")
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
+        p[0].code = p[4].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
     elif len(p)==8:
         if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[3].data}
         tmp1 = getnewvar("int")
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[6].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[6].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
+        p[0].code = p[6].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
     elif len(p)==9:
         if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[3].data, "init" : p[5].data}
         tmp1 = getnewvar("int")
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
+        p[0].code = p[4].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
     # print("yo", p[0].data)
 
 
@@ -2004,7 +1988,7 @@ def p_iteration_statement_5(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].begin = getnewlabel("for_begin3")
-    p[0].cont = p[0].begin.copy()
+    p[0].cont = p[0].begin
     p[0].after = getnewlabel("for_after3")
     p[0].data=assigner(p,8)
     l = p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[8].code + ["goto->" + p[0].begin ]
@@ -2017,7 +2001,7 @@ def p_iteration_statement_6(p):
     p[0].parse=f(p) 
     p[0].data=assigner(p,7)
     p[0].begin = getnewlabel("for_begin4")
-    p[0].cont = p[0].begin.copy()
+    p[0].cont = p[0].begin
     p[0].after = getnewlabel("for_after4")
     l = p[7].code + ["goto->" + p[0].begin ]
     l = break_continue(l, p[0].after, p[0].cont)
@@ -2059,10 +2043,18 @@ def get_size(data_type):
         "void" :  0
     }
     if("|" in data_type):
+        basic_type = data_type.rstrip("p").rstrip("|")
+        if basic_type in size.keys():
+            return 8
+        get_class = checkVar(basic_type, "global")
+        if get_class ==  False:
+            print(" Error :: Class " + basic_type + " is not defined")
+            exit()
         return 8
     
     if data_type in size.keys():
         return size[data_type]
+
 
     # it has to be class
     get_class = checkVar(data_type, "global")
