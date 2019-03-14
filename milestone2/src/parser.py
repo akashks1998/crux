@@ -727,7 +727,7 @@ def p_postfix_expression_7(p):
     if "class" in details["var"].keys() and details["var"]["class"]=="class":
         x=checkVar(p[3].data, details["var"]["scope"])
         if x!=False:
-            p[0].data["type"]=x["type"]
+            p[0].data=x.copy()
             if(p[0].data["type"] == "function_upper"):
                 p[0].data["func_sig"] = x["func_sig"]
                 p[0].data["func_name"] = p[3].data
@@ -765,7 +765,7 @@ def p_primary_expression0(p):
 
     v_type = detail["var"]["type"]
     
-    p[0].data = {"type": v_type, "name" : assigner(p,1)}
+    p[0].data = detail["var"].copy()
     
     if v_type=="function_upper":
         p[0].data["func_sig"] = detail["var"]["func_sig"]
@@ -807,8 +807,15 @@ def p_unary_expression1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = assigner(p,2)
+    if p[1].data == "&":
+        if "|" in p[2].data["type"]:
+            p[0].data["type"]=p[2].data["type"]+"p"
+        else:
+            p[0].data["type"]=p[2].data["type"]+"|p"
     p[0].place = getnewvar()
-    p[0].code = p[2].code+[p[0].place+"="+ p[1].data +p[2].place ] 
+    t_var = getnewvar()
+    p[0].code = p[2].code+ [ t_var + " = " +  p[2].place ] + [ p[0].place + " = "+ p[1].data + t_var ] 
+  
 
 def p_unary_expression2(p): 
     '''unary_expression : unary2_operator cast_expression 
@@ -828,8 +835,8 @@ def p_unary_expression2(p):
         else:
             p[0].data["type"]=p[2].data["type"]+"|p"
     p[0].place = getnewvar()
-    p[0].code = p[2].code+[p[0].place+"="+ p[1].data +p[2].place ]
-
+    t_var = getnewvar()
+    p[0].code = p[2].code+ [ t_var + " = " +  p[2].place ] + [ p[0].place + " = "+ p[1].data + t_var ] 
 def p_deallocation_expression(p): 
     '''deallocation_expression : DELETE cast_expression  ''' 
     p[0] = OBJ() 
@@ -1445,7 +1452,7 @@ def p_member_declaration0(p):
         
         # handle array type
         if len(data["meta"]) != 0:
-            element_type = data["type"].rstrip("a")
+            element_type = data["type"].rstrip("a").rstrip("|")
             data["is_array"] = 1
             data["element_type"] = element_type
             data["index"] = 0
@@ -1694,7 +1701,7 @@ def p_declaration0(p):
         
         # handle array type
         if len(data["meta"]) != 0:
-            element_type = data["type"].rstrip("a")
+            element_type = data["type"].rstrip("a").rstrip("|")
             data["is_array"] = 1
             data["element_type"] = element_type
             data["index"] = 0

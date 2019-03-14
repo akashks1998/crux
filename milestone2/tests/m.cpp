@@ -8,7 +8,7 @@ class e
 // }
 
 int main(){
-    int a[2][3];
-    class e c;
-    c.b[1] =3;
+    int **a[2][3];
+    int *c;
+    *(a[1][1] ) = c;
 }
