@@ -228,7 +228,6 @@ def p_conditional_expression(p):
         p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
-        
     else:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] not in allowed_type:
@@ -507,7 +506,7 @@ def p_assignment_expression(p):
         if p[1].data["type"]!=p[3].data["type"]:
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         p[0].place = p[1].place
-        p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ]  
+        p[0].code = p[3].code + p[1].code + [ p[1].place + str(p[2].data) + p[3].place ] 
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -555,11 +554,11 @@ def p_unary_expression(p):
     elif len(p)==3:
         if p[2].data["type"] in allowed_type:
             p[0].data=assigner(p,2)
-            p[0].place=getnewvar()
+            p[0].place=p[2].place
             if p[1].data=="++":
-                p[0].code=p[1].code+[p[0].place+"="+p[1].place+"+1"]
+                p[0].code=p[1].code+[p[0].place+"="+p[2].place+"+1"]
             else:
-                p[0].code=p[1].code+[p[0].place+"="+p[1].place+"-1"]
+                p[0].code=p[1].code+[p[0].place+"="+p[2].place+"-1"]
         else:
             report_error("This unary operation is not allowed with given type", p.lineno(1))
     elif len(p)==5:
@@ -574,7 +573,8 @@ def p_postfix_expression_1(p):
     p[0].parse=f(p)
     p[0].data = assigner(p,1)
     p[0].place = p[1].place
-    p[0].code = p[1].code
+    p[0].code = p[1].code.copy()
+
 
 def p_postfix_expression_2(p): 
     '''postfix_expression : postfix_expression LSPAREN expression RSPAREN  ''' 
@@ -621,16 +621,10 @@ def p_postfix_expression_2(p):
     else:
         report_error("Not a array or pointer", p.lineno(0))
 
-   
-
-def danda(s):
-    return s
-
 def p_postfix_expression_3(p): 
     '''postfix_expression : postfix_expression  LPAREN expression_list  RPAREN 
                           | postfix_expression LPAREN  RPAREN 
     ''' 
-
     p[0] = OBJ() 
     p[0].parse=f(p)
 
@@ -753,6 +747,7 @@ def p_postfix_expression_8(p):
     p[0].parse=f(p)
     p[0].place = p[1].place
     p[0].code = p[1].code + [ p[0].place + " = " + p[0].place + " + 1"  ]
+    p[0].data=assigner(p,1)
 
 def p_primary_expression0(p): 
     '''primary_expression : name   
@@ -983,7 +978,7 @@ def p_literal_string(p):
     '''literal :  STRING_L ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {"type": "string", "value" : p[1].data, "name" : None}
+    p[0].data = {"type": "char|p", "value" : p[1].data, "name" : None}
 
 def p_literal_number(p): 
     '''literal : NUMBER ''' 
@@ -1657,22 +1652,37 @@ def p_iteration_statement_2(p):
 def p_iteration_statement_3(p): 
     '''iteration_statement : FOR LPAREN push_scope for_init_statement expression SEMICOLON expression  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p) 
+    p[0].parse=f(p)
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code = p[4].code + [p[0].begin + " : "] + p[5].code + [ "if " + p[5].place + "== 0 goto " + p[0].after ] \
+         + p[9].code + p[7].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
 def p_iteration_statement_4(p): 
     '''iteration_statement : FOR LPAREN push_scope for_init_statement SEMICOLON expression  RPAREN  compound_statement pop_scope   ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p) 
+    p[0].parse=f(p)
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code = p[4].code + [p[0].begin + " : "] + p[8].code + p[6].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
 def p_iteration_statement_5(p): 
     '''iteration_statement :  FOR LPAREN push_scope for_init_statement expression SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p) 
+    p[0].parse=f(p)
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code = p[4].code + [p[0].begin + " : "] + p[5].code + [ "if " + p[5].place + "== 0 goto " + p[0].after ] \
+         + p[9].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
+
 
 def p_iteration_statement_6(p): 
     '''iteration_statement :  FOR LPAREN push_scope for_init_statement SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
+    p[0].begin = getnewlabel()
+    p[0].after = getnewlabel()
+    p[0].code = p[4].code + [p[0].begin + " : "] + p[7].code + ["goto " + p[0].begin ]  + [ p[0].after + " : "]
 
 
 def p_for_init_statement(p): 
@@ -1681,6 +1691,8 @@ def p_for_init_statement(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].code=p[1].code.copy()
+    p[0].place=p[1].place
 
 def p_expression_statement(p): 
     '''expression_statement : expression SEMICOLON 
@@ -1688,7 +1700,7 @@ def p_expression_statement(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].place = p[1].place
-    p[0].code = p[1].code 
+    p[0].code = p[1].code.copy()
 
 def p_declaration_statement(p): 
     '''declaration_statement : declaration''' 
@@ -1705,7 +1717,7 @@ def p_declaration0(p):
     p[0] = OBJ()
     p[0].parse=f(p)
     decl_list = p[2].data
-    p[0].code=p[2].code
+    p[0].code=p[2].code.copy()
     for each in decl_list:
         data = p[1].data.copy()
         if(each["type"] != ""):
@@ -1757,7 +1769,6 @@ def p_declaration0(p):
                     report_error("Constructor is not defined for "+data["type"],p.lineno(1))
                 print("Type,", each["init_type"])
                 report_error("Assigned type is not same as given type",p.lineno(1))   
-
 # def p_declaration1(p):
 #     '''declaration :  asm_declaration  ''' 
         
@@ -1811,6 +1822,7 @@ def p_declarator_list(p):
     if len(p) == 2 :
         p[0].data = [assigner(p,1)]
         p[0].code = p[1].code.copy()
+        
     else:
         p[0].data = p[1].data + [ p[3].data ]
         p[0].code = p[1].code + p[3].code
@@ -1829,7 +1841,7 @@ def p_init_declarator(p):
 
         p[0].data["init_type"]=p[2].data["type"]
         p[0].data["place"] = p[2].place
-        p[0].code = p[1].code.copy()
+        p[0].code = p[2].code.copy()
 
 def p_initializer_1(p): 
     '''initializer :   EQUAL assignment_expression''' 
