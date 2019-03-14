@@ -6,7 +6,6 @@ lineno = 0
 
 keywords = {
     'include':'INCLUDE',
-    'asm':'ASM',
     'auto':'AUTO',
     'break':'BREAK',
     'case':'CASE',
@@ -27,10 +26,6 @@ keywords = {
     'int':'INT',
     'long':'LONG',
     'new':'NEW',
-    'operator' : 'OPERATOR',
-    'private':'PRIVATE',
-    'protected':'PROTECTED',
-    'public':'PUBLIC',
     'return':'RETURN',
     'short':'SHORT',
     'signed':'SIGNED',
@@ -103,8 +98,6 @@ tokens = [
         'NOTSYM',
         'QUESMARK',
         'ARROW',
-        'ARROWSTAR',
-        'DOTSTAR',
         'LSHIFTEQOP',
         'RSHIFTEQOP',
         'BOREQOP',
@@ -204,8 +197,6 @@ t_HASHTAG       = r'\#'
 t_NOTSYM        = r'\!'
 t_QUESMARK      = r'\?'
 t_ARROW         = r'-\>'
-t_ARROWSTAR     = r'-\>\*'
-t_DOTSTAR       = r'\.\*'
 t_DOUBLEBNOP    = r'\~\~'
 
 

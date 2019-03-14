@@ -204,10 +204,10 @@ def p_error(p):
     print("Syntax Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], "near", p.value)
     exit()
 
-def p_empty(p): 
-    'empty :' 
-    p[0]=OBJ()
-    p[0].data=None
+# def p_empty(p): 
+#     'empty :' 
+#     p[0]=OBJ()
+#     p[0].data=None
 
 def p_constant_expression(p): 
     '''constant_expression : conditional_expression''' 
@@ -518,7 +518,8 @@ def p_assignment_operator(p):
                            | LSHIFTEQOP 
                            | RSHIFTEQOP 
                            | BANDEQOP 
-                           | BOREQOP 
+                           | BOREQOP
+                           | XOREQOP
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -1210,49 +1211,48 @@ def p_name(p):
 
 
 
-def p_operator_name(p): 
-    '''operator_name : NEW 
-                     | DELETE 
-                     | PLUSOP 
-                     | MINUSOP 
-                     | MULTOP 
-                     | DIVOP 
-                     | MODOP 
-                     | XOROP 
-                     | BANDOP 
-                     | BNOP 
-                     | NOTSYM 
-                     | EQUAL 
-                     | LTCOMP 
-                     | GTCOMP 
-                     | PLUSEQOP 
-                     | MINUSEQOP 
-                     | MULTEQOP 
-                     | DIVEQOP 
-                     | MODEQOP 
-                     | XOREQOP 
-                     | BANDEQOP 
-                     | LSHIFT 
-                     | RSHIFT 
-                     | RSHIFTEQOP 
-                     | LSHIFTEQOP 
-                     | EQCOMP 
-                     | NEQCOMP 
-                     | LTECOMP 
-                     | GTECOMP 
-                     | ANDOP 
-                     | OROP 
-                     | DPLUSOP 
-                     | DMINUSOP 
-                     | COMMA 
-                     | ARROWSTAR 
-                     | ARROW 
-    ''' 
-                    #  | LPAREN  RPAREN 
-                    #  | LSPAREN RSPAREN 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data = p[1].data
+# def p_operator_name(p): 
+#     '''operator_name : NEW 
+#                      | DELETE 
+#                      | PLUSOP 
+#                      | MINUSOP 
+#                      | MULTOP 
+#                      | DIVOP 
+#                      | MODOP 
+#                      | XOROP 
+#                      | BANDOP 
+#                      | BNOP 
+#                      | NOTSYM 
+#                      | EQUAL 
+#                      | LTCOMP 
+#                      | GTCOMP 
+#                      | PLUSEQOP 
+#                      | MINUSEQOP 
+#                      | MULTEQOP 
+#                      | DIVEQOP 
+#                      | MODEQOP 
+#                      | XOREQOP 
+#                      | BANDEQOP 
+#                      | LSHIFT 
+#                      | RSHIFT 
+#                      | RSHIFTEQOP 
+#                      | LSHIFTEQOP 
+#                      | EQCOMP 
+#                      | NEQCOMP 
+#                      | LTECOMP 
+#                      | GTECOMP 
+#                      | ANDOP 
+#                      | OROP 
+#                      | DPLUSOP 
+#                      | DMINUSOP 
+#                      | COMMA 
+#                      | ARROW 
+#     ''' 
+#                     #  | LPAREN  RPAREN 
+#                     #  | LSPAREN RSPAREN 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
+#     p[0].data = p[1].data
 
 def p_template_class_name(p): 
     '''template_class_name : LTEMPLATE template_arg_list RTEMPLATE''' 
@@ -1352,10 +1352,10 @@ def p_complex_type_specifier(p):
         p[0].data["template"]=1
         p[0].data["template_list"]=p[3].data
 
-def p_pure_specifier(p): 
-    '''pure_specifier : EQUAL NUMBER''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+# def p_pure_specifier(p): 
+#     '''pure_specifier : EQUAL NUMBER''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
 
 # use for class inhertance
 
