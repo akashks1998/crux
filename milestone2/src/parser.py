@@ -88,10 +88,18 @@ def getnewlabel():
     currentLabel = currentLabel + 1
     return label
 
-def getnewvar():
+def getnewvar(type_):
     global currentTmp
     tmp = "tmp#" + str(currentTmp)
     currentTmp = currentTmp + 1
+    size = get_size(type_)
+    offset = get_offset()
+    add_to_offset(size)
+
+    data = {"type" :  type_ , "class" : "temp",
+            "size" : size, "offset" : offset }
+    pushVar(tmp, data)
+
     return tmp
 
 def pushScope():
@@ -174,7 +182,7 @@ def retType(p,i,j):
         if p[i].data["ret_type"]==p[j].data["ret_type"]:
             p[0].data["ret_type"]=p[i].data["ret_type"]
         else:
-            report_error("Return type is not same",p.lineno(0))
+            report_error(",Return type is not same",p.lineno(0))
     else:
         if "ret_type" in p[i].data.keys():
             p[0].data["ret_type"]=p[i].data["ret_type"]
@@ -285,7 +293,7 @@ def p_conditional_expression(p):
         if p[3].data["type"] != p[5].data["type"]:
             report_error("Type mismatch between two opearands", p.lineno(0))
         p[0].data = { "type" : p[3].data["type"] }
-        p[0].place = getnewvar()
+        p[0].place = getnewvar(p[3].data["type"])
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
         
@@ -307,7 +315,7 @@ def p_logical_OR_expression(p):
             p[0].data = { "type" : "int" }
         else:
             report_error("Type not compatible with OR operation", p.lineno(0))
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
    
@@ -324,10 +332,10 @@ def p_logical_AND_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int", "codename" : getnewvar()}
+            p[0].data = {"type" : "int"}
         else:
             report_error("Type not compatible with AND operation", p.lineno(0))
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
 
@@ -348,7 +356,7 @@ def p_inclusive_OR_expression(p):
             p[0].data = {"type" : "int", "codename" : getnewvar()}
         else:
             report_error("Type not compatible with bitwise or operation", p.lineno(1))
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
 
@@ -364,10 +372,10 @@ def p_exclusive_OR_expression(p):
         p[0].code = p[1].code 
     if len(p)==4:
         if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-            p[0].data = {"type" : "int", "codename" : getnewvar()}
+            p[0].data = {"type" : "int"}
         else:
             report_error("Type not compatible with bitwise xor operation", p.lineno(1))
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
 
@@ -383,11 +391,11 @@ def p_AND_expression(p):
         p[0].code = p[1].code 
     if len(p)==4:
         if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-            p[0].data = {"type" : "int", "codename" : getnewvar()}
+            p[0].data = {"type" : "int"}
         else:
             report_error("Type not compatible with bitwise and operation", p.lineno(1))
         
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
 def p_equality_expression(p): 
@@ -404,11 +412,11 @@ def p_equality_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int", "codename" : getnewvar()}
+            p[0].data = {"type" : "int"}
         else:
             report_error("Type not compatible with relational operation", p.lineno(0))
         
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
     
 
@@ -428,11 +436,11 @@ def p_relational_expression(p):
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
         if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int", "codename" : getnewvar()}
+            p[0].data = {"type" : "int"}
         else:
             report_error("Type not compatible with relational operation", p.lineno(0))
         
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
 def p_shift_expression(p): 
@@ -453,7 +461,7 @@ def p_shift_expression(p):
         else:
             report_error(" Type not compatible with bitwise shift operation ", p.lineno(0))
 
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
 def p_additive_expression(p): 
@@ -474,7 +482,7 @@ def p_additive_expression(p):
         else:
             report_error("Type not compatible with plus , minus operation", p.lineno(0))
 
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
 def p_multiplicative_expression(p): 
@@ -496,7 +504,7 @@ def p_multiplicative_expression(p):
         else:
             report_error("Type not compatible with mult, div operation", p.lineno(0))
 
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
 
 
@@ -515,10 +523,14 @@ def p_cast_expression(p):
         x= re.fullmatch(rex, p[2].data["type"])
         if x!=None:
             report_error("Type casting to "+p[2].data["type"]+" is not allowed",p.lineno(0))
+        p[0].data = {}
+        print("cast1", p[0].data)
         p[0].data["type"]=p[2].data["type"]
-        p[0].place=getnewvar()
+        print("cast2", p[0].data)
+        p[0].place=getnewvar(p[0].data["type"])
         p[0].code=p[4].code+[p[0].place+"="+ p[4].data["type"]+"_to_"+p[2].data["type"]+"("+p[4].place+")" ]
 
+    
 
 def p_expression(p): 
     '''expression : assignment_expression 
@@ -614,7 +626,7 @@ def p_unary_expression(p):
             report_error("This unary operation is not allowed with given type", p.lineno(1))
     elif len(p)==5:
         p[0].data["type"]="int"
-        p[0].place=getnewvar()
+        p[0].place=getnewvar("int")
         p[0].code=p[3].code+[p[0].place+"= sizeof("+p[1].data+")"]
 
 def p_postfix_expression_1(p): 
@@ -639,10 +651,10 @@ def p_postfix_expression_2(p):
     type_last_char = p[1].data["type"][-1]
     if type_last_char == "a":
         p[0].data = p[1].data.copy()
-        to_add_var = getnewvar()
+        to_add_var = getnewvar("int")
         index = p[1].data["index"]
         to_mult =  p[1].data["meta"][index] if ( index < len(p[1].data["meta"]) ) else 1
-        to_add_var_temp  = getnewvar()
+        to_add_var_temp  = getnewvar("int")
         to_add = to_add_var_temp + " * " + str(to_mult)
         p[0].code = p[1].code + p[3].code  + [ to_add_var_temp + " = " + p[1].data["to_add"] + " + " + p[3].place  ] + [ to_add_var +  " = " +  to_add ]
         p[0].place = p[1].place
@@ -656,7 +668,7 @@ def p_postfix_expression_2(p):
                 p[0].data = {"type": p[1].data["type"][:-2]}
             else:
                 p[0].data = {"type": p[1].data["type"][:-1]} 
-            new_addr = getnewvar()
+            new_addr = getnewvar("int")
             p[0].code = p[0].code + [ new_addr + " = " + p[0].place + " + " + to_add_var ]
             p[0].place = "*(" + new_addr + ")"
 
@@ -666,7 +678,7 @@ def p_postfix_expression_2(p):
         else:
             p[0].data = {"type": p[1].data["type"][:-1]}
 
-        p[0].place = getnewvar()
+        p[0].place = getnewvar(p[0].data["type"])
         p[0].code = p[1].code +  p[3].code  + [ p[0].place + " = "  + "*( " + p[1].place + " + " +  p[3].place + ")" ]
 
     else:
@@ -695,9 +707,9 @@ def p_postfix_expression_3(p):
 
     flag=0
     for fun in func_sig_list:
-        print(fun[0], "::" , expected_sig)
         if fun[0]==expected_sig:
             p[0].data = {"type" : fun[1]}
+            
             flag=1
     if flag==0:
         report_error("Function not declared", p.lineno(1))
@@ -710,8 +722,9 @@ def p_postfix_expression_3(p):
     if "class_obj" in p[1].data.keys():
         code.append("PushParam " + p[1].data["class_obj"] )
 
-    p[0].place = getnewvar()
+    p[0].place = getnewvar(p[0].data["type"])
     p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
+    print("dsjs", p[0].data)
 
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
@@ -725,7 +738,6 @@ def p_postfix_expression_6(p):
 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place = getnewvar()
     # post_fix must be a object and name should be a class member
 
     if "|" in p[1].data["type"]:
@@ -738,7 +750,8 @@ def p_postfix_expression_6(p):
         x=checkVar(p[3].data, details["var"]["scope"])
         if x!=False:
             p[0].data = x.copy()
-
+            tmp_type = "int|p" if p[0].data["type"] == "function_upper" else p[0].data["type"] 
+            p[0].place = getnewvar(tmp_type)
             if(p[0].data["type"] == "function_upper"):
                 p[0].data["func_sig"] = x["func_sig"]
                 p[0].data["func_name"] = p[3].data
@@ -760,8 +773,7 @@ def p_postfix_expression_7(p):
     '''postfix_expression : postfix_expression ARROW name  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place = getnewvar()
-    class_obj = getnewvar()
+   
 
     if p[1].data["type"][-2:] != "|a" and p[1].data["type"][-2:] != "|p":
         report_error("request for member "+p[3].data+" in ptr to non-class type "+p[1].data["type"],p.lineno(0))
@@ -773,6 +785,9 @@ def p_postfix_expression_7(p):
         x=checkVar(p[3].data, details["var"]["scope"])
         if x!=False:
             p[0].data=x.copy()
+            tmp_type = "int|p" if p[0].data["type"] == "function_upper" else p[0].data["type"] 
+            p[0].place = getnewvar(tmp_type)
+            class_obj = getnewvar(details["var"]["type"])
             if(p[0].data["type"] == "function_upper"):
                 p[0].data["func_sig"] = x["func_sig"]
                 p[0].data["func_name"] = p[3].data
@@ -825,7 +840,7 @@ def p_primary_expression1(p):
     p[0] = OBJ() 
     p[0].parse=f(p) 
     p[0].data = assigner(p,1)
-    p[0].place = getnewvar()
+    p[0].place = getnewvar(p[0].data["type"])
     p[0].code = [ p[0].place + " = " + str(p[1].data["value"]) ] 
     
     
@@ -858,8 +873,8 @@ def p_unary_expression1(p):
             p[0].data["type"]=p[2].data["type"]+"p"
         else:
             p[0].data["type"]=p[2].data["type"]+"|p"
-    p[0].place = getnewvar()
-    t_var = getnewvar()
+    p[0].place = getnewvar(p[0].data["type"])
+    t_var = getnewvar(p[2].data["type"])
     p[0].code = p[2].code+ [ t_var + " = " +  p[2].place ] + [ p[0].place + " = "+ p[1].data + t_var ] 
   
 
@@ -880,8 +895,8 @@ def p_unary_expression2(p):
             p[0].data["type"]=p[2].data["type"]+"p"
         else:
             p[0].data["type"]=p[2].data["type"]+"|p"
-    p[0].place = getnewvar()
-    t_var = getnewvar()
+    p[0].place = getnewvar(p[0].data["type"])
+    t_var = getnewvar(p[2].data["type"])
     p[0].code = p[2].code+ [ t_var + " = " +  p[2].place ] + [ p[0].place + " = "+ p[1].data + t_var ] 
 def p_deallocation_expression(p): 
     '''deallocation_expression : DELETE cast_expression  ''' 
@@ -914,22 +929,22 @@ def p_allocation_expression0(p):
     if len(p)==3:
         p[0].data = {"type" : p[2].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        p[0].place=getnewvar()
+        p[0].place=getnewvar(p[0].data["type"])
         p[0].code = ["PushParam " + byte_size(tpe), "PushParam 0", p[0].place + " = call alloc"]
     elif len(p)==4:
         p[0].data = {"type" : p[2].data, "init" : p[3].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        p[0].place=getnewvar()
+        p[0].place=getnewvar(p[0].data["type"])
         p[0].code = ["PushParam " + byte_size(tpe), "PushParam constructor", p[0].place + " = call alloc"]
     elif len(p)==5:
         p[0].data = {"type" : p[3].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        p[0].place=getnewvar()
+        p[0].place=getnewvar(p[0].data["type"])
         p[0].code = ["PushParam " + byte_size(tpe), "PushParam 0", p[0].place + " = call alloc"]
     elif len(p)==6:
         p[0].data = {"type" : p[3].data, "init" : p[5].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        p[0].place=getnewvar()
+        p[0].place=getnewvar(p[0].data["type"])
         p[0].code = ["PushParam " + byte_size(tpe), "PushParam constructor", p[0].place + " = call alloc"]
     # print("yo", p[0].data)
 
@@ -947,29 +962,29 @@ def p_allocation_expression1(p):
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[2].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        tmp1 = getnewvar()
-        p[0].place=getnewvar()
+        tmp1 = getnewvar("int")
+        p[0].place=getnewvar(p[0].data["type"])
         p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
     elif len(p)==7:
         if "type" not in p[4].data.keys() or p[4].data["type"]!="int":
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[2].data, "init" : p[3].data}
-        tmp1 = getnewvar()
-        p[0].place=getnewvar()
+        tmp1 = getnewvar("int")
+        p[0].place=getnewvar(p[0].data["type"])
         p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
     elif len(p)==8:
         if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[3].data}
-        tmp1 = getnewvar()
-        p[0].place=getnewvar()
+        tmp1 = getnewvar("int")
+        p[0].place=getnewvar(p[0].data["type"])
         p[0].code = p[6].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[6].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
     elif len(p)==9:
         if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[3].data, "init" : p[5].data}
-        tmp1 = getnewvar()
-        p[0].place=getnewvar()
+        tmp1 = getnewvar("int")
+        p[0].place=getnewvar(p[0].data["type"])
         p[0].code = p[4].code + [tmp1 + " = " + byte_size(tpe) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
     # print("yo", p[0].data)
 
@@ -1555,7 +1570,6 @@ def p_function_definition(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    print(p[6].data)
     function_name = p[2].data["name"]
     func_sig = function_name +"|" + p[4].data["input_sig"]
     if p[4].data["return_sig"]=="void":
@@ -1571,6 +1585,8 @@ def p_function_definition(p):
     func_detail["stack_space"] = get_offset()
     updateVar(func_sig, func_detail)    
     popOffset()
+   
+
     p[0].code = [func_detail["name"] + "|" + func_detail["return_sig"] + ":", "    BeginFunc __func_size__" ] + [ "    " + i for i in p[6].code] + ["    EndFunc"]
 
 
@@ -1588,25 +1604,11 @@ def p_func_push_scope(p):
 
 
 def p_fct_body(p): 
-    '''fct_body : func_compound_statement''' 
+    '''fct_body : compound_statement''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].code = p[1].code.copy()
     p[0].data=assigner(p,1)
-
-def p_func_compound_statement(p): 
-    '''func_compound_statement : LCPAREN statement_list RCPAREN 
-                          | LCPAREN RCPAREN 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    if len(p) == 4:
-        p[0].code = p[2].code
-        p[0].place = p[2].place
-        p[0].data=assigner(p,2)
-    else:
-        p[0].code = {}
-        p[0].place = getnewvar()
     
 
 def p_compound_statement(p): 
@@ -1621,7 +1623,7 @@ def p_compound_statement(p):
         p[0].data=assigner(p,2)
     else:
         p[0].code = {}
-        p[0].place = getnewvar()
+        p[0].place = getnewvar("int")
 
 def p_statement_list(p): 
     '''statement_list : statement 
@@ -1634,7 +1636,10 @@ def p_statement_list(p):
         p[0].data=assigner(p,1)
         p[0].code = p[1].code
         p[0].place = p[1].place
+        print("state sing", p[1].data, p.lineno(1))
     else:
+        p[0].data = {}
+        print("state", p[1].data, p[2].data, p.lineno(1), p.lineno(2))
         retType(p,1,2)
         p[0].code = p[1].code + p[2].code
         p[0].place = p[2].place
@@ -1660,7 +1665,7 @@ def p_statement(p):
         p[0].code = p[2].code
         p[0].place = p[2].place
 
-
+    print("expr", p[0].data)
 def p_jump_statement(p): 
     '''jump_statement : BREAK SEMICOLON 
                       | CONTINUE SEMICOLON 
@@ -1697,6 +1702,7 @@ def p_selection_statement_2(p):
     p[0].parse=f(p)  
     p[0].else_ = getnewlabel()
     p[0].after = getnewlabel()
+    p[0].data = {}
     retType(p,6,10)
     p[0].code = p[3].code + ["if " + p[3].place + "==0 goto " + p[0].else_] + p[6].code + ["goto " + p[0].after] + \
         [p[0].else_ + " : "] + p[10].code + [p[0].after + " : "]
@@ -1712,6 +1718,7 @@ def p_try_block(p):
     '''try_block : TRY push_scope compound_statement pop_scope CATCH  push_scope compound_statement pop_scope''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].data = {}
     retType(p, 3, 7 )
 
 
@@ -1724,6 +1731,7 @@ def p_labeled_statement_list(p):
     if len(p)==2:
         p[0].data=assigner(p,1)
     else:
+        p[0].data = {}
         retType(p,1,2 )
 
 def p_labeled_statement(p): 
@@ -1806,6 +1814,7 @@ def p_for_init_statement(p):
     p[0].code=p[1].code.copy()
     p[0].place=p[1].place
 
+
 def p_expression_statement(p): 
     '''expression_statement : expression SEMICOLON 
     ''' 
@@ -1819,6 +1828,7 @@ def p_declaration_statement(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].code=p[1].code.copy()
+    p[0].data = assigner(p,1)
 
 def get_size(data_type):
     size = {
@@ -1839,6 +1849,7 @@ def p_declaration0(p):
     p[0].parse=f(p)
     decl_list = p[2].data
     p[0].code=p[2].code.copy()
+    p[0].data = {}
     for each in decl_list:
         data = p[1].data.copy()
         if(each["type"] != ""):
@@ -1908,6 +1919,9 @@ def p_declaration0(p):
                     report_error("Constructor is not defined for "+data["type"],p.lineno(1))
                 # print("Type,", each["init_type"])
                 report_error("Assigned type is not same as given type",p.lineno(1))   
+
+    print(p[0].data)
+
 # def p_declaration1(p):
 #     '''declaration :  asm_declaration  ''' 
         
@@ -1990,6 +2004,7 @@ def p_initializer_1(p):
     p[0].data=p[2].data.copy()
     p[0].place=p[2].place
     p[0].code=p[2].code.copy()
+    print("init",p[0].data)
 
 # def p_initializer1(p): 
 #     '''initializer :   EQUAL LCPAREN initializer_list RCPAREN''' 
