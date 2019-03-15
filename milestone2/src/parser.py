@@ -32,7 +32,7 @@ def f(p):
 
 CodeFile = 'code.crux'
 FileName = '<given file>'
-SynbolTableFileName = 'symbol.dump'
+SymbolTableFileName = 'symbol.dump'
         
 labeldict = {}
 scopeTableList = []
@@ -1102,9 +1102,7 @@ def p_deallocation_expression(p):
 # New Allocation
 # Extra * new_type_name me added hain
 def p_allocation_expression0(p): 
-    '''allocation_expression : NEW new_type_name new_initializer 
-                             | NEW new_type_name 
-                             | NEW LPAREN type_name  RPAREN new_initializer 
+    '''allocation_expression : NEW new_type_name 
                              | NEW LPAREN type_name  RPAREN 
     ''' 
     p[0] = OBJ() 
@@ -1114,26 +1112,14 @@ def p_allocation_expression0(p):
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         p[0].place=getnewvar(p[0].data["type"])
         p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam 0", p[0].place + " = call alloc"]
-    elif len(p)==4:
-        p[0].data = {"type" : p[2].data, "init" : p[3].data}
-        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam constructor", p[0].place + " = call alloc"]
     elif len(p)==5:
         p[0].data = {"type" : p[3].data}
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         p[0].place=getnewvar(p[0].data["type"])
         p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam 0", p[0].place + " = call alloc"]
-    elif len(p)==6:
-        p[0].data = {"type" : p[3].data, "init" : p[5].data}
-        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam constructor", p[0].place + " = call alloc"]
 
 def p_allocation_expression1(p): 
-    '''allocation_expression : NEW new_type_name LSPAREN expression RSPAREN new_initializer 
-                             | NEW new_type_name LSPAREN expression RSPAREN
-                             | NEW LPAREN type_name RPAREN LSPAREN expression RSPAREN new_initializer 
+    '''allocation_expression :  NEW new_type_name LSPAREN expression RSPAREN
                              | NEW LPAREN type_name RPAREN LSPAREN expression RSPAREN
     ''' 
     p[0] = OBJ() 
@@ -1145,28 +1131,14 @@ def p_allocation_expression1(p):
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         tmp1 = getnewvar("int")
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[4].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
-    elif len(p)==7:
-        if "type" not in p[4].data.keys() or p[4].data["type"]!="int":
-            report_error("Need int type for []", p.lineno(1))
-        p[0].data = {"type" : p[2].data, "init" : p[3].data}
-        tmp1 = getnewvar("int")
-        p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[4].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
+        p[0].code = p[4].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[4].place, "PushParam " + tmp1  , p[0].place + " = call alloc"]
     elif len(p)==8:
         if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
             report_error("Need int type for []", p.lineno(1))
         p[0].data = {"type" : p[3].data}
         tmp1 = getnewvar("int")
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[6].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place, "PushParam " + tmp1 , "PushParam 0" , p[0].place + " = call alloc"]
-    elif len(p)==9:
-        if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
-            report_error("Need int type for []", p.lineno(1))
-        p[0].data = {"type" : p[3].data, "init" : p[5].data}
-        tmp1 = getnewvar("int")
-        p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[4].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
+        p[0].code = p[6].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place, "PushParam " + tmp1  , p[0].place + " = call alloc"]
 
 
 def p_new_type_name(p): 
@@ -1189,14 +1161,7 @@ def p_new_declarator(p):
         p[0].data = "p"
     elif len(p)==3:
         p[0].data = p[1].data + "p"
-    
-#Remaining
-def p_new_initializer(p): 
-    '''new_initializer : LPAREN expression_list  RPAREN 
-                       | LPAREN  RPAREN 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+
 
 def p_unary1_operator(p): 
     '''unary1_operator : PLUSOP 
@@ -2386,6 +2351,16 @@ if __name__ == "__main__":
     p = parser.parse(file_o,lexer = lexer,debug=debug,tracking=True)  
     open('dot.gz','a').write("\n}\n")
     scope_table_graph(scopeTableList)
-    # for each in scopeTableList:
-    #     pp.pprint(each.table)
-    # print(offsetList, offsetParent)
+    
+    f = open(SymbolTableFileName, "w")
+
+    for idx, table in  enumerate( scopeTableList):
+        f.write("SCOPE START :: " + str(idx) + "\n")
+        for key in table.table.keys():
+            f.write("    " + str(key) + " , " )
+            detail = table.table[key]
+            if isinstance(detail,dict):
+                for elem_key in detail.keys():
+                    f.write("{ " + str(elem_key) + " : " + str(detail[elem_key]) + " } , " )
+            f.write("\n")
+        f.write("SCOPE END :: " + str(idx) + "\n\n")
