@@ -884,14 +884,15 @@ def p_postfix_expression_3(p):
 
     class_name = "" if "class_name" not in p[1].data.keys() else p[1].data["class_name"]
     code = [ ]
-    for each in p[3].place:
-        code.append("PushParam " + each )
+    if isinstance(p[3].place, list):
+        for each in p[3].place:
+            code.append("PushParam " + each )
 
     if "class_obj" in p[1].data.keys():
         code.append("PushParam " + p[1].data["class_obj"] )
 
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig , "PopParams"]
+    p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig ]
 
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
@@ -2014,7 +2015,10 @@ def p_expression_statement(p):
     p[0].parse=f(p)
     p[0].place = p[1].place
     p[0].code = p[1].code.copy()
-    p[0].data = assigner(p,1)
+    if len(p)==2:
+        p[0].data = {}
+    else:
+        p[0].data = assigner(p,1)
 
 def p_declaration_statement(p): 
     '''declaration_statement : declaration''' 
