@@ -5,3 +5,5 @@
 *__pycache__*
 *m.cpp
 *.vscode
+*.crux
+*.dump
