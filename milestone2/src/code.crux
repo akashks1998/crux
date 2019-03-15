@@ -1,0 +1,28 @@
+//Code For <given file>
+  1::test|void|p:
+  2::    BeginFunc 20
+  3::    tmp@1 = g@1
+  4::    tmp@0 = *tmp@1
+  5::    return tmp@0
+  6::    EndFunc
+  7::h|:
+  8::    BeginFunc 4
+  9::    tmp@2 = 0
+ 10::    return tmp@2
+ 11::    EndFunc
+ 12::main|:
+ 13::    BeginFunc 40
+ 14::    tmp@3=int|p_to_void|p(x@5)
+ 15::    PushParam tmp@3
+ 16::    tmp@4 = Fcall test|void|p
+ 17::    PopParams
+ 18::    tmp@5 = *(g@5)
+ 19::    PushParam N
+ 20::    PushParam O
+ 21::    PushParam P
+ 22::    PushParam tmp@5
+ 23::    tmp@6 = Fcall T:h|
+ 24::    PopParams
+ 25::    tmp@7 = 0
+ 26::    return tmp@7
+ 27::    EndFunc

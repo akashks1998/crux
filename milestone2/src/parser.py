@@ -29,6 +29,10 @@ def f(p):
         
         open('dot.gz','a').write("    " + str(out[1])  +  " -> " + str(p[each+1].parse[1]))
     return out
+
+CodeFile = 'code.crux'
+FileName = '<given file>'
+SynbolTableFileName = 'symbol.dump'
         
 labeldict = {}
 scopeTableList = []
@@ -368,15 +372,16 @@ def p_program(p):
     p[0].parse=f(p)
     for l in range(len(p)):
         p[0].code = p[0].code + p[l].code.copy()
-    x=1
     for i in p[0].code:
         if re.fullmatch('[ ]*break', i) != None:
             report_error("break should be inside for/do-while/while/switch-case !!", "break")
         elif re.fullmatch('[ ]*continue', i) != None:
             report_error("continue should be inside for/do-while/while !!", "continue")
+    open(CodeFile,'w').write("//Code For " + FileName + "\n")
+    x=1
     for i in p[0].code:
         if re.fullmatch('[ ]*', i) == None:
-            print('{0:3}'.format(x),"::",i)
+            open(CodeFile,'a').write('{0:3}'.format(x) + "::" + i + "\n")
             x=x+1
 
 def p_translation_unit(p):
@@ -886,7 +891,7 @@ def p_postfix_expression_3(p):
         code.append("PushParam " + p[1].data["class_obj"] )
 
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
+    p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig , "PopParams"]
 
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
