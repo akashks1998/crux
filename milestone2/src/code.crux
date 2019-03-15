@@ -1,0 +1,40 @@
+//Code For <given file>
+  1::main|:
+  2::    BeginFunc 128
+  3::    tmp@0 = 3
+  4::    c@1 = tmp@0
+  5::    tmp@1 = 5
+  6::    tmp@2 = 4*tmp@1
+  7::    PushParam tmp@2
+  8::    tmp@3 = Scall alloc
+  9::    p@1 = tmp@3
+ 10::    tmp@4 = 6
+ 11::    tmp@5 = 10
+ 12::    rowCount@1 = tmp@4
+ 13::    colCount@1 = tmp@5
+ 14::    tmp@6 = 8*rowCount@1
+ 15::    PushParam tmp@6
+ 16::    tmp@7 = Scall alloc
+ 17::    a@1 = tmp@7
+ 18::    tmp@8 = 0
+ 19::    i@2 = tmp@8
+ 20::    for_begin1#0 : 
+ 21::        tmp@9 = i@2 int< rowCount@1
+ 22::        ifz tmp@9 goto->for_after1#0
+ 23::        tmp@13 = 4*colCount@1
+ 24::        PushParam tmp@13
+ 25::        tmp@14 = Scall alloc
+ 26::        tmp@12 = *( a@1 int+ i@2)
+ 27::        tmp@12=tmp@14
+ 28::    for_continue1#0 : 
+ 29::        tmp@10 = 1
+ 30::        tmp@11 = i@2 int+ tmp@10
+ 31::        i@2=tmp@11
+ 32::        goto->for_begin1#0
+ 33::    for_after1#0 : 
+ 34::    PushParam 8
+ 35::    tmp@15 = Scall alloc
+ 36::    q@1 = tmp@15
+ 37::    tmp@16 = 0
+ 38::    return tmp@16
+ 39::    EndFunc

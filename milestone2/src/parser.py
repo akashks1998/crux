@@ -1102,49 +1102,42 @@ def p_deallocation_expression(p):
 
 # New Allocation
 # Extra * new_type_name me added hain
-def p_allocation_expression0(p): 
-    '''allocation_expression : NEW new_type_name 
-                             | NEW LPAREN type_name  RPAREN 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    if len(p)==3:
-        p[0].data = {"type" : p[2].data}
-        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam 0", p[0].place + " = call alloc"]
-    elif len(p)==5:
-        p[0].data = {"type" : p[3].data}
-        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam 0", p[0].place + " = call alloc"]
-
 def p_allocation_expression1(p): 
-    '''allocation_expression :  NEW new_type_name LSPAREN expression RSPAREN
-                             | NEW LPAREN type_name RPAREN LSPAREN expression RSPAREN
+    '''allocation_expression :  NEW LPAREN type_name RPAREN LSPAREN expression RSPAREN
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    if len(p)==6:
-        if "type" not in p[4].data.keys() or p[4].data["type"]!="int":
-            report_error("Need int type for []", p.lineno(1))
-        p[0].data = {"type" : p[2].data}
-        tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
-        tmp1 = getnewvar("int")
-        p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[4].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[4].place, "PushParam " + tmp1  , p[0].place + " = call alloc"]
-    elif len(p)==8:
-        if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
-            report_error("Need int type for []", p.lineno(1))
-        p[0].data = {"type" : p[3].data}
-        tmp1 = getnewvar("int")
-        p[0].place=getnewvar(p[0].data["type"])
-        p[0].code = p[6].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place, "PushParam " + tmp1  , p[0].place + " = call alloc"]
+
+    if "|" in p[3].data["type"].rstrip("p").rstrip("|"):
+        report_error("wrong type name for allocation", p.lineno(0))
+    if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
+        report_error("Need int type for []", p.lineno(1))
+
+    p[0].data["type"] = p[3].data["type"] + "p" if ("|" in p[3].data["type"]) else p[3].data["type"] + "|p"
+    tpe = p[3].data["type"]
+    tmp1 = getnewvar("int")
+    p[0].place=getnewvar(p[0].data["type"])
+    p[0].code = p[6].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place, "PushParam " + tmp1  , p[0].place + " = Scall alloc"]
+
+
+def p_allocation_expression0(p): 
+    '''allocation_expression : NEW LPAREN type_name  RPAREN 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    
+    if "|" in p[3].data["type"].rstrip("p").rstrip("|"):
+        report_error("wrong type name for allocation", p.lineno(0))
+    p[0].data = {"type" : p[3].data["type"] + "p"} if "|" in p[3].data["type"] else {"type" : p[3].data["type"] + "|p"}
+    tpe = p[3].data["type"]
+    p[0].place=getnewvar(p[0].data["type"])
+    p[0].code = ["PushParam " + str(get_size(tpe)),  p[0].place + " = Scall alloc"]
+
 
 
 def p_new_type_name(p): 
     '''new_type_name : type_specifier_ new_declarator %prec HIGHER
-                     | type_specifier_ %prec LOWER
+                     | type_specifier_  %prec LOWER
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -1153,9 +1146,8 @@ def p_new_type_name(p):
         p[0].data = p[0].data + p[2].data
 
 def p_new_declarator(p): 
-    '''new_declarator : new_declarator unary2_operator 
-                      | unary2_operator  
-    ''' 
+    '''new_declarator :  unary2_operator new_declarator %prec HIGHER
+                      | unary2_operator  %prec LOWER'''
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
