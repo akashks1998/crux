@@ -708,7 +708,7 @@ def p_assignment_expression(p):
             p[0].code = p[3].code + p[1].code + t["code"] +[ p[1].place + p[2].data + t["place"] ]
         else:
             p[0].code = p[3].code + p[1].code + t["code"]+[ p[1].place + " = " \
-                + p[1].place + " " +p[1].data["type"]+"_" +p[2].data[0] + " " + t["place"] ]
+                + p[1].place + " " +p[1].data["type"] +p[2].data[0] + " " + t["place"] ]
 
 
 def p_assignment_operator(p): 
