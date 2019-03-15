@@ -1096,10 +1096,30 @@ def p_unary_expression2(p):
     p[0].data["class_u"] = "unary2"
 
 def p_deallocation_expression(p): 
-    '''deallocation_expression : DELETE cast_expression  ''' 
+    '''deallocation_expression : DELETE IDENTIFIER
+                              |  DELETE LSPAREN RSPAREN IDENTIFIER
+    ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if(len(p) == 3):
+        detail = checkVar(p[2].data)["var"]
+        name = p[2].data
+        if detail == False:
+            report_error(p[2].data +" not defined", p.lineno(1))
+        
+    else:
+        detail = checkVar(p[4].data)["var"]
+        name = p[4].data
+        if detail == False:
+            report_error(p[2].data +" not defined", p.lineno(1))
 
+    if "type" in detail.keys() and "|" in detail["type"] and detail["type"][-1] == "p":
+        pass
+    else:
+        report_error("wrong specification of deallocate ", p.lineno(0))
+    
+    p[0].code = ["PushParam " + name + "@" + str(currentScopeTable) ] + ["Scall dealloc"]
+        
 # New Allocation
 # Extra * new_type_name me added hain
 def p_allocation_expression1(p): 
