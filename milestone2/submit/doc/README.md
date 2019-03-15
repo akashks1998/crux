@@ -1,14 +1,16 @@
 ## Instructions of running
-- run using ````
+- run using ``python3 parser.py Inputfile OutputFile SymbolTableFile``
 
 ## Features :
 - if,if-else
 - break,continue
 - for,while,do-while
-- Functions
+- Functions, Function Overloading
 - Classes
+- new , delete
 - Vanilla C features
-Following are the differences from vanilla implementation of the above
+
+Following are the differences from vanilla implementation of the above[^1]
 ## Miscelaneous
 - Variable sized arrays cannot be declared :
   ```
@@ -80,3 +82,5 @@ Following are the differences from vanilla implementation of the above
 ## Allocation/Deallocation
 - new keyword is used for allocation and is used as ```new (int)[c]``` round brackets are compulsory and square braces are optional and if mentioned returns array of allocated objects. Here variable sized arrays are possible.
 - to delete a variable previously allocated, use ``delete id`` and for array use ``delete [] id``. Currently the id should be an identifier only.
+
+[^1]: Reference for 3AC : [Stanford 3AC Examples](https://web.stanford.edu/class/archive/cs/cs143/cs143.1128/handouts/240%20TAC%20Examples.pdf )
