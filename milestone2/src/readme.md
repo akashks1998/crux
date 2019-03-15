@@ -3,7 +3,7 @@
 
 ### Features of our language
 - Function overloading is allowed
-- Class, Struct
+- Class
 - If Else
 - For, while, do while
 - Break, continue
@@ -23,7 +23,7 @@ class x: int f(int y){
     }
 }
 ```
-Function declaration inside a class is not allowed, though function defination insde a class is allowed
+Function declaration inside a class is not allowed, though function defination insde a class is allowed. Public, Private, Protected are removed, every thing is public.
 - Paranthesis are must for start of new scope. Like
 ```c++
 if(x>1)
