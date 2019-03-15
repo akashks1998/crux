@@ -1155,27 +1155,6 @@ def p_allocation_expression0(p):
 
 
 
-def p_new_type_name(p): 
-    '''new_type_name : type_specifier_ new_declarator %prec HIGHER
-                     | type_specifier_  %prec LOWER
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data = p[1].data["type"] + "|p"
-    if len(p)==3:
-        p[0].data = p[0].data + p[2].data
-
-def p_new_declarator(p): 
-    '''new_declarator :  unary2_operator new_declarator %prec HIGHER
-                      | unary2_operator  %prec LOWER'''
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    if len(p)==2:
-        p[0].data = "p"
-    elif len(p)==3:
-        p[0].data = p[1].data + "p"
-
-
 def p_unary1_operator(p): 
     '''unary1_operator : PLUSOP 
                       | MINUSOP 

@@ -1,42 +1,40 @@
 //Code For <given file>
   1::main|:
-  2::    BeginFunc 128
+  2::    BeginFunc 120
   3::    tmp@0 = 3
   4::    c@1 = tmp@0
-  5::    tmp@1 = 5
-  6::    tmp@2 = 4*tmp@1
-  7::    PushParam tmp@2
-  8::    tmp@3 = Scall alloc
-  9::    p@1 = tmp@3
- 10::    tmp@4 = 6
- 11::    tmp@5 = 10
- 12::    rowCount@1 = tmp@4
- 13::    colCount@1 = tmp@5
- 14::    tmp@6 = 8*rowCount@1
- 15::    PushParam tmp@6
- 16::    tmp@7 = Scall alloc
- 17::    a@1 = tmp@7
- 18::    tmp@8 = 0
- 19::    i@2 = tmp@8
- 20::    for_begin1#0 : 
- 21::        tmp@9 = i@2 int< rowCount@1
- 22::        ifz tmp@9 goto->for_after1#0
- 23::        tmp@13 = 4*colCount@1
- 24::        PushParam tmp@13
- 25::        tmp@14 = Scall alloc
- 26::        tmp@12 = *( a@1 int+ i@2)
- 27::        tmp@12=tmp@14
- 28::    for_continue1#0 : 
- 29::        tmp@10 = 1
- 30::        tmp@11 = i@2 int+ tmp@10
- 31::        i@2=tmp@11
- 32::        goto->for_begin1#0
- 33::    for_after1#0 : 
- 34::    PushParam 8
- 35::    tmp@15 = Scall alloc
- 36::    q@1 = tmp@15
- 37::    PushParam p@1
- 38::    Scall dealloc
- 39::    tmp@16 = 0
- 40::    return tmp@16
- 41::    EndFunc
+  5::    PushParam 4
+  6::    tmp@1 = Scall alloc
+  7::    p@1 = tmp@1
+  8::    tmp@2 = 6
+  9::    tmp@3 = 10
+ 10::    rowCount@1 = tmp@2
+ 11::    colCount@1 = tmp@3
+ 12::    tmp@4 = 8*rowCount@1
+ 13::    PushParam tmp@4
+ 14::    tmp@5 = Scall alloc
+ 15::    a@1 = tmp@5
+ 16::    tmp@6 = 0
+ 17::    i@2 = tmp@6
+ 18::    for_begin1#0 : 
+ 19::        tmp@7 = i@2 int< rowCount@1
+ 20::        ifz tmp@7 goto->for_after1#0
+ 21::        tmp@11 = 4*colCount@1
+ 22::        PushParam tmp@11
+ 23::        tmp@12 = Scall alloc
+ 24::        tmp@10 = *( a@1 int+ i@2)
+ 25::        tmp@10=tmp@12
+ 26::    for_continue1#0 : 
+ 27::        tmp@8 = 1
+ 28::        tmp@9 = i@2 int+ tmp@8
+ 29::        i@2=tmp@9
+ 30::        goto->for_begin1#0
+ 31::    for_after1#0 : 
+ 32::    PushParam 8
+ 33::    tmp@13 = Scall alloc
+ 34::    q@1 = tmp@13
+ 35::    PushParam p@1
+ 36::    Scall dealloc
+ 37::    tmp@14 = 0
+ 38::    return tmp@14
+ 39::    EndFunc
