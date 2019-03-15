@@ -1917,20 +1917,22 @@ def p_selection_statement_3(p):
         tmp = getnewvar("int")
         p[0].code = [tmp + " = char-to-int " + place]
         place = tmp
+    default_label = p[0].after
     for idx,v in enumerate([t["value"] for t in p[7].code]):
         if v == None:
+            default_label = p[7].code[idx]["label"]
             continue
         if p[7].code[idx]["type"] =="char":
             tmp3 = getnewvar("char")
             tmp = getnewvar("int")
             tmp2 = getnewvar("int")
-            testcode = testcode + [tmp3+" = "+str(v)] + [tmp+" = char-to-int "+tmp3] + [tmp2+" = "+place+" - "+tmp, "ifz "+tmp2+" goto->"+p[7].code[idx]["label"]]
+            testcode = testcode + [tmp3+" = "+str(v)] + [tmp+" = char-to-int "+tmp3] + [tmp2+" = "+place+" int- "+tmp, "ifz "+tmp2+" goto->"+p[7].code[idx]["label"]]
         else:
             tmp = getnewvar("int")
             tmp2 = getnewvar("int")
             # print(v, p[7].code[idx]["value"], p[7].code[idx]["type"], tmp)
-            testcode = testcode + [tmp+" = "+str(v)] + [tmp2+" = "+place+" - "+tmp, "ifz "+tmp2+" goto->"+p[7].code[idx]["label"]]
-    testcode = testcode + ["goto->" + p[0].after]
+            testcode = testcode + [tmp+" = "+str(v)] + [tmp2+" = "+place+" int- "+tmp, "ifz "+tmp2+" goto->"+p[7].code[idx]["label"]]
+    testcode = testcode + ["goto->" + default_label]
     for idx,c in enumerate(p[7].code):
         # print(idx)
         l = c["statement"]
@@ -2073,6 +2075,7 @@ def p_for_init_statement(p):
 
 def p_expression_statement(p): 
     '''expression_statement : expression SEMICOLON 
+                            | SEMICOLON
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
