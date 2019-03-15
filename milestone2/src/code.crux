@@ -1,34 +1,9 @@
 //Code For <given file>
   1::main|:
-  2::    BeginFunc 144
-  3::    tmp@0 = 0
-  4::    sum@1 = tmp@0
-  5::    tmp@1 = 0
-  6::    i@1=tmp@1
-  7::    for_begin1#0 : 
-  8::        tmp@2 = i@1 int< n@1
-  9::        ifz tmp@2 goto->for_after1#0
- 10::        tmp@5 = 1
- 11::        tmp@6 = i@1 int+ tmp@5
- 12::        i@1=tmp@6
- 13::        tmp@8 = 0 int+ i@1
- 14::        tmp@7 = tmp@8 int* 1
- 15::        tmp@10 = tmp@7 int* 4
- 16::        tmp@9 = marks@1 int+ tmp@10
- 17::        tmp@11 = *(tmp@9)
- 18::        sum@1 = sum@1 int+ tmp@11
- 19::    for_continue1#0 : 
- 20::        tmp@3 = 1
- 21::        tmp@4 = i@1 int+ tmp@3
- 22::        i@1=tmp@4
- 23::        goto->for_begin1#0
- 24::    for_after1#0 : 
- 25::    tmp@12 = sum@1 int/ n@1
- 26::    average@1=tmp@12
- 27::    tmp@13 = 2
- 28::    tmp@14 = tmp@13 int* 4
- 29::    tmp@15 = b@1 int+ tmp@14
- 30::    a@1=tmp@15
- 31::    tmp@16 = 0
- 32::    return tmp@16
- 33::    EndFunc
+  2::    BeginFunc 16
+  3::    temporaryVariable@1=firstNumber@1
+  4::    firstNumber@1=secondNumber@1
+  5::    secondNumber@1=temporaryVariable@1
+  6::    tmp@0 = 0
+  7::    return tmp@0
+  8::    EndFunc

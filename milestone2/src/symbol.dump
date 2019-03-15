@@ -1,35 +1,16 @@
 SCOPE START :: 0
-    main| , { name : main } , { return_sig : int } , { input_sig :  } , { body_scope : 1 } , { declaration : False } , { stack_space : 144 } , 
+    main| , { name : main } , { return_sig : int } , { input_sig :  } , { body_scope : 1 } , { declaration : False } , { stack_space : 16 } , 
     main , { type : function_upper } , { func_sig : [('main|', 'int')] } , 
 SCOPE END :: 0
 
 SCOPE START :: 1
-    tmp@0 , { type : int } , { class : temp } , { size : 4 } , { offset : 0 } , 
-    marks , { class : simple } , { type : int|a } , { template : 0 } , { template_list : None } , { const : 0 } , { name : marks } , { meta : [10] } , { is_array : 1 } , { element_type : int } , { index : 1 } , { to_add : 0 } , { size : 40 } , { offset : 4 } , 
-    i , { class : simple } , { type : int } , { template : 0 } , { template_list : None } , { const : 0 } , { name : i } , { meta : [] } , { size : 4 } , { offset : 44 } , 
-    n , { class : simple } , { type : int } , { template : 0 } , { template_list : None } , { const : 0 } , { name : n } , { meta : [] } , { size : 4 } , { offset : 48 } , 
-    sum , { class : simple } , { type : int } , { template : 0 } , { template_list : None } , { const : 0 } , { name : sum } , { meta : [] } , { size : 4 } , { offset : 52 } , 
-    average , { class : simple } , { type : int } , { template : 0 } , { template_list : None } , { const : 0 } , { name : average } , { meta : [] } , { size : 4 } , { offset : 56 } , 
-    tmp@12 , { type : int } , { class : temp } , { size : 4 } , { offset : 104 } , 
-    a , { class : simple } , { type : int|p } , { template : 0 } , { template_list : None } , { const : 0 } , { name : a } , { meta : [] } , { size : 8 } , { offset : 108 } , 
-    b , { class : simple } , { type : int|p } , { template : 0 } , { template_list : None } , { const : 0 } , { name : b } , { meta : [] } , { size : 8 } , { offset : 116 } , 
-    tmp@13 , { type : int } , { class : temp } , { size : 4 } , { offset : 124 } , 
-    tmp@14 , { type : int } , { class : temp } , { size : 4 } , { offset : 128 } , 
-    tmp@15 , { type : int|p } , { class : temp } , { size : 8 } , { offset : 132 } , 
-    tmp@16 , { type : int } , { class : temp } , { size : 4 } , { offset : 140 } , 
+    firstNumber , { class : simple } , { type : int } , { name : firstNumber } , { meta : [] } , { size : 4 } , { offset : 0 } , 
+    secondNumber , { class : simple } , { type : int } , { name : secondNumber } , { meta : [] } , { size : 4 } , { offset : 4 } , 
+    temporaryVariable , { class : simple } , { type : int } , { name : temporaryVariable } , { meta : [] } , { size : 4 } , { offset : 8 } , 
+    tmp@0 , { type : int } , { class : temp } , { size : 4 } , { offset : 12 } , 
 SCOPE END :: 1
 
-SCOPE START :: 2
-    tmp@1 , { type : int } , { class : temp } , { size : 4 } , { offset : 60 } , 
-    tmp@2 , { type : int } , { class : temp } , { size : 4 } , { offset : 64 } , 
-    tmp@3 , { type : int } , { class : temp } , { size : 4 } , { offset : 68 } , 
-    tmp@4 , { type : int } , { class : temp } , { size : 4 } , { offset : 72 } , 
-    tmp@5 , { type : int } , { class : temp } , { size : 4 } , { offset : 76 } , 
-    tmp@6 , { type : int } , { class : temp } , { size : 4 } , { offset : 80 } , 
-    tmp@7 , { type : int } , { class : temp } , { size : 4 } , { offset : 84 } , 
-    tmp@8 , { type : int } , { class : temp } , { size : 4 } , { offset : 88 } , 
-    tmp@9 , { type : int } , { class : temp } , { size : 4 } , { offset : 92 } , 
-    tmp@10 , { type : int } , { class : temp } , { size : 4 } , { offset : 96 } , 
-    tmp@11 , { type : int } , { class : temp } , { size : 4 } , { offset : 100 } , 
-SCOPE END :: 2
 
+SCOPE SCOPE RELATION ::  SCOPE NUMBER : PARENT NUMBER
+                               0             None
+                               1             0

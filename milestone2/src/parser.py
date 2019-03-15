@@ -1400,21 +1400,6 @@ def p_argument_declaration_1(p):
                
     p[0].data = data
 
-# # these two can be removed, will be handled later if time permits
-# def p_argument_declaration_3(p): 
-#     '''argument_declaration : type_specifier_ abstract_declarator ''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
-#     # p[0].data = {"name" : , "type" : "meta": [] , "init" : }
-
-
-# def p_argument_declaration_4(p): 
-#     '''argument_declaration :  type_specifier_ ''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
-#     # p[0].data = {"name" : , "type" : "meta": [] , "init" : }
-
-
 def p_name(p): 
     '''name : IDENTIFIER 
             | DOUBLEBNOP IDENTIFIER 
@@ -1423,50 +1408,6 @@ def p_name(p):
     p[0].parse=f(p)
     p[0].data = p[1].data if len(p) == 2 else "~~" + p[2].data
 
-
-
-# def p_operator_name(p): 
-#     '''operator_name : NEW 
-#                      | DELETE 
-#                      | PLUSOP 
-#                      | MINUSOP 
-#                      | MULTOP 
-#                      | DIVOP 
-#                      | MODOP 
-#                      | XOROP 
-#                      | BANDOP 
-#                      | BNOP 
-#                      | NOTSYM 
-#                      | EQUAL 
-#                      | LTCOMP 
-#                      | GTCOMP 
-#                      | PLUSEQOP 
-#                      | MINUSEQOP 
-#                      | MULTEQOP 
-#                      | DIVEQOP 
-#                      | MODEQOP 
-#                      | XOREQOP 
-#                      | BANDEQOP 
-#                      | LSHIFT 
-#                      | RSHIFT 
-#                      | RSHIFTEQOP 
-#                      | LSHIFTEQOP 
-#                      | EQCOMP 
-#                      | NEQCOMP 
-#                      | LTECOMP 
-#                      | GTECOMP 
-#                      | ANDOP 
-#                      | OROP 
-#                      | DPLUSOP 
-#                      | DMINUSOP 
-#                      | COMMA 
-#                      | ARROW 
-#     ''' 
-#                     #  | LPAREN  RPAREN 
-#                     #  | LSPAREN RSPAREN 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
-#     p[0].data = p[1].data
 
 def p_template_class_name(p): 
     '''template_class_name : LTEMPLATE template_arg_list RTEMPLATE''' 
@@ -1509,17 +1450,17 @@ def p_type_specifier_(p):
     p[0].parse=f(p)  
     if len(p)==3:
         p[0].data = assigner(p,2)
-        p[0].data["const"]=1
+        # p[0].data["const"]=1
     else:
         p[0].data = assigner(p,1)
-        p[0].data["const"]=0
+        # p[0].data["const"]=0
 
-def p_typedef_declarator(p):
-    '''typedef_declarator : TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
-                          | TYPEDEF type_specifier_  IDENTIFIER SEMICOLON
-    '''
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+# def p_typedef_declarator(p):
+#     '''typedef_declarator : TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
+#                           | TYPEDEF type_specifier_  IDENTIFIER SEMICOLON
+#     '''
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
 
 def p_type_specifier(p): 
     '''type_specifier : simple_type_name 
@@ -1538,57 +1479,25 @@ def p_simple_type_name(p):
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)   
-    p[0].data = { "class" : "simple", "type": p[1].data, "template" : 0, "template_list": None }
+    p[0].data = { "class" : "simple", "type": p[1].data }
 
 # input                 class               type        template                    template_list
 # class A<|int,char|>   "class"             A           1                           [int,char]             
 def p_complex_type_specifier(p): 
     '''complex_type_specifier : class_key IDENTIFIER 
-                                | class_key  IDENTIFIER template_class_name
-                                | TYPE IDENTIFIER 
-                                | TYPE IDENTIFIER template_class_name
                                  
     ''' 
+                                # | class_key  IDENTIFIER template_class_name
+                                # | TYPE IDENTIFIER 
+                                # | TYPE IDENTIFIER template_class_name
+
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = { "class":p[1].data,"type": p[2].data, "template" : 0, "template_list": None}
+    p[0].data = { "class":p[1].data,"type": p[2].data}
     if len(p)==4:
         p[0].data["class"]=p[0].data["class"]
-        p[0].data["template"]=1
-        p[0].data["template_list"]=p[3].data
-
-# def p_pure_specifier(p): 
-#     '''pure_specifier : EQUAL NUMBER''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
-
-# use for class inhertance
-
-# def p_base_spec(p): 
-#     '''base_spec : COLON base_list''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
-#     p[0].data = {"base" : []}
-
-# def p_base_list(p): 
-#     '''base_list : base_specifier
-#                  | base_list COMMA base_specifier 
-#     ''' 
-
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
-
-# def p_base_specifier(p): 
-#     '''base_specifier : class_key  IDENTIFIER 
-#                       | class_key  IDENTIFIER template_class_name
-#                       | IDENTIFIER 
-#                       | IDENTIFIER template_class_name
-
-#     '''
-
- 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p) 
+        # p[0].data["template"]=1
+        # p[0].data["template_list"]=p[3].data
 
 def p_class_key(p): 
     '''class_key : CLASS 
@@ -1606,10 +1515,7 @@ def p_class_head(p):
     p[0].data = {
         "class" : p[1].data,
         "type" : p[2].data,
-        "base" : []
-        }
-    if len(p)==4:
-        p[0].data["base"] = p[3].data["base"]
+    }
 
     pushVar(p[2].data + "@|@", "")
 
@@ -1874,7 +1780,6 @@ def p_statement(p):
                  | iteration_statement 
                  | jump_statement 
                  | declaration_statement 
-                 | try_block 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -1969,12 +1874,12 @@ def p_selection_statement_3(p):
         nextcode = nextcode + [c["label"] + ":"] + ["    " + i for i in l] # + ["    goto->"+p[0].after]
     p[0].code = p[3].code + [p[0].test + ":"] + ["    " + i for i in testcode ] + [p[0].next + ":"] + ["    " + i for i in nextcode ] + [p[0].after + ":"]
 
-def p_try_block(p): 
-    '''try_block : TRY push_scope compound_statement pop_scope CATCH  push_scope compound_statement pop_scope''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data = {}
-    retType(p, 3, 7 )
+# def p_try_block(p): 
+#     '''try_block : TRY push_scope compound_statement pop_scope CATCH  push_scope compound_statement pop_scope''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
+#     p[0].data = {}
+#     retType(p, 3, 7 )
 
 def p_labeled_statement_list(p): 
     '''labeled_statement_list : labeled_statement
@@ -2207,27 +2112,27 @@ def p_declaration4(p):
     p[0].code = p[1].code.copy()
 
 
-def p_declaration5(p):
-    '''declaration : typedef_declarator ''' 
-    p[0] = OBJ()
-    p[0].parse=f(p)
+# def p_declaration5(p):
+#     '''declaration : typedef_declarator ''' 
+#     p[0] = OBJ()
+#     p[0].parse=f(p)
 
-def p_declaration6(p):
-    '''declaration :  template_declaration ''' 
-    p[0] = OBJ()
-    p[0].parse=f(p)
+# def p_declaration6(p):
+#     '''declaration :  template_declaration ''' 
+#     p[0] = OBJ()
+#     p[0].parse=f(p)
 
-def p_template_declaration(p): 
-    '''template_declaration : TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+# def p_template_declaration(p): 
+#     '''template_declaration : TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
 
-def p_template_argument_list(p): 
-    '''template_argument_list : argument_declaration
-                              | template_argument_list COMMA argument_declaration
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+# def p_template_argument_list(p): 
+#     '''template_argument_list : argument_declaration
+#                               | template_argument_list COMMA argument_declaration
+#     ''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
 
 def p_declarator_list(p): 
     '''declarator_list : init_declarator 
@@ -2353,7 +2258,7 @@ if __name__ == "__main__":
     scope_table_graph(scopeTableList)
     
     f = open(SymbolTableFileName, "w")
-
+    ignore_key = ["is_array", "element_type", "index", "to_add"]
     for idx, table in  enumerate( scopeTableList):
         f.write("SCOPE START :: " + str(idx) + "\n")
         for key in table.table.keys():
@@ -2361,6 +2266,13 @@ if __name__ == "__main__":
             detail = table.table[key]
             if isinstance(detail,dict):
                 for elem_key in detail.keys():
-                    f.write("{ " + str(elem_key) + " : " + str(detail[elem_key]) + " } , " )
+                    if elem_key not in ignore_key:
+                        f.write("{ " + str(elem_key) + " : " + str(detail[elem_key]) + " } , " )
             f.write("\n")
         f.write("SCOPE END :: " + str(idx) + "\n\n")
+
+    f.write("\n")
+    f.write("SCOPE SCOPE RELATION ::  SCOPE NUMBER : PARENT NUMBER\n")
+    for idx, table in  enumerate( scopeTableList):
+        f.write("                       " + "        " + str(idx) + "             " +  str(table.parent) + "\n" )
+    
