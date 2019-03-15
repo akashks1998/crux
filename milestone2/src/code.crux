@@ -1,28 +1,52 @@
 //Code For <given file>
-  1::test|void|p:
-  2::    BeginFunc 20
-  3::    tmp@1 = g@1
-  4::    tmp@0 = *tmp@1
-  5::    return tmp@0
-  6::    EndFunc
-  7::h|:
-  8::    BeginFunc 4
-  9::    tmp@2 = 0
- 10::    return tmp@2
- 11::    EndFunc
- 12::main|:
- 13::    BeginFunc 40
- 14::    tmp@3=int|p_to_void|p(x@5)
- 15::    PushParam tmp@3
- 16::    tmp@4 = Fcall test|void|p
- 17::    PopParams
- 18::    tmp@5 = *(g@5)
- 19::    PushParam N
- 20::    PushParam O
- 21::    PushParam P
- 22::    PushParam tmp@5
- 23::    tmp@6 = Fcall T:h|
- 24::    PopParams
- 25::    tmp@7 = 0
- 26::    return tmp@7
- 27::    EndFunc
+  1::main|:
+  2::    BeginFunc 1236
+  3::    tmp@6 = 2
+  4::    tmp@8 = 0 int+ tmp@6
+  5::    tmp@7 = tmp@8 int* 1
+  6::    tmp@10 = tmp@7 int* 8
+  7::    tmp@9 = list@2 int+ tmp@10
+  8::    tmp@11 = *(tmp@9)
+  9::    tmp@0 = 3
+ 10::    tmp@2 = 0 int+ tmp@0
+ 11::    tmp@1 = tmp@2 int* 1
+ 12::    tmp@4 = tmp@1 int* 8
+ 13::    tmp@3 = list@2 int+ tmp@4
+ 14::    tmp@5 = *(tmp@3)
+ 15::    *(tmp@3)=tmp@11
+ 16::    tmp@15 = j@2
+ 17::    tmp@14 = *tmp@15
+ 18::    tmp@13 = i@2
+ 19::    tmp@12 = *tmp@13
+ 20::    tmp@12=tmp@14
+ 21::    tmp@28 = 2
+ 22::    tmp@30 = 0 int+ tmp@28
+ 23::    tmp@29 = tmp@30 int* 5
+ 24::    tmp@31 = 2
+ 25::    tmp@33 = tmp@29 int+ tmp@31
+ 26::    tmp@32 = tmp@33 int* 8
+ 27::    tmp@34 = 6
+ 28::    tmp@36 = tmp@32 int+ tmp@34
+ 29::    tmp@35 = tmp@36 int* 1
+ 30::    tmp@38 = tmp@35 int* 8
+ 31::    tmp@37 = a@2 int+ tmp@38
+ 32::    tmp@39 = *(tmp@37)
+ 33::    tmp@40 = 1
+ 34::    tmp@41 = tmp@40 int* 4
+ 35::    tmp@42 = tmp@39 int+ tmp@41
+ 36::    tmp@16 = 2
+ 37::    tmp@18 = 0 int+ tmp@16
+ 38::    tmp@17 = tmp@18 int* 5
+ 39::    tmp@19 = 2
+ 40::    tmp@21 = tmp@17 int+ tmp@19
+ 41::    tmp@20 = tmp@21 int* 8
+ 42::    tmp@22 = 6
+ 43::    tmp@24 = tmp@20 int+ tmp@22
+ 44::    tmp@23 = tmp@24 int* 1
+ 45::    tmp@26 = tmp@23 int* 8
+ 46::    tmp@25 = a@2 int+ tmp@26
+ 47::    tmp@27 = *(tmp@25)
+ 48::    *(tmp@25)=tmp@42
+ 49::    tmp@43 = 0
+ 50::    return tmp@43
+ 51::    EndFunc

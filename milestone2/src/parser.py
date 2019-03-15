@@ -710,7 +710,7 @@ def p_assignment_expression(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].place2 = p[1].place2
-    place = p[0].place2 if p[0].place2 != None else  p[0].place
+    place = p[1].place2 if p[1].place2 != None else  p[1].place
 
     if len(p)==2:
         p[0].data = assigner(p,1)
