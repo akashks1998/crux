@@ -5,8 +5,9 @@
 - if,if-else
 - break,continue
 - for,while,do-while
-- Functions
+- Functions, Function Overloading
 - Classes
+- new , delete
 - Vanilla C features
 Following are the differences from vanilla implementation of the above
 ## Miscelaneous
