@@ -2225,7 +2225,7 @@ if __name__ == "__main__":
     parser.error = 0 
 
     if(len(sys.argv) != 4): 
-        print("Usage python3 parser.py Inputfile OutputFile SymbolTableFile given #args : ", len(sys.argv) , sys.argv) 
+        print("Usage python3 parser.py Inputfile OutputFile SymbolTableFile ") # given #args : ", len(sys.argv) , sys.argv) 
         exit() 
 
     arglist = sys.argv 
