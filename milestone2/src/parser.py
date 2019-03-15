@@ -221,7 +221,7 @@ def operator(op, op1 ,op2 ,typ=None):
         if typ==None:
             typ=op1.data["type"]
         t=getnewvar(typ)
-        return {"place":t,"code":[ t +" = " + op1.place +" "+op1.data["type"]+"_"+ op+" "+op2.place ],"type":typ}
+        return {"place":t,"code":[ t +" = " + op1.place +" "+op1.data["type"]+op+" "+op2.place ],"type":typ}
     elif prec[ op1.data["type"] ]>prec[ op2.data["type"] ]:
         y=cast_string( op2.place, op2.data["type"],op1.data["type"] )
         if typ==None:
@@ -229,7 +229,7 @@ def operator(op, op1 ,op2 ,typ=None):
         t=getnewvar(typ)
         if y==False:
             return False
-        return {"place":t,"code":y["code"]+[ t +" = "+ op1.place+" "+op1.data["type"]+"_"+op +" "+ y["place"] ],"type":typ}
+        return {"place":t,"code":y["code"]+[ t +" = "+ op1.place+" "+op1.data["type"]+op +" "+ y["place"] ],"type":typ}
     else:
         y=cast_string( op1.place, op1.data["type"],op2.data["type"] )
         if y==False:
@@ -237,7 +237,7 @@ def operator(op, op1 ,op2 ,typ=None):
         if typ==None:
             typ=op2.data["type"]
         t=getnewvar(typ)
-        return {"place":t,"code":y["code"]+[ t +" = " + y["place"] +" "+op2.data["type"]+"_"+op+" "+ op2.place ],"type":typ}
+        return {"place":t,"code":y["code"]+[ t +" = " + y["place"] +" "+op2.data["type"]+op+" "+ op2.place ],"type":typ}
 
 def get_size(data_type, basic = True):
     data_type = data_type[:-1] if data_type[-1] == "|" else data_type
