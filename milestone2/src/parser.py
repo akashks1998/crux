@@ -281,7 +281,7 @@ def updateVar(identifier, val,scope=None):
         scopeTableList[scope].update(identifier, val)
     
 
-def checkVar(identifier,scopeId="**"):
+def checkVar(identifier,scopeId="**", search_in_class = False):
     global scopeTableList
     global currentScopeTable
     if scopeId == "global":
@@ -297,7 +297,11 @@ def checkVar(identifier,scopeId="**"):
         scope=currentScopeTable
 
         while scope!=None:
-            if scopeTableList[scope].lookUp(identifier):
+            symbol_table = scopeTableList[scope]
+            if symbol_table.type_ == "class" and search_in_class == False:
+                scope=scopeTableList[scope].parent
+                continue
+            if symbol_table.lookUp(identifier):
                 return {"var":scopeTableList[scope].getDetail(identifier), "scope":scope}
             scope=scopeTableList[scope].parent
         return False
@@ -916,7 +920,7 @@ def p_postfix_expression_7(p):
 
     details=checkVar(p[1].data["type"][:-2],"**")
     if details==False:
-        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"][:-2],p.lineno(0))
+        report_error( p[3].data + " does not exist ",p.lineno(0))
     if "class" in details["var"].keys() and details["var"]["class"]=="class":
         x=checkVar(p[3].data, details["var"]["scope"])
         if x!=False:
@@ -999,7 +1003,7 @@ def p_primary_expression2(p):
     p[0] = OBJ() 
     p[0].parse=f(p) 
 
-    detail = checkVar("this")
+    detail = checkVar("this", search_in_class = True)
     if detail == False:
         report_error("wrong reference to THIS", p.lineno(0))
 
