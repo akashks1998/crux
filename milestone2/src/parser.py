@@ -125,10 +125,10 @@ def getnewvar(type_):
     pushVar(tmp, data)
     return tmp
 
-def pushScope():
+def pushScope(type_ = None):
     global scopeTableList
     global currentScopeTable
-    newScope = SymbolTable(parent=currentScopeTable)
+    newScope = SymbolTable(parent=currentScopeTable, type_ = type_)
     scopeTableList.append(newScope)
     currentScopeTable = len(scopeTableList) - 1
 
@@ -998,8 +998,13 @@ def p_primary_expression2(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p) 
-    
-    # p[0].data = {"type" : "class"} # use symbol table to determine
+
+    detail = checkVar("this")
+    if detail == False:
+        report_error("wrong reference to THIS", p.lineno(0))
+
+    p[0].data = detail["var"]
+    p[0].place = "this"
 
 
 def p_primary_expression3(p): 
@@ -1631,12 +1636,15 @@ def p_change_scope(p):
 
 
 def p_class_define_specifier(p): 
-    '''class_define_specifier : class_head push_scope LCPAREN member_list RCPAREN pop_scope ''' 
+    '''class_define_specifier : class_head push_class_scope LCPAREN member_list RCPAREN pop_scope ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = assigner(p,1)
     p[0].data["scope"] = p[4].scope
     p[0].data["size"] = get_offset()
+
+    pushVar("this", {"type" : p[1].data["type"] + "|p"}, scope = p[4].scope)
+
     if pushVar(p[0].data["type"], p[0].data)==False:
             report_error("Redeclaration of variable", p.lineno(1))
 
@@ -1741,8 +1749,7 @@ def p_member_declaration_0(p):
                     
 
 def p_member_declaration_1(p):
-    '''member_declaration : function_definition
-                         | function_decl 
+    '''member_declaration :  function_decl 
     '''
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -1797,6 +1804,13 @@ def p_function_decl(p):
 
 def p_func_push_scope(p):
     ''' func_push_scope : LPAREN '''
+    global currentScopeTable 
+    global scopeTableList
+    if currentScopeTable == 0 or scopeTableList[currentScopeTable].type_ == "class" :
+        pass
+    else:
+        report_error("Function can only be defined in global or class scope", p.lineno(0))
+
     pushScope()
     pushOffset()
 
@@ -2272,6 +2286,13 @@ def p_expression_list(p):
 def p_push_scope(p):
     '''push_scope : '''
     pushScope()
+
+def p_push_class_scope(p):
+    '''push_class_scope : '''
+    global currentScopeTable
+    if currentScopeTable != 0:
+        report_error("Class can only be defined in global scope", p.lineno(0))
+    pushScope(type_ = "class")
 
 def p_pop_scope(p):
     '''pop_scope : '''
