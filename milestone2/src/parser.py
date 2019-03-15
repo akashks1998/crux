@@ -665,9 +665,9 @@ def p_cast_expression(p):
 
 def p_expression(p): 
     '''expression : assignment_expression 
-                  | throw_expression
-                  | expression COMMA assignment_expression 
+                  | expression COMMA assignment_expression %prec LOWER
     ''' 
+                #   | throw_expression
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==2:
@@ -678,12 +678,12 @@ def p_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code + p[2].code
 
-def p_throw_expression(p): 
-    '''throw_expression : THROW expression 
-                        | THROW 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+# def p_throw_expression(p): 
+#     '''throw_expression : THROW expression 
+#                         | THROW 
+#     ''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
 
 def p_assignment_expression(p): 
     '''assignment_expression : conditional_expression 
@@ -1130,8 +1130,8 @@ def p_allocation_expression1(p):
 
 
 def p_new_type_name(p): 
-    '''new_type_name : type_specifier_ new_declarator 
-                     | type_specifier_ 
+    '''new_type_name : type_specifier_ new_declarator %prec HIGHER
+                     | type_specifier_ %prec LOWER
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -1140,8 +1140,8 @@ def p_new_type_name(p):
         p[0].data = p[0].data + p[2].data
 
 def p_new_declarator(p): 
-    '''new_declarator : new_declarator MULTOP
-                      | MULTOP 
+    '''new_declarator : new_declarator unary2_operator 
+                      | unary2_operator  
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -1259,29 +1259,27 @@ def p_declarator_1(p):
 
               
 def p_declarator_2(p): 
-    '''declarator :  declarator LSPAREN NUMBER RSPAREN  ''' 
+    '''declarator :  declarator LSPAREN NUMBER RSPAREN 
+                  |  declarator LSPAREN  RSPAREN  
+     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = {
-        "name" : p[1].data["name"], 
-        "type" : p[1].data['type'] + "a",
-        "meta" : p[1].data["meta"] + [p[3].data] 
-    }
-              
-def p_declarator_3(p): 
-    '''declarator :  declarator LSPAREN  RSPAREN  ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+    if len(p) == 5:
+        p[0].data = {
+            "name" : p[1].data["name"], 
+            "type" : p[1].data['type'] + "a",
+            "meta" : p[1].data["meta"] + [p[3].data] 
+        }
+    else:
+        if len(p[1].data["meta"]) != 0:
+            report_error("can not left array size empty", p.lineno(1))
+        p[0].data = {
+            "name" : p[1].data["name"], 
+            "type" : p[1].data['type'] + "a",
+            "meta" : p[1].data["meta"] + [1] 
+        }
 
-    if len(p[1].data["meta"]) != 0:
-        report_error("can not left array size empty", p.lineno(1))
-    p[0].data = {
-        "name" : p[1].data["name"], 
-        "type" : p[1].data['type'] + "a",
-        "meta" : p[1].data["meta"] + [1] 
-    }
-
-
+            
 
 def p_arg_list(p):
     ''' arg_list : argument_declaration_list 
@@ -1347,7 +1345,7 @@ def p_arg_list(p):
 
 def p_argument_declaration_list(p): 
     '''argument_declaration_list : argument_declaration 
-                                 | argument_declaration COMMA argument_declaration_list
+                                 | argument_declaration COMMA argument_declaration_list 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)  
@@ -1370,27 +1368,6 @@ def p_argument_declaration_1(p):
     if pushVar(p[2].data["name"],p[0].data)==False:
         report_error("Redeclaration of variable", p.lineno(1))
 
-def p_argument_declaration_2(p): 
-    '''argument_declaration :  type_specifier_ declarator  EQUAL expression ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data = assigner(p,1)
-    if p[2].data["type"] != "":
-        p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
-    p[0].data["name"] = p[2].data["name"]
-    p[0].data["meta"] = p[2].data["meta"]
-
-    if "a" in  p[2].data["type"]:
-        report_error("array cannot be initilialized while declaration", p.lineno(0))
-    
-    if p[0].data["type"] != p[4]:
-        report_error("type mismatch with initialization", p.lineno(0))
-
-    if pushVar(p[2].data["name"],p[0].data)==False:
-        report_error("Redeclaration of variable", p.lineno(1))
-
-    # code part
-    p[0].code = p[4].code + [ p[1].data["name"] + " = " + p[4].place ]
 
 # # these two can be removed, will be handled later if time permits
 # def p_argument_declaration_3(p): 
@@ -1556,31 +1533,31 @@ def p_complex_type_specifier(p):
 
 # use for class inhertance
 
-def p_base_spec(p): 
-    '''base_spec : COLON base_list''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    p[0].data = {"base" : []}
+# def p_base_spec(p): 
+#     '''base_spec : COLON base_list''' 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
+#     p[0].data = {"base" : []}
 
-def p_base_list(p): 
-    '''base_list : base_specifier
-                 | base_list COMMA base_specifier 
-    ''' 
+# def p_base_list(p): 
+#     '''base_list : base_specifier
+#                  | base_list COMMA base_specifier 
+#     ''' 
 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
+#     p[0] = OBJ() 
+#     p[0].parse=f(p)
 
-def p_base_specifier(p): 
-    '''base_specifier : class_key  IDENTIFIER 
-                      | class_key  IDENTIFIER template_class_name
-                      | IDENTIFIER 
-                      | IDENTIFIER template_class_name
+# def p_base_specifier(p): 
+#     '''base_specifier : class_key  IDENTIFIER 
+#                       | class_key  IDENTIFIER template_class_name
+#                       | IDENTIFIER 
+#                       | IDENTIFIER template_class_name
 
-    '''
+#     '''
 
  
-    p[0] = OBJ() 
-    p[0].parse=f(p) 
+#     p[0] = OBJ() 
+#     p[0].parse=f(p) 
 
 def p_class_key(p): 
     '''class_key : CLASS 

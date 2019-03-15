@@ -6,7 +6,6 @@ lineno = 0
 
 keywords = {
     'include':'INCLUDE',
-    'auto':'AUTO',
     'break':'BREAK',
     'case':'CASE',
     'catch':'CATCH',
@@ -17,29 +16,22 @@ keywords = {
     'default':'DEFAULT',
     'delete':'DELETE',
     'do':'DO',
-    'double':'DOUBLE',
     'else':'ELSE',
     'float':'FLOAT',
     'for':'FOR',
-    'goto':'GOTO',
     'if':'IF',
     'int':'INT',
-    'long':'LONG',
     'new':'NEW',
     'return':'RETURN',
-    'short':'SHORT',
-    'signed':'SIGNED',
     'sizeof':'SIZEOF',
     'switch':'SWITCH',
     'struct' : 'STRUCT',
-    'string' : 'STRING',
     'this':'THIS',
-    'throw':'THROW',
+    # 'throw':'THROW',
     'try':'TRY',
     'typedef':'TYPEDEF',
     'type' : 'TYPE',
     'template' : 'TEMPLATE',
-    'unsigned':'UNSIGNED',
     'void':'VOID',
     'while':'WHILE',
 }
@@ -64,9 +56,7 @@ tokens = [
         'MINUSEQOP',
         'MULTEQOP',
         'DIVEQOP',
-        'BANDEQOP',
         'XOROP',
-        'XOREQOP',
         'BNOP',
         'BOROP',
 
@@ -99,9 +89,6 @@ tokens = [
         'NOTSYM',
         'QUESMARK',
         'ARROW',
-        'LSHIFTEQOP',
-        'RSHIFTEQOP',
-        'BOREQOP',
         'MODEQOP',
         'DPLUSOP',
         'LSHIFT',
@@ -144,7 +131,6 @@ t_MULTOP    = r'\*'
 t_MODOP     = r'\%'
 t_XOROP     = r'\^'
 
-t_BOREQOP   = r'\|\='
 t_OROP      = r'\|\|'
 t_BANDOP    = r'\&'
 t_BOROP     = r'\|'
@@ -155,16 +141,13 @@ t_MODEQOP   = r'\%\='
 t_MINUSEQOP = r'-='
 t_MULTEQOP  = r'\*='
 t_DIVEQOP   = r'/='
-t_BANDEQOP  = r'\&\='
 
-t_XOREQOP   = r'\^='
 t_DPLUSOP   = r'\+\+'
 t_DMINUSOP  = r'--'
 t_BNOP      = r'\~'
 t_LSHIFT    = r'\<\<'
 t_RSHIFT    = r'\>\>'
-t_LSHIFTEQOP= r'\<\<='
-t_RSHIFTEQOP= r'\>\>='
+
 
 t_LTEMPLATE = r'<\|'
 t_RTEMPLATE = r'\|>'
