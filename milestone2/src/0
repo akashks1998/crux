@@ -1,0 +1,12 @@
+//Code For ../tests/m.cpp
+  1::func|int:
+  2::    BeginFunc 0
+  3::    EndFunc
+  4::main|:
+  5::    BeginFunc 8
+  6::    tmp@0 = 5
+  7::    PushParam tmp@0
+  8::    tmp@1 = Fcall func|int
+  9::    tmp@2 = 0
+ 10::    return tmp@2
+ 11::    EndFunc

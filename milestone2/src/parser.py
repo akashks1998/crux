@@ -30,8 +30,8 @@ def f(p):
         open('dot.gz','a').write("    " + str(out[1])  +  " -> " + str(p[each+1].parse[1]))
     return out
 
-CodeFile = 'code.crux'
 FileName = '<given file>'
+CodeFile = 'code.crux'
 SymbolTableFileName = 'symbol.dump'
         
 labeldict = {}
@@ -2184,21 +2184,6 @@ def p_expression_list(p):
         p[0].place =  [ p[3].place ] +  p[1].place
         p[0].code = p[1].code + p[3].code
 
-
-# def p_initializer_list(p): 
-#     '''initializer_list : assignment_expression 
-#                         | initializer_list COMMA assignment_expression 
-#                         | LCPAREN initializer_list RCPAREN 
-#                         | LCPAREN initializer_list COMMA RCPAREN 
-#     ''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
-
-# def p_asm_declaration(p): 
-#     '''asm_declaration : ASM LPAREN STRING_L  RPAREN  SEMICOLON''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
-
 def p_push_scope(p):
     '''push_scope : '''
     pushScope()
@@ -2239,19 +2224,22 @@ if __name__ == "__main__":
     parser = yacc.yacc()
     parser.error = 0 
 
-    if(len(sys.argv) != 3): 
-        print("Usage python3 parser.py arg1 arg2 #args : ", sys.argv) 
+    if(len(sys.argv) != 4): 
+        print("Usage python3 parser.py Inputfile OutputFile SymbolTableFile given #args : ", len(sys.argv) , sys.argv) 
         exit() 
 
     arglist = sys.argv 
-    filename = arglist[2]
-    debug = int(arglist[1])
+    FileName = arglist[1]
+    CodeFile = arglist[2]
+    SymbolTableFileName = arglist[3]
+    debug=0
+    # debug = int(arglist[1])
+    # filename = arglist[2]
     open('dot.gz','w').write("digraph ethane {graph [ordering=\"out\"];")
-    file_o = open(arglist[2],'r').read()
+    file_o = open(FileName,'r').read()
     p = parser.parse(file_o,lexer = lexer,debug=debug,tracking=True)  
     open('dot.gz','a').write("\n}\n")
     scope_table_graph(scopeTableList)
-    
     f = open(SymbolTableFileName, "w")
     ignore_key = ["is_array", "element_type", "index", "to_add"]
     for idx, table in  enumerate( scopeTableList):
