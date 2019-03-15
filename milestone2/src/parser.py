@@ -106,6 +106,7 @@ class OBJ:
         self.data = {}
         self.code = []
         self.place = "NOP"
+        self.place2 = None
 
 def getnewlabel(s="label"):
 
@@ -215,8 +216,6 @@ def operator(op, op1 ,op2 ,typ=None):
         "float":5,
         "double":6
     }
-    print(op1.data)
-    print(op2.data)
     if op1.data["type"] == op2.data["type"]:
         if typ==None:
             typ=op1.data["type"]
@@ -249,7 +248,7 @@ def get_size(data_type, basic = True):
     }
     if("|" in data_type):
         if basic == True:
-            basic_type = data_type.rstrip("p").rstrip("|")
+            basic_type = data_type.rstrip("r").rstrip("p").rstrip("|")
             if basic_type in size.keys():
                 return 8
             get_class = checkVar(basic_type, "global")
@@ -259,10 +258,9 @@ def get_size(data_type, basic = True):
             return 8
         else:
             return 8
-    
+
     if data_type in size.keys():
         return size[data_type]
-
 
     # it has to be class
     get_class = checkVar(data_type, "global")
@@ -616,13 +614,22 @@ def p_additive_expression(p):
         p[0].code = p[1].code
     if len(p)==4:
         allowed_type = ["int", "char", "float"]
+        if "|" in p[1].data["type"] and p[1].data["type"][-1] == "p" and p[3].data["type"] == "int":
+            tmp = getnewvar("int")
+            code = [ tmp + " = " + p[3].place + " int* " +  str(get_size(p[1].data["type"][:-1].rstrip("|"))) ]  
+            place = getnewvar(p[1].data["type"])
+            code = code + [place + " = " + p[1].place + " int" +p[2].data + " " + tmp  ]
+            p[0].place = place
+            p[0].code = p[1].code + p[3].code + code
+            p[0].data["type"] = p[1].data["type"]
+            return
+
         if p[1].data["type"] not in allowed_type or p[3].data["type"] not in allowed_type:
             report_error("Type not compatible with plus , minus operation", p.lineno(0))
         x=operator(p[2].data,p[1],p[3])
         p[0].place = x["place"]
         p[0].code = p[1].code + p[3].code + x["code"]
         p[0].data["type"]=x["type"]
-        print(x["type"])
 
 def p_multiplicative_expression(p): 
     '''multiplicative_expression : cast_expression 
@@ -651,6 +658,8 @@ def p_cast_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)  
+    p[0].place2 = p[1].place2
+
     if len(p)==2 :
         p[0].data = assigner(p,1)
         p[0].place = p[1].place
@@ -695,21 +704,26 @@ def p_assignment_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].place2 = p[1].place2
+    place = p[0].place2 if p[0].place2 != None else  p[0].place
+
     if len(p)==2:
         p[0].data = assigner(p,1)
         p[0].place = p[1].place
-        p[0].code = p[1].code 
+        p[0].code = p[1].code.copy() 
     else:
         p[0].place = p[1].place
+        if "class_u" in p[1].data.keys() and p[1].data["class_u"] == "unary1":
+            report_error("can not assign some value to a unary expresion other than *", p.lineno(0))
+
         t=cast_string(p[3].place,p[3].data["type"],p[1].data["type"])
         if t==False:
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         if p[2].data == "=":
-            p[0].code = p[3].code + p[1].code + t["code"] +[ p[1].place + p[2].data + t["place"] ]
+            p[0].code = p[3].code + p[1].code + t["code"] +[ place + p[2].data + t["place"] ]
         else:
-            p[0].code = p[3].code + p[1].code + t["code"]+[ p[1].place + " = " \
-                + p[1].place + " " +p[1].data["type"]+"_" +p[2].data[0] + " " + t["place"] ]
-
+            p[0].code = p[3].code + p[1].code + t["code"]+[ place + " = " \
+                + place + " " +p[1].data["type"] +p[2].data[0] + " " + t["place"] ]
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -727,12 +741,15 @@ def p_unary_expression_0(p):
     '''unary_expression : postfix_expression  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].place2 = p[1].place2
+
    
     p[0].data = assigner(p,1)
     if("|" in p[0].data["type"] and p[0].data["type"][-1] == "a"):
         report_error("Array not called upto end", p.lineno(0))
     p[0].place = p[1].place
     p[0].code = p[1].code 
+    
 
 def p_unary_expression(p): 
     '''unary_expression : DPLUSOP unary_expression 
@@ -744,6 +761,9 @@ def p_unary_expression(p):
                         # | SIZEOF  unary_expression 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if(len(p) == 3):
+        p[0].place2 = p[2].place2
+
     if len(p)==2:
         p[0].data = assigner(p,1)
         p[0].place = p[1].place
@@ -787,39 +807,39 @@ def p_postfix_expression_2(p):
 
     if( p[3].data["type"] != "int" ):
         report_error("Array index is not integer", p.lineno(3))
-    # print(p[1].data)
     type_last_char = p[1].data["type"][-1]
-    if type_last_char == "a":
+    if "|" in p[1].data["type"] and  type_last_char == "a":
         p[0].data = p[1].data.copy()
         to_add_var = getnewvar("int")
         index = p[1].data["index"]
         to_mult =  p[1].data["meta"][index] if ( index < len(p[1].data["meta"]) ) else 1
         to_add_var_temp  = getnewvar("int")
-        to_add = to_add_var_temp + " * " + str(to_mult)
-        p[0].code = p[1].code + p[3].code  + [ to_add_var_temp + " = " + p[1].data["to_add"] + " + " + p[3].place  ] + [ to_add_var +  " = " +  to_add ]
+        to_add = to_add_var_temp + " int* " + str(to_mult)
+        p[0].code = p[1].code + p[3].code  + [ to_add_var_temp + " = " + p[1].data["to_add"] + " int+ " + p[3].place  ] + [ to_add_var +  " = " +  to_add ]
         p[0].place = p[1].place
         p[0].data["type"] =  p[1].data["type"][:-1]
         p[0].data["index"] = p[1].data["index"] + 1
         p[0].data["to_add"] = to_add_var
 
-        if(p[1].data["type"][-2] != "a"):
+        if(p[1].data["type"][-2] == "p") or (p[1].data["type"][-2] == "|") :
             # end of array
-            if(p[1].data["type"][-2] == "|"):
-                p[0].data = {"type": p[1].data["type"][:-2]}
-            else:
-                p[0].data = {"type": p[1].data["type"][:-1]} 
+            p[0].data = {"type": p[1].data["type"][:-1].rstrip("|")}
             new_addr = getnewvar("int")
-            p[0].code = p[0].code + [ new_addr + " = " + p[0].place + " + " + to_add_var ]
-            p[0].place = "*(" + new_addr + ")"
-
-    elif type_last_char == "p":
+            new_temp = getnewvar("int")
+            ptr_addr = getnewvar(p[0].data["type"])
+            p[0].code = p[0].code + [new_temp + " = " + to_add_var + " int* " + str(get_size(p[0].data["type"])) ]  \
+                 + [ new_addr + " = " + p[0].place + " int+ " + new_temp] + [ ptr_addr + " = " + "*(" + new_addr + ")" ]
+            p[0].place = ptr_addr
+            p[0].place2 = "*(" + new_addr + ")"
+       
+    elif "|" in p[1].data["type"] and type_last_char == "p":
         if(p[1].data["type"][-2] == "|"):
             p[0].data = {"type": p[1].data["type"][:-2]}
         else:
             p[0].data = {"type": p[1].data["type"][:-1]}
 
         p[0].place = getnewvar(p[0].data["type"])
-        p[0].code = p[1].code +  p[3].code  + [ p[0].place + " = "  + "*( " + p[1].place + " + " +  p[3].place + ")" ]
+        p[0].code = p[1].code +  p[3].code  + [ p[0].place + " = "  + "*( " + p[1].place + " int+ " +  p[3].place + ")" ]
 
     else:
         report_error("Not a array or pointer", p.lineno(0))
@@ -830,6 +850,7 @@ def p_postfix_expression_3(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].place2 = p[1].place2
 
     # this must be a function call
     # first get function sig..
@@ -865,12 +886,12 @@ def p_postfix_expression_3(p):
     p[0].place = getnewvar(p[0].data["type"])
     p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + class_name + ":" + expected_sig , "PopParams"]
 
-
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].place2 = p[1].place2
 
 
 def p_postfix_expression_6(p): 
@@ -878,6 +899,8 @@ def p_postfix_expression_6(p):
 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].place2 = p[1].place2
+
     # post_fix must be a object and name should be a class member
 
     if "|" in p[1].data["type"]:
@@ -913,6 +936,7 @@ def p_postfix_expression_7(p):
     '''postfix_expression : postfix_expression ARROW name  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].place2 = p[1].place2
    
 
     if p[1].data["type"][-2:] != "|a" and p[1].data["type"][-2:] != "|p":
@@ -951,6 +975,7 @@ def p_postfix_expression_8(p):
 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    p[0].place2 = p[1].place2
     p[0].place = p[1].place
     p[0].data=assigner(p,1)
     p[0].place=p[1].place
@@ -1026,36 +1051,42 @@ def p_unary_expression1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = assigner(p,2)
+    operator = ""
     if p[1].data == "&":
         if "|" in p[2].data["type"]:
-            p[0].data["type"]=p[2].data["type"]+"p"
+            p[0].data["type"]=p[2].data["type"]+"r"
         else:
-            p[0].data["type"]=p[2].data["type"]+"|p"
+            p[0].data["type"]=p[2].data["type"]+"|r"
+    elif p[1].data in ["-", "+"] and p[2].data["type"] in ["int", "float"]:
+        p[0].data["type"] = p[2].data["type"]
+        operator = p[2].data["type"]
+    elif p[1].data in ["!", "~"] and p[2].data["type"] in ["int"]:
+        p[0].data["type"] = p[2].data["type"]
+        operator = p[2].data["type"]
+    else:
+        report_error("unary operation " + p[1].data + " is invalid with operand of type " + p[2].data["type"], p.lineno(0))
+
     p[0].place = getnewvar(p[0].data["type"])
     t_var = getnewvar(p[2].data["type"])
-    p[0].code = p[2].code+ [ t_var + " = " +  p[2].place ] + [ p[0].place + " = "+ p[1].data + t_var ] 
-  
+    p[0].code = p[2].code+ [ t_var + " = " +  p[2].place ] + [ p[0].place + " = "+ operator + p[1].data + " " +t_var ] 
+    p[0].data["class_u"] = "unary1"
 
 def p_unary_expression2(p): 
     '''unary_expression : unary2_operator cast_expression 
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    if p[1].data=="*":
-        if p[2].data["type"][-1] in ["a","p"]  and "|" in p[2].data["type"]:
-            p[0].data["type"]=p[2].data["type"][:-1]
-            if p[0].data["type"][-1]=="|":
-                p[0].data["type"]=p[0].data["type"][:-1]
-        else:
-            report_error("Cannot dereference non-pointer element",p.lineno(0))
+   
+    if p[2].data["type"][-1] in ["a","p"]  and "|" in p[2].data["type"]:
+        p[0].data["type"]=p[2].data["type"][:-1].rstrip("a").rstrip("|")
     else:
-        if "|" in p[2].data["type"]:
-            p[0].data["type"]=p[2].data["type"]+"p"
-        else:
-            p[0].data["type"]=p[2].data["type"]+"|p"
+        report_error("Cannot dereference non-pointer element",p.lineno(0))
+  
     p[0].place = getnewvar(p[0].data["type"])
     t_var = getnewvar(p[2].data["type"])
     p[0].code = p[2].code+ [ t_var + " = " +  p[2].place ] + [ p[0].place + " = "+ p[1].data + t_var ] 
+    p[0].data["class_u"] = "unary2"
+
 def p_deallocation_expression(p): 
     '''deallocation_expression : DELETE cast_expression  ''' 
     p[0] = OBJ() 
@@ -1091,7 +1122,6 @@ def p_allocation_expression0(p):
         tpe = p[0].data["type"][:-2] if p[0].data["type"][-2]=='|' else p[0].data["type"][:-1]
         p[0].place=getnewvar(p[0].data["type"])
         p[0].code = ["PushParam " + str(get_size(tpe)), "PushParam constructor", p[0].place + " = call alloc"]
-    # print("yo", p[0].data)
 
 def p_allocation_expression1(p): 
     '''allocation_expression : NEW new_type_name LSPAREN expression RSPAREN new_initializer 
@@ -1130,7 +1160,6 @@ def p_allocation_expression1(p):
         tmp1 = getnewvar("int")
         p[0].place=getnewvar(p[0].data["type"])
         p[0].code = p[4].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[4].place, "PushParam " + tmp1 , "PushParam constructor" , p[0].place + " = call alloc"]
-    # print("yo", p[0].data)
 
 
 def p_new_type_name(p): 
@@ -1910,8 +1939,7 @@ def p_selection_statement_3(p):
     p[0].after = getnewlabel("switch_end")
     nextcode = []
     testcode = []
-    # pp.pprint(p[7].code)
-    # print(list(set([t["value"] for t in p[7].code])))
+
     place = p[3].place
     if p[3].data["type"] == "char":
         tmp = getnewvar("int")
@@ -1930,11 +1958,9 @@ def p_selection_statement_3(p):
         else:
             tmp = getnewvar("int")
             tmp2 = getnewvar("int")
-            # print(v, p[7].code[idx]["value"], p[7].code[idx]["type"], tmp)
             testcode = testcode + [tmp+" = "+str(v)] + [tmp2+" = "+place+" int- "+tmp, "ifz "+tmp2+" goto->"+p[7].code[idx]["label"]]
     testcode = testcode + ["goto->" + default_label]
     for idx,c in enumerate(p[7].code):
-        # print(idx)
         l = c["statement"]
         l = break_continue(l, p[0].after)
         nextcode = nextcode + [c["label"] + ":"] + ["    " + i for i in l] # + ["    goto->"+p[0].after]
@@ -2017,7 +2043,6 @@ def p_iteration_statement_3(p):
     p[0].begin = getnewlabel("for_begin1")
     p[0].cont = getnewlabel("for_continue1")
     p[0].after = getnewlabel("for_after1")
-    print("compound : ", p[9].code)
     l = p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[9].code + p[7].code + ["goto->" + p[0].begin ]
     l = break_continue(l, p[0].after, p[0].cont)
     p[0].code = p[4].code + [p[0].begin + " : "] + ["    " + i for i in l[:len(p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[9].code)]] \
