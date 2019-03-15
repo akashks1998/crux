@@ -1389,18 +1389,44 @@ def p_argument_declaration_list(p):
 
 def p_argument_declaration_1(p): 
     '''argument_declaration : type_specifier_ declarator   ''' 
-    p[0] = OBJ() 
+    p[0] = OBJ()
     p[0].parse=f(p)
-    p[0].data = assigner(p,1)
-    if p[2].data["type"] != "":
-        p[0].data["type"] = p[0].data["type"] + "|" +  p[2].data["type"]
-    p[0].data["name"] = p[2].data["name"]
-    p[0].data["meta"] = p[2].data["meta"]
-    p[0].data["init"] =  None
 
-    if pushVar(p[2].data["name"],p[0].data)==False:
-        report_error("Redeclaration of variable", p.lineno(1))
+    each = p[2].data.copy()
+    data = p[1].data.copy()
+    if(each["type"] != ""):
+        data["type"] = p[1].data["type"] + "|" +  each["type"]
+    data["name"] = each["name"]
+    data["meta"] = each["meta"]
+        
+    # handle array type
+    if len(data["meta"]) != 0:
+        element_type = data["type"].rstrip("a").rstrip("|")
+        if(element_type == "void"):
+            report_error("can not declare a array of type void", p.lineno(0))
+        data["is_array"] = 1
+        data["element_type"] = element_type
+        data["index"] = 1
+        data["to_add"] = "0"
 
+        size = 1
+        for n in data["meta"]:
+            size = size * n
+
+        # check the basic data_type_exist or not
+        get_size(element_type.rstrip("p").rstrip("|"))
+        if pushVar(data["name"],data)==False:
+            report_error("Redeclaration of variable", p.lineno(1))
+    else:
+        if(data["type"] == "void"):
+            report_error("can not declare a variable of type void", p.lineno(0))
+        basic_type = data["type"].rstrip("p").rstrip("|")
+        get_size(basic_type)
+
+        if pushVar(each["name"],data)==False:
+            report_error("Redeclaration of variable", p.lineno(1))
+               
+    p[0].data = data
 
 # # these two can be removed, will be handled later if time permits
 # def p_argument_declaration_3(p): 
@@ -1710,6 +1736,8 @@ def p_member_declaration_0(p):
         # handle array type
         if len(data["meta"]) != 0:
             element_type = data["type"].rstrip("a").rstrip("|")
+            if(element_type == "void"):
+                report_error("can not declare a array of type void", p.lineno(0))
             data["is_array"] = 1
             data["element_type"] = element_type
             data["index"] = 1
@@ -1737,6 +1765,9 @@ def p_member_declaration_0(p):
                 add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
         else:
+            if(data["type"] == "void"):
+                report_error("can not declare a variable of type void", p.lineno(0))            
+            
             basic_type = data["type"].rstrip("p").rstrip("|")
         
             # check the basic data_type_exist or not
@@ -2134,6 +2165,8 @@ def p_declaration0(p):
         # handle array type
         if len(data["meta"]) != 0:
             element_type = data["type"].rstrip("a").rstrip("|")
+            if(element_type == "void"):
+                report_error("can not declare a array of type void", p.lineno(0))
             data["is_array"] = 1
             data["element_type"] = element_type
             data["index"] = 1
@@ -2153,6 +2186,8 @@ def p_declaration0(p):
                 add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
         else:
+            if(data["type"] == "void"):
+                report_error("can not declare a variable of type void", p.lineno(0))
             basic_type = data["type"].rstrip("p").rstrip("|")
             get_size(basic_type)
             data["size"] = get_size(data["type"])
