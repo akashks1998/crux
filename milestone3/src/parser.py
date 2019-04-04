@@ -1312,7 +1312,12 @@ def p_arg_list(p):
 
     if len(p)==2:
         input_detail=p[1].data
-        print(p[1].data)
+        offset = -16
+        for each_p in p[1].data[1]:
+            each_p["offset"] = offset
+            offset = offset - each_p["size"]
+            updateVar(each_p["name"],each_p)
+
     else:
         input_detail=("",[])
 
