@@ -27,7 +27,6 @@ def f(p):
             p[each + 1] = OBJ()
             p[each + 1].data = token
             p[each+1].parse = (token, cnt)            
-        
         open('dot.gz','a').write("    " + str(out[1])  +  " -> " + str(p[each+1].parse[1]))
     return out
 
@@ -726,9 +725,9 @@ def p_assignment_expression(p):
         if t==False:
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         if p[2].data == "=":
-            p[0].code = p[3].code + p[1].code + t["code"] +[ quad("eq",[place,t["place"]],place + p[2].data + t["place"]) ]
+            p[0].code = p[3].code + p[1].code + t["code"] +[ quad("eq",[place,t["place"]],place + "=" + t["place"]) ]
         else:
-            p[0].code = p[3].code + p[1].code + t["code"]+[ quad(p[1].data["type"] +p[2].data[0],[place,place,t["place"]],place + " = " + place + " " +p[1].data["type"] +p[2].data[0] + " " + t["place"]) ]
+            p[0].code = p[3].code + p[1].code + t["code"]+[ quad("eq",[place,place,t["place"]],place + " = " + place + " " +"=" + " " + t["place"]) ]
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -1149,7 +1148,7 @@ def p_allocation_expression1(p):
     tpe = p[3].data["type"]
     tmp1 = getnewvar("int")
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = p[6].code + [quad("eq",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Fcall",["alloc",p[0].place],p[0].place + " = Scall alloc")]
+    p[0].code = p[6].code + [quad("int*",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "int*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Fcall",["alloc",p[0].place],p[0].place + " = Scall alloc")]
 
 
 def p_allocation_expression0(p): 
@@ -2227,10 +2226,36 @@ def p_pop_scope(p):
 
 def quad(op, a, statement):
     arg = [ a[i] if i<len(a) else "" for i in range(3) ]
+<<<<<<< HEAD
     if op=="eq" and arg[0][0]=="*":
         op = "store"
         arg[0] = arg[0][1:].rstrip("(").lstrip(")")
     return " $ ".join([statement]+[op]+arg)
+=======
+    if op=="eq":
+        if arg[0][0]=="*":
+            op = "store"
+            arg[0] = arg[0][1:].rstrip("(").lstrip(")")
+        elif arg[1][0]=="*":
+            op = "load"
+            arg[1] = arg[1][1:].rstrip("(").lstrip(")")
+        else:
+            if arg[1].isdigit():
+                op = "eq" + "int"
+            elif arg[1][0]=="'" and arg[1][2]=="'" and len(arg)==3:
+                op = "eq" + "char"
+            elif arg[1].isdecimal():
+                op = "eq" + "float"
+            elif arg[1].split('@')[0]=="tmp":
+                print(arg)
+                c = checkVar(arg[1], "**")
+                op = "eq"+c["var"]["type"]
+            else:
+                c = checkVar(arg[1], int(arg[1].split('@')[1]))
+                op = "eq"+c["var"]["type"]
+    
+    return " $ ".join([op]+arg+[statement])
+>>>>>>> x86
 
 def parsequad(q):
     return [i.strip() for i in q.split("$")[1:]]
@@ -2251,6 +2276,7 @@ def generate_code(p):
     open(x86File,'w').write("section .text\n")
     x=1
     for i in p[0].code:
+        q = parsequad(i)
         if re.fullmatch('[ ]*', i) == None:
             open(x86File,'a').write(asm(i)+"\n")
             x=x+1
