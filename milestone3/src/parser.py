@@ -33,6 +33,7 @@ def f(p):
 
 FileName = '<given file>'
 CodeFile = 'code.crux'
+x86File = 'x86'
 SymbolTableFileName = 'symbol.dump'
         
 labeldict = {}
@@ -193,9 +194,11 @@ def allowed_type(converted_from,converted_to):
     return (converted_from in allowed_types[converted_to])
 
 def break_continue(l, a, b=""):
-    t = ["[break]goto->"+a if re.fullmatch('[ ]*break', i) else i for i in l]
-    return ["[continue]goto->"+b if re.fullmatch('[ ]*continue', i) else i for i in t] if b!="" else t
-
+    # t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
+    t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i.split('$')[4] if i!= '' else i) else i for i in l]
+    # s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
+    s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i.split('$')[4] if i!= '' else i) else i for i in t]
+    return s if b!="" else t
 
 def cast_string(place, converted_from,converted_to,t=None):
     
@@ -204,7 +207,7 @@ def cast_string(place, converted_from,converted_to,t=None):
     if allowed_type(converted_from,converted_to)==True:
         if t==None:
             t=getnewvar(converted_to)
-        return {"place":t,"code":[ t +" = " + converted_from+"_to_"+converted_to+"("+place+")" ]}
+        return {"place":t,"code":[ quad(converted_from+"_to_"+converted_to, [t, place, ''], t +" = " + converted_from+"_to_"+converted_to+"("+place+")") ]}
     return False
 
 def op_allowed(op, typ):
@@ -228,7 +231,7 @@ def operator(op, op1 ,op2 ,typ=None):
         if typ==None:
             typ=op1.data["type"]
         t=getnewvar(typ)
-        return {"place":t,"code":[ t +" = " + op1.place +" "+op1.data["type"]+op+" "+op2.place ],"type":typ}
+        return {"place":t,"code":[ quad(op1.data["type"]+op , [t,op1.place,op2.place], t +" = " + op1.place +" "+op1.data["type"]+op+" "+op2.place) ],"type":typ}
     elif prec[ op1.data["type"] ]>prec[ op2.data["type"] ]:
         y=cast_string( op2.place, op2.data["type"],op1.data["type"] )
         if typ==None:
@@ -236,7 +239,7 @@ def operator(op, op1 ,op2 ,typ=None):
         t=getnewvar(typ)
         if y==False:
             return False
-        return {"place":t,"code":y["code"]+[ t +" = "+ op1.place+" "+op1.data["type"]+op +" "+ y["place"] ],"type":typ}
+        return {"place":t,"code":y["code"]+[ quad(op1.data["type"]+op , [t,op1.place,y["place"]], t +" = "+ op1.place+" "+op1.data["type"]+op +" "+ y["place"]) ],"type":typ}
     else:
         y=cast_string( op1.place, op1.data["type"],op2.data["type"] )
         if y==False:
@@ -244,7 +247,7 @@ def operator(op, op1 ,op2 ,typ=None):
         if typ==None:
             typ=op2.data["type"]
         t=getnewvar(typ)
-        return {"place":t,"code":y["code"]+[ t +" = " + y["place"] +" "+op2.data["type"]+op+" "+ op2.place ],"type":typ}
+        return {"place":t,"code":y["code"]+[ quad(op2.data["type"]+op,[t,y["place"],op2.place],t +" = " + y["place"] +" "+op2.data["type"]+op+" "+ op2.place) ],"type":typ}
 
 def get_size(data_type, basic = True):
     data_type = data_type[:-1] if data_type[-1] == "|" else data_type
@@ -381,12 +384,7 @@ def p_program(p):
             report_error("break should be inside for/do-while/while/switch-case !!", "break")
         elif re.fullmatch('[ ]*continue', i) != None:
             report_error("continue should be inside for/do-while/while !!", "continue")
-    open(CodeFile,'w').write("//Code For " + FileName + "\n")
-    x=1
-    for i in p[0].code:
-        if re.fullmatch('[ ]*', i) == None:
-            open(CodeFile,'a').write('{0:3}'.format(x) + "::" + i + "\n")
-            x=x+1
+    generate_code(p)
 
 def p_translation_unit(p):
     '''translation_unit : declaration_seq''' 
@@ -436,9 +434,9 @@ def p_conditional_expression(p):
         p[0].else_=getnewlabel()
         t=cast_string(p[1].place,p[1].data["type"],"int")
 
-        p[0].code = p[1].code + t["code"] + [ "if "+t["place"] +"==0: goto "+ p[0].else_ ]\
-           + p[3].code+ [ p[0].place + " = " + p[3].place] +[ p[0].begin+":" ]\
-            + [ p[0].else_+":" ]+ p[5].code+ [ p[0].place + " = " + p[5].place]
+        p[0].code = p[1].code + t["code"] + [ quad("ifz",[t["place"],p[0].else_,""],"if "+t["place"] +"==0: goto "+ p[0].else_) ]\
+           + p[3].code+ [ quad("eq",[p[0].place,p[3].place],p[0].place + " = " + p[3].place)] +[ quad("label",[p[0].begin,"",""], p[0].begin+":") ]\
+            + [ quad("label",[p[0].else_,"",""],p[0].else_+":") ]+ p[5].code+ [ quad("eq",[p[0].place, p[5].place],p[0].place + " = " + p[5].place) ]
 
         
 
@@ -462,7 +460,7 @@ def p_logical_OR_expression(p):
         p[0].place = getnewvar("int")
         t=cast_string(p[1].place,p[1].data["type"],"int")
         t1=cast_string(p[3].place,p[3].data["type"],"int")
-        p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"] ]
+        p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ quad(str(p[2].data),[p[0].place, t["place"], t1["place"]],p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"]) ]
 
    
 def p_logical_AND_expression(p): 
@@ -484,7 +482,7 @@ def p_logical_AND_expression(p):
         p[0].place = getnewvar("int")
         t=cast_string(p[1].place,p[1].data["type"],"int")
         t1=cast_string(p[3].place,p[3].data["type"],"int")
-        p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"] ]
+        p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ quad(str(p[2].data),[p[0].place, t["place"], t1["place"]],p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"]) ]
 
 
 
@@ -505,7 +503,7 @@ def p_inclusive_OR_expression(p):
         else:
             report_error("Type not compatible with bitwise or operation", p.lineno(1))
         p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
 
 
 def p_exclusive_OR_expression(p): 
@@ -524,7 +522,7 @@ def p_exclusive_OR_expression(p):
         else:
             report_error("Type not compatible with bitwise xor operation", p.lineno(1))
         p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
 
 
 def p_AND_expression(p): 
@@ -544,7 +542,7 @@ def p_AND_expression(p):
             report_error("Type not compatible with bitwise and operation", p.lineno(1))
         
         p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
 
 def p_equality_expression(p): 
     '''equality_expression : relational_expression 
@@ -608,7 +606,7 @@ def p_shift_expression(p):
             report_error(" Type not compatible with bitwise shift operation ", p.lineno(0))
 
         p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place ]
+        p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
 
 def p_additive_expression(p): 
     '''additive_expression : multiplicative_expression 
@@ -625,9 +623,9 @@ def p_additive_expression(p):
         allowed_type = ["int", "char", "float"]
         if "|" in p[1].data["type"] and p[1].data["type"][-1] == "p" and p[3].data["type"] == "int":
             tmp = getnewvar("int")
-            code = [ tmp + " = " + p[3].place + " int* " +  str(get_size(p[1].data["type"][:-1].rstrip("|"))) ]  
+            code = [ quad("int*",[tmp,p[3].place,str(get_size(p[1].data["type"][:-1].rstrip("|")))],tmp + " = " + p[3].place + " int* " +  str(get_size(p[1].data["type"][:-1].rstrip("|")))) ]  
             place = getnewvar(p[1].data["type"])
-            code = code + [place + " = " + p[1].place + " int" +p[2].data + " " + tmp  ]
+            code = code + [ quad("int" +p[2].data,[place,p[1].place,tmp],place + " = " + p[1].place + " int" +p[2].data + " " + tmp) ]
             p[0].place = place
             p[0].code = p[1].code + p[3].code + code
             p[0].data["type"] = p[1].data["type"]
@@ -681,7 +679,7 @@ def p_cast_expression(p):
         p[0].data = {}
         p[0].data["type"]=p[2].data["type"]
         p[0].place=getnewvar(p[0].data["type"])
-        p[0].code=p[4].code+[p[0].place+"="+ p[4].data["type"]+"_to_"+p[2].data["type"]+"("+p[4].place+")" ]
+        p[0].code=p[4].code+[ quad(p[4].data["type"]+"_to_"+p[2].data["type"],[p[0].place,p[4].place,""],p[0].place+"="+ p[4].data["type"]+"_to_"+p[2].data["type"]+"("+p[4].place+")") ]
 
     
 
@@ -729,12 +727,9 @@ def p_assignment_expression(p):
         if t==False:
             report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
         if p[2].data == "=":
-            p[0].code = p[3].code + p[1].code + t["code"] +[ place + p[2].data + t["place"] ]
+            p[0].code = p[3].code + p[1].code + t["code"] +[ quad("eq",[place,t["place"]],place + p[2].data + t["place"]) ]
         else:
-            p[0].code = p[3].code + p[1].code + t["code"]+[ place + " = " \
-                + place + " " +p[1].data["type"] +p[2].data[0] + " " + t["place"] ]
-
-
+            p[0].code = p[3].code + p[1].code + t["code"]+[ quad(p[1].data["type"] +p[2].data[0],[place,place,t["place"]],place + " = " + place + " " +p[1].data["type"] +p[2].data[0] + " " + t["place"]) ]
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -792,13 +787,13 @@ def p_unary_expression(p):
                 y=cast_string(x["place"],"int",p[2].data["type"])
             else:
                 y=x
-            p[0].code=p[2].code+[one.place+" = 1"]+y["code"]+[p[0].place+"="+y["place"]]
+            p[0].code=p[2].code+[quad("eq",[one.place,"1",""],one.place+" = 1")]+y["code"]+[quad("eq",[p[0].place,y["place"],""],p[0].place+"="+y["place"])]
         else:
             report_error("This unary operation is not allowed with given type", p.lineno(1))
     elif len(p)==5:
         p[0].data["type"]="int"
         p[0].place=getnewvar("int")
-        p[0].code=p[3].code+[p[0].place+"= "+str(get_size(p[3].data["type"]))]
+        p[0].code=p[3].code+[quad("eq",[p[0].place,str(get_size(p[3].data["type"])),""],p[0].place+"= "+str(get_size(p[3].data["type"])))]
 
 def p_postfix_expression_1(p): 
     '''postfix_expression : primary_expression ''' 
@@ -826,7 +821,7 @@ def p_postfix_expression_2(p):
         to_mult =  p[1].data["meta"][index] if ( index < len(p[1].data["meta"]) ) else 1
         to_add_var_temp  = getnewvar("int")
         to_add = to_add_var_temp + " int* " + str(to_mult)
-        p[0].code = p[1].code + p[3].code  + [ to_add_var_temp + " = " + p[1].data["to_add"] + " int+ " + p[3].place  ] + [ to_add_var +  " = " +  to_add ]
+        p[0].code = p[1].code + p[3].code  + [ quad("int+",[to_add_var_temp,p[1].data["to_add"],p[3].place],to_add_var_temp + " = " + p[1].data["to_add"] + " int+ " + p[3].place ) ] + [ quad("eq",[to_add_var,to_add,""],to_add_var +  " = " +  to_add) ]
         p[0].place = p[1].place
         p[0].data["type"] =  p[1].data["type"][:-1]
         p[0].data["index"] = p[1].data["index"] + 1
@@ -838,8 +833,10 @@ def p_postfix_expression_2(p):
             new_addr = getnewvar("int")
             new_temp = getnewvar("int")
             ptr_addr = getnewvar(p[0].data["type"])
-            p[0].code = p[0].code + [new_temp + " = " + to_add_var + " int* " + str(get_size(p[0].data["type"])) ]  \
-                 + [ new_addr + " = " + p[0].place + " int+ " + new_temp] + [ ptr_addr + " = " + "*(" + new_addr + ")" ]
+            # load a b -> a = *b
+            p[0].code = p[0].code + [ quad("int*",[new_temp,to_add_var,str(get_size(p[0].data["type"]))],new_temp + " = " + to_add_var + " int* " + str(get_size(p[0].data["type"]))) ]  \
+                 + [ quad("int+",[new_addr,p[0].place,new_temp],new_addr + " = " + p[0].place + " int+ " + new_temp)] \
+                     + [ quad("load",[ptr_addr,new_addr,""],ptr_addr + " = " + "*(" + new_addr + ")") ]
             p[0].place = ptr_addr
             p[0].place2 = "*(" + new_addr + ")"
        
@@ -850,7 +847,8 @@ def p_postfix_expression_2(p):
             p[0].data = {"type": p[1].data["type"][:-1]}
 
         p[0].place = getnewvar(p[0].data["type"])
-        p[0].code = p[1].code +  p[3].code  + [ p[0].place + " = "  + "*( " + p[1].place + " int+ " +  p[3].place + ")" ]
+        t = getnewvar(p[1].data["type"])
+        p[0].code = p[1].code +  p[3].code  + [ quad("int+",[t,p[1].place,p[3].place],t + " = " + p[1].place + " int+ " +  p[3].place) ] + [ quad("load",[p[0].place,t,""],p[0].place + " = "  + "*( " + t + ")") ]
 
     else:
         report_error("Not a array or pointer", p.lineno(0))
@@ -890,13 +888,14 @@ def p_postfix_expression_3(p):
     code = [ ]
     if isinstance(p[3].place, list):
         for each in p[3].place:
-            code.append("PushParam " + each )
+            code.append( quad("PushParam",[each,"",""],"PushParam " + each) )
 
     if "class_obj" in p[1].data.keys():
-        code.append("PushParam " + p[1].data["class_obj"] )
+        code.append( quad("PushParam",[p[1].data["class_obj"],"",""],"PushParam " + p[1].data["class_obj"]) )
 
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig ]
+    p[0].code = p[1].code + expr_code + code + [ quad("Fcall",[p[0].place,(class_name  + ":" if class_name != "" else "") + expected_sig,""],p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig) ]
+    # p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig ]
 
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
@@ -933,9 +932,9 @@ def p_postfix_expression_6(p):
                 p[0].data["class_name"] = p[1].data["type"]
                 p[0].data["class_obj"] = p[0].place 
 
-                p[0].code = p[1].code + [  p[0].place + " = *(" +  p[1].place + ")" ]
+                p[0].code = p[1].code + [ quad("load",[p[0].place,p[1].place,""],p[0].place + " = *(" +  p[1].place + ")") ]
             else:
-                p[0].code = p[1].code + [  p[0].place + " = " +  p[1].place + "." + p[3].data ]
+                p[0].code = p[1].code + [ quad("dot",[p[0].place, p[1].place, p[3].place],p[0].place + " = " +  p[1].place + "." + p[3].data) ]
 
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
@@ -969,10 +968,9 @@ def p_postfix_expression_7(p):
                 p[0].data["func_name"] = p[3].data
                 p[0].data["class_name"] = p[1].data["type"][:-2]
                 p[0].data["class_obj"] = class_obj
-                p[0].code = p[1].code + [ class_obj + " = " + p[1].place  ] 
-
+                p[0].code = p[1].code + [ quad("eq", [class_obj, p[1].place, ""], class_obj + " = " + p[1].place) ] 
             else:
-                p[0].code = p[1].code + [ class_obj + " = *(" +  p[1].place + ")" ]  + [ p[0].place + " = " + class_obj + "." + p[3].data ]
+                p[0].code = p[1].code + [ quad("load",[class_obj, p[1].place, ""],class_obj + " = *(" +  p[1].place + ")") ]  + [ quad("dot",[p[0].place, class_obj, p[3].data],p[0].place + " = " + class_obj + "." + p[3].data) ]
 
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
@@ -1000,7 +998,7 @@ def p_postfix_expression_8(p):
             y=cast_string(x["place"],"int",p[1].data["type"])
         else:
             y=x
-        p[0].code=p[1].code+[one.place+" = 1"]+y["code"]+[p[0].place+"="+y["place"]]
+        p[0].code=p[1].code+[quad("eq",[one.place, "1", ""],one.place+" = 1")]+y["code"]+[quad("eq",[p[0].place, y["place"]],p[0].place+"="+y["place"])]
     else:
         report_error("This unary operation is not allowed with given type", p.lineno(1))
     p[0].data=assigner(p,1)
@@ -1031,7 +1029,7 @@ def p_primary_expression1(p):
     p[0].parse=f(p) 
     p[0].data = assigner(p,1)
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = [ p[0].place + " = " + str(p[1].data["value"]) ] 
+    p[0].code = [ quad("eq",[p[0].place,str(p[1].data["value"]),""],p[0].place + " = " + str(p[1].data["value"])) ] 
     
     
 def p_primary_expression2(p): 
@@ -1080,7 +1078,7 @@ def p_unary_expression1(p):
 
     p[0].place = getnewvar(p[0].data["type"])
     t_var = getnewvar(p[2].data["type"])
-    p[0].code = p[2].code+ [ t_var + " = " +  p[2].place ] + [ p[0].place + " = "+ operator + p[1].data + " " +t_var ] 
+    p[0].code = p[2].code+ [ quad("eq", [t_var, p[2].place, ""], t_var + " = " +  p[2].place) ] + [ quad(operator + p[1].data, [p[0].place,t_var,""],p[0].place + " = "+ operator + p[1].data + " " +t_var) ] 
     p[0].data["class_u"] = "unary1"
 
 def p_unary_expression2(p): 
@@ -1096,7 +1094,7 @@ def p_unary_expression2(p):
   
     p[0].place = getnewvar(p[0].data["type"])
     t_var = getnewvar(p[2].data["type"])
-    p[0].code = p[2].code+ [ t_var + " = " +  p[2].place ] + [ p[0].place + " = "+ p[1].data + t_var ] 
+    p[0].code = p[2].code+ [ quad("eq", [t_var, p[2].place, ""], t_var + " = " +  p[2].place) ] + [ quad("load",[p[0].place, t_var, ""],p[0].place + " = "+ p[1].data + t_var) ] 
     p[0].data["class_u"] = "unary2"
 
 def p_deallocation_expression(p): 
@@ -1122,7 +1120,7 @@ def p_deallocation_expression(p):
     else:
         report_error("wrong specification of deallocate ", p.lineno(0))
     
-    p[0].code = ["PushParam " + name + "@" + str(currentScopeTable) ] + ["Scall dealloc"]
+    p[0].code = [ quad("PushParam", [name + "@" + str(currentScopeTable),"",""], "PushParam " + name + "@" + str(currentScopeTable)) ] + [quad("Scall",["dealloc","",""],"Scall dealloc")]
         
 # New Allocation
 # Extra * new_type_name me added hain
@@ -1141,7 +1139,7 @@ def p_allocation_expression1(p):
     tpe = p[3].data["type"]
     tmp1 = getnewvar("int")
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = p[6].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place, "PushParam " + tmp1  , p[0].place + " = Fcall alloc"]
+    p[0].code = p[6].code + [quad("eq",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Fcall",["alloc",p[0].place],p[0].place + " = Scall alloc")]
 
 
 def p_allocation_expression0(p): 
@@ -1155,7 +1153,7 @@ def p_allocation_expression0(p):
     p[0].data = {"type" : p[3].data["type"] + "p"} if "|" in p[3].data["type"] else {"type" : p[3].data["type"] + "|p"}
     tpe = p[3].data["type"]
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = ["PushParam " + str(get_size(tpe)),  p[0].place + " = Scall alloc"]
+    p[0].code = [quad("PushParam",[str(get_size(tpe)),"",""],"PushParam " + str(get_size(tpe))), quad("Scall",["alloc",p[0].place],p[0].place + " = Scall alloc") ]
 
 
 
@@ -1523,7 +1521,9 @@ def p_class_function_specifier(p):
     p[0].parse=f(p)
 
     p[0].code = p[5].code.copy()
-    p[0].code[0] = p[2].data + ":" + p[0].code[0]
+    c = p[0].code[0].split("$")
+    c[1] = p[2].data + ":" + c[1].strip()
+    p[0].code[0] = " $ ".join(c)
 
     
 def p_change_scope(p):
@@ -1705,9 +1705,7 @@ def p_function_definition(p):
     func_detail["stack_space"] = get_offset()
     updateVar(func_sig, func_detail)    
     popOffset()
-   
-
-    p[0].code = [func_detail["name"] + "|" + func_detail["input_sig"] + ":", "    BeginFunc " + str(func_detail["stack_space"]) ] + [ "    " + i for i in p[6].code] + ["    EndFunc"]
+    p[0].code = [quad("label", [func_detail["name"] + "|" + func_detail["input_sig"], "", ""], func_detail["name"] + "|" + func_detail["input_sig"] + ":"), quad("BeginFunc", [str(func_detail["stack_space"]), "", ""], "    BeginFunc " + str(func_detail["stack_space"])) ] + [ "    " + i for i in p[6].code] + [quad("EndFunc", ["","",""], "    EndFunc")]
 
 
 def p_function_decl(p): 
@@ -1804,10 +1802,10 @@ def p_jump_statement1(p):
     p[0].parse=f(p)
     if len(p)==4:
         p[0].data["ret_type"]=p[2].data["type"]
-        p[0].code=p[2].code+["return "+p[2].place]
+        p[0].code=p[2].code+[quad("return", [p[2].place,"",""], "return "+p[2].place)]
     else:
         p[0].data["ret_type"]=""
-        p[0].code=p[2].code+["return "]
+        p[0].code=p[2].code+[quad("return", [], "return ")]
 
 def p_selection_statement_1(p): 
     '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope  ''' 
@@ -1815,7 +1813,7 @@ def p_selection_statement_1(p):
     p[0].parse=f(p)  
     p[0].after = getnewlabel("single_if_after")
     p[0].data=assigner(p,6)
-    p[0].code = p[3].code + ["ifnz " + p[3].place + " goto->" + p[0].after] + p[6].code +  [p[0].after + " : "]
+    p[0].code = p[3].code + [quad("ifnz", [p[3].place, p[0].after, ""], "ifnz " + p[3].place + " goto->" + p[0].after)] + p[6].code +  [quad("label", [p[0].after], p[0].after + " : ")]
 
 def p_selection_statement_2(p): 
     '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope  ''' 
@@ -1825,8 +1823,9 @@ def p_selection_statement_2(p):
     p[0].else_ = getnewlabel("ifelse_else_")
     p[0].after = getnewlabel("ifelse_after")
     retType(p,6,10)
-    l = ["ifnz " + p[3].place + " goto->" + p[0].else_] + p[6].code + ["goto->" + p[0].after]
-    p[0].code = p[3].code + [p[0].before + ":"] + ["    " + i for i in l] + [p[0].else_ + ":"] + ["    " + i for i in p[10].code] + [p[0].after + ":"]
+    l = [quad("ifnz",[p[3].place,  p[0].else_, ""],"ifnz " + p[3].place + " goto->" + p[0].else_)] + p[6].code + [quad("goto", [p[0].after,"",""], "goto->" + p[0].after)]
+    p[0].code = p[3].code + [quad("label",[p[0].before,"",""],p[0].before + ":")] + ["    " + i for i in l] + [quad("label", [p[0].else_,"",""], p[0].else_ + ":")] \
+         + ["    " + i for i in p[10].code] + [quad("label",[p[0].after,"",""],p[0].after + ":")]
 
 def p_selection_statement_3(p): 
     '''selection_statement :  SWITCH LPAREN expression  RPAREN push_scope  LCPAREN labeled_statement_list RCPAREN pop_scope ''' 
@@ -1847,7 +1846,7 @@ def p_selection_statement_3(p):
     place = p[3].place
     if p[3].data["type"] == "char":
         tmp = getnewvar("int")
-        p[0].code = [tmp + " = char-to-int " + place]
+        p[0].code = [quad("char_to_int",[tmp, place, ""],tmp + " = char_to_int " + place)]
         place = tmp
     default_label = p[0].after
     for idx,v in enumerate([t["value"] for t in p[7].code]):
@@ -1858,17 +1857,18 @@ def p_selection_statement_3(p):
             tmp3 = getnewvar("char")
             tmp = getnewvar("int")
             tmp2 = getnewvar("int")
-            testcode = testcode + [tmp3+" = "+str(v)] + [tmp+" = char-to-int "+tmp3] + [tmp2+" = "+place+" int- "+tmp, "ifz "+tmp2+" goto->"+p[7].code[idx]["label"]]
+            testcode = testcode + [quad("eq", [tmp3, str(v),""], tmp3+" = "+str(v))] + [quad("char_to_int",[tmp,tmp3,""],tmp+" = char_to_int "+tmp3)] \
+                + [quad("int-",[tmp2,place,tmp],tmp2+" = "+place+" int- "+tmp), quad("ifz",[tmp2, p[7].code[idx]["label"],""],"ifz "+tmp2+" goto->"+p[7].code[idx]["label"])]
         else:
             tmp = getnewvar("int")
             tmp2 = getnewvar("int")
-            testcode = testcode + [tmp+" = "+str(v)] + [tmp2+" = "+place+" int- "+tmp, "ifz "+tmp2+" goto->"+p[7].code[idx]["label"]]
+            testcode = testcode + [tmp+" = "+str(v)] + [quad("int-",[tmp2,place,tmp],tmp2+" = "+place+" int- "+tmp), quad("ifz",[tmp2, p[7].code[idx]["label"],""],"ifz "+tmp2+" goto->"+p[7].code[idx]["label"])]
     testcode = testcode + ["goto->" + default_label]
     for idx,c in enumerate(p[7].code):
         l = c["statement"]
         l = break_continue(l, p[0].after)
-        nextcode = nextcode + [c["label"] + ":"] + ["    " + i for i in l] # + ["    goto->"+p[0].after]
-    p[0].code = p[3].code + [p[0].test + ":"] + ["    " + i for i in testcode ] + [p[0].next + ":"] + ["    " + i for i in nextcode ] + [p[0].after + ":"]
+        nextcode = nextcode + [quad("label",[c["label"],"",""], c["label"] + ":")] + ["    " + i for i in l] # + ["    goto->"+p[0].after]
+    p[0].code = p[3].code + [quad("label", [p[0].test,"",""], p[0].test + ":")] + ["    " + i for i in testcode ] + [quad("label",[p[0].next, "",""],p[0].next + ":")] + ["    " + i for i in nextcode ] + [quad("label",[p[0].after,"",""],p[0].after + ":")]
 
 # def p_try_block(p): 
 #     '''try_block : TRY push_scope compound_statement pop_scope CATCH  push_scope compound_statement pop_scope''' 
@@ -1926,7 +1926,7 @@ def p_iteration_statement_1(p):
     p[0].data=assigner(p,6)
     l = p[4].code + [ "ifz " + p[4].place + " goto->" + p[0].after ] + p[6].code + ["goto->" + p[0].begin ]
     l = break_continue(l, p[0].after, p[0].begin)
-    p[0].code =  [p[0].begin + " : "] + ["    " + i for i in l] + [ p[0].after + " : "]
+    p[0].code =  [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l] + [ quad("label", [p[0].after], p[0].after + " : ") ]
 
 def p_iteration_statement_2(p): 
     '''iteration_statement : DO push_scope compound_statement WHILE LPAREN expression  RPAREN  SEMICOLON pop_scope  ''' 
@@ -1935,9 +1935,9 @@ def p_iteration_statement_2(p):
     p[0].data=assigner(p,3)
     p[0].begin = getnewlabel("do_begin")
     p[0].after = getnewlabel("do_after")
-    l = p[3].code + p[6].code + [ "ifnotz " + p[6].place + " goto->" + p[0].begin ]
+    l = p[3].code + p[6].code + [ quad("ifnz", [p[6].place, p[0].begin, ""], "ifnotz " + p[6].place + " goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].begin)
-    p[0].code =  [p[0].begin + " : "] + ["    " + i for i in l] + [ p[0].after + " : "]
+    p[0].code =  [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l] + [ quad("label", [p[0].after], p[0].after + " : ") ]
 
 def p_iteration_statement_3(p): 
     '''iteration_statement : FOR LPAREN push_scope for_init_statement expression SEMICOLON expression  RPAREN  compound_statement pop_scope  ''' 
@@ -1947,11 +1947,11 @@ def p_iteration_statement_3(p):
     p[0].begin = getnewlabel("for_begin1")
     p[0].cont = getnewlabel("for_continue1")
     p[0].after = getnewlabel("for_after1")
-    l = p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[9].code + p[7].code + ["goto->" + p[0].begin ]
+    l = p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[9].code + p[7].code + [quad("label", [p[0].begin], "goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].cont)
-    p[0].code = p[4].code + [p[0].begin + " : "] + ["    " + i for i in l[:len(p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[9].code)]] \
-        + [ p[0].cont + " : "] + ["    " + i for i in l[len(p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[9].code):]] \
-        + [ p[0].after + " : "]
+    p[0].code = p[4].code + [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l[:len(p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[9].code)]] 
+    p[0].code = p[0].code + [ quad("label", [p[0].cont], p[0].cont + " : ")] + ["    " + i for i in l[len(p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[9].code):]] 
+    p[0].code = p[0].code + [ quad("label", [p[0].after], p[0].after + " : ") ]
 
 def p_iteration_statement_4(p): 
     '''iteration_statement : FOR LPAREN push_scope for_init_statement SEMICOLON expression  RPAREN  compound_statement pop_scope   ''' 
@@ -1961,11 +1961,11 @@ def p_iteration_statement_4(p):
     p[0].begin = getnewlabel("for_begin2")
     p[0].cont = getnewlabel("for_continue2")
     p[0].after = getnewlabel("for_after2")
-    l = p[8].code + p[6].code + ["goto->" + p[0].begin ]
+    l = p[8].code + p[6].code + [quad("label", [p[0].begin], "goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].cont)
-    p[0].code = p[4].code + [p[0].begin + " : "] + ["    " + i for i in l[:len(p[8].code)]] \
-        + [ p[0].after + " : "] + ["    " + i for i in l[len(p[8].code):]] \
-        + [ p[0].after + " : "]
+    p[0].code = p[4].code + [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l[:len(p[8].code)]] \
+        + [ quad("label", [p[0].after], p[0].after + " : ") ] + ["    " + i for i in l[len(p[8].code):]] \
+        + [ quad("label", [p[0].after], p[0].after + " : ") ]
 
 def p_iteration_statement_5(p): 
     '''iteration_statement :  FOR LPAREN push_scope for_init_statement expression SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
@@ -1975,9 +1975,9 @@ def p_iteration_statement_5(p):
     p[0].cont = p[0].begin
     p[0].after = getnewlabel("for_after3")
     p[0].data=assigner(p,8)
-    l = p[5].code + [ "ifz " + p[5].place + " goto->" + p[0].after ] + p[8].code + ["goto->" + p[0].begin ]
+    l = p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[8].code + [quad("label", [p[0].begin], "goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].cont)
-    p[0].code = p[4].code + [p[0].begin + " : "] + ["    " + i for i in l] + [ p[0].after + " : "]
+    p[0].code = p[4].code + [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l] + [ quad("label", [p[0].after], p[0].after + " : ") ]
 
 def p_iteration_statement_6(p): 
     '''iteration_statement :  FOR LPAREN push_scope for_init_statement SEMICOLON  RPAREN  compound_statement pop_scope  ''' 
@@ -1987,9 +1987,9 @@ def p_iteration_statement_6(p):
     p[0].begin = getnewlabel("for_begin4")
     p[0].cont = p[0].begin
     p[0].after = getnewlabel("for_after4")
-    l = p[7].code + ["goto->" + p[0].begin ]
+    l = p[7].code + [quad("label", [p[0].begin], "goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].cont)
-    p[0].code = p[4].code + [p[0].begin + " : "] + ["    " + i for i in l] + [ p[0].after + " : "]
+    p[0].code = p[4].code + [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l] + [ quad("label", [p[0].after], p[0].after + " : ") ]
 
 
 def p_for_init_statement(p): 
@@ -2077,7 +2077,7 @@ def p_declaration0(p):
                 if  not allowed_type(each["init_type"],data["type"]):
                     report_error("type_mismatch in initialization", p.lineno(0))
                 x=cast_string(each["place"],each["init_type"],data["type"])
-                p[0].code=p[0].code + x["code"]+[each["name"]+ "@" + str(currentScopeTable) +" = "+ x["place"] ]            
+                p[0].code=p[0].code + x["code"]+[ quad("eq",[each["name"]+ "@" + str(currentScopeTable), x["place"],""],each["name"]+ "@" + str(currentScopeTable) +" = "+ x["place"]) ]            
 
 
 
@@ -2202,6 +2202,36 @@ def p_push_class_scope(p):
 def p_pop_scope(p):
     '''pop_scope : '''
     popScope()
+
+def quad(op, a, statement):
+    arg = [ a[i] if i<len(a) else "" for i in range(3) ]
+    if op=="eq" and arg[0][0]=="*":
+        op = "store"
+        arg[0] = arg[0][1:].rstrip("(").lstrip(")")
+    return " $ ".join([op]+arg+[statement])
+
+def parsequad(q):
+    return [i.strip() for i in q.split("$")[:-1]]
+
+def asm(line):
+    return ' '.join(parsequad(line))
+
+def generate_code(p):
+    open(CodeFile,'w').write("//Code For " + FileName + "\n")
+    x=1
+    for i in p[0].code:
+        if re.fullmatch('[ ]*', i) == None:
+            open(CodeFile,'a').write('{0:3}'.format(x) + "::" + i + "\n")
+            x=x+1
+    
+
+    open(x86File,'w').write("; Code For " + FileName + "\n")
+    open(x86File,'w').write("section .text\n")
+    x=1
+    for i in p[0].code:
+        if re.fullmatch('[ ]*', i) == None:
+            open(x86File,'a').write(asm(i)+"\n")
+            x=x+1
 
 def scope_table_graph(S):
     open('scope.gz','w').write("digraph ethane{ rankdir=LR {graph [ordering=\"out\"];node [fontsize=20 width=0.25 shape=box ]; ")

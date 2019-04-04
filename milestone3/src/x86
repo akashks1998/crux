@@ -1,0 +1,23 @@
+section .text
+label e:hi|int  
+BeginFunc 48  
+eq tmp@1 this 
+load tmp@0 tmp@1 
+eq obj@3 tmp@0 
+eq tmp@3 1 
+dot tmp@2 obj@3 NOP
+eq tmp@2 tmp@3 
+eq tmp@6 5 
+load tmp@5 this 
+dot tmp@4 tmp@5 a
+eq tmp@4 tmp@6 
+eq tmp@7 1 
+eq a@3 tmp@7 
+eq tmp@8 1 
+return tmp@8  
+EndFunc   
+label main|  
+BeginFunc 4  
+eq tmp@9 0 
+return tmp@9  
+EndFunc   
