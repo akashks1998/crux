@@ -125,8 +125,8 @@ def getnewvar(type_, offset = None, size = None, base="rbp"):
     currentTmp = currentTmp + 1
     if offset == None:
         size = get_size(type_)
-        offset = get_offset()
         add_to_offset(size)
+        offset = get_offset()
     
     data = {"type" :  type_ , "class" : "temp", "size" : size, "offset" : offset , "base" : str(base)}
     pushVar(tmp, data)
@@ -749,7 +749,10 @@ def p_unary_expression_0(p):
 
     p[0].data = assigner(p,1)
     if("|" in p[0].data["type"] and p[0].data["type"][-1] == "a"):
-        report_error("Array not called upto end", p.lineno(0))
+        if p[0].data["type"][ : - len(p[0].data["meta"]) ] == p[0].data["element_type"]:
+            pass
+        else:
+            report_error("Array not called upto end", p.lineno(0))
     p[0].place = p[1].place
     p[0].code = p[1].code 
     
@@ -827,6 +830,7 @@ def p_postfix_expression_2(p):
         if(p[1].data["type"][-2] == "p") or (p[1].data["type"][-2] == "|") :
             # end of array
             p[0].data = {"type": p[1].data["type"][:-1].rstrip("|")}
+            print("d",p[1].data)
             array_offset = p[1].data["offset"]
             array_offset_var = getnewvar("int")
             new_temp = getnewvar("int")
@@ -1311,12 +1315,25 @@ def p_arg_list(p):
         return_sig = p[-3].data["type"] + "|" + p[-2].data["type"]
 
     if len(p)==2:
+        print(p[1].data)
         input_detail=p[1].data
         offset = -16
         for each_p in p[1].data[1]:
-            each_p["offset"] = offset
-            offset = offset - each_p["size"]
-            updateVar(each_p["name"],each_p)
+            if "is_array" in each_p.keys():
+                new_offset = getnewvar("int")
+                each_p["offset"] = new_offset
+                each_p["base"] = 0
+                
+                updateVar(each_p["name"],each_p)
+                
+                array_addr_temp = getnewvar("int", offset, 4)
+                offset = offset - 4
+                p[0].code = p[0].code  + [ "    " + quad("load",[new_offset, array_addr_temp, "" ], new_offset + " = *(" + array_addr_temp + " ) " ) ] 
+
+            else:
+                each_p["offset"] = offset
+                offset = offset - each_p["size"]
+                updateVar(each_p["name"],each_p)
 
     else:
         input_detail=("",[])
@@ -1357,7 +1374,6 @@ def p_arg_list(p):
             pushVar(func_sig, p[0].data, scope = parent)
             detail = checkVar(function_name, parent)
             updateVar(function_name, {"type" : "function_upper", "func_sig" : detail["func_sig"] + [(func_sig, return_sig)]}, scope = parent )
-
 
 def p_argument_declaration_list(p): 
     '''argument_declaration_list : argument_declaration 
@@ -1656,9 +1672,10 @@ def p_member_declaration_0(p):
 
 
             data["size"] = get_size(element_type, basic=False) * size
+            add_to_offset(data["size"])
             data["offset"] = get_offset()
             data["base"] = "rbp"
-            add_to_offset(data["size"])
+            
             if pushVar(data["name"],data)==False:
                 add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
@@ -1680,10 +1697,10 @@ def p_member_declaration_0(p):
 
 
             data["size"] = get_size(data["type"], basic = False)
+            add_to_offset(data["size"])
             data["offset"] = get_offset()
             data["base"] = "rbp"
-            add_to_offset(data["size"])
-
+            
             if pushVar(each["name"],data)==False:
                 report_error("Redeclaration of variable", p.lineno(1))
                     
@@ -1730,7 +1747,7 @@ def p_function_definition(p):
     func_detail["stack_space"] = get_offset()
     updateVar(func_sig, func_detail)    
     popOffset()
-    p[0].code = [quad("label", [func_detail["name"] + "|" + func_detail["input_sig"], "", ""], func_detail["name"] + "|" + func_detail["input_sig"] + ":"), quad("BeginFunc", [str(func_detail["stack_space"]), "", ""], "    BeginFunc " + str(func_detail["stack_space"])) ] + [ "    " + i for i in p[6].code] + [quad("EndFunc", ["","",""], "    EndFunc")]
+    p[0].code =[quad("label", [func_detail["name"] + "|" + func_detail["input_sig"], "", ""], func_detail["name"] + "|" + func_detail["input_sig"] + ":"), quad("BeginFunc", [str(func_detail["stack_space"]), "", ""], "    BeginFunc " + str(func_detail["stack_space"])) ]   + p[4].code + [ "    " + i for i in p[6].code] + [quad("EndFunc", ["","",""], "    EndFunc")]
 
 
 def p_function_decl(p): 
@@ -2081,9 +2098,9 @@ def p_declaration0(p):
             get_size(element_type.rstrip("p").rstrip("|"))
 
             data["size"] = get_size(element_type) * size
+            add_to_offset(data["size"])
             data["offset"] = get_offset()
             data["base"] = "rbp"
-            add_to_offset(data["size"])
             if pushVar(data["name"],data)==False:
                 add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
@@ -2093,9 +2110,10 @@ def p_declaration0(p):
             basic_type = data["type"].rstrip("p").rstrip("|")
             get_size(basic_type)
             data["size"] = get_size(data["type"])
+            add_to_offset(data["size"])
             data["offset"] = get_offset()
             data["base"] = "rbp"
-            add_to_offset(data["size"])
+            
 
             if pushVar(each["name"],data)==False:
                 report_error("Redeclaration of variable", p.lineno(1))

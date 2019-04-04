@@ -4,26 +4,33 @@ BeginFunc 8
 eq tmp@0 1 
 return tmp@0  
 EndFunc   
-label dos|int,int,char|aa  
-BeginFunc 8  
-eq tmp@1 1 
-eq a@4 tmp@1 
+label dos|int,int,char|paa  
+BeginFunc 12  
+load tmp@1 tmp@2 
+eq tmp@3 1 
+eq a@4 tmp@3 
 return b@4  
 EndFunc   
 label main|  
-BeginFunc 308  
-eq tmp@14 1 
-eq tmp@2 2 
-int+ tmp@4 0 tmp@2
-int* tmp@3 tmp@4 4
-eq tmp@5 2 
-int+ tmp@7 tmp@3 tmp@5
-int* tmp@6 tmp@7 1
-int* tmp@9 tmp@6 20
-eq tmp@8 100 
-int- tmp@10 tmp@8 tmp@9
-int+ tmp@12 tmp@10 0
-eq tmp@13 tmp@14 
-eq tmp@15 1 
-return tmp@15  
+BeginFunc 512  
+eq tmp@16 1 
+eq tmp@4 2 
+int+ tmp@6 0 tmp@4
+int* tmp@5 tmp@6 4
+eq tmp@7 2 
+int+ tmp@9 tmp@5 tmp@7
+int* tmp@8 tmp@9 1
+int* tmp@11 tmp@8 20
+eq tmp@10 260 
+int- tmp@12 tmp@10 tmp@11
+int+ tmp@14 tmp@12 4
+eq tmp@15 tmp@16 
+eq tmp@17 1 
+eq tmp@18 1 
+PushParam c@5  
+PushParam tmp@18  
+PushParam tmp@17  
+Fcall tmp@19 dos|int,int,char|paa 
+eq tmp@20 1 
+return tmp@20  
 EndFunc   
