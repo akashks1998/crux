@@ -817,7 +817,8 @@ def p_postfix_expression_2(p):
         to_mult =  p[1].data["meta"][index] if ( index < len(p[1].data["meta"]) ) else 1
         to_add_var_temp  = getnewvar("int")
         to_add = to_add_var_temp + " int* " + str(to_mult)
-        p[0].code = p[1].code + p[3].code  + [ quad("int+",[to_add_var_temp,p[1].data["to_add"],p[3].place],to_add_var_temp + " = " + p[1].data["to_add"] + " int+ " + p[3].place ) ] + [ quad("eq",[to_add_var,to_add,""],to_add_var +  " = " +  to_add) ]
+        p[0].code = p[1].code + p[3].code  + [ quad("int+",[to_add_var_temp,p[1].data["to_add"],p[3].place],to_add_var_temp + " = " + p[1].data["to_add"] + " int+ " + p[3].place ) ] \
+             + [ quad("int*",[to_add_var,to_add_var_temp,str(to_mult)],to_add_var +  " = " +  to_add) ]
         p[0].place = p[1].place
         p[0].data["type"] =  p[1].data["type"][:-1]
         p[0].data["index"] = p[1].data["index"] + 1
@@ -1311,6 +1312,7 @@ def p_arg_list(p):
 
     if len(p)==2:
         input_detail=p[1].data
+        print(p[1].data)
     else:
         input_detail=("",[])
 
@@ -1322,6 +1324,7 @@ def p_arg_list(p):
         "declaration": True,
         "stack_space" : get_offset()
     }
+
     parent=getParentScope(currentScopeTable)
     func_sig = function_name +"|" + input_detail[0]
 
@@ -1360,7 +1363,7 @@ def p_argument_declaration_list(p):
     if(len(p) == 2 ):
         p[0].data = ( p[1].data["type"], [p[1].data])
     else:
-        p[0].data = ( p[1].data["type"] +  ","  +p[3].data[0] , [ p[1].data ] + p[3].data[1] )
+        p[0].data = ( p[1].data["type"] +  ","  + p[3].data[0] , [ p[1].data ] + p[3].data[1] )
 
 def p_argument_declaration_1(p): 
     '''argument_declaration : type_specifier_ declarator   ''' 
@@ -1388,6 +1391,9 @@ def p_argument_declaration_1(p):
         for n in data["meta"]:
             size = size * n
 
+        data["size"] = get_size(element_type) * size
+        data["base"] = "rbp"
+
         # check the basic data_type_exist or not
         get_size(element_type.rstrip("p").rstrip("|"))
         if pushVar(data["name"],data)==False:
@@ -1397,6 +1403,9 @@ def p_argument_declaration_1(p):
             report_error("can not declare a variable of type void", p.lineno(0))
         basic_type = data["type"].rstrip("p").rstrip("|")
         get_size(basic_type)
+
+        data["size"] = get_size(data["type"])
+        data["base"] = "rbp"
 
         if pushVar(each["name"],data)==False:
             report_error("Redeclaration of variable", p.lineno(1))
@@ -2221,10 +2230,10 @@ def quad(op, a, statement):
     if op=="eq" and arg[0][0]=="*":
         op = "store"
         arg[0] = arg[0][1:].rstrip("(").lstrip(")")
-    return " $ ".join([op]+arg+[statement])
+    return " $ ".join([statement]+[op]+arg)
 
 def parsequad(q):
-    return [i.strip() for i in q.split("$")[:-1]]
+    return [i.strip() for i in q.split("$")[1:]]
 
 def asm(line):
     return ' '.join(parsequad(line))
@@ -2234,7 +2243,7 @@ def generate_code(p):
     x=1
     for i in p[0].code:
         if re.fullmatch('[ ]*', i) == None:
-            open(CodeFile,'a').write('{0:3}'.format(x) + "::" + i.split('$')[-1] + "\n")
+            open(CodeFile,'a').write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
             x=x+1
     
 
