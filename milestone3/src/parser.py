@@ -112,7 +112,6 @@ class OBJ:
         self.data = {}
         self.code = []
         self.place = "NOP"
-        self.place2 = None
 
 def getnewlabel(s="label"):
 
@@ -120,16 +119,18 @@ def getnewlabel(s="label"):
     label = s + "#" + str(labeldict[s])
     return label
 
-def getnewvar(type_):
+def getnewvar(type_, offset = None, size = None, base="rbp"):
     global currentTmp
     tmp = "tmp@" + str(currentTmp)
     currentTmp = currentTmp + 1
-    size = get_size(type_)
-    offset = get_offset()
-    add_to_offset(size)
-    data = {"type" :  type_ , "class" : "temp",
-            "size" : size, "offset" : offset }
+    if offset == None:
+        size = get_size(type_)
+        offset = get_offset()
+        add_to_offset(size)
+    
+    data = {"type" :  type_ , "class" : "temp", "size" : size, "offset" : offset , "base" : str(base)}
     pushVar(tmp, data)
+
     return tmp
 
 def pushScope(type_ = None):
@@ -665,7 +666,6 @@ def p_cast_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)  
-    p[0].place2 = p[1].place2
 
     if len(p)==2 :
         p[0].data = assigner(p,1)
@@ -711,8 +711,7 @@ def p_assignment_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place2 = p[1].place2
-    place = p[1].place2 if p[1].place2 != None else  p[1].place
+    place = p[1].place
 
     if len(p)==2:
         p[0].data = assigner(p,1)
@@ -747,9 +746,7 @@ def p_unary_expression_0(p):
     '''unary_expression : postfix_expression  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place2 = p[1].place2
 
-   
     p[0].data = assigner(p,1)
     if("|" in p[0].data["type"] and p[0].data["type"][-1] == "a"):
         report_error("Array not called upto end", p.lineno(0))
@@ -767,14 +764,12 @@ def p_unary_expression(p):
                         # | SIZEOF  unary_expression 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    if(len(p) == 3):
-        p[0].place2 = p[2].place2
+
 
     if len(p)==2:
         p[0].data = assigner(p,1)
         p[0].place = p[1].place
         p[0].code = p[1].code 
-
     elif len(p)==3:
         p[0].data=assigner(p,2)
         p[0].place=p[2].place
@@ -814,6 +809,7 @@ def p_postfix_expression_2(p):
     if( p[3].data["type"] != "int" ):
         report_error("Array index is not integer", p.lineno(3))
     type_last_char = p[1].data["type"][-1]
+    print(p[1].data)
     if "|" in p[1].data["type"] and  type_last_char == "a":
         p[0].data = p[1].data.copy()
         to_add_var = getnewvar("int")
@@ -830,25 +826,26 @@ def p_postfix_expression_2(p):
         if(p[1].data["type"][-2] == "p") or (p[1].data["type"][-2] == "|") :
             # end of array
             p[0].data = {"type": p[1].data["type"][:-1].rstrip("|")}
-            new_addr = getnewvar("int")
+            array_offset = p[1].data["offset"]
+            array_offset_var = getnewvar("int")
             new_temp = getnewvar("int")
-            ptr_addr = getnewvar(p[0].data["type"])
-            # load a b -> a = *b
+            new_offset = getnewvar("int")
+            final_var = getnewvar(p[1].data["type"], new_offset ,  p[1].data["size"] )
             p[0].code = p[0].code + [ quad("int*",[new_temp,to_add_var,str(get_size(p[0].data["type"]))],new_temp + " = " + to_add_var + " int* " + str(get_size(p[0].data["type"]))) ]  \
-                 + [ quad("int+",[new_addr,p[0].place,new_temp],new_addr + " = " + p[0].place + " int+ " + new_temp)] \
-                     + [ quad("load",[ptr_addr,new_addr,""],ptr_addr + " = " + "*(" + new_addr + ")") ]
-            p[0].place = ptr_addr
-            p[0].place2 = "*(" + new_addr + ")"
+                 + [quad("eq", [array_offset_var, str(array_offset) ] , array_offset_var + " = " + str(array_offset) )] \
+                 + [ quad("int-",[new_offset, array_offset_var ,new_temp],new_offset + " = " + array_offset_var + " int- " + new_temp)] 
+            p[0].place = final_var
        
     elif "|" in p[1].data["type"] and type_last_char == "p":
+        # address mod
         if(p[1].data["type"][-2] == "|"):
             p[0].data = {"type": p[1].data["type"][:-2]}
         else:
             p[0].data = {"type": p[1].data["type"][:-1]}
 
-        p[0].place = getnewvar(p[0].data["type"])
-        t = getnewvar(p[1].data["type"])
-        p[0].code = p[1].code +  p[3].code  + [ quad("int+",[t,p[1].place,p[3].place],t + " = " + p[1].place + " int+ " +  p[3].place) ] + [ quad("load",[p[0].place,t,""],p[0].place + " = "  + "*( " + t + ")") ]
+        actual_addr = getnewvar(p[1].data["type"])
+        p[0].place = getnewvar(p[0].data["type"], actual_addr, get_size(p[0].data["type"]), 0) 
+        p[0].code = p[1].code +  p[3].code  + [ quad("int+",[actual_addr,p[1].place,p[3].place], actual_addr + " = " + p[1].place + " int+ " +  p[3].place) ] 
 
     else:
         report_error("Not a array or pointer", p.lineno(0))
@@ -859,7 +856,6 @@ def p_postfix_expression_3(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place2 = p[1].place2
 
     # this must be a function call
     # first get function sig..
@@ -902,7 +898,6 @@ def p_postfix_expression_5(p):
 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place2 = p[1].place2
 
 
 def p_postfix_expression_6(p): 
@@ -910,8 +905,8 @@ def p_postfix_expression_6(p):
 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place2 = p[1].place2
 
+    print(p[1].data, p[1].place)
     # post_fix must be a object and name should be a class member
 
     if "|" in p[1].data["type"]:
@@ -925,8 +920,8 @@ def p_postfix_expression_6(p):
         if x!=False:
             p[0].data = x.copy()
             tmp_type = "int|p" if p[0].data["type"] == "function_upper" else p[0].data["type"] 
-            p[0].place = getnewvar(tmp_type)
             if(p[0].data["type"] == "function_upper"):
+                p[0].place = getnewvar(tmp_type)
                 p[0].data["func_sig"] = x["func_sig"]
                 p[0].data["func_name"] = p[3].data
                 p[0].data["class_name"] = p[1].data["type"]
@@ -934,7 +929,16 @@ def p_postfix_expression_6(p):
 
                 p[0].code = p[1].code + [ quad("load",[p[0].place,p[1].place,""],p[0].place + " = *(" +  p[1].place + ")") ]
             else:
-                p[0].code = p[1].code + [ quad("dot",[p[0].place, p[1].place, p[3].place],p[0].place + " = " +  p[1].place + "." + p[3].data) ]
+                class_relative_offset = x["offset"]
+                class_element_size = x["size"]
+                
+                class_actual_offset = checkVar(p[1].place)["var"]["offset"]
+                class_actual_base = checkVar(p[1].place)["var"]["base"]
+
+                actual_offset = getnewvar("int")
+            
+                p[0].place = getnewvar(x["type"], actual_offset, class_element_size, class_actual_base)
+                p[0].code = p[1].code + [ quad("int+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " int+ " + str(class_relative_offset)  ) ]
 
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
@@ -947,7 +951,6 @@ def p_postfix_expression_7(p):
     '''postfix_expression : postfix_expression ARROW name  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place2 = p[1].place2
    
 
     if p[1].data["type"][-2:] != "|a" and p[1].data["type"][-2:] != "|p":
@@ -970,7 +973,14 @@ def p_postfix_expression_7(p):
                 p[0].data["class_obj"] = class_obj
                 p[0].code = p[1].code + [ quad("eq", [class_obj, p[1].place, ""], class_obj + " = " + p[1].place) ] 
             else:
-                p[0].code = p[1].code + [ quad("load",[class_obj, p[1].place, ""],class_obj + " = *(" +  p[1].place + ")") ]  + [ quad("dot",[p[0].place, class_obj, p[3].data],p[0].place + " = " + class_obj + "." + p[3].data) ]
+                class_relative_offset = x["offset"]
+                class_element_size = x["size"]
+                
+                class_actual_offset = p[1].place
+                class_actual_base = 0
+                actual_offset = getnewvar("int")
+                p[0].place = getnewvar(x["type"], actual_offset, class_element_size, class_actual_base)
+                p[0].code = p[1].code + [ quad("int+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " int+ " + str(class_relative_offset)  ) ]
 
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
@@ -985,7 +995,6 @@ def p_postfix_expression_8(p):
 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place2 = p[1].place2
     p[0].place = p[1].place
     p[0].data=assigner(p,1)
     p[0].place=p[1].place
@@ -1634,6 +1643,7 @@ def p_member_declaration_0(p):
 
             data["size"] = get_size(element_type, basic=False) * size
             data["offset"] = get_offset()
+            data["base"] = "rbp"
             add_to_offset(data["size"])
             if pushVar(data["name"],data)==False:
                 add_to_offset(-data["size"])
@@ -1657,6 +1667,7 @@ def p_member_declaration_0(p):
 
             data["size"] = get_size(data["type"], basic = False)
             data["offset"] = get_offset()
+            data["base"] = "rbp"
             add_to_offset(data["size"])
 
             if pushVar(each["name"],data)==False:
@@ -2057,6 +2068,7 @@ def p_declaration0(p):
 
             data["size"] = get_size(element_type) * size
             data["offset"] = get_offset()
+            data["base"] = "rbp"
             add_to_offset(data["size"])
             if pushVar(data["name"],data)==False:
                 add_to_offset(-data["size"])
@@ -2068,6 +2080,7 @@ def p_declaration0(p):
             get_size(basic_type)
             data["size"] = get_size(data["type"])
             data["offset"] = get_offset()
+            data["base"] = "rbp"
             add_to_offset(data["size"])
 
             if pushVar(each["name"],data)==False:
@@ -2221,7 +2234,7 @@ def generate_code(p):
     x=1
     for i in p[0].code:
         if re.fullmatch('[ ]*', i) == None:
-            open(CodeFile,'a').write('{0:3}'.format(x) + "::" + i + "\n")
+            open(CodeFile,'a').write('{0:3}'.format(x) + "::" + i.split('$')[-1] + "\n")
             x=x+1
     
 
