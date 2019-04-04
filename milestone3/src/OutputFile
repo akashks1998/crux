@@ -1,0 +1,23 @@
+//Code For ../test/32.cpp
+  1::label  $ e:hi|int $    $    $  hi|int:
+  2::BeginFunc $ 48 $  $  $     BeginFunc 48
+  3::    eq $ tmp@1 $ this $  $ tmp@1 = this
+  4::    load $ tmp@0 $ tmp@1 $  $ tmp@0 = *tmp@1
+  5::    eq $ obj@3 $ tmp@0 $  $ obj@3 = tmp@0
+  6::    eq $ tmp@3 $ 1 $  $ tmp@3 = 1
+  7::    dot $ tmp@2 $ obj@3 $ NOP $ tmp@2 = obj@3.a
+  8::    eq $ tmp@2 $ tmp@3 $  $ tmp@2=tmp@3
+  9::    eq $ tmp@6 $ 5 $  $ tmp@6 = 5
+ 10::    load $ tmp@5 $ this $  $ tmp@5 = *(this)
+ 11::    dot $ tmp@4 $ tmp@5 $ a $ tmp@4 = tmp@5.a
+ 12::    eq $ tmp@4 $ tmp@6 $  $ tmp@4=tmp@6
+ 13::    eq $ tmp@7 $ 1 $  $ tmp@7 = 1
+ 14::    eq $ a@3 $ tmp@7 $  $ a@3=tmp@7
+ 15::    eq $ tmp@8 $ 1 $  $ tmp@8 = 1
+ 16::    return $ tmp@8 $  $  $ return tmp@8
+ 17::EndFunc $  $  $  $     EndFunc
+ 18::label $ main| $  $  $ main|:
+ 19::BeginFunc $ 4 $  $  $     BeginFunc 4
+ 20::    eq $ tmp@9 $ 0 $  $ tmp@9 = 0
+ 21::    return $ tmp@9 $  $  $ return tmp@9
+ 22::EndFunc $  $  $  $     EndFunc
