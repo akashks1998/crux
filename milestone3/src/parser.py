@@ -12,6 +12,7 @@ pp = pprint.PrettyPrinter(indent=4)
 cnt=0
 tokens = lexTokens
 filename=""
+heap_ptr=0
 def f(p):
     global cnt
     p_name = sys._getframe(1).f_code.co_name
@@ -183,6 +184,9 @@ def allowed_type(converted_from,converted_to):
     if "|" in converted_from or "|" in converted_to:
         if "|" in converted_from and converted_from[-1]=='p' and (converted_to[-1]=="p" or converted_to in allowed_types["pointer"]):
             return True
+        if "|" in converted_to and converted_to[-1]=='p' and (converted_from[-1]=="p" or converted_from in allowed_types["pointer"]):
+            return True
+
         return False
     if converted_to not in allowed_types.keys():
         return False
@@ -1137,7 +1141,7 @@ def p_allocation_expression1(p):
     tpe = p[3].data["type"]
     tmp1 = getnewvar("int")
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = p[6].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place, "PushParam " + tmp1  , p[0].place + " = Scall alloc"]
+    p[0].code = p[6].code + [tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place, "PushParam " + tmp1  , p[0].place + " = Fcall alloc"]
 
 
 def p_allocation_expression0(p): 

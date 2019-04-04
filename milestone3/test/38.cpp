@@ -1,11 +1,14 @@
- class x{
-    int a;
-    int f(int b);
-  };
-  class x:: int f(int y){
-    	if(this->a > y){
-       	return 0;
-      }else{
-      	return 1;
-      }
+int heap_ptr=0;
+void* alloc(int size){
+  if(size>0){
+    heap_ptr+=size;
+    return (void*)heap_ptr-size;
+  }else{
+    return (void*)-1;
   }
+}
+int main(){
+  int size;
+  int* a=new(int)[5];
+  return 0;
+}
