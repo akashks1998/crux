@@ -352,29 +352,8 @@ precedence = (
     ('left', 'HIGHER'),
 )
 
-def p_control_line(p):
-    '''control_line : control_line control_line_stmt
-                    | control_line_stmt
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)    
-
-def p_include_control(p):
-    '''include_control : HASHTAG INCLUDE
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
-def p_control_line_stmt(p):
-    '''control_line_stmt : include_control LTCOMP STRING_L GTCOMP
-                    | include_control STRING_L
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
 def p_program(p):
-    '''program : control_line translation_unit
-               | translation_unit
+    '''program : translation_unit
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
