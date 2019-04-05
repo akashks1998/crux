@@ -1,36 +1,35 @@
 section .text
-hi:label hello|  
-BeginFunc 8  
-eq tmp@0 1 
-return tmp@0  
-EndFunc   
-label dos|int,int,char|paa  
-BeginFunc 12  
-load tmp@1 tmp@2 
-eq tmp@3 1 
-eq a@4 tmp@3 
-return b@4  
-EndFunc   
 label main|  
-BeginFunc 512  
-eq tmp@16 1 
-eq tmp@4 2 
-int+ tmp@6 0 tmp@4
-int* tmp@5 tmp@6 4
-eq tmp@7 2 
-int+ tmp@9 tmp@5 tmp@7
+BeginFunc 148  
+eq tmp@0 0 
+eq sum@1 tmp@0 
+label while_begin#0  
+eq tmp@1 1 
+
+eq tmp@2 0 
+eq i@1 tmp@2 
+int< tmp@3 i@1 n@1
+eq tmp@4 1 
+int+ tmp@5 i@1 tmp@4
+eq i@1 tmp@5 
+label while_after#0  
+eq tmp@6 1 
+int+ tmp@7 i@1 tmp@6
+eq i@1 tmp@7 
+int+ tmp@9 0 i@1
 int* tmp@8 tmp@9 1
-int* tmp@11 tmp@8 20
-eq tmp@10 260 
+int* tmp@11 tmp@8 4
+eq tmp@10 44 
 int- tmp@12 tmp@10 tmp@11
-int+ tmp@14 tmp@12 4
-eq tmp@15 tmp@16 
-eq tmp@17 1 
-eq tmp@18 1 
-PushParam c@5  
-PushParam tmp@18  
-PushParam tmp@17  
-Fcall tmp@19 dos|int,int,char|paa 
-eq tmp@20 1 
-return tmp@20  
+int+ sum@1 sum@1 tmp@13
+
+label while_after#0  
+int/ tmp@14 sum@1 n@1
+eq average@1 tmp@14 
+eq tmp@15 2 
+int* tmp@16 tmp@15 4
+int+ tmp@17 b@1 tmp@16
+eq a@1 tmp@17 
+eq tmp@18 0 
+return tmp@18  
 EndFunc   

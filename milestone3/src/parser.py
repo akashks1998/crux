@@ -196,9 +196,9 @@ def allowed_type(converted_from,converted_to):
 
 def break_continue(l, a, b=""):
     # t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
-    t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i.split('$')[4] if i!= '' else i) else i for i in l]
+    t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
     # s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
-    s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i.split('$')[4] if i!= '' else i) else i for i in t]
+    s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
     return s if b!="" else t
 
 def cast_string(place, converted_from,converted_to,t=None):
