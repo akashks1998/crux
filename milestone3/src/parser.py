@@ -1045,7 +1045,7 @@ def p_primary_expression1(p):
     p[0].parse=f(p) 
     p[0].data = assigner(p,1)
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = [ quad("eq",[p[0].place,str(p[1].data["value"]),""],p[0].place + " = " + str(p[1].data["value"])) ] 
+    p[0].code = [ quad("eqconst"+p[1].data["type"],[p[0].place,str(p[1].data["value"]),""],p[0].place + " = " + str(p[1].data["value"])) ] 
     
     
 def p_primary_expression2(p): 

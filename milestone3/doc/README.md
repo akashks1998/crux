@@ -25,7 +25,9 @@
 ### Some Specific Points:
   - We currently generate 2 3AC code file(code.crux, code2.crux), one contains names of variable, while other contain address, relative to stack or heap
   - load_address a , b ::  a = &b :: put address of b in variable a
-  - laod a, b :: a = *b; 
+  - load a, b :: a = *b; 
+  - eq a, b :: *a = b
+  - eqconst a, b :: a = b
 
 ## Features :
 - if,if-else
