@@ -1,6 +1,11 @@
 ## Instructions of running
 - run using ``python3 parser.py Inputfile OutputFile SymbolTableFile``
 
+## SymbolTable : 
+- This is a list of symbol Tables; One for global and one each for functions and classes
+- each local and temp varible contain base address, offset and size
+
+
 ## 3AC :
 ### BeginFunc 
 ```
@@ -17,6 +22,10 @@
   pop %rbp
   ret
 ```
+### Some Specific Points:
+  - We currently generate 2 3AC code file(code.crux, code2.crux), one contains names of variable, while other contain address, relative to stack or heap
+  - load_address a , b ::  a = &b :: put address of b in variable a
+  - laod a, b :: a = *b; 
 
 ## Features :
 - if,if-else

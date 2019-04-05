@@ -202,9 +202,9 @@ def allowed_type(converted_from,converted_to):
 
 def break_continue(l, a, b=""):
     # t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
-    t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
+    t = [quad("goto", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
     # s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
-    s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
+    s = [quad("goto", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
     return s if b!="" else t
 
 def cast_string(place, converted_from,converted_to,t=None):
@@ -933,9 +933,9 @@ def p_postfix_expression_6(p):
             else:
                 class_relative_offset = x["offset"]
                 class_element_size = x["size"]
-                
-                class_actual_offset = checkVar(p[1].place)["var"]["offset"]
-                class_actual_base = checkVar(p[1].place)["var"]["base"]
+                to_check_var = p[1].place if p[1].place.split('@')[0]=="tmp" else p[1].place.split('@')[0]
+                class_actual_offset = checkVar(to_check_var)["var"]["offset"]
+                class_actual_base = checkVar(to_check_var)["var"]["base"]
 
                 actual_offset = getnewvar("int|p")
             
@@ -1932,7 +1932,7 @@ def p_selection_statement_3(p):
             tmp = getnewvar("int")
             tmp2 = getnewvar("int")
             testcode = testcode + [quad("eq", [tmp, str(v),""], tmp+" = "+str(v))] + [quad("int-",[tmp2,place,tmp],tmp2+" = "+place+" int- "+tmp), quad("ifz",[tmp2, p[7].code[idx]["label"],""],"ifz "+tmp2+" goto->"+p[7].code[idx]["label"])]
-    testcode = testcode + [quad("label",[default_label],"goto->" + default_label)]
+    testcode = testcode + [quad("goto",[default_label],"goto->" + default_label)]
     for idx,c in enumerate(p[7].code):
         l = c["statement"]
         l = break_continue(l, p[0].after)
@@ -1993,7 +1993,7 @@ def p_iteration_statement_1(p):
     p[0].begin = getnewlabel("while_begin")
     p[0].after = getnewlabel("while_after")
     p[0].data=assigner(p,6)
-    l = p[4].code + [ "ifz " + p[4].place + " goto->" + p[0].after ] + p[6].code + ["goto->" + p[0].begin ]
+    l = p[4].code + [ quad("ifz",[p[4].place,p[0].after],"ifz " + p[4].place + " goto->" + p[0].after) ] + p[6].code + [ quad("goto",[p[0].begin],"goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].begin)
     p[0].code =  [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l] + [ quad("label", [p[0].after], p[0].after + " : ") ]
 
@@ -2016,7 +2016,7 @@ def p_iteration_statement_3(p):
     p[0].begin = getnewlabel("for_begin1")
     p[0].cont = getnewlabel("for_continue1")
     p[0].after = getnewlabel("for_after1")
-    l = p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[9].code + p[7].code + [quad("label", [p[0].begin], "goto->" + p[0].begin) ]
+    l = p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[9].code + p[7].code + [quad("goto", [p[0].begin], "goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].cont)
     p[0].code = p[4].code + [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l[:len(p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[9].code)]] 
     p[0].code = p[0].code + [ quad("label", [p[0].cont], p[0].cont + " : ")] + ["    " + i for i in l[len(p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[9].code):]] 
@@ -2030,7 +2030,7 @@ def p_iteration_statement_4(p):
     p[0].begin = getnewlabel("for_begin2")
     p[0].cont = getnewlabel("for_continue2")
     p[0].after = getnewlabel("for_after2")
-    l = p[8].code + p[6].code + [quad("label", [p[0].begin], "goto->" + p[0].begin) ]
+    l = p[8].code + p[6].code + [quad("goto", [p[0].begin], "goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].cont)
     p[0].code = p[4].code + [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l[:len(p[8].code)]] \
         + [ quad("label", [p[0].after], p[0].after + " : ") ] + ["    " + i for i in l[len(p[8].code):]] \
@@ -2044,7 +2044,7 @@ def p_iteration_statement_5(p):
     p[0].cont = p[0].begin
     p[0].after = getnewlabel("for_after3")
     p[0].data=assigner(p,8)
-    l = p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[8].code + [quad("label", [p[0].begin], "goto->" + p[0].begin) ]
+    l = p[5].code + [ quad("ifz",[p[5].place, p[0].after],"ifz " + p[5].place + " goto->" + p[0].after) ] + p[8].code + [quad("goto", [p[0].begin], "goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].cont)
     p[0].code = p[4].code + [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l] + [ quad("label", [p[0].after], p[0].after + " : ") ]
 
@@ -2056,7 +2056,7 @@ def p_iteration_statement_6(p):
     p[0].begin = getnewlabel("for_begin4")
     p[0].cont = p[0].begin
     p[0].after = getnewlabel("for_after4")
-    l = p[7].code + [quad("label", [p[0].begin], "goto->" + p[0].begin) ]
+    l = p[7].code + [quad("goto", [p[0].begin], "goto->" + p[0].begin) ]
     l = break_continue(l, p[0].after, p[0].cont)
     p[0].code = p[4].code + [quad("label",[p[0].begin,"",""],p[0].begin + " : ")] + ["    " + i for i in l] + [ quad("label", [p[0].after], p[0].after + " : ") ]
 
@@ -2277,6 +2277,8 @@ def p_pop_scope(p):
 
 def quad(op, a, statement):
     arg = [ a[i] if i<len(a) else "" for i in range(3) ]
+    if op=="&":
+        op = "load_address"
     if op=="eq":
         if arg[0][0]=="*":
             op = "store"
@@ -2292,10 +2294,10 @@ def quad(op, a, statement):
             op = "eq" + "float"
         elif arg[0].split('@')[0]=="tmp":
             c = checkVar(arg[0], "**")
-            op = "eq"+c["var"]["type"]
+            op = "eq"+("p" if "|" in  c["var"]["type"] else c["var"]["type"]) 
         else:
             c = checkVar(arg[0].split('@')[0], int(arg[0].split('@')[1]))
-            op = "eq"+c["type"]
+            op = "eq"+ ("p" if "|" in  c["type"] else c["type"]) 
     
     return " $ ".join([statement]+[op]+arg)
 
@@ -2314,9 +2316,12 @@ def off(ar):
                 if c["base"]=="rbp":
                     offset = "-"+str(c["offset"])
                 else:
-                    offset = "-"+str(c["offset"])
+                    offset = "+"+str(c["offset"])
             else:
-                offset = "+"+str(c["offset"])[1:]
+                if c["base"]=="rbp":
+                    offset = "+"+str(c["offset"])[1:]
+                else:
+                    offset = "-"+str(c["offset"])[1:]
             t = c["base"]+offset if c["base"]=="rbp" else c["base"]+offset
             l.append("[" + t + "]")
         else:
@@ -2343,7 +2348,8 @@ def generate_code(p):
     x=1
     for i in p[0].code:
         if re.fullmatch('[ ]*', i) == None:
-            afile.write('{0:3}'.format(x) + ":: " + acode(parsequad(i)) + "\n")
+            t=len(i) - len(i.lstrip(' '))
+            afile.write('{0:3}'.format(x) + ":: " + t*" " + acode(parsequad(i)) + "\n")
             x=x+1
 
     x86.write("; Code For " + FileName + "\n")
