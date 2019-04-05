@@ -6,3 +6,6 @@ void* alloc(int size){
     return (void*)-1;
   }
 }
+void dealloc(void* addr){
+
+}

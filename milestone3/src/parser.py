@@ -1119,6 +1119,8 @@ def p_deallocation_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
+    if checkVar("dealloc|void|p","global")==False:
+        report_error("STD lib not included", p.lineno(0))
     if(len(p) == 3):
         detail = checkVar(p[2].data)["var"]
         name = p[2].data
@@ -1136,7 +1138,7 @@ def p_deallocation_expression(p):
     else:
         report_error("wrong specification of deallocate ", p.lineno(0))
     
-    p[0].code = [ quad("PushParam", [name + "@" + str(currentScopeTable),"",""], "PushParam " + name + "@" + str(currentScopeTable)) ] + [quad("Scall",["dealloc","",""],"Scall dealloc")]
+    p[0].code = [ quad("PushParam", [name + "@" + str(currentScopeTable),"",""], "PushParam " + name + "@" + str(currentScopeTable)) ] + [quad("Fcall",["dealloc|void|p","",""],"Fcall dealloc|void|p")]
         
 # New Allocation
 # Extra * new_type_name me added hain
@@ -1145,7 +1147,8 @@ def p_allocation_expression1(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-
+    if checkVar("alloc|int","global")==False:
+        report_error("STD lib not included", p.lineno(0))
     if "|" in p[3].data["type"].rstrip("p").rstrip("|"):
         report_error("wrong type name for allocation", p.lineno(0))
     if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
@@ -1155,7 +1158,7 @@ def p_allocation_expression1(p):
     tpe = p[3].data["type"]
     tmp1 = getnewvar("int")
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = p[6].code + [quad("int*",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "int*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Scall",["alloc",p[0].place],p[0].place + " = Scall alloc")]
+    p[0].code = p[6].code + [quad("int*",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "int*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Fcall",["alloc|int",p[0].place],p[0].place + " = Fcall alloc|int")]
 
 
 def p_allocation_expression0(p): 
@@ -1163,13 +1166,14 @@ def p_allocation_expression0(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    
+    if checkVar("alloc|int","global")==False:
+        report_error("STD lib not included", p.lineno(0))
     if "|" in p[3].data["type"].rstrip("p").rstrip("|"):
         report_error("wrong type name for allocation", p.lineno(0))
     p[0].data = {"type" : p[3].data["type"] + "p"} if "|" in p[3].data["type"] else {"type" : p[3].data["type"] + "|p"}
     tpe = p[3].data["type"]
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = [quad("PushParam",[str(get_size(tpe)),"",""],"PushParam " + str(get_size(tpe))), quad("Scall",["alloc",p[0].place],p[0].place + " = Scall alloc") ]
+    p[0].code = [quad("PushParam",[str(get_size(tpe)),"",""],"PushParam " + str(get_size(tpe))), quad("Fcall",["alloc|int",p[0].place],p[0].place + " = Fcall alloc|int") ]
     pop_params_code = [ quad("removeParams", [ str(8),"", ""], "RemoveParams " + str(8) ) ]
     p[0].code = p[0].code +  pop_params_code
 
@@ -2407,7 +2411,7 @@ if __name__ == "__main__":
     fin = open(FileName, "r")
     data2 = fin.read()
     fin.close()
-    if("#include'std.cpp'"==data2[:17] or '#include"std.cpp"'==data2[:17]):
+    if("#include<std.cpp>"==data2[:17]):
         error_line_offset=file_len("std.cpp")+1
         fout = open("temp.cpp", "w")
         fin = open("std.cpp", "r")
