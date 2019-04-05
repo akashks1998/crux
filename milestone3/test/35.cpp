@@ -1,3 +1,4 @@
+#include<std.cpp>
 int a[1000];
 int f(int j){
      return f(j);
@@ -18,6 +19,8 @@ int main()
           i=0;
      }
      average = sum/n;
+     int * t=average;
+     delete t;
      int x=f(i);
      int *a,*b;
      a = b + 2;
