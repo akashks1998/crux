@@ -1109,8 +1109,8 @@ def p_unary_expression2(p):
         report_error("Cannot dereference non-pointer element",p.lineno(0))
   
     p[0].place = getnewvar(p[0].data["type"], p[2].place , size = get_size(p[0].data["type"]), base = "0")
-    
-    p[0].code = p[2].code + [ quad("load",[p[0].place, p[2].place , ""], p[0].place + " = *("  + p[2].place + ")" ) ] 
+
+    p[0].code = p[2].code 
     p[0].data["class_u"] = "unary2"
 
 def p_deallocation_expression(p): 
