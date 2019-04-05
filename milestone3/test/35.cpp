@@ -3,8 +3,7 @@
 int main()
 {
      int marks[10], i, n, sum = 0, average;
-     while(1 ){
-          i=0; i<n; i++;
+     for(i=0; i<n; i++ ){
           break;
           sum += marks[++i];
      }
