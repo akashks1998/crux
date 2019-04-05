@@ -199,9 +199,9 @@ def allowed_type(converted_from,converted_to):
 
 def break_continue(l, a, b=""):
     # t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
-    t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i.split('$')[4] if i!= '' else i) else i for i in l]
+    t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
     # s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
-    s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i.split('$')[4] if i!= '' else i) else i for i in t]
+    s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
     return s if b!="" else t
 
 def cast_string(place, converted_from,converted_to,t=None):
@@ -355,29 +355,8 @@ precedence = (
     ('left', 'HIGHER'),
 )
 
-def p_control_line(p):
-    '''control_line : control_line control_line_stmt
-                    | control_line_stmt
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)    
-
-def p_include_control(p):
-    '''include_control : HASHTAG INCLUDE
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
-def p_control_line_stmt(p):
-    '''control_line_stmt : include_control LTCOMP STRING_L GTCOMP
-                    | include_control STRING_L
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
 def p_program(p):
-    '''program : control_line translation_unit
-               | translation_unit
+    '''program : translation_unit
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -2340,6 +2319,19 @@ if __name__ == "__main__":
     arglist = sys.argv 
     FileName = arglist[1]
     CodeFile = arglist[2]
+    file1 = os.path.join(os.getcwd(), FileName)
+    x=os.path.dirname(file1)
+    fin = open(FileName, "r")
+    data2 = fin.read()
+    fin.close()
+    if("#include'std.cpp'"==data2[:17] or '#include"std.cpp"'==data2[:17]):
+        fout = open("temp.cpp", "w")
+        fin = open("std.cpp", "r")
+        fout.write(fin.read())
+        fin.close()
+        fout.write(data2[17:])
+        fout.close()
+        FileName="temp.cpp"
     SymbolTableFileName = arglist[3]
     debug=0
     # debug = int(arglist[1])

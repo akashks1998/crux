@@ -1,31 +1,78 @@
 section .text
-label main|  
-BeginFunc 288  
 eq tmp@0 0 
-eq sum@1 tmp@0 
-eq tmp@1 1 
-int+ tmp@2 i@1 tmp@1
-eq i@1 tmp@2 
-eq tmp@3 2 
-int+ tmp@5 0 tmp@3
-int* tmp@4 tmp@5 1
-int* tmp@7 tmp@4 8
-eq tmp@6 88 
-int- tmp@8 tmp@6 tmp@7
-eq tmp@9 sum@1 
-eq tmp@10 1 
-int+ tmp@12 0 tmp@10
-int* tmp@11 tmp@12 1
-int* tmp@14 tmp@11 8
-eq tmp@13 88 
-int- tmp@15 tmp@13 tmp@14
-int+ sum@1 sum@1 tmp@16
-int/ tmp@17 sum@1 n@1
-eq average@1 tmp@17 
-eq tmp@18 2 
-int* tmp@19 tmp@18 8
-int+ tmp@20 b@1 tmp@19
-eq a@1 tmp@20 
-eq tmp@21 0 
-return tmp@21  
+eq heap_ptr@0 tmp@0 
+label alloc|int  
+BeginFunc 72  
+eq tmp@1 0 
+int> tmp@2 size@1 tmp@1
+label ifelse_before#0  
+ifnz tmp@2 ifelse_else_#0 
+int+ heap_ptr@0 heap_ptr@0 size@1
+int_to_void|p tmp@3 heap_ptr@0 
+int* tmp@4 size@1 0
+int- tmp@5 tmp@3 tmp@4
+return tmp@5  
+goto ifelse_after#0  
+label ifelse_else_#0  
+eq tmp@6 1 
+eq tmp@8 tmp@6 
+int- tmp@7 tmp@8 
+int_to_void|p tmp@9 tmp@7 
+return tmp@9  
+label ifelse_after#0  
+EndFunc   
+label main|  
+BeginFunc 320  
+eq tmp@10 0 
+eq sum@4 tmp@10 
+eq tmp@11 0 
+eq i@4 tmp@11 
+label for_begin1#0  
+int< tmp@12 i@4 n@4
+ifz tmp@12 for_after1#0 
+label for_after1#0  
+eq tmp@15 1 
+int+ tmp@16 i@4 tmp@15
+eq i@4 tmp@16 
+int+ tmp@18 0 i@4
+int* tmp@17 tmp@18 1
+int* tmp@20 tmp@17 8
+eq tmp@19 88 
+int- tmp@21 tmp@19 tmp@20
+int+ sum@4 sum@4 tmp@22
+label for_continue1#0  
+eq tmp@13 1 
+int+ tmp@14 i@4 tmp@13
+eq i@4 tmp@14 
+label for_begin1#0  
+label for_after1#0  
+label switch_test#0  
+
+int- tmp@27 n@4 tmp@26
+ifz tmp@27 label#0 
+
+int- tmp@29 n@4 tmp@28
+ifz tmp@29 label#1 
+
+label switch_body#0  
+label label#0  
+eq tmp@23 0 
+eq i@4 tmp@23 
+label switch_end#0  
+label label#1  
+eq tmp@24 1 
+eq i@4 tmp@24 
+label switch_end#0  
+label label#2  
+eq tmp@25 0 
+eq i@4 tmp@25 
+label switch_end#0  
+int/ tmp@30 sum@4 n@4
+eq average@4 tmp@30 
+eq tmp@31 2 
+int* tmp@32 tmp@31 8
+int+ tmp@33 b@4 tmp@32
+eq a@4 tmp@33 
+eq tmp@34 0 
+return tmp@34  
 EndFunc   
