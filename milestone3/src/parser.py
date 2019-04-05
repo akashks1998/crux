@@ -7,6 +7,7 @@ from lexer import lexer
 from lexer import tokens as lexTokens
 from symbolTable import SymbolTable
 import re
+import inspect
 
 pp = pprint.PrettyPrinter(indent=4)
 cnt=0
@@ -34,6 +35,7 @@ FileName = '<given file>'
 CodeFile = 'code.crux'
 x86File = 'x86'
 SymbolTableFileName = 'symbol.dump'
+AddressFile = 'code2.crux'
         
 labeldict = {}
 scopeTableList = []
@@ -124,6 +126,8 @@ def getnewlabel(s="label"):
 def getnewvar(type_, offset = None, size = None, base="rbp"):
     global currentTmp
     tmp = "tmp@" + str(currentTmp)
+    # if tmp=="tmp@26":
+        # print('caller name:', inspect.stack()[1][3])
     currentTmp = currentTmp + 1
     if offset == None:
         size = get_size(type_)
@@ -291,7 +295,6 @@ def updateVar(identifier, val,scope=None):
         scopeTableList[currentScopeTable].update(identifier, val)
     else:
         scopeTableList[scope].update(identifier, val)
-    
 
 def checkVar(identifier,scopeId="**", search_in_class = False):
     global scopeTableList
@@ -300,7 +303,17 @@ def checkVar(identifier,scopeId="**", search_in_class = False):
         if scopeTableList[0].lookUp(identifier):
             return scopeTableList[0].getDetail(identifier)
         return False
-
+    if scopeId == "all":
+        scope=0
+        while scope<len(scopeTableList):
+            symbol_table = scopeTableList[scope]
+            if symbol_table.type_ == "class" and search_in_class == False:
+                scope=scope+1
+                continue
+            if symbol_table.lookUp(identifier):
+                return {"var":scopeTableList[scope].getDetail(identifier), "scope":scope}
+            scope=scope+1
+        return False
     if scopeId == "*":
         if scopeTableList[currentScopeTable].lookUp(identifier):
             return scopeTableList[currentScopeTable].getDetail(identifier)
@@ -709,7 +722,7 @@ def p_assignment_expression(p):
         if p[2].data == "=":
             p[0].code = p[3].code + p[1].code + t["code"] +[ quad("eq",[place,t["place"]],place + "=" + t["place"]) ]
         else:
-            p[0].code = p[3].code + p[1].code + t["code"]+[ quad("eq",[place,place,t["place"]],place + " = " + place + " " +"=" + " " + t["place"]) ]
+            p[0].code = p[3].code + p[1].code + t["code"]+[ quad(p[3].data["type"] + p[2].data[0],[place,place,t["place"]],place + " = " + place + " " + p[3].data["type"] + p[2].data[0] + " " + t["place"]) ]
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -793,7 +806,6 @@ def p_postfix_expression_2(p):
     if( p[3].data["type"] != "int" ):
         report_error("Array index is not integer", p.lineno(3))
     type_last_char = p[1].data["type"][-1]
-    print(p[1].data)
     if "|" in p[1].data["type"] and  type_last_char == "a":
         p[0].data = p[1].data.copy()
         to_add_var = getnewvar("int")
@@ -811,7 +823,6 @@ def p_postfix_expression_2(p):
         if(p[1].data["type"][-2] == "p") or (p[1].data["type"][-2] == "|") :
             # end of array
             p[0].data = {"type": p[1].data["type"][:-1].rstrip("|")}
-            print("d",p[1].data)
             array_offset = p[1].data["offset"]
             array_offset_var = getnewvar("int")
             new_temp = getnewvar("int")
@@ -892,7 +903,6 @@ def p_postfix_expression_6(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
-    print(p[1].data, p[1].place)
     # post_fix must be a object and name should be a class member
 
     if "|" in p[1].data["type"]:
@@ -1321,7 +1331,6 @@ def p_arg_list(p):
         pushVar("this", this_data)
 
     if len(p)==2:
-        print(p[1].data)
         input_detail=p[1].data
         for each_p in p[1].data[1]:
             if "is_array" in each_p.keys():
@@ -1912,8 +1921,8 @@ def p_selection_statement_3(p):
         else:
             tmp = getnewvar("int")
             tmp2 = getnewvar("int")
-            testcode = testcode + [tmp+" = "+str(v)] + [quad("int-",[tmp2,place,tmp],tmp2+" = "+place+" int- "+tmp), quad("ifz",[tmp2, p[7].code[idx]["label"],""],"ifz "+tmp2+" goto->"+p[7].code[idx]["label"])]
-    testcode = testcode + ["goto->" + default_label]
+            testcode = testcode + [quad("eq", [tmp, str(v),""], tmp+" = "+str(v))] + [quad("int-",[tmp2,place,tmp],tmp2+" = "+place+" int- "+tmp), quad("ifz",[tmp2, p[7].code[idx]["label"],""],"ifz "+tmp2+" goto->"+p[7].code[idx]["label"])]
+    testcode = testcode + [quad("label",[default_label],"goto->" + default_label)]
     for idx,c in enumerate(p[7].code):
         l = c["statement"]
         l = break_continue(l, p[0].after)
@@ -2258,12 +2267,6 @@ def p_pop_scope(p):
 
 def quad(op, a, statement):
     arg = [ a[i] if i<len(a) else "" for i in range(3) ]
-<<<<<<< HEAD
-    if op=="eq" and arg[0][0]=="*":
-        op = "store"
-        arg[0] = arg[0][1:].rstrip("(").lstrip(")")
-    return " $ ".join([statement]+[op]+arg)
-=======
     if op=="eq":
         if arg[0][0]=="*":
             op = "store"
@@ -2271,23 +2274,20 @@ def quad(op, a, statement):
         elif arg[1][0]=="*":
             op = "load"
             arg[1] = arg[1][1:].rstrip("(").lstrip(")")
+        elif arg[1].isdigit():
+            op = "eq" + "int"
+        elif arg[1][0]=="'" and arg[1][2]=="'" and len(arg)==3:
+            op = "eq" + "char"
+        elif arg[1].isdecimal():
+            op = "eq" + "float"
+        elif arg[0].split('@')[0]=="tmp":
+            c = checkVar(arg[0], "**")
+            op = "eq"+c["var"]["type"]
         else:
-            if arg[1].isdigit():
-                op = "eq" + "int"
-            elif arg[1][0]=="'" and arg[1][2]=="'" and len(arg)==3:
-                op = "eq" + "char"
-            elif arg[1].isdecimal():
-                op = "eq" + "float"
-            elif arg[1].split('@')[0]=="tmp":
-                print(arg)
-                c = checkVar(arg[1], "**")
-                op = "eq"+c["var"]["type"]
-            else:
-                c = checkVar(arg[1], int(arg[1].split('@')[1]))
-                op = "eq"+c["var"]["type"]
+            c = checkVar(arg[0].split('@')[0], int(arg[0].split('@')[1]))
+            op = "eq"+c["type"]
     
-    return " $ ".join([op]+arg+[statement])
->>>>>>> x86
+    return " $ ".join([statement]+[op]+arg)
 
 def parsequad(q):
     return [i.strip() for i in q.split("$")[1:]]
@@ -2295,22 +2295,50 @@ def parsequad(q):
 def asm(line):
     return ' '.join(parsequad(line))
 
+def off(ar):
+    l=[]
+    for a in ar:
+        if "@" in a:
+            c = checkVar(a, "all")["var"] if a.split('@')[0]=="tmp" else checkVar(a.split('@')[0], int(a.split('@')[1]))
+            if str(c["offset"])[0]!="-":
+                offset = "+"+str(c["offset"])
+            else:
+                offset = str(c["offset"])
+            t = c["base"]+offset if c["base"]=="rbp" else c["base"]+offset
+            l.append("[" + t + "]")
+        else:
+            l.append(a)
+    return l
+
+def acode(ar):
+    o = off(ar)
+    return ' '.join(o) if o != [] else ''
+
 def generate_code(p):
-    open(CodeFile,'w').write("//Code For " + FileName + "\n")
+    afile = open(AddressFile,'w')
+    cfile = open(CodeFile,'w')
+    x86 = open(x86File,'w')
+
+    cfile.write("//Code For " + FileName + "\n")
     x=1
     for i in p[0].code:
         if re.fullmatch('[ ]*', i) == None:
-            open(CodeFile,'a').write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
+            cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
             x=x+1
     
-
-    open(x86File,'w').write("; Code For " + FileName + "\n")
-    open(x86File,'w').write("section .text\n")
+    afile.write("//Code For " + FileName + "\n")
     x=1
     for i in p[0].code:
-        q = parsequad(i)
         if re.fullmatch('[ ]*', i) == None:
-            open(x86File,'a').write(asm(i)+"\n")
+            afile.write('{0:3}'.format(x) + ":: " + acode(parsequad(i)) + "\n")
+            x=x+1
+
+    x86.write("; Code For " + FileName + "\n")
+    x86.write("section .text\n")
+    x=1
+    for i in p[0].code:
+        if re.fullmatch('[ ]*', i) == None:
+            x86.write(asm(i)+"\n")
             x=x+1
 
 def scope_table_graph(S):
