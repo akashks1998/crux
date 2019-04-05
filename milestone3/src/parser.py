@@ -13,7 +13,7 @@ pp = pprint.PrettyPrinter(indent=4)
 cnt=0
 tokens = lexTokens
 filename=""
-heap_ptr=0
+error_line_offset=1
 def f(p):
     global cnt
     p_name = sys._getframe(1).f_code.co_name
@@ -347,10 +347,11 @@ def retType(p,i,j):
             p[0].data["ret_type"]=p[j].data["ret_type"]
 
 def report_error(msg, line):
+    global error_line_offset
     if line=="break" or line=="continue":
         print("Error : " + msg + ", Check your " + line + "s")
         exit()
-    print("Error at line : " + str(line) + " :: " + msg)
+    print("Error at line : " + str(line-error_line_offset) + " :: " + msg)
     exit()
 
 start = 'program'
@@ -385,7 +386,8 @@ def p_translation_unit(p):
     '''translation_unit : declaration_seq''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].code = p[1].code.copy()
+    
+    p[0].code = [quad("eq",["heap_ptr@0",str(get_offset()),""],"heap_ptr@0 = "+str(get_offset()))]+ p[1].code.copy()
 
 def p_declaration_seq(p):
     ''' declaration_seq : declaration_seq declaration
@@ -399,7 +401,8 @@ def p_declaration_seq(p):
         p[0].code=p[1].code.copy()+p[2].code.copy()
 
 def p_error(p):
-    print("Syntax Error: line " + str(p.lineno) + ":" + filename.split('/')[-1], "near", p.value)
+    global error_line_offset
+    print("Syntax Error: line " + str(p.lineno-error_line_offset) + ":" + filename.split('/')[-1], "near", p.value)
     exit()
 
 # def p_empty(p): 
@@ -2094,7 +2097,7 @@ def p_declaration_statement(p):
 
 def p_declaration0(p):
     '''declaration : type_specifier_ declarator_list SEMICOLON ''' 
-
+    global currentScopeTable
     p[0] = OBJ()
     p[0].parse=f(p)
     decl_list = p[2].data
@@ -2126,8 +2129,8 @@ def p_declaration0(p):
 
             data["size"] = get_size(element_type) * size
             add_to_offset(data["size"])
-            data["offset"] = get_offset()
-            data["base"] = "rbp"
+            data["offset"] = get_offset()-data["size"] if (currentScopeTable==0) else get_offset() 
+            data["base"] = "0" if (currentScopeTable==0) else  "rbp"
             if pushVar(data["name"],data)==False:
                 add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
@@ -2138,8 +2141,8 @@ def p_declaration0(p):
             get_size(basic_type)
             data["size"] = get_size(data["type"])
             add_to_offset(data["size"])
-            data["offset"] = get_offset()
-            data["base"] = "rbp"
+            data["offset"] = get_offset()-data["size"] if (currentScopeTable==0) else get_offset() 
+            data["base"] = "0" if (currentScopeTable==0) else  "rbp"
             
 
             if pushVar(each["name"],data)==False:
@@ -2380,7 +2383,12 @@ def scope_table_graph(S):
             open('scope.gz', 'a').write(sr)
         cnt=cnt+1
     open('scope.gz','a').write("\n}\n}\n")
-
+def file_len(fname):
+    with open(fname) as f:
+        i=-1
+        for i, l in enumerate(f):
+            pass
+    return i + 1
 if __name__ == "__main__": 
     parser = yacc.yacc()
     parser.error = 0 
@@ -2398,11 +2406,19 @@ if __name__ == "__main__":
     data2 = fin.read()
     fin.close()
     if("#include'std.cpp'"==data2[:17] or '#include"std.cpp"'==data2[:17]):
+        error_line_offset=file_len("std.cpp")+1
         fout = open("temp.cpp", "w")
         fin = open("std.cpp", "r")
+        fout.write("int heap_ptr;\n")
         fout.write(fin.read())
         fin.close()
         fout.write(data2[17:])
+        fout.close()
+        FileName="temp.cpp"
+    else:
+        fout = open("temp.cpp", "w")
+        fout.write("int heap_ptr;\n")
+        fout.write(data2)
         fout.close()
         FileName="temp.cpp"
     SymbolTableFileName = arglist[3]
