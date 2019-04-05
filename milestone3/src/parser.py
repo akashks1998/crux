@@ -859,8 +859,10 @@ def p_postfix_expression_3(p):
     try:
         func_sig_list = p[1].data["func_sig"]
         func_name = p[1].data["func_name"]
+        detail_scope = p[1].data["detail_scope"]
     except:
         report_error("Calling function on non function type", p.lineno(1))
+
     if len(p)==5:
         expected_sig = func_name + "|" + p[3].data["type"] 
         expr_code = p[3].code
@@ -868,12 +870,14 @@ def p_postfix_expression_3(p):
         expected_sig = func_name + "|"
         expr_code = []
 
+    func_detail = checkVar(expected_sig, detail_scope)
+    
     flag=0
     for fun in func_sig_list:
         if fun[0]==expected_sig:
-            p[0].data = {"type" : fun[1]}
-            
+            p[0].data = {"type" : fun[1]}            
             flag=1
+
     if flag==0:
         report_error("Function not declared", p.lineno(1))
 
@@ -888,7 +892,8 @@ def p_postfix_expression_3(p):
 
     p[0].place = getnewvar(p[0].data["type"])
     p[0].code = p[1].code + expr_code + code + [ quad("Fcall",[p[0].place,(class_name  + ":" if class_name != "" else "") + expected_sig,""],p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig) ]
-    # p[0].code = p[1].code + expr_code + code + [ p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig ]
+    pop_params_code = [ quad("removeParams", [ str(func_detail["parameter_space"]),"", ""], "RemoveParams " + str(func_detail["parameter_space"]) ) ]
+    p[0].code = p[0].code +  pop_params_code
 
 def p_postfix_expression_5(p): 
     '''postfix_expression : postfix_expression template_class_name  LPAREN expression_list  RPAREN   ''' 
@@ -919,6 +924,7 @@ def p_postfix_expression_6(p):
             if(p[0].data["type"] == "function_upper"):
                 p[0].place = getnewvar(tmp_type)
                 p[0].data["func_sig"] = x["func_sig"]
+                p[0].data["detail_scope"] = details["var"]["scope"]
                 p[0].data["func_name"] = p[3].data
                 p[0].data["class_name"] = p[1].data["type"]
                 p[0].data["class_obj"] = p[0].place 
@@ -965,6 +971,7 @@ def p_postfix_expression_7(p):
             if(p[0].data["type"] == "function_upper"):
                 p[0].data["func_sig"] = x["func_sig"]
                 p[0].data["func_name"] = p[3].data
+                p[0].data["detail_scope"] = details["var"]["scope"]
                 p[0].data["class_name"] = p[1].data["type"][:-2]
                 p[0].data["class_obj"] = class_obj
                 p[0].code = p[1].code + [ quad("eq", [class_obj, p[1].place, ""], class_obj + " = " + p[1].place) ] 
@@ -1024,6 +1031,7 @@ def p_primary_expression0(p):
     if v_type=="function_upper":
         p[0].data["func_sig"] = detail["var"]["func_sig"]
         p[0].data["func_name"] = p[1].data
+        p[0].data["detail_scope"] = detail["scope"]
 
     p[0].place = p[1].data + "@" + str(detail["scope"])
     p[0].code = [ "" ]
@@ -1144,7 +1152,7 @@ def p_allocation_expression1(p):
     tpe = p[3].data["type"]
     tmp1 = getnewvar("int")
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = p[6].code + [quad("int*",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "int*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Fcall",["alloc",p[0].place],p[0].place + " = Scall alloc")]
+    p[0].code = p[6].code + [quad("int*",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "int*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Scall",["alloc",p[0].place],p[0].place + " = Scall alloc")]
 
 
 def p_allocation_expression0(p): 
@@ -1314,7 +1322,6 @@ def p_arg_list(p):
 
     offset = -16
     if add_this:
-        print("push add_this")
         class_name = p[-6]
         class_detail = checkVar(class_name)
         if class_detail == False:
@@ -1360,6 +1367,7 @@ def p_arg_list(p):
         "declaration": True,
         "stack_space" : get_offset(),
         "parameter_space": (- offset - 16 ),
+        "saved_register_space" : 40 , # r12 -r15, rbx
         "return_offset" : 8,
         "rbp_offset" : 0
     }
@@ -1764,7 +1772,9 @@ def p_function_definition(p):
     func_detail["stack_space"] = get_offset()
     updateVar(func_sig, func_detail)    
     popOffset()
-    p[0].code =[quad("label", [func_detail["name"] + "|" + func_detail["input_sig"], "", ""], func_detail["name"] + "|" + func_detail["input_sig"] + ":"), quad("BeginFunc", [str(func_detail["stack_space"]), "", ""], "    BeginFunc " + str(func_detail["stack_space"])) ]   + p[4].code + [ "    " + i for i in p[6].code] + [quad("EndFunc", ["","",""], "    EndFunc")]
+    p[0].code =[quad("label", [func_detail["name"] + "|" + func_detail["input_sig"], "", ""], func_detail["name"] + "|" + func_detail["input_sig"] + ":"), \
+         quad("BeginFunc", [str(func_detail["stack_space"]), "", ""], "    BeginFunc " + str(func_detail["stack_space"]))] + p[4].code + \
+             [ "    " + i for i in p[6].code] + [quad("EndFunc", ["","",""], "    EndFunc")]
 
 
 def p_function_decl(p): 
@@ -2301,9 +2311,12 @@ def off(ar):
         if "@" in a:
             c = checkVar(a, "all")["var"] if a.split('@')[0]=="tmp" else checkVar(a.split('@')[0], int(a.split('@')[1]))
             if str(c["offset"])[0]!="-":
-                offset = "+"+str(c["offset"])
+                if c["base"]=="rbp":
+                    offset = "-"+str(c["offset"])
+                else:
+                    offset = "-"+str(c["offset"])
             else:
-                offset = str(c["offset"])
+                offset = "+"+str(c["offset"])[1:]
             t = c["base"]+offset if c["base"]=="rbp" else c["base"]+offset
             l.append("[" + t + "]")
         else:
