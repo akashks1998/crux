@@ -4,6 +4,7 @@
 ## SymbolTable : 
 - This is a list of symbol Tables; One for global and one each for functions and classes
 - each local and temp varible contain base address, offset and size
+- All entries for activation record are in function entry of symbol table
 
 
 ## 3AC :
@@ -25,7 +26,7 @@
 ### Some Specific Points:
   - We currently generate 2 3AC code file(code.crux, code2.crux), one contains names of variable, while other contain address, relative to stack or heap
   - load_address a , b ::  a = &b :: put address of b in variable a
-  - load a, b :: a = *b; 
+  - load a, b :: a = *b;
   - eq a, b :: *a = b
   - eqconst a, b :: a = b
 
@@ -71,7 +72,7 @@ Following are the differences from vanilla implementation of the above[^1]
 - break gets attached to nearest switch-case/\{for,while,do-while\}loop, while continue gets attached to nearest \{for,while,do-while\}loop. See tests/34.cpp.
 
 ## Classes
-- Class variables are accessed only by ``this``. 
+- Class variables are accessed only by ``this``.
 - Class function can be prototyped inside class declaration itself
 - Class function should be defined outside of class as in given example, it does not needs to prototyped for definition.
 - No Constructor and Destructor, we have to call them excplicitly.
@@ -94,7 +95,7 @@ Following are the differences from vanilla implementation of the above[^1]
 - Function overloading allowed.
   - 2 Functions are same only if thier name are same, and order of type of arguments are exactly same.
   - Class Functions can also be overloaded.
-  - return type overloading is not allowed. E.g. 
+  - return type overloading is not allowed. E.g.
     ```
     void func(int b, int c){;}  //1,2,3,4 are all different
     void func(int b, float c){;}
@@ -106,6 +107,9 @@ Following are the differences from vanilla implementation of the above[^1]
   - offset of all local variables except parameters are calculated during function definition.
   - offset of parameters is calculated during function call.
   - Stack space is increased using offset calculated earlier using BeginFunc and EndFunc reverts to original space
+
+## Include
+- Presently you can only include std.cpp, it contains function for new and delete. And include statement(if used) should be at the top of the file.
 
 ## Allocation/Deallocation
 - new keyword is used for allocation and is used as ```new (int)[c]``` round brackets are compulsory and square braces are optional and if mentioned returns array of allocated objects. Here variable sized arrays are possible.
