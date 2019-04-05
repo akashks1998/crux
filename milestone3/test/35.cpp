@@ -1,4 +1,7 @@
-#include'std.cpp'
+int a[1000];
+int f(int j){
+     return f(j);
+}
 int main()
 {
      int marks[10], i, n, sum = 0, average;
@@ -15,7 +18,7 @@ int main()
           i=0;
      }
      average = sum/n;
-
+     int x=f(i);
      int *a,*b;
      a = b + 2;
      return 0;
