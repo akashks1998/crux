@@ -2310,6 +2310,19 @@ if __name__ == "__main__":
     arglist = sys.argv 
     FileName = arglist[1]
     CodeFile = arglist[2]
+    file1 = os.path.join(os.getcwd(), FileName)
+    x=os.path.dirname(file1)
+    fin = open(FileName, "r")
+    data2 = fin.read()
+    fin.close()
+    if("#include'std.cpp'"==data2[:17] or '#include"std.cpp"'==data2[:17]):
+        fout = open("temp.cpp", "w")
+        fin = open("std.cpp", "r")
+        fout.write(fin.read())
+        fin.close()
+        fout.write(data2[17:])
+        fout.close()
+        FileName="temp.cpp"
     SymbolTableFileName = arglist[3]
     debug=0
     # debug = int(arglist[1])
