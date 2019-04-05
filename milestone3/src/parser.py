@@ -2239,7 +2239,7 @@ def p_init_declarator(p):
     if len(p) == 3:
         if len(p[0].data["meta"]) != 0:
             # its a array, can not be init
-            report_error("Array can be initialized while declaration", p.lineno(1))
+            report_error("Array can not be initialized while declaration", p.lineno(1))
 
         p[0].data["init_type"]=p[2].data["type"]
         p[0].data["place"] = p[2].place
