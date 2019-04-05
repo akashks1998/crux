@@ -1170,6 +1170,8 @@ def p_allocation_expression0(p):
     tpe = p[3].data["type"]
     p[0].place=getnewvar(p[0].data["type"])
     p[0].code = [quad("PushParam",[str(get_size(tpe)),"",""],"PushParam " + str(get_size(tpe))), quad("Scall",["alloc",p[0].place],p[0].place + " = Scall alloc") ]
+    pop_params_code = [ quad("removeParams", [ str(8),"", ""], "RemoveParams " + str(8) ) ]
+    p[0].code = p[0].code +  pop_params_code
 
 
 
