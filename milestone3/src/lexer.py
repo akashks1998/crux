@@ -5,7 +5,6 @@ lineno = 0
 #Personal Groups
 
 keywords = {
-    'include':'INCLUDE',
     'break':'BREAK',
     'case':'CASE',
     # 'catch':'CATCH',
@@ -85,7 +84,6 @@ tokens = [
         'DOUBLECOLON',
         'SCHAR',
         'STRING_L',
-        'HASHTAG',
         'NOTSYM',
         'QUESMARK',
         'ARROW',
@@ -178,7 +176,6 @@ t_COLON         = r':'
 t_DOUBLECOLON   = r'::'
 t_SCHAR         = r'\'.\''
 t_STRING_L      = r'\".*\"'
-t_HASHTAG       = r'\#'
 t_NOTSYM        = r'\!'
 t_QUESMARK      = r'\?'
 t_ARROW         = r'-\>'

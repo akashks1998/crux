@@ -111,6 +111,9 @@ class OBJ:
         self.data = {}
         self.code = []
         self.place = "NOP"
+    
+    def __str__(self):
+        return ( str(self.data) +  str(self.place))
 
 def getnewlabel(s="label"):
 
@@ -124,8 +127,8 @@ def getnewvar(type_, offset = None, size = None, base="rbp"):
     currentTmp = currentTmp + 1
     if offset == None:
         size = get_size(type_)
-        offset = get_offset()
         add_to_offset(size)
+        offset = get_offset()
     
     data = {"type" :  type_ , "class" : "temp", "size" : size, "offset" : offset , "base" : str(base)}
     pushVar(tmp, data)
@@ -195,9 +198,9 @@ def allowed_type(converted_from,converted_to):
 
 def break_continue(l, a, b=""):
     # t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
-    t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i.split('$')[4] if i!= '' else i) else i for i in l]
+    t = [quad("label", [a], "goto->"+a) if re.fullmatch('[ ]*break', i) else i for i in l]
     # s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
-    s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i.split('$')[4] if i!= '' else i) else i for i in t]
+    s = [quad("label", [b], "goto->"+b) if re.fullmatch('[ ]*continue', i) else i for i in t]
     return s if b!="" else t
 
 def cast_string(place, converted_from,converted_to,t=None):
@@ -252,7 +255,7 @@ def operator(op, op1 ,op2 ,typ=None):
 def get_size(data_type, basic = True):
     data_type = data_type[:-1] if data_type[-1] == "|" else data_type
     size = {
-        "int" : 4,
+        "int" : 8,
         "float" : 8,
         "char" : 1,
         "void" :  0
@@ -351,29 +354,8 @@ precedence = (
     ('left', 'HIGHER'),
 )
 
-def p_control_line(p):
-    '''control_line : control_line control_line_stmt
-                    | control_line_stmt
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)    
-
-def p_include_control(p):
-    '''include_control : HASHTAG INCLUDE
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
-def p_control_line_stmt(p):
-    '''control_line_stmt : include_control LTCOMP STRING_L GTCOMP
-                    | include_control STRING_L
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-
 def p_program(p):
-    '''program : control_line translation_unit
-               | translation_unit
+    '''program : translation_unit
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -625,7 +607,7 @@ def p_additive_expression(p):
             tmp = getnewvar("int")
             code = [ quad("int*",[tmp,p[3].place,str(get_size(p[1].data["type"][:-1].rstrip("|")))],tmp + " = " + p[3].place + " int* " +  str(get_size(p[1].data["type"][:-1].rstrip("|")))) ]  
             place = getnewvar(p[1].data["type"])
-            code = code + [ quad("int" +p[2].data,[place,p[1].place,tmp],place + " = " + p[1].place + " int" +p[2].data + " " + tmp) ]
+            code = code + [ quad("int" +p[2].data,[place,p[1].place,tmp],place + " = " + p[1].place + " int" + p[2].data + " " + tmp) ]
             p[0].place = place
             p[0].code = p[1].code + p[3].code + code
             p[0].data["type"] = p[1].data["type"]
@@ -748,7 +730,10 @@ def p_unary_expression_0(p):
 
     p[0].data = assigner(p,1)
     if("|" in p[0].data["type"] and p[0].data["type"][-1] == "a"):
-        report_error("Array not called upto end", p.lineno(0))
+        if p[0].data["type"][ : - len(p[0].data["meta"]) ] == p[0].data["element_type"]:
+            pass
+        else:
+            report_error("Array not called upto end", p.lineno(0))
     p[0].place = p[1].place
     p[0].code = p[1].code 
     
@@ -826,6 +811,7 @@ def p_postfix_expression_2(p):
         if(p[1].data["type"][-2] == "p") or (p[1].data["type"][-2] == "|") :
             # end of array
             p[0].data = {"type": p[1].data["type"][:-1].rstrip("|")}
+            print("d",p[1].data)
             array_offset = p[1].data["offset"]
             array_offset_var = getnewvar("int")
             new_temp = getnewvar("int")
@@ -935,7 +921,7 @@ def p_postfix_expression_6(p):
                 class_actual_offset = checkVar(p[1].place)["var"]["offset"]
                 class_actual_base = checkVar(p[1].place)["var"]["base"]
 
-                actual_offset = getnewvar("int")
+                actual_offset = getnewvar("int|p")
             
                 p[0].place = getnewvar(x["type"], actual_offset, class_element_size, class_actual_base)
                 p[0].code = p[1].code + [ quad("int+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " int+ " + str(class_relative_offset)  ) ]
@@ -1047,7 +1033,7 @@ def p_primary_expression2(p):
     p[0] = OBJ() 
     p[0].parse=f(p) 
 
-    detail = checkVar("this", search_in_class = True)
+    detail = checkVar("this")
     if detail == False:
         report_error("wrong reference to THIS", p.lineno(0))
 
@@ -1309,9 +1295,51 @@ def p_arg_list(p):
     else:
         return_sig = p[-3].data["type"] + "|" + p[-2].data["type"]
 
+    add_this = False
+    try:
+        if str(p[-4])=="::":
+            add_this = True
+    except:
+        pass
+
+    offset = -16
+    if add_this:
+        print("push add_this")
+        class_name = p[-6]
+        class_detail = checkVar(class_name)
+        if class_detail == False:
+            report_error("Class " + class_name + " does not exist", p.lineno(0) )
+        if "class" in class_detail["var"].keys() and class_detail["var"]["class"] == "class":
+            pass
+        else:
+            report_error( class_name + " is not a class, give a class name", p.lineno(0))
+        this_data = {"class": "simple", "type" : class_detail["var"]["type"] + "|p", "name" : "this" }
+        this_data["offset"] = offset
+        this_data["base"] = "rbp"
+        this_data["size"] = 8
+        offset = offset - 8
+        pushVar("this", this_data)
+
     if len(p)==2:
-        input_detail=p[1].data
         print(p[1].data)
+        input_detail=p[1].data
+        for each_p in p[1].data[1]:
+            if "is_array" in each_p.keys():
+                new_offset = getnewvar("int")
+                each_p["offset"] = new_offset
+                each_p["base"] = 0
+                
+                updateVar(each_p["name"],each_p)
+                
+                array_addr_temp = getnewvar("int", offset, 8)
+                offset = offset - 8
+                p[0].code = p[0].code  + [ "    " + quad("load",[new_offset, array_addr_temp, "" ], new_offset + " = *(" + array_addr_temp + " ) " ) ] 
+
+            else:
+                each_p["offset"] = offset
+                offset = offset - each_p["size"]
+                updateVar(each_p["name"],each_p)
+
     else:
         input_detail=("",[])
 
@@ -1321,7 +1349,10 @@ def p_arg_list(p):
         "input_sig" : input_detail[0],
         "body_scope" : currentScopeTable,
         "declaration": True,
-        "stack_space" : get_offset()
+        "stack_space" : get_offset(),
+        "parameter_space": (- offset - 16 ),
+        "return_offset" : 8,
+        "rbp_offset" : 0
     }
 
     parent=getParentScope(currentScopeTable)
@@ -1351,7 +1382,6 @@ def p_arg_list(p):
             pushVar(func_sig, p[0].data, scope = parent)
             detail = checkVar(function_name, parent)
             updateVar(function_name, {"type" : "function_upper", "func_sig" : detail["func_sig"] + [(func_sig, return_sig)]}, scope = parent )
-
 
 def p_argument_declaration_list(p): 
     '''argument_declaration_list : argument_declaration 
@@ -1570,8 +1600,6 @@ def p_class_define_specifier(p):
     p[0].data["scope"] = p[4].scope
     p[0].data["size"] = get_offset()
 
-    pushVar("this", {"type" : p[1].data["type"] + "|p"}, scope = p[4].scope)
-
     if pushVar(p[0].data["type"], p[0].data)==False:
             report_error("Redeclaration of variable", p.lineno(1))
 
@@ -1650,9 +1678,10 @@ def p_member_declaration_0(p):
 
 
             data["size"] = get_size(element_type, basic=False) * size
+            add_to_offset(data["size"])
             data["offset"] = get_offset()
             data["base"] = "rbp"
-            add_to_offset(data["size"])
+            
             if pushVar(data["name"],data)==False:
                 add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
@@ -1674,10 +1703,10 @@ def p_member_declaration_0(p):
 
 
             data["size"] = get_size(data["type"], basic = False)
+            add_to_offset(data["size"])
             data["offset"] = get_offset()
             data["base"] = "rbp"
-            add_to_offset(data["size"])
-
+            
             if pushVar(each["name"],data)==False:
                 report_error("Redeclaration of variable", p.lineno(1))
                     
@@ -1711,6 +1740,8 @@ def p_function_definition(p):
     p[0].parse=f(p)
     function_name = p[2].data["name"]
     func_sig = function_name +"|" + p[4].data["input_sig"]
+
+        
     if p[4].data["return_sig"]=="void":
         if "ret_type" in p[6].data.keys() and p[6].data["ret_type"]!="":
             report_error("Return type is not same",p.lineno(0))
@@ -1724,7 +1755,7 @@ def p_function_definition(p):
     func_detail["stack_space"] = get_offset()
     updateVar(func_sig, func_detail)    
     popOffset()
-    p[0].code = [quad("label", [func_detail["name"] + "|" + func_detail["input_sig"], "", ""], func_detail["name"] + "|" + func_detail["input_sig"] + ":"), quad("BeginFunc", [str(func_detail["stack_space"]), "", ""], "    BeginFunc " + str(func_detail["stack_space"])) ] + [ "    " + i for i in p[6].code] + [quad("EndFunc", ["","",""], "    EndFunc")]
+    p[0].code =[quad("label", [func_detail["name"] + "|" + func_detail["input_sig"], "", ""], func_detail["name"] + "|" + func_detail["input_sig"] + ":"), quad("BeginFunc", [str(func_detail["stack_space"]), "", ""], "    BeginFunc " + str(func_detail["stack_space"])) ]   + p[4].code + [ "    " + i for i in p[6].code] + [quad("EndFunc", ["","",""], "    EndFunc")]
 
 
 def p_function_decl(p): 
@@ -2075,9 +2106,9 @@ def p_declaration0(p):
             get_size(element_type.rstrip("p").rstrip("|"))
 
             data["size"] = get_size(element_type) * size
+            add_to_offset(data["size"])
             data["offset"] = get_offset()
             data["base"] = "rbp"
-            add_to_offset(data["size"])
             if pushVar(data["name"],data)==False:
                 add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
@@ -2087,9 +2118,10 @@ def p_declaration0(p):
             basic_type = data["type"].rstrip("p").rstrip("|")
             get_size(basic_type)
             data["size"] = get_size(data["type"])
+            add_to_offset(data["size"])
             data["offset"] = get_offset()
             data["base"] = "rbp"
-            add_to_offset(data["size"])
+            
 
             if pushVar(each["name"],data)==False:
                 report_error("Redeclaration of variable", p.lineno(1))
@@ -2313,6 +2345,19 @@ if __name__ == "__main__":
     arglist = sys.argv 
     FileName = arglist[1]
     CodeFile = arglist[2]
+    file1 = os.path.join(os.getcwd(), FileName)
+    x=os.path.dirname(file1)
+    fin = open(FileName, "r")
+    data2 = fin.read()
+    fin.close()
+    if("#include'std.cpp'"==data2[:17] or '#include"std.cpp"'==data2[:17]):
+        fout = open("temp.cpp", "w")
+        fin = open("std.cpp", "r")
+        fout.write(fin.read())
+        fin.close()
+        fout.write(data2[17:])
+        fout.close()
+        FileName="temp.cpp"
     SymbolTableFileName = arglist[3]
     debug=0
     # debug = int(arglist[1])
