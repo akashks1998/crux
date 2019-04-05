@@ -112,6 +112,9 @@ class OBJ:
         self.data = {}
         self.code = []
         self.place = "NOP"
+    
+    def __str__(self):
+        return ( str(self.data) +  str(self.place))
 
 def getnewlabel(s="label"):
 
@@ -253,7 +256,7 @@ def operator(op, op1 ,op2 ,typ=None):
 def get_size(data_type, basic = True):
     data_type = data_type[:-1] if data_type[-1] == "|" else data_type
     size = {
-        "int" : 4,
+        "int" : 8,
         "float" : 8,
         "char" : 1,
         "void" :  0
@@ -626,7 +629,7 @@ def p_additive_expression(p):
             tmp = getnewvar("int")
             code = [ quad("int*",[tmp,p[3].place,str(get_size(p[1].data["type"][:-1].rstrip("|")))],tmp + " = " + p[3].place + " int* " +  str(get_size(p[1].data["type"][:-1].rstrip("|")))) ]  
             place = getnewvar(p[1].data["type"])
-            code = code + [ quad("int" +p[2].data,[place,p[1].place,tmp],place + " = " + p[1].place + " int" +p[2].data + " " + tmp) ]
+            code = code + [ quad("int" +p[2].data,[place,p[1].place,tmp],place + " = " + p[1].place + " int" + p[2].data + " " + tmp) ]
             p[0].place = place
             p[0].code = p[1].code + p[3].code + code
             p[0].data["type"] = p[1].data["type"]
@@ -940,7 +943,7 @@ def p_postfix_expression_6(p):
                 class_actual_offset = checkVar(p[1].place)["var"]["offset"]
                 class_actual_base = checkVar(p[1].place)["var"]["base"]
 
-                actual_offset = getnewvar("int")
+                actual_offset = getnewvar("int|p")
             
                 p[0].place = getnewvar(x["type"], actual_offset, class_element_size, class_actual_base)
                 p[0].code = p[1].code + [ quad("int+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " int+ " + str(class_relative_offset)  ) ]
@@ -1052,7 +1055,7 @@ def p_primary_expression2(p):
     p[0] = OBJ() 
     p[0].parse=f(p) 
 
-    detail = checkVar("this", search_in_class = True)
+    detail = checkVar("this")
     if detail == False:
         report_error("wrong reference to THIS", p.lineno(0))
 
@@ -1314,10 +1317,34 @@ def p_arg_list(p):
     else:
         return_sig = p[-3].data["type"] + "|" + p[-2].data["type"]
 
+    add_this = False
+    try:
+        if str(p[-4])=="::":
+            add_this = True
+    except:
+        pass
+
+    offset = -16
+    if add_this:
+        print("push add_this")
+        class_name = p[-6]
+        class_detail = checkVar(class_name)
+        if class_detail == False:
+            report_error("Class " + class_name + " does not exist", p.lineno(0) )
+        if "class" in class_detail["var"].keys() and class_detail["var"]["class"] == "class":
+            pass
+        else:
+            report_error( class_name + " is not a class, give a class name", p.lineno(0))
+        this_data = {"class": "simple", "type" : class_detail["var"]["type"] + "|p", "name" : "this" }
+        this_data["offset"] = offset
+        this_data["base"] = "rbp"
+        this_data["size"] = 8
+        offset = offset - 8
+        pushVar("this", this_data)
+
     if len(p)==2:
         print(p[1].data)
         input_detail=p[1].data
-        offset = -16
         for each_p in p[1].data[1]:
             if "is_array" in each_p.keys():
                 new_offset = getnewvar("int")
@@ -1326,8 +1353,8 @@ def p_arg_list(p):
                 
                 updateVar(each_p["name"],each_p)
                 
-                array_addr_temp = getnewvar("int", offset, 4)
-                offset = offset - 4
+                array_addr_temp = getnewvar("int", offset, 8)
+                offset = offset - 8
                 p[0].code = p[0].code  + [ "    " + quad("load",[new_offset, array_addr_temp, "" ], new_offset + " = *(" + array_addr_temp + " ) " ) ] 
 
             else:
@@ -1344,7 +1371,10 @@ def p_arg_list(p):
         "input_sig" : input_detail[0],
         "body_scope" : currentScopeTable,
         "declaration": True,
-        "stack_space" : get_offset()
+        "stack_space" : get_offset(),
+        "parameter_space": (- offset - 16 ),
+        "return_offset" : 8,
+        "rbp_offset" : 0
     }
 
     parent=getParentScope(currentScopeTable)
@@ -1592,8 +1622,6 @@ def p_class_define_specifier(p):
     p[0].data["scope"] = p[4].scope
     p[0].data["size"] = get_offset()
 
-    pushVar("this", {"type" : p[1].data["type"] + "|p"}, scope = p[4].scope)
-
     if pushVar(p[0].data["type"], p[0].data)==False:
             report_error("Redeclaration of variable", p.lineno(1))
 
@@ -1734,6 +1762,8 @@ def p_function_definition(p):
     p[0].parse=f(p)
     function_name = p[2].data["name"]
     func_sig = function_name +"|" + p[4].data["input_sig"]
+
+        
     if p[4].data["return_sig"]=="void":
         if "ret_type" in p[6].data.keys() and p[6].data["ret_type"]!="":
             report_error("Return type is not same",p.lineno(0))
