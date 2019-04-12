@@ -2313,9 +2313,6 @@ def quad(op, a, statement):
 def parsequad(q):
     return [i.strip() for i in q.split("$")[1:]]
 
-def asm(line):
-    return ' '.join(parsequad(line))
-
 def off(ar):
     l=[]
     for a in ar:
@@ -2337,6 +2334,12 @@ def off(ar):
             l.append(a)
     return l
 
+opr = []
+
+def asm(ar):
+    o = off(ar)
+    return ' '.join(o) if o != [] else ''
+
 def acode(ar):
     o = off(ar)
     return ' '.join(o) if o != [] else ''
@@ -2346,28 +2349,30 @@ def generate_code(p):
     cfile = open(CodeFile,'w')
     x86 = open(x86File,'w')
 
-    cfile.write("//Code For " + FileName + "\n")
-    x=1
+    cod=[]
     for i in p[0].code:
         if re.fullmatch('[ ]*', i) == None:
-            cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
-            x=x+1
+            cod.append(i)
+
+    cfile.write("//Code For " + FileName + "\n")
+    x=1
+    for i in cod:
+        cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
+        x=x+1
     
     afile.write("//Code For " + FileName + "\n")
     x=1
-    for i in p[0].code:
-        if re.fullmatch('[ ]*', i) == None:
-            t=len(i) - len(i.lstrip(' '))
-            afile.write('{0:3}'.format(x) + ":: " + t*" " + acode(parsequad(i)) + "\n")
-            x=x+1
+    for i in cod:
+        t=len(i) - len(i.lstrip(' '))
+        afile.write('{0:3}'.format(x) + ":: " + t*" " + acode(parsequad(i)) + "\n")
+        x=x+1
 
     x86.write("; Code For " + FileName + "\n")
     x86.write("section .text\n")
     x=1
-    for i in p[0].code:
-        if re.fullmatch('[ ]*', i) == None:
-            x86.write(asm(i)+"\n")
-            x=x+1
+    for i in cod:
+        x86.write(asm(parsequad(i))+"\n")
+        x=x+1
 
 def scope_table_graph(S):
     open('scope.gz','w').write("digraph ethane{ rankdir=LR {graph [ordering=\"out\"];node [fontsize=20 width=0.25 shape=box ]; ")
