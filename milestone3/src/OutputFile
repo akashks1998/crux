@@ -1,14 +1,32 @@
 //Code For temp.cpp
   1::heap_ptr@0 = 8 
-  2::main|: 
-  3::    BeginFunc 56 
-  4::    tmp@0 = 10 
-  5::    y@1 = tmp@0 
-  6::    tmp@2 = y@1 
-  7::    tmp@1 = & tmp@2 
-  8::    x@1=tmp@1 
-  9::    tmp@4 = 5 
- 10::    tmp@3=tmp@4 
- 11::    tmp@5 = 0 
- 12::    return tmp@5 
- 13::    EndFunc 
+  2::f|int: 
+  3::    BeginFunc 72 
+  4::    tmp@0 = 2 
+  5::    tmp@1 = n@1 int< tmp@0 
+  6::    ifnz tmp@1 goto->single_if_after#0 
+  7::    return n@1 
+  8::    single_if_after#0 :  
+  9::    tmp@2 = 1 
+ 10::    tmp@3 = n@1 int- tmp@2 
+ 11::    PushParam tmp@3 
+ 12::    tmp@4 = Fcall f|int 
+ 13::    RemoveParams 8 
+ 14::    tmp@5 = 2 
+ 15::    tmp@6 = n@1 int- tmp@5 
+ 16::    PushParam tmp@6 
+ 17::    tmp@7 = Fcall f|int 
+ 18::    RemoveParams 8 
+ 19::    tmp@8 = tmp@4 int+ tmp@7 
+ 20::    return tmp@8 
+ 21::    EndFunc 
+ 22::main|: 
+ 23::    BeginFunc 32 
+ 24::    tmp@9 = 5 
+ 25::    PushParam tmp@9 
+ 26::    tmp@10 = Fcall f|int 
+ 27::    RemoveParams 8 
+ 28::    g@3 = tmp@10 
+ 29::    tmp@11 = 0 
+ 30::    return tmp@11 
+ 31::    EndFunc 
