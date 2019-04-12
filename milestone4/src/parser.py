@@ -8,6 +8,8 @@ from lexer import tokens as lexTokens
 from symbolTable import SymbolTable
 import re
 import inspect
+import pickle
+
 
 pp = pprint.PrettyPrinter(indent=4)
 cnt=0
@@ -2346,6 +2348,14 @@ def generate_code(p):
     cfile = open(CodeFile,'w')
     x86 = open(x86File,'w')
 
+
+    cod=[]
+    for i in p[0].code:
+        if re.fullmatch('[ ]*', i) == None:
+            cod.append(i)
+    f = open("code.obj", "wb")
+    pickle.dump(cod,f)
+
     cfile.write("//Code For " + FileName + "\n")
     x=1
     for i in p[0].code:
@@ -2455,7 +2465,6 @@ if __name__ == "__main__":
     for idx, table in  enumerate( scopeTableList):
         f.write("                       " + "        " + str(idx) + "             " +  str(table.parent) + "\n" )
     
-    import pickle
     f = open("sym_table.obj", "wb")
     pickle.dump(scopeTableList,f)
     
