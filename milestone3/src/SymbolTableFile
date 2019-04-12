@@ -1,21 +1,37 @@
 SCOPE START :: 0
     heap_ptr , { class : simple } , { type : int } , { name : heap_ptr } , { meta : [] } , { size : 8 } , { offset : 0 } , { base : 0 } , 
-    main| , { name : main } , { return_sig : int } , { input_sig :  } , { body_scope : 1 } , { declaration : False } , { stack_space : 56 } , { parameter_space : 0 } , { saved_register_space : 40 } , { return_offset : 8 } , { rbp_offset : 0 } , 
+    f|int , { name : f } , { return_sig : int } , { input_sig : int } , { body_scope : 1 } , { declaration : False } , { stack_space : 72 } , { parameter_space : 8 } , { saved_register_space : 40 } , { return_offset : 8 } , { rbp_offset : 0 } , 
+    f , { type : function_upper } , { func_sig : [('f|int', 'int')] } , 
+    main| , { name : main } , { return_sig : int } , { input_sig :  } , { body_scope : 3 } , { declaration : False } , { stack_space : 32 } , { parameter_space : 0 } , { saved_register_space : 40 } , { return_offset : 8 } , { rbp_offset : 0 } , 
     main , { type : function_upper } , { func_sig : [('main|', 'int')] } , 
 SCOPE END :: 0
 
 SCOPE START :: 1
-    x , { class : simple } , { type : int|p } , { name : x } , { meta : [] } , { size : 8 } , { offset : 8 } , { base : rbp } , 
-    tmp@0 , { type : int } , { class : temp } , { size : 8 } , { offset : 16 } , { base : rbp } , 
-    y , { class : simple } , { type : int } , { name : y } , { meta : [] } , { size : 8 } , { offset : 24 } , { base : rbp } , 
-    tmp@1 , { type : int|p } , { class : temp } , { size : 8 } , { offset : 32 } , { base : rbp } , 
-    tmp@2 , { type : int } , { class : temp } , { size : 8 } , { offset : 40 } , { base : rbp } , 
-    tmp@3 , { type : int } , { class : temp } , { size : 8 } , { offset : x@1 } , { base : 0 } , 
-    tmp@4 , { type : int } , { class : temp } , { size : 8 } , { offset : 48 } , { base : rbp } , 
-    tmp@5 , { type : int } , { class : temp } , { size : 8 } , { offset : 56 } , { base : rbp } , 
+    n , { class : simple } , { type : int } , { name : n } , { meta : [] } , { size : 8 } , { base : rbp } , { offset : -16 } , 
+    tmp@0 , { type : int } , { class : temp } , { size : 8 } , { offset : 8 } , { base : rbp } , 
+    tmp@1 , { type : int } , { class : temp } , { size : 8 } , { offset : 16 } , { base : rbp } , 
+    tmp@2 , { type : int } , { class : temp } , { size : 8 } , { offset : 24 } , { base : rbp } , 
+    tmp@3 , { type : int } , { class : temp } , { size : 8 } , { offset : 32 } , { base : rbp } , 
+    tmp@4 , { type : int } , { class : temp } , { size : 8 } , { offset : 40 } , { base : rbp } , 
+    tmp@5 , { type : int } , { class : temp } , { size : 8 } , { offset : 48 } , { base : rbp } , 
+    tmp@6 , { type : int } , { class : temp } , { size : 8 } , { offset : 56 } , { base : rbp } , 
+    tmp@7 , { type : int } , { class : temp } , { size : 8 } , { offset : 64 } , { base : rbp } , 
+    tmp@8 , { type : int } , { class : temp } , { size : 8 } , { offset : 72 } , { base : rbp } , 
 SCOPE END :: 1
+
+SCOPE START :: 2
+SCOPE END :: 2
+
+SCOPE START :: 3
+    tmp@9 , { type : int } , { class : temp } , { size : 8 } , { offset : 8 } , { base : rbp } , 
+    tmp@10 , { type : int } , { class : temp } , { size : 8 } , { offset : 16 } , { base : rbp } , 
+    g , { class : simple } , { type : int } , { name : g } , { meta : [] } , { size : 8 } , { offset : 24 } , { base : rbp } , 
+    tmp@11 , { type : int } , { class : temp } , { size : 8 } , { offset : 32 } , { base : rbp } , 
+SCOPE END :: 3
 
 
 SCOPE SCOPE RELATION ::  SCOPE NUMBER : PARENT NUMBER
                                0             None
                                1             0
+                               2             1
+                               3             0
