@@ -387,7 +387,7 @@ def p_translation_unit(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     
-    p[0].code = [quad("eq",["heap_ptr@0",str(get_offset()),""],"heap_ptr@0 = "+str(get_offset()))]+ p[1].code.copy()
+    p[0].code = [quad("eqconstint",["heap_ptr@0",str(get_offset()),""],"heap_ptr@0 = "+str(get_offset()))]+ p[1].code.copy()
 
 def p_declaration_seq(p):
     ''' declaration_seq : declaration_seq declaration
@@ -2454,4 +2454,8 @@ if __name__ == "__main__":
     f.write("SCOPE SCOPE RELATION ::  SCOPE NUMBER : PARENT NUMBER\n")
     for idx, table in  enumerate( scopeTableList):
         f.write("                       " + "        " + str(idx) + "             " +  str(table.parent) + "\n" )
+    
+    import pickle
+    f = open("sym_table.obj", "wb")
+    pickle.dump(scopeTableList,f)
     
