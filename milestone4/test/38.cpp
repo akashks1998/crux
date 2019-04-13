@@ -1,7 +1,8 @@
-#include<std.cpp>
 
 int main(){
   int size;
-  int* a=new(int)[5];
+  int *a;
+  int i;
+  a = i;
   return 0;
 }

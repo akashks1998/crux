@@ -84,51 +84,63 @@ def acode(ar):
 def give_asm_op(inst_type):
     op_dict = {
         "int+" : "add",
-        "int-" : "mul",
+        "int-" : "sub",
         "int/" : "idiv",
         "int*" : "imul",
         "and" : "and",
         "or" : "or",
     }
+    return op_dict[inst_type]
+
+def LoadVar(reg,var):
+    code=[]
+    if "@" in var:
+        info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
+        offset = info["offset"]
+        base = info["base"]
+        if "@" in str(offset):
+            # offset in variable
+            pass
+        else:
+            # offset as integer
+            if offset < 0:
+                code = [ "mov "+reg+", ["+base+" + " + str(-offset) + "]" ]
+            else:
+                code = [ "mov "+reg+", ["+base+" - " + str(offset) + "]" ]
+    else:
+        code = [ "mov "+reg+", " + str(var) ]
+    return code
+
+def StoreVar(reg,var):
+    code=[]
+    if "@" in var:
+        info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
+        offset = info["offset"]
+        base = info["base"]
+        if "@" in str(offset):
+            # offset in variable
+            pass
+        else:
+            # offset as integer
+            if offset < 0:
+                code = [ "mov ["+base+" + " + str(-offset) + "] , "+reg  ]
+            else:
+                code = [ "mov ["+base+"  " + str(-offset) + "] , "+reg  ]
+    else:
+        print("Error in storing as it is int instaid of variable")
+        exit()
+    return code
+
 def gen_asm_for_one_line(quad):
     code = []
     if quad[0] in ["int+", "int-", "int/", "int*"]:
         # load 2 and 3rd in reg, do compute and store in 1st
         var = quad[2]
-        if "@" in var:
-            info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
-            offset = info["offset"]
-            base = info["base"]
-            if "@" in str(offset):
-                # offset in variable
-                pass
-            else:
-                # offset as integer
-                if offset < 0:
-                    code = code + [ "mov eax, [ebp + " + str(-offset) + "]" ]
-                else:
-                    code = code + [ "mov eax, [ebp - " + str(offset) + "]" ]
-        else:
-            code = code + [ "mov eax, " + str(var) ]
-
+        code=code+ LoadVar("eax",var)
         var = quad[3]
-        if "@" in var:
-            info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
-            offset = info["offset"]
-            base = info["base"]
-            if "@" in str(offset):
-                pass
-                # offset in variable
-            else:
-                # offset as integer
-                if offset < 0:
-                    code = code + [ "mov eax, [ebp + " + str(-offset) + "]" ]
-                else:
-                    code = code + [ "mov eax, [ebp - " + str(offset) + "]" ]
-        else:
-            code = code + [ "mov ebx, " + str(var) ]
-
-        
+        code=code+ LoadVar("ebx",var)
+        code=code+[give_asm_op(quad[0]) +" eax , ebx"]
+        code=code+StoreVar("eax",quad[1])
 
         print(code)
     

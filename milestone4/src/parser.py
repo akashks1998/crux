@@ -10,7 +10,6 @@ import re
 import inspect
 import pickle
 
-
 pp = pprint.PrettyPrinter(indent=4)
 cnt=0
 tokens = lexTokens
@@ -44,7 +43,7 @@ scopeTableList = []
 globalScopeTable = SymbolTable()
 scopeTableList.append(globalScopeTable)
 currentTmp=0
-new_pointer_size = 8
+new_pointer_size = 4
 currentScopeTable = 0
 
 offsetList = [0]
@@ -52,10 +51,10 @@ offsetParent = [None]
 currentOffset = 0
 
 allowed_types={}
-allowed_types["float"]=["int","long long int", "long int" ,"float","char" ]
+allowed_types["float"]=["int","float","char" ]
 allowed_types["int"]=["float", "char","int"]
 allowed_types["char"]=["int", "char"]
-allowed_types["pointer"]=["int","float"]
+allowed_types["pointer"]=["int"]
 
 operator_allowed={}
 operator_allowed["+"]=["int","float","char"]
@@ -63,9 +62,9 @@ operator_allowed["-"]=["int","float","char"]
 operator_allowed["*"]=["int","float","char"]
 operator_allowed["/"]=["int","float","char"]
 operator_allowed["%"]=["int"]
-operator_allowed["||"]=["int","float","char"]
-operator_allowed["&&"]=["int","float","char"]
-operator_allowed["!"]=["int","float","char"]
+operator_allowed["||"]=["int"]
+operator_allowed["&&"]=["int"]
+operator_allowed["!"]=["int"]
 operator_allowed["|"]=["int"]
 operator_allowed["&"]=["int"]
 operator_allowed["~"]=["int"]
@@ -210,7 +209,7 @@ def break_continue(l, a, b=""):
     return s if b!="" else t
 
 def cast_string(place, converted_from,converted_to,t=None):
-    
+    return {"place":place,"code":[]}
     if converted_from==converted_to:
         return {"place":place,"code":[]}
     if allowed_type(converted_from,converted_to)==True:
@@ -231,16 +230,13 @@ def operator(op, op1 ,op2 ,typ=None):
     prec={
         "char":1,
         "int":2,
-        "long int":3,
-        "long long int":4,
-        "float":5,
-        "double":6
+        "float":3
     }
     if op1.data["type"] == op2.data["type"]:
         if typ==None:
             typ=op1.data["type"]
         t=getnewvar(typ)
-        return {"place":t,"code":[ quad(op1.data["type"]+op , [t,op1.place,op2.place], t +" = " + op1.place +" "+op1.data["type"]+op+" "+op2.place) ],"type":typ}
+        return {"place":t,"code":[ quad( op , [t,op1.place,op2.place], t + " = " + op1.place + " " + op + " "+op2.place) ],"type":typ}
     elif prec[ op1.data["type"] ]>prec[ op2.data["type"] ]:
         y=cast_string( op2.place, op2.data["type"],op1.data["type"] )
         if typ==None:
@@ -248,7 +244,7 @@ def operator(op, op1 ,op2 ,typ=None):
         t=getnewvar(typ)
         if y==False:
             return False
-        return {"place":t,"code":y["code"]+[ quad(op1.data["type"]+op , [t,op1.place,y["place"]], t +" = "+ op1.place+" "+op1.data["type"]+op +" "+ y["place"]) ],"type":typ}
+        return {"place":t,"code":y["code"]+[ quad( op , [t,op1.place,y["place"]], t +" = "+ op1.place+" "+ op +" "+ y["place"]) ],"type":typ}
     else:
         y=cast_string( op1.place, op1.data["type"],op2.data["type"] )
         if y==False:
@@ -256,13 +252,13 @@ def operator(op, op1 ,op2 ,typ=None):
         if typ==None:
             typ=op2.data["type"]
         t=getnewvar(typ)
-        return {"place":t,"code":y["code"]+[ quad(op2.data["type"]+op,[t,y["place"],op2.place],t +" = " + y["place"] +" "+op2.data["type"]+op+" "+ op2.place) ],"type":typ}
+        return {"place":t,"code":y["code"]+[ quad(op,[t,y["place"],op2.place],t +" = " + y["place"] +" "+op+" "+ op2.place) ],"type":typ}
 
 def get_size(data_type, basic = True):
     data_type = data_type[:-1] if data_type[-1] == "|" else data_type
     size = {
-        "int" : 8,
-        "float" : 8,
+        "int" : 4,
+        "float" : 4,
         "char" : 1,
         "void" :  0
     }
@@ -270,14 +266,14 @@ def get_size(data_type, basic = True):
         if basic == True:
             basic_type = data_type.rstrip("r").rstrip("p").rstrip("|")
             if basic_type in size.keys():
-                return 8
+                return 4
             get_class = checkVar(basic_type, "global")
             if get_class ==  False:
                 print(" Error :: Class " + basic_type + " is not defined")
                 exit()
-            return 8
+            return 4
         else:
-            return 8
+            return 4
 
     if data_type in size.keys():
         return size[data_type]
@@ -389,7 +385,7 @@ def p_translation_unit(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     
-    p[0].code = [quad("eqconstint",["heap_ptr@0",str(get_offset()),""],"heap_ptr@0 = "+str(get_offset()))]+ p[1].code.copy()
+    p[0].code = [quad("eq",["heap_ptr@0",str(get_offset()),""],"heap_ptr@0 = "+str(get_offset()))]+ p[1].code.copy()
 
 def p_declaration_seq(p):
     ''' declaration_seq : declaration_seq declaration
@@ -623,7 +619,7 @@ def p_additive_expression(p):
         allowed_type = ["int", "char", "float"]
         if "|" in p[1].data["type"] and p[1].data["type"][-1] == "p" and p[3].data["type"] == "int":
             tmp = getnewvar("int")
-            code = [ quad("int*",[tmp,p[3].place,str(get_size(p[1].data["type"][:-1].rstrip("|")))],tmp + " = " + p[3].place + " int* " +  str(get_size(p[1].data["type"][:-1].rstrip("|")))) ]  
+            code = [ quad("*",[tmp,p[3].place,str(get_size(p[1].data["type"][:-1].rstrip("|")))],tmp + " = " + p[3].place + " * " +  str(get_size(p[1].data["type"][:-1].rstrip("|")))) ]  
             place = getnewvar(p[1].data["type"])
             code = code + [ quad("int" +p[2].data,[place,p[1].place,tmp],place + " = " + p[1].place + " int" + p[2].data + " " + tmp) ]
             p[0].place = place
@@ -817,9 +813,9 @@ def p_postfix_expression_2(p):
         index = p[1].data["index"]
         to_mult =  p[1].data["meta"][index] if ( index < len(p[1].data["meta"]) ) else 1
         to_add_var_temp  = getnewvar("int")
-        to_add = to_add_var_temp + " int* " + str(to_mult)
-        p[0].code = p[1].code + p[3].code  + [ quad("int+",[to_add_var_temp,p[1].data["to_add"],p[3].place],to_add_var_temp + " = " + p[1].data["to_add"] + " int+ " + p[3].place ) ] \
-             + [ quad("int*",[to_add_var,to_add_var_temp,str(to_mult)],to_add_var +  " = " +  to_add) ]
+        to_add = to_add_var_temp + " * " + str(to_mult)
+        p[0].code = p[1].code + p[3].code  + [ quad("+",[to_add_var_temp,p[1].data["to_add"],p[3].place],to_add_var_temp + " = " + p[1].data["to_add"] + " + " + p[3].place ) ] \
+             + [ quad("*",[to_add_var,to_add_var_temp,str(to_mult)],to_add_var +  " = " +  to_add) ]
         p[0].place = p[1].place
         p[0].data["type"] =  p[1].data["type"][:-1]
         p[0].data["index"] = p[1].data["index"] + 1
@@ -833,9 +829,9 @@ def p_postfix_expression_2(p):
             new_temp = getnewvar("int")
             new_offset = getnewvar("int")
             final_var = getnewvar(p[1].data["type"], new_offset ,  p[1].data["size"] )
-            p[0].code = p[0].code + [ quad("int*",[new_temp,to_add_var,str(get_size(p[0].data["type"]))],new_temp + " = " + to_add_var + " int* " + str(get_size(p[0].data["type"]))) ]  \
+            p[0].code = p[0].code + [ quad("*",[new_temp,to_add_var,str(get_size(p[0].data["type"]))],new_temp + " = " + to_add_var + " * " + str(get_size(p[0].data["type"]))) ]  \
                  + [quad("eq", [array_offset_var, str(array_offset) ] , array_offset_var + " = " + str(array_offset) )] \
-                 + [ quad("int-",[new_offset, array_offset_var ,new_temp],new_offset + " = " + array_offset_var + " int- " + new_temp)] 
+                 + [ quad("-",[new_offset, array_offset_var ,new_temp],new_offset + " = " + array_offset_var + " - " + new_temp)] 
             p[0].place = final_var
        
     elif "|" in p[1].data["type"] and type_last_char == "p":
@@ -847,7 +843,7 @@ def p_postfix_expression_2(p):
 
         actual_addr = getnewvar(p[1].data["type"])
         p[0].place = getnewvar(p[0].data["type"], actual_addr, get_size(p[0].data["type"]), 0) 
-        p[0].code = p[1].code +  p[3].code  + [ quad("int+",[actual_addr,p[1].place,p[3].place], actual_addr + " = " + p[1].place + " int+ " +  p[3].place) ] 
+        p[0].code = p[1].code +  p[3].code  + [ quad("+",[actual_addr,p[1].place,p[3].place], actual_addr + " = " + p[1].place + " + " +  p[3].place) ] 
 
     else:
         report_error("Not a array or pointer", p.lineno(0))
@@ -945,7 +941,7 @@ def p_postfix_expression_6(p):
                 actual_offset = getnewvar("int|p")
             
                 p[0].place = getnewvar(x["type"], actual_offset, class_element_size, class_actual_base)
-                p[0].code = p[1].code + [ quad("int+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " int+ " + str(class_relative_offset)  ) ]
+                p[0].code = p[1].code + [ quad("+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " + " + str(class_relative_offset)  ) ]
 
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
@@ -988,7 +984,7 @@ def p_postfix_expression_7(p):
                 class_actual_base = 0
                 actual_offset = getnewvar("int")
                 p[0].place = getnewvar(x["type"], actual_offset, class_element_size, class_actual_base)
-                p[0].code = p[1].code + [ quad("int+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " int+ " + str(class_relative_offset)  ) ]
+                p[0].code = p[1].code + [ quad("+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " + " + str(class_relative_offset)  ) ]
 
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
@@ -1085,18 +1081,27 @@ def p_unary_expression1(p):
             p[0].data["type"]=p[2].data["type"]+"p"
         else:
             p[0].data["type"]=p[2].data["type"]+"|p"
+
+        p[0].place = getnewvar(p[0].data["type"])
+        p[0].code = p[2].code + [ quad( "&" , [p[0].place, p[2].place , ""], p[0].place + " = "+  p[1].data + " " + p[2].place ) ] 
+
+        
     elif p[1].data in ["-", "+"] and p[2].data["type"] in ["int", "float"]:
         p[0].data["type"] = p[2].data["type"]
-        operator = p[2].data["type"]
+        if(p[1].data == "+") :
+            p[0].code = p[2].code
+            p[0].place = p[2].place
+        else:
+            p[0].place = getnewvar(p[2].data["type"])
+            p[0].code = p[2].code + [ quad( "*", [ p[0].place, "-1" , p[2].place ] , p[0].place + " = " + " -1 * " + p[2].place  ) ] 
+
     elif p[1].data in ["!", "~"] and p[2].data["type"] in ["int"]:
-        p[0].data["type"] = p[2].data["type"]
-        operator = p[2].data["type"]
+        p[0].place = getnewvar(p[0].data["type"])
+        p[0].code = p[2].code + [ quad( p[1].data , [p[0].place, p[2].place , ""], p[0].place + " = "+  p[1].data + " " + p[2].place ) ] 
     else:
         report_error("unary operation " + p[1].data + " is invalid with operand of type " + p[2].data["type"], p.lineno(0))
 
-    p[0].place = getnewvar(p[0].data["type"])
-    t_var = getnewvar(p[2].data["type"])
-    p[0].code = p[2].code+ [ quad("eq", [t_var, p[2].place, ""], t_var + " = " +  p[2].place) ] + [ quad(operator + p[1].data, [p[0].place,t_var,""],p[0].place + " = "+ operator + p[1].data + " " +t_var) ] 
+    
     p[0].data["class_u"] = "unary1"
 
 def p_unary_expression2(p): 
@@ -1160,7 +1165,7 @@ def p_allocation_expression1(p):
     tpe = p[3].data["type"]
     tmp1 = getnewvar("int")
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = p[6].code + [quad("int*",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "int*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Fcall",["alloc|int",p[0].place],p[0].place + " = Fcall alloc|int")]
+    p[0].code = p[6].code + [quad("*",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Fcall",["alloc|int",p[0].place],p[0].place + " = Fcall alloc|int")]
 
 
 def p_allocation_expression0(p): 
@@ -1176,7 +1181,7 @@ def p_allocation_expression0(p):
     tpe = p[3].data["type"]
     p[0].place=getnewvar(p[0].data["type"])
     p[0].code = [quad("PushParam",[str(get_size(tpe)),"",""],"PushParam " + str(get_size(tpe))), quad("Fcall",["alloc|int",p[0].place],p[0].place + " = Fcall alloc|int") ]
-    pop_params_code = [ quad("removeParams", [ str(8),"", ""], "RemoveParams " + str(8) ) ]
+    pop_params_code = [ quad("removeParams", [ str(4),"", ""], "RemoveParams " + str(4) ) ]
     p[0].code = p[0].code +  pop_params_code
 
 
@@ -1344,8 +1349,8 @@ def p_arg_list(p):
         this_data = {"class": "simple", "type" : class_detail["var"]["type"] + "|p", "name" : "this" }
         this_data["offset"] = offset
         this_data["base"] = "rbp"
-        this_data["size"] = 8
-        offset = offset - 8
+        this_data["size"] = 4
+        offset = offset - 4
         pushVar("this", this_data)
 
     if len(p)==2:
@@ -1358,8 +1363,8 @@ def p_arg_list(p):
                 
                 updateVar(each_p["name"],each_p)
                 
-                array_addr_temp = getnewvar("int", offset, 8)
-                offset = offset - 8
+                array_addr_temp = getnewvar("int", offset, 4)
+                offset = offset - 4
                 p[0].code = p[0].code  + [ "    " + quad("load",[new_offset, array_addr_temp, "" ], new_offset + " = *(" + array_addr_temp + " ) " ) ] 
 
             else:
@@ -1379,7 +1384,7 @@ def p_arg_list(p):
         "stack_space" : get_offset(),
         "parameter_space": (- offset - 16 ),
         "saved_register_space" : 40 , # r12 -r15, rbx
-        "return_offset" : 8,
+        "return_offset" : 4,
         "rbp_offset" : 0
     }
 
@@ -1938,11 +1943,11 @@ def p_selection_statement_3(p):
             tmp = getnewvar("int")
             tmp2 = getnewvar("int")
             testcode = testcode + [quad("eq", [tmp3, str(v),""], tmp3+" = "+str(v))] + [quad("char_to_int",[tmp,tmp3,""],tmp+" = char_to_int "+tmp3)] \
-                + [quad("int-",[tmp2,place,tmp],tmp2+" = "+place+" int- "+tmp), quad("ifz",[tmp2, p[7].code[idx]["label"],""],"ifz "+tmp2+" goto->"+p[7].code[idx]["label"])]
+                + [quad("-",[tmp2,place,tmp],tmp2+" = "+place+" - "+tmp), quad("ifz",[tmp2, p[7].code[idx]["label"],""],"ifz "+tmp2+" goto->"+p[7].code[idx]["label"])]
         else:
             tmp = getnewvar("int")
             tmp2 = getnewvar("int")
-            testcode = testcode + [quad("eq", [tmp, str(v),""], tmp+" = "+str(v))] + [quad("int-",[tmp2,place,tmp],tmp2+" = "+place+" int- "+tmp), quad("ifz",[tmp2, p[7].code[idx]["label"],""],"ifz "+tmp2+" goto->"+p[7].code[idx]["label"])]
+            testcode = testcode + [quad("eq", [tmp, str(v),""], tmp+" = "+str(v))] + [quad("-",[tmp2,place,tmp],tmp2+" = "+place+" - "+tmp), quad("ifz",[tmp2, p[7].code[idx]["label"],""],"ifz "+tmp2+" goto->"+p[7].code[idx]["label"])]
     testcode = testcode + [quad("goto",[default_label],"goto->" + default_label)]
     for idx,c in enumerate(p[7].code):
         l = c["statement"]
@@ -2298,25 +2303,22 @@ def quad(op, a, statement):
             op = "load"
             arg[1] = arg[1][1:].rstrip("(").lstrip(")")
         elif arg[1].isdigit():
-            op = "eq" + "int"
+            op = "=" 
         elif arg[1][0]=="'" and arg[1][2]=="'" and len(arg)==3:
-            op = "eq" + "char"
+            op = "="
         elif arg[1].isdecimal():
-            op = "eq" + "float"
+            op = "="
         elif arg[0].split('@')[0]=="tmp":
             c = checkVar(arg[0], "**")
-            op = "eq"+("p" if "|" in  c["var"]["type"] else c["var"]["type"]) 
+            op = "=" # +("p" if "|" in  c["var"]["type"] else c["var"]["type"]) 
         else:
             c = checkVar(arg[0].split('@')[0], int(arg[0].split('@')[1]))
-            op = "eq"+ ("p" if "|" in  c["type"] else c["type"]) 
+            op = "=" #+ ("p" if "|" in  c["type"] else c["type"]) 
     
     return " $ ".join([statement]+[op]+arg)
 
 def parsequad(q):
     return [i.strip() for i in q.split("$")[1:]]
-
-def asm(line):
-    return ' '.join(parsequad(line))
 
 def off(ar):
     l=[]
@@ -2339,6 +2341,12 @@ def off(ar):
             l.append(a)
     return l
 
+opr = []
+
+def asm(ar):
+    o = off(ar)
+    return ' '.join(o) if o != [] else ''
+
 def acode(ar):
     o = off(ar)
     return ' '.join(o) if o != [] else ''
@@ -2346,38 +2354,23 @@ def acode(ar):
 def generate_code(p):
     afile = open(AddressFile,'w')
     cfile = open(CodeFile,'w')
-    x86 = open(x86File,'w')
-
 
     cod=[]
     for i in p[0].code:
         if re.fullmatch('[ ]*', i) == None:
             cod.append(i)
-    f = open("code.obj", "wb")
-    pickle.dump(cod,f)
 
     cfile.write("//Code For " + FileName + "\n")
     x=1
-    for i in p[0].code:
-        if re.fullmatch('[ ]*', i) == None:
-            cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
-            x=x+1
-    
-    afile.write("//Code For " + FileName + "\n")
-    x=1
-    for i in p[0].code:
-        if re.fullmatch('[ ]*', i) == None:
-            t=len(i) - len(i.lstrip(' '))
-            afile.write('{0:3}'.format(x) + ":: " + t*" " + acode(parsequad(i)) + "\n")
-            x=x+1
+    for i in cod:
+        cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
+        x=x+1
 
-    x86.write("; Code For " + FileName + "\n")
-    x86.write("section .text\n")
-    x=1
-    for i in p[0].code:
-        if re.fullmatch('[ ]*', i) == None:
-            x86.write(asm(i)+"\n")
-            x=x+1
+    f = open("code.obj", "wb")
+    pickle.dump(cod,f)
+
+    
+
 
 def scope_table_graph(S):
     open('scope.gz','w').write("digraph ethane{ rankdir=LR {graph [ordering=\"out\"];node [fontsize=20 width=0.25 shape=box ]; ")
@@ -2467,4 +2460,3 @@ if __name__ == "__main__":
     
     f = open("sym_table.obj", "wb")
     pickle.dump(scopeTableList,f)
-    

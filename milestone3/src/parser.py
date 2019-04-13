@@ -8,6 +8,7 @@ from lexer import tokens as lexTokens
 from symbolTable import SymbolTable
 import re
 import inspect
+import pickle
 
 pp = pprint.PrettyPrinter(indent=4)
 cnt=0
@@ -42,7 +43,7 @@ scopeTableList = []
 globalScopeTable = SymbolTable()
 scopeTableList.append(globalScopeTable)
 currentTmp=0
-new_pointer_size = 8
+new_pointer_size = 4
 currentScopeTable = 0
 
 offsetList = [0]
@@ -50,10 +51,10 @@ offsetParent = [None]
 currentOffset = 0
 
 allowed_types={}
-allowed_types["float"]=["int","long long int", "long int" ,"float","char" ]
+allowed_types["float"]=["int","float","char" ]
 allowed_types["int"]=["float", "char","int"]
 allowed_types["char"]=["int", "char"]
-allowed_types["pointer"]=["int","float"]
+allowed_types["pointer"]=["int"]
 
 operator_allowed={}
 operator_allowed["+"]=["int","float","char"]
@@ -61,9 +62,9 @@ operator_allowed["-"]=["int","float","char"]
 operator_allowed["*"]=["int","float","char"]
 operator_allowed["/"]=["int","float","char"]
 operator_allowed["%"]=["int"]
-operator_allowed["||"]=["int","float","char"]
-operator_allowed["&&"]=["int","float","char"]
-operator_allowed["!"]=["int","float","char"]
+operator_allowed["||"]=["int"]
+operator_allowed["&&"]=["int"]
+operator_allowed["!"]=["int"]
 operator_allowed["|"]=["int"]
 operator_allowed["&"]=["int"]
 operator_allowed["~"]=["int"]
@@ -208,7 +209,7 @@ def break_continue(l, a, b=""):
     return s if b!="" else t
 
 def cast_string(place, converted_from,converted_to,t=None):
-    
+    return {"place":place,"code":[]}
     if converted_from==converted_to:
         return {"place":place,"code":[]}
     if allowed_type(converted_from,converted_to)==True:
@@ -229,16 +230,13 @@ def operator(op, op1 ,op2 ,typ=None):
     prec={
         "char":1,
         "int":2,
-        "long int":3,
-        "long long int":4,
-        "float":5,
-        "double":6
+        "float":3
     }
     if op1.data["type"] == op2.data["type"]:
         if typ==None:
             typ=op1.data["type"]
         t=getnewvar(typ)
-        return {"place":t,"code":[ quad(op1.data["type"]+op , [t,op1.place,op2.place], t +" = " + op1.place +" "+op1.data["type"]+op+" "+op2.place) ],"type":typ}
+        return {"place":t,"code":[ quad( op , [t,op1.place,op2.place], t + " = " + op1.place + " " + op + " "+op2.place) ],"type":typ}
     elif prec[ op1.data["type"] ]>prec[ op2.data["type"] ]:
         y=cast_string( op2.place, op2.data["type"],op1.data["type"] )
         if typ==None:
@@ -246,7 +244,7 @@ def operator(op, op1 ,op2 ,typ=None):
         t=getnewvar(typ)
         if y==False:
             return False
-        return {"place":t,"code":y["code"]+[ quad(op1.data["type"]+op , [t,op1.place,y["place"]], t +" = "+ op1.place+" "+op1.data["type"]+op +" "+ y["place"]) ],"type":typ}
+        return {"place":t,"code":y["code"]+[ quad( op , [t,op1.place,y["place"]], t +" = "+ op1.place+" "+ op +" "+ y["place"]) ],"type":typ}
     else:
         y=cast_string( op1.place, op1.data["type"],op2.data["type"] )
         if y==False:
@@ -254,13 +252,13 @@ def operator(op, op1 ,op2 ,typ=None):
         if typ==None:
             typ=op2.data["type"]
         t=getnewvar(typ)
-        return {"place":t,"code":y["code"]+[ quad(op2.data["type"]+op,[t,y["place"],op2.place],t +" = " + y["place"] +" "+op2.data["type"]+op+" "+ op2.place) ],"type":typ}
+        return {"place":t,"code":y["code"]+[ quad(op,[t,y["place"],op2.place],t +" = " + y["place"] +" "+op+" "+ op2.place) ],"type":typ}
 
 def get_size(data_type, basic = True):
     data_type = data_type[:-1] if data_type[-1] == "|" else data_type
     size = {
-        "int" : 8,
-        "float" : 8,
+        "int" : 4,
+        "float" : 4,
         "char" : 1,
         "void" :  0
     }
@@ -268,14 +266,14 @@ def get_size(data_type, basic = True):
         if basic == True:
             basic_type = data_type.rstrip("r").rstrip("p").rstrip("|")
             if basic_type in size.keys():
-                return 8
+                return 4
             get_class = checkVar(basic_type, "global")
             if get_class ==  False:
                 print(" Error :: Class " + basic_type + " is not defined")
                 exit()
-            return 8
+            return 4
         else:
-            return 8
+            return 4
 
     if data_type in size.keys():
         return size[data_type]
@@ -746,7 +744,7 @@ def p_unary_expression_0(p):
 
     p[0].data = assigner(p,1)
     if("|" in p[0].data["type"] and p[0].data["type"][-1] == "a"):
-        if p[0].data["type"][ : - len(p[0].data["meta"]) ] == p[0].data["element_type"]:
+        if p[0].data["type"][ : - len(p[0].data["meta"]) ].rsplit("|") == p[0].data["element_type"]:
             pass
         else:
             report_error("Array not called upto end", p.lineno(0))
@@ -1174,7 +1172,7 @@ def p_allocation_expression0(p):
     tpe = p[3].data["type"]
     p[0].place=getnewvar(p[0].data["type"])
     p[0].code = [quad("PushParam",[str(get_size(tpe)),"",""],"PushParam " + str(get_size(tpe))), quad("Fcall",["alloc|int",p[0].place],p[0].place + " = Fcall alloc|int") ]
-    pop_params_code = [ quad("removeParams", [ str(8),"", ""], "RemoveParams " + str(8) ) ]
+    pop_params_code = [ quad("removeParams", [ str(4),"", ""], "RemoveParams " + str(4) ) ]
     p[0].code = p[0].code +  pop_params_code
 
 
@@ -1342,8 +1340,8 @@ def p_arg_list(p):
         this_data = {"class": "simple", "type" : class_detail["var"]["type"] + "|p", "name" : "this" }
         this_data["offset"] = offset
         this_data["base"] = "rbp"
-        this_data["size"] = 8
-        offset = offset - 8
+        this_data["size"] = 4
+        offset = offset - 4
         pushVar("this", this_data)
 
     if len(p)==2:
@@ -1356,8 +1354,8 @@ def p_arg_list(p):
                 
                 updateVar(each_p["name"],each_p)
                 
-                array_addr_temp = getnewvar("int", offset, 8)
-                offset = offset - 8
+                array_addr_temp = getnewvar("int", offset, 4)
+                offset = offset - 4
                 p[0].code = p[0].code  + [ "    " + quad("load",[new_offset, array_addr_temp, "" ], new_offset + " = *(" + array_addr_temp + " ) " ) ] 
 
             else:
@@ -1377,7 +1375,7 @@ def p_arg_list(p):
         "stack_space" : get_offset(),
         "parameter_space": (- offset - 16 ),
         "saved_register_space" : 40 , # r12 -r15, rbx
-        "return_offset" : 8,
+        "return_offset" : 4,
         "rbp_offset" : 0
     }
 
@@ -2296,17 +2294,17 @@ def quad(op, a, statement):
             op = "load"
             arg[1] = arg[1][1:].rstrip("(").lstrip(")")
         elif arg[1].isdigit():
-            op = "eq" + "int"
+            op = "=" 
         elif arg[1][0]=="'" and arg[1][2]=="'" and len(arg)==3:
-            op = "eq" + "char"
+            op = "="
         elif arg[1].isdecimal():
-            op = "eq" + "float"
+            op = "="
         elif arg[0].split('@')[0]=="tmp":
             c = checkVar(arg[0], "**")
-            op = "eq"+("p" if "|" in  c["var"]["type"] else c["var"]["type"]) 
+            op = "=" # +("p" if "|" in  c["var"]["type"] else c["var"]["type"]) 
         else:
             c = checkVar(arg[0].split('@')[0], int(arg[0].split('@')[1]))
-            op = "eq"+ ("p" if "|" in  c["type"] else c["type"]) 
+            op = "=" #+ ("p" if "|" in  c["type"] else c["type"]) 
     
     return " $ ".join([statement]+[op]+arg)
 
@@ -2347,7 +2345,6 @@ def acode(ar):
 def generate_code(p):
     afile = open(AddressFile,'w')
     cfile = open(CodeFile,'w')
-    x86 = open(x86File,'w')
 
     cod=[]
     for i in p[0].code:
@@ -2359,20 +2356,12 @@ def generate_code(p):
     for i in cod:
         cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
         x=x+1
-    
-    afile.write("//Code For " + FileName + "\n")
-    x=1
-    for i in cod:
-        t=len(i) - len(i.lstrip(' '))
-        afile.write('{0:3}'.format(x) + ":: " + t*" " + acode(parsequad(i)) + "\n")
-        x=x+1
 
-    x86.write("; Code For " + FileName + "\n")
-    x86.write("section .text\n")
-    x=1
-    for i in cod:
-        x86.write(asm(parsequad(i))+"\n")
-        x=x+1
+    f = open("code.obj", "wb")
+    pickle.dump(cod,f)
+
+    
+
 
 def scope_table_graph(S):
     open('scope.gz','w').write("digraph ethane{ rankdir=LR {graph [ordering=\"out\"];node [fontsize=20 width=0.25 shape=box ]; ")
@@ -2460,3 +2449,5 @@ if __name__ == "__main__":
     for idx, table in  enumerate( scopeTableList):
         f.write("                       " + "        " + str(idx) + "             " +  str(table.parent) + "\n" )
     
+    f = open("sym_table.obj", "wb")
+    pickle.dump(scopeTableList,f)
