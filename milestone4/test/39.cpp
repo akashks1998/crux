@@ -10,6 +10,7 @@ int a(int b[10],int c, float d){
         while(i<c-1){
           i++;
           b[i]=(i>>2);
+          c=c|c;
           if(i==5){
             break;
           }else{
@@ -24,7 +25,7 @@ int a(int b[10],int c, float d){
 }
 int main(){
   int b[10],c=9,k;
-  k=sizeof(c);
+   k=sizeof(int);
   float d=1.0;
   switch(k){
     case 1:

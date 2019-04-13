@@ -746,7 +746,7 @@ def p_unary_expression_0(p):
 
     p[0].data = assigner(p,1)
     if("|" in p[0].data["type"] and p[0].data["type"][-1] == "a"):
-        if p[0].data["type"][ : - len(p[0].data["meta"]) ] == p[0].data["element_type"]:
+        if p[0].data["type"][ : - len(p[0].data["meta"]) ].rstrip("|") == p[0].data["element_type"]:
             pass
         else:
             report_error("Array not called upto end", p.lineno(0))
