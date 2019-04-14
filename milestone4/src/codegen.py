@@ -303,6 +303,8 @@ class CodeGenerator:
             self.op_logical_dual(instr["arg"],instr["ins"])
         elif instr["ins"] in ["~","!"]:
             self.op_unary(instr["arg"])
+        elif instr["ins"] =="label":
+            self.op_label(instr["arg"])
 
 
 if __name__ == "__main__":
