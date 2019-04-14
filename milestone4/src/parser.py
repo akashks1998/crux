@@ -1908,7 +1908,7 @@ def p_selection_statement_1(p):
         report_error("only boolean and int allowed in if expr", p.lineno(0))
     p[0].after = getnewlabel("single_if_after")
     p[0].data=assigner(p,6)
-    p[0].code = p[3].code + [quad("ifnz", [p[3].place, p[0].after, p[3].place, p[0].after, ""], "ifnz " + p[3].place + " goto->" + p[0].after)] + p[6].code +  [quad("label", [p[0].after], p[0].after + " : ")]
+    p[0].code = p[3].code + [quad("ifz", [p[3].place, p[0].after, p[3].place, p[0].after, ""], "ifz " + p[3].place + " goto->" + p[0].after)] + p[6].code +  [quad("label", [p[0].after], p[0].after + " : ")]
 
 def p_selection_statement_2(p): 
     '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope  ''' 
@@ -1923,7 +1923,7 @@ def p_selection_statement_2(p):
     p[0].else_ = getnewlabel("ifelse_else_")
     p[0].after = getnewlabel("ifelse_after")
     retType(p,6,10)
-    l = [quad("ifnz",[p[3].place,  p[0].else_, ""],"ifnz " + p[3].place + " goto->" + p[0].else_)] + p[6].code + [quad("goto", [p[0].after,"",""], "goto->" + p[0].after)]
+    l = [quad("ifz",[p[3].place,  p[0].else_, ""],"ifz " + p[3].place + " goto->" + p[0].else_)] + p[6].code + [quad("goto", [p[0].after,"",""], "goto->" + p[0].after)]
     p[0].code = p[3].code + [quad("label",[p[0].before,"",""],p[0].before + ":")] + ["    " + i for i in l] + [quad("label", [p[0].else_,"",""], p[0].else_ + ":")] \
          + ["    " + i for i in p[10].code] + [quad("label",[p[0].after,"",""],p[0].after + ":")]
 

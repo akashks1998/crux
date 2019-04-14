@@ -1,60 +1,165 @@
-	.file	"m.cpp"
-	.text
-	.section	.rodata
-.LC0:
-	.string	"hi"
-	.text
-	.globl	main
-	.type	main, @function
+	 .data
+	 fmt_int: .string "%d\n" 
+	 fmt_char: .string "%c\n" 
+	 .text
+	 .global main
+	 .type main, @function
+	 mov $4, %eax
 main:
-.LFB0:
-	.cfi_startproc
-	leal	4(%esp), %ecx
-	.cfi_def_cfa 1, 0
-	andl	$-16, %esp
-	pushl	-4(%ecx)
-	pushl	%ebp
-	.cfi_escape 0x10,0x5,0x2,0x75,0
-	movl	%esp, %ebp
-	pushl	%ebx
-	pushl	%ecx
-	.cfi_escape 0xf,0x3,0x75,0x78,0x6
-	.cfi_escape 0x10,0x3,0x2,0x75,0x7c
-	subl	$16, %esp
-	call	__x86.get_pc_thunk.ax
-	addl	$_GLOBAL_OFFSET_TABLE_, %eax
-	movl	$10, -12(%ebp)
-	subl	$12, %esp
-	leal	.LC0@GOTOFF(%eax), %edx
-	pushl	%edx
-	movl	%eax, %ebx
-	call	printf@PLT
-	addl	$16, %esp
-	movl	$0, %eax
-	leal	-8(%ebp), %esp
-	popl	%ecx
-	.cfi_restore 1
-	.cfi_def_cfa 1, 0
-	popl	%ebx
-	.cfi_restore 3
-	popl	%ebp
-	.cfi_restore 5
-	leal	-4(%ecx), %esp
-	.cfi_def_cfa 4, 4
-	ret
-	.cfi_endproc
-.LFE0:
-	.size	main, .-main
-	.section	.text.__x86.get_pc_thunk.ax,"axG",@progbits,__x86.get_pc_thunk.ax,comdat
-	.globl	__x86.get_pc_thunk.ax
-	.hidden	__x86.get_pc_thunk.ax
-	.type	__x86.get_pc_thunk.ax, @function
-__x86.get_pc_thunk.ax:
-.LFB1:
-	.cfi_startproc
-	movl	(%esp), %eax
-	ret
-	.cfi_endproc
-.LFE1:
-	.ident	"GCC: (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0"
-	.section	.note.GNU-stack,"",@progbits
+	 push %ebp
+	 mov %esp, %ebp
+	 sub $88, %esp
+	 push %ebx
+	 push %ecx
+	 push %edx
+	 push %esi
+	 push %edi
+	 mov $10, %eax
+	 mov %eax , -4(%ebp)
+	 mov -4(%ebp), %eax
+	 mov %eax , -8(%ebp)
+	 mov $0, %eax
+	 mov %eax , -12(%ebp)
+	 mov -12(%ebp), %eax
+	 mov %eax , -16(%ebp)
+for_begin10:
+	 mov $5, %eax
+	 mov %eax , -20(%ebp)
+	 mov -16(%ebp), %eax
+	 mov -20(%ebp), %ebx
+	 cmp %ebx, %eax
+	 mov $0, %ecx
+	 setne %cl
+	 mov %ecx , -24(%ebp)
+	 mov -24(%ebp), %eax
+	 cmp $0 , %eax 
+	 je for_after10
+	 mov -8(%ebp), %eax
+	 mov %eax , -32(%ebp)
+	 mov -8(%ebp), %eax
+	 inc  %eax
+	 mov %eax , -8(%ebp)
+	 mov -8(%ebp), %eax
+	 push %ebp
+	 mov %esp,%ebp
+	 push %eax
+	 push $fmt_int
+	 call printf
+	 add  $8, %esp
+	 mov %ebp, %esp
+	 pop %ebp
+for_continue10:
+	 mov -16(%ebp), %eax
+	 mov %eax , -28(%ebp)
+	 mov -16(%ebp), %eax
+	 inc  %eax
+	 mov %eax , -16(%ebp)
+	 jmp for_begin10
+for_after10:
+	 mov $17, %eax
+	 mov %eax , -40(%ebp)
+	 mov -8(%ebp), %eax
+	 mov -40(%ebp), %ebx
+	 cmp %ebx, %eax
+	 mov $0, %ecx
+	 setl %cl
+	 mov %ecx , -44(%ebp)
+ifelse_before0:
+	 mov -44(%ebp), %eax
+	 cmp $0 , %eax 
+	 je ifelse_else_0
+	 mov $1, %eax
+	 mov %eax , -48(%ebp)
+	 mov -48(%ebp), %eax
+	 mov %eax , -36(%ebp)
+	 jmp ifelse_after0
+ifelse_else_0:
+	 mov $2, %eax
+	 mov %eax , -52(%ebp)
+	 mov -52(%ebp), %eax
+	 mov %eax , -36(%ebp)
+ifelse_after0:
+	 mov -36(%ebp), %eax
+	 push %ebp
+	 mov %esp,%ebp
+	 push %eax
+	 push $fmt_int
+	 call printf
+	 add  $8, %esp
+	 mov %ebp, %esp
+	 pop %ebp
+	 mov $7, %eax
+	 mov %eax , -56(%ebp)
+	 mov -8(%ebp), %eax
+	 mov -56(%ebp), %ebx
+	 cmp %ebx, %eax
+	 mov $0, %ecx
+	 setl %cl
+	 mov %ecx , -60(%ebp)
+ifelse_before1:
+	 mov -60(%ebp), %eax
+	 cmp $0 , %eax 
+	 je ifelse_else_1
+	 mov $2, %eax
+	 mov %eax , -64(%ebp)
+	 mov -64(%ebp), %eax
+	 mov %eax , -36(%ebp)
+	 jmp ifelse_after1
+ifelse_else_1:
+	 mov $1, %eax
+	 mov %eax , -68(%ebp)
+	 mov -68(%ebp), %eax
+	 mov %eax , -36(%ebp)
+ifelse_after1:
+	 mov -36(%ebp), %eax
+	 push %ebp
+	 mov %esp,%ebp
+	 push %eax
+	 push $fmt_int
+	 call printf
+	 add  $8, %esp
+	 mov %ebp, %esp
+	 pop %ebp
+	 mov $15, %eax
+	 mov %eax , -72(%ebp)
+	 mov -8(%ebp), %eax
+	 mov -72(%ebp), %ebx
+	 cmp %ebx, %eax
+	 mov $0, %ecx
+	 setl %cl
+	 mov %ecx , -76(%ebp)
+ifelse_before2:
+	 mov -76(%ebp), %eax
+	 cmp $0 , %eax 
+	 je ifelse_else_2
+	 mov $2, %eax
+	 mov %eax , -80(%ebp)
+	 mov -80(%ebp), %eax
+	 mov %eax , -36(%ebp)
+	 jmp ifelse_after2
+ifelse_else_2:
+	 mov $1, %eax
+	 mov %eax , -84(%ebp)
+	 mov -84(%ebp), %eax
+	 mov %eax , -36(%ebp)
+ifelse_after2:
+	 mov -36(%ebp), %eax
+	 push %ebp
+	 mov %esp,%ebp
+	 push %eax
+	 push $fmt_int
+	 call printf
+	 add  $8, %esp
+	 mov %ebp, %esp
+	 pop %ebp
+	 mov $0, %eax
+	 mov %eax , -88(%ebp)
+	 mov -88(%ebp), %eax
+	 pop %ebx
+	 pop %ecx
+	 pop %edx
+	 pop %esi
+	 pop %edi
+	 mov %ebp, %esp
+	 pop %ebp
+	 ret 

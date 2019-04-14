@@ -98,7 +98,7 @@ def loadAddr(reg, var):
         base = info["base"]
         if "@" in str(offset):
             loadVar(reg,offset)
-            code.append("lea " + "(%ebp , " + reg + ", 1), " + "%" + reg )
+            code.append("lea " + "(%ebp , %" + reg + ", 1), " + "%" + reg )
         elif str(base) == "rbp":
             # offset as integer
             code.append("lea " + str(-offset) + "(%ebp), " + "%" + reg )
@@ -116,9 +116,9 @@ def loadVar(reg,var):
         if "@" in str(offset):
             loadVar(reg,offset)
             if "|" in type_ or type_ in ["int", "float"]:
-                code.append("mov "  + "(%ebp , " + reg + ", 1), " + "%" + reg )
+                code.append("mov "  + "(%ebp , %" + reg + ", 1), " + "%" + reg )
             elif type_ == "char":
-                code.append("movb " + "(%ebp , " + reg + ", 1), " + "%" + reg )
+                code.append("movb " + "(%ebp , %" + reg + ", 1), " + "%" + reg )
             else:
                 print( " class error in store")
                 exit()  
@@ -167,10 +167,37 @@ def storeVar(reg,var):
         exit()
 
 class CodeGenerator:
-    def gen_start_template(self):
-        print()
-        print("section .text")
-        print("global main")
+    def __init__(self):
+        code.append(".data")
+        code.append('fmt_int: .string "%d\\n" ')
+        code.append('fmt_char: .string "%c\\n" ')
+        code.append(".text")
+        code.append(".global main|")
+        code.append(".type main|, @function") 
+
+    def op_print_int(self, instr):
+        to_print_int = instr[0]
+        loadVar("eax",to_print_int)
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        code.append("push %eax")
+        code.append("push $fmt_int")
+        code.append("call printf")
+        code.append("add  $8, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
+    
+    def op_print_char(self, instr):
+        to_print_int = instr[0]
+        loadVar("eax",to_print_int)
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        code.append("push %eax")
+        code.append("push $fmt_char")
+        code.append("call printf")
+        code.append("add  $8, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
 
     def op_add(self, instr):
         out , inp1, inp2 = instr
@@ -264,19 +291,20 @@ class CodeGenerator:
         out , inp1, inp2 = instr
         loadVar("eax", inp1)
         loadVar("ebx", inp2)
-        code.append("cmp %eax, %ebx")
+        code.append("cmp %ebx, %eax")
+        code.append("mov $0, %ecx")
         if comp == "<":
-            code.append("setl %ecx")
+            code.append("setl %cl")
         elif comp == ">":
-            code.append("setg %ecx")
+            code.append("setg %cl")
         elif comp == "<=":
-            code.append("setle %ecx")            
+            code.append("setle %cl")            
         elif comp == ">=":   
-            code.append("setge %ecx")            
+            code.append("setge %cl")            
         elif comp == "==":
-            code.append("sete %ecx")            
+            code.append("sete %cl")            
         elif comp == "!=":
-            code.append("setne %ecx")
+            code.append("setne %cl")
 
         storeVar("ecx", out)
         
@@ -298,22 +326,29 @@ class CodeGenerator:
             info = checkVar(out, "all")["var"] if out.split('@')[0]=="tmp" else checkVar(out.split('@')[0], int(out.split('@')[1]))
             type_ = info["type"]
             if type_ == "char":
-                code.append("movb $" + str(ord(inp)) + ", eax")
+                code.append("movb $" + str(ord(inp)) + ",%eax")
                 storeVar("eax", out)
             else:
-                code.append("mov $" + inp + ", eax")
+                code.append("mov $" + inp + ", %eax")
                 storeVar("eax", out)
 
     def op_label(self, instr):
         label = instr[0]
         code.append(str(label) + ":")
 
-    def op_if(self, instr):
+    def op_ifnz(self, instr):
         var = instr[0]
         label = instr[1]
         loadVar("eax", var)
         code.append("cmp $0 , %eax ")
         code.append("jne " + label)
+    
+    def op_ifz(self, instr):
+        var = instr[0]
+        label = instr[1]
+        loadVar("eax", var)
+        code.append("cmp $0 , %eax ")
+        code.append("je " + label)
 
     def op_goto(self, instr):
         label = instr[0]
@@ -350,7 +385,7 @@ class CodeGenerator:
     
     def op_removeParam(self, instr):
         pop_size = instr[0]
-        if not pop_size.is_digit():
+        if not pop_size.isdigit():
             print(" pop size should be int")
             exit()
 
@@ -358,12 +393,12 @@ class CodeGenerator:
 
     def op_beginFunc(self, instr):
         expand_size = instr[0]
-        if not expand_size.is_digit():
+        if not expand_size.isdigit():
             print(" expand size should be int")
             exit()
         code.append("push %ebp")
-        code.append("mov %esp %ebp")
-        code.append("sub " + expand_size + " %esp")
+        code.append("mov %esp, %ebp")
+        code.append("sub $" + expand_size + ", %esp")
         code.append("push %ebx")
         code.append("push %ecx")
         code.append("push %edx")
@@ -376,15 +411,15 @@ class CodeGenerator:
         code.append("pop %ebx")
         code.append("pop %ecx")
         code.append("pop %edx")
-        code.append("pop %esix")
+        code.append("pop %esi")
         code.append("pop %edi")
-        code.append("mov %ebp %esp")
+        code.append("mov %ebp, %esp")
         code.append("pop %ebp")
         code.append("ret ")        
 
     def gen_code(self, instr):
         if(instr["ins"]=="+"):
-            self.op_add(instr["arg"])
+            self.op_add(instr["arg"]) 
         elif instr["ins"] == "-":
                 self.op_sub(instr["arg"])
         elif instr["ins"] == "*":
@@ -409,18 +444,41 @@ class CodeGenerator:
             self.op_unary(instr["arg"])
         elif instr["ins"] =="label":
             self.op_label(instr["arg"])
+        elif instr["ins"] =="ifnz":
+            self.op_ifnz(instr["arg"])
+        elif instr["ins"] =="ifz":
+            self.op_ifz(instr["arg"])
+        elif instr["ins"] =="lea":
+            self.op_lea(instr["arg"])
+        elif instr["ins"] in ["<",">","==","<=",">=","!="]:
+            self.op_comp(instr["arg"],instr["ins"])
+        elif instr["ins"] =="goto":
+            self.op_goto(instr["arg"])
+        elif instr["ins"] =="PushParam":
+            self.op_pushParam(instr["arg"])
+        elif instr["ins"] =="Fcall":
+            self.op_fcall(instr["arg"])
+        elif instr["ins"] =="BeginFunc":
+            self.op_beginFunc(instr["arg"])
+        elif instr["ins"]=="return":
+            self.op_return(instr["arg"])
+        elif instr["ins"]=="print_int":
+            self.op_print_int(instr["arg"])
+        elif instr["ins"]=="print_char":
+            self.op_print_char(instr["arg"])
 
 
 if __name__ == "__main__":
     afile = open(AddressFile,'w')
     afile.write("//Code For " + FileName + "\n")
-    x86_compiler=CodeGenerator()    
+    x86_compiler=CodeGenerator()
     for i in _3accode:
         i=i.replace(' ','')
         z=[y for y in i.split("$") if y != '']
         x={"ins":z[1].strip(),"arg":z[2:]}
         x86_compiler.gen_code(x)
     for c in code:
+        c=c.replace('|','').replace('#', '')
         if c[-1]==':':
             print(c)
         else:
