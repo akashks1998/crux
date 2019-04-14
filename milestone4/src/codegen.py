@@ -350,7 +350,7 @@ class CodeGenerator:
     
     def op_removeParam(self, instr):
         pop_size = instr[0]
-        if not pop_size.is_digit():
+        if not pop_size.isdigit():
             print(" pop size should be int")
             exit()
 
@@ -358,12 +358,12 @@ class CodeGenerator:
 
     def op_beginFunc(self, instr):
         expand_size = instr[0]
-        if not expand_size.is_digit():
+        if not expand_size.isdigit():
             print(" expand size should be int")
             exit()
         code.append("push %ebp")
-        code.append("mov %esp %ebp")
-        code.append("sub " + expand_size + " %esp")
+        code.append("mov %esp, %ebp")
+        code.append("sub $" + expand_size + ", %esp")
         code.append("push %ebx")
         code.append("push %ecx")
         code.append("push %edx")
@@ -376,9 +376,9 @@ class CodeGenerator:
         code.append("pop %ebx")
         code.append("pop %ecx")
         code.append("pop %edx")
-        code.append("pop %esix")
+        code.append("pop %esi")
         code.append("pop %edi")
-        code.append("mov %ebp %esp")
+        code.append("mov %ebp, %esp")
         code.append("pop %ebp")
         code.append("ret ")        
 
@@ -421,6 +421,12 @@ class CodeGenerator:
             self.op_lea(instr["arg"])
         elif instr["ins"] =="PushParam":
             self.op_pushParam(instr["arg"])
+        elif instr["ins"] =="Fcall":
+            self.op_fcall(instr["arg"])
+        elif instr["ins"] =="BeginFunc":
+            self.op_beginFunc(instr["arg"])
+        elif instr["ins"]=="return":
+            self.op_return(instr["arg"])
 
 
 if __name__ == "__main__":
