@@ -21,6 +21,8 @@ keywords = {
     'if':'IF',
     'int':'INT',
     'new':'NEW',
+    'print_int' : 'PRINTINT',
+    'print_char' : 'PRINTCHAR',
     'return':'RETURN',
     'sizeof':'SIZEOF',
     'switch':'SWITCH',

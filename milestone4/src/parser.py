@@ -297,6 +297,7 @@ def updateVar(identifier, val,scope=None):
 def checkVar(identifier,scopeId="**", search_in_class = False):
     global scopeTableList
     global currentScopeTable
+    identifier = identifier if identifier.split('@')[0]=="tmp" else identifier.split('@')[0]
     if scopeId == "global":
         if scopeTableList[0].lookUp(identifier):
             return scopeTableList[0].getDetail(identifier)
@@ -1837,6 +1838,8 @@ def p_statement(p):
                  | iteration_statement 
                  | jump_statement 
                  | declaration_statement 
+                 | print_int 
+                 | print_char
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -1849,6 +1852,34 @@ def p_statement(p):
         p[0].code = p[2].code
         p[0].place = p[2].place
 
+def p_print_int(p):
+    '''print_int : PRINTINT LPAREN  expression RPAREN SEMICOLON '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].code = p[3].code + [quad("print_int", [p[3].place], "print_int " + p[3].place  )]
+
+    info = checkVar(p[3].place) 
+    type_  = info["var"]["type"]
+    if type_ in ["int", "char"] :
+        pass
+    elif "|" in type_ and type_[-1] == "p" :
+        pass
+    else:
+        report_error("Only int char and pointer allowed in print int", p.lineno(0))
+
+def p_print_char(p):
+    '''print_char : PRINTCHAR LPAREN expression RPAREN SEMICOLON '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].code = p[3].code + [quad("print_char", [p[3].place], "print_char " + p[3].place  )]
+
+    info = checkVar(p[3].place) 
+    type_  = info["var"]["type"]
+    if type_ in ["char"] :
+        pass
+    else:
+        report_error("Only char allowed in print char", p.lineno(0))
+
 def p_jump_statement(p): 
     '''jump_statement : BREAK SEMICOLON 
                       | CONTINUE SEMICOLON 
@@ -1858,9 +1889,7 @@ def p_jump_statement(p):
     p[0].code = [p[1].data]
 
 def p_jump_statement1(p):
-    '''jump_statement : RETURN expression SEMICOLON 
-                      | RETURN SEMICOLON 
-    ''' 
+    ''' jump_statement : RETURN expression SEMICOLON  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
     if len(p)==4:

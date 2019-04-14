@@ -382,10 +382,6 @@ class CodeGenerator:
         code.append("pop %ebp")
         code.append("ret ")        
 
-    
-        
-
-
     def gen_code(self, instr):
         if(instr["ins"]=="+"):
             self.op_add(instr["arg"])
