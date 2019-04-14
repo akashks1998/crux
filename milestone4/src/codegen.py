@@ -10,7 +10,7 @@ code = pickle.load(f)
 AddressFile = "adr"
 FileName = ""
 
-from symbolTable import SymbolTable
+from .symbolTable import SymbolTable
 
 code = []
 
@@ -101,8 +101,14 @@ def loadVar(reg,var):
         base = info["base"]
         type_ = info["type"]
         if "@" in str(offset):
-            # offset in variable
-            pass
+            loadVar(reg,offset)
+            if "|" in type_ or type_ in ["int", "float"]:
+                code.append("mov "  + "(%ebp , " + reg + ", 1), " + "%" + reg )
+            elif type_ == "char":
+                code.append("movb " + "(%ebp , " + reg + ", 1), " + "%" + reg )
+            else:
+                print( " class error in store")
+                exit()  
         elif str(base) == "rbp":
             # offset as integer
             if "|" in type_ or type_ in ["int", "float"]:
@@ -123,9 +129,17 @@ def storeVar(reg,var):
         info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
         offset = info["offset"]
         base = info["base"]
+        type_=info["type"]
         if "@" in str(offset):
             # offset in variable
-            pass
+            loadVar("edi",offset)
+            if "|" in type_ or type_ in ["int", "float"]:
+                code.append("mov "  + "(%ebp , %edi"  + ", 1), " + "%" + reg )
+            elif type_ == "char":
+                code.append("movb " + "(%ebp , %edi" + ", 1), " + "%" + reg )
+            else:
+                print( " class error in store")
+                exit()  
         elif str(base) == "rbp":
             if "|" in type_ or type_ in ["int", "float"]:
                 code.append("mov " + "%" + reg + " , " + str(-offset) + "(%ebp)" )
