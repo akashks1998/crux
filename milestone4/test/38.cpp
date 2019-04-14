@@ -1,6 +1,7 @@
 
 int main(){
-  int a[10],b[10];
-  int d=a[b[1]];
+  int *b;
+  int d=*b;
+  int* e=&d;
   return 0;
 }

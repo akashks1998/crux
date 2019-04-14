@@ -98,7 +98,7 @@ def loadAddr(reg, var):
         base = info["base"]
         if "@" in str(offset):
             loadVar(reg,offset)
-            code.append("lea " + "(%ebp , " + reg + ", 1), " + "%" + reg )
+            code.append("lea " + "(%ebp , %" + reg + ", 1), " + "%" + reg )
         elif str(base) == "rbp":
             # offset as integer
             code.append("lea " + str(-offset) + "(%ebp), " + "%" + reg )
@@ -116,9 +116,9 @@ def loadVar(reg,var):
         if "@" in str(offset):
             loadVar(reg,offset)
             if "|" in type_ or type_ in ["int", "float"]:
-                code.append("mov "  + "(%ebp , " + reg + ", 1), " + "%" + reg )
+                code.append("mov "  + "(%ebp , %" + reg + ", 1), " + "%" + reg )
             elif type_ == "char":
-                code.append("movb " + "(%ebp , " + reg + ", 1), " + "%" + reg )
+                code.append("movb " + "(%ebp , %" + reg + ", 1), " + "%" + reg )
             else:
                 print( " class error in store")
                 exit()  
@@ -298,10 +298,10 @@ class CodeGenerator:
             info = checkVar(out, "all")["var"] if out.split('@')[0]=="tmp" else checkVar(out.split('@')[0], int(out.split('@')[1]))
             type_ = info["type"]
             if type_ == "char":
-                code.append("movb $" + str(ord(inp)) + ", eax")
+                code.append("movb $" + str(ord(inp)) + ",%eax")
                 storeVar("eax", out)
             else:
-                code.append("mov $" + inp + ", eax")
+                code.append("mov $" + inp + ", %eax")
                 storeVar("eax", out)
 
     def op_label(self, instr):
@@ -367,18 +367,30 @@ class CodeGenerator:
             self.op_unary(instr["arg"])
         elif instr["ins"] =="label":
             self.op_label(instr["arg"])
+        elif instr["ins"] =="lea":
+            self.op_lea(instr["arg"])
+        elif instr["ins"] in ["<",">","==","<=",">=","!="]:
+            self.op_comp(instr["arg"],instr["ins"])
+        elif instr["ins"] =="goto":
+            self.op_lea(instr["arg"])
+        elif instr["ins"] =="PushParam":
+            self.op_pushParam(instr["arg"])
 
 
 if __name__ == "__main__":
     afile = open(AddressFile,'w')
     afile.write("//Code For " + FileName + "\n")
-    x86_compiler=CodeGenerator()    
+    x86_compiler=CodeGenerator()
+    code.append(".text")
+    code.append(".global main|") 
+    code.append(".type main|, @function") 
     for i in _3accode:
         i=i.replace(' ','')
         z=[y for y in i.split("$") if y != '']
         x={"ins":z[1].strip(),"arg":z[2:]}
         x86_compiler.gen_code(x)
     for c in code:
+        c=c.replace('|','')
         if c[-1]==':':
             print(c)
         else:
