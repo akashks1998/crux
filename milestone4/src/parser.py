@@ -772,15 +772,7 @@ def p_unary_expression(p):
         p[0].data=assigner(p,2)
         p[0].place=p[2].place
         if op_allowed(p[1].data[0],p[2].data["type"]):
-            one=OBJ()
-            one.data["type"]="int"
-            one.place=getnewvar("int")
-            x=operator(p[1].data[0],p[2],one)
-            if p[2].data["type"]=="char":
-                y=cast_string(x["place"],"int",p[2].data["type"])
-            else:
-                y=x
-            p[0].code=p[2].code+[quad("eq",[one.place,"1",""],one.place+" = 1")]+y["code"]+[quad("eq",[p[0].place,y["place"],""],p[0].place+"="+y["place"])]
+            p[0].code=p[2].code + [ quad( p[1].data, [p[2].place] , p[2].place + p[1].data )]
         else:
             report_error("This unary operation is not allowed with given type", p.lineno(1))
     elif len(p)==5:
@@ -999,19 +991,10 @@ def p_postfix_expression_8(p):
 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].place = p[1].place
     p[0].data=assigner(p,1)
-    p[0].place=p[1].place
+    p[0].place=getnewvar("int")
     if op_allowed(p[2].data[0],p[1].data["type"]):
-        one=OBJ()
-        one.data["type"]="int"
-        one.place=getnewvar("int")
-        x=operator(p[2].data[0],p[1],one)
-        if p[1].data["type"]=="char":
-            y=cast_string(x["place"],"int",p[1].data["type"])
-        else:
-            y=x
-        p[0].code=p[1].code+[quad("eq",[one.place, "1", ""],one.place+" = 1")]+y["code"]+[quad("eq",[p[0].place, y["place"]],p[0].place+"="+y["place"])]
+        p[0].code=p[1].code + [ quad("eq", [ p[0].place, p[1].place ], p[0].place +  " =  " + p[1].place )] + [ quad( p[2].data, [p[1].place] , p[1].place + p[2].data )]
     else:
         report_error("This unary operation is not allowed with given type", p.lineno(1))
     p[0].data=assigner(p,1)
@@ -1896,14 +1879,22 @@ def p_selection_statement_1(p):
     '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope  ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)  
+    info = checkVar(p[3].place)["var"]
+    if info["type"] != "int":
+        report_error("only boolean and int allowed in if expr", p.lineno(0))
     p[0].after = getnewlabel("single_if_after")
     p[0].data=assigner(p,6)
-    p[0].code = p[3].code + [quad("ifnz", [p[3].place, p[0].after, ""], "ifnz " + p[3].place + " goto->" + p[0].after)] + p[6].code +  [quad("label", [p[0].after], p[0].after + " : ")]
+    p[0].code = p[3].code + [quad("ifnz", [p[3].place, p[0].after, p[3].place, p[0].after, ""], "ifnz " + p[3].place + " goto->" + p[0].after)] + p[6].code +  [quad("label", [p[0].after], p[0].after + " : ")]
 
 def p_selection_statement_2(p): 
     '''selection_statement : IF LPAREN expression  RPAREN push_scope compound_statement pop_scope ELSE push_scope compound_statement pop_scope  ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)  
+    p[0].parse=f(p) 
+
+    info = checkVar(p[3].place)["var"]
+    if info["type"] != "int":
+        report_error("only boolean and int allowed in if expr", p.lineno(0))
+
     p[0].before = getnewlabel("ifelse_before")
     p[0].else_ = getnewlabel("ifelse_else_")
     p[0].after = getnewlabel("ifelse_after")
@@ -1931,7 +1922,7 @@ def p_selection_statement_3(p):
     place = p[3].place
     if p[3].data["type"] == "char":
         tmp = getnewvar("int")
-        p[0].code = [quad("char_to_int",[tmp, place, ""],tmp + " = char_to_int " + place)]
+        p[0].code = [quad("char_to_int",[tmp, place, ""],tmp + " = " + place)]
         place = tmp
     default_label = p[0].after
     for idx,v in enumerate([t["value"] for t in p[7].code]):
@@ -2363,7 +2354,11 @@ def generate_code(p):
     cfile.write("//Code For " + FileName + "\n")
     x=1
     for i in cod:
-        # cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
+        cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
+        x=x+1
+
+    x=1
+    for i in cod:
         cfile.write('{0:3}'.format(x) + "::" + i + "\n")
         x=x+1
 
