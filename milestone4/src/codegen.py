@@ -329,16 +329,62 @@ class CodeGenerator:
         info = checkVar(inp, "all")["var"] if inp.split('@')[0]=="tmp" else checkVar(inp.split('@')[0], int(inp.split('@')[1]))
         if "|" in info["type"] and info["type"][-1] == "a":
             # this is array
-            pass
+            loadAddr("eax", inp)
+            code.append("push %eax")
         elif "|" in info["type"]:
-            # this is pointe
-            pass
+            # this is pointer
+            loadVar("eax", inp)
+            code.append("push %eax")
         elif info["type"] in ["int", "char", "float"]:
-            # this is basic type
-            pass
+            loadVar("eax", inp)
+            code.append("push %eax")
         else:
             # this is class
+            # to do
             pass
+
+    def op_fcall(self, instr):
+        out, label = instr
+        code.append("call " + label)
+        storeVar("eax", out)
+    
+    def op_removeParam(self, instr):
+        pop_size = instr[0]
+        if not pop_size.is_digit():
+            print(" pop size should be int")
+            exit()
+
+        code.append("add " + pop_size + " %esp")
+
+    def op_beginFunc(self, instr):
+        expand_size = instr[0]
+        if not expand_size.is_digit():
+            print(" expand size should be int")
+            exit()
+        code.append("push %ebp")
+        code.append("mov %esp %ebp")
+        code.append("sub " + expand_size + " %esp")
+        code.append("push %ebx")
+        code.append("push %ecx")
+        code.append("push %edx")
+        code.append("push %esi")
+        code.append("push %edi")
+
+    def op_return(self, instr):
+        ret_val = instr[0]
+        loadVar("eax", ret_val)
+        code.append("pop %ebx")
+        code.append("pop %ecx")
+        code.append("pop %edx")
+        code.append("pop %esix")
+        code.append("pop %edi")
+        code.append("mov %ebp %esp")
+        code.append("pop %ebp")
+        code.append("ret ")        
+
+    
+        
+
 
     def gen_code(self, instr):
         if(instr["ins"]=="+"):
