@@ -274,6 +274,9 @@ class CodeGenerator:
         code.append("not %eax")
         storeVar("eax", out)
 
+    def op_label(self, instr):
+        label = instr[0]
+        code.append(str(label) + ":")
 
     def gen_code(self, instr):
         if(instr["ins"]=="+"):
@@ -300,10 +303,6 @@ class CodeGenerator:
             self.op_logical_dual(instr["arg"],instr["ins"])
         elif instr["ins"] in ["~","!"]:
             self.op_unary(instr["arg"])
-
-
-
-
 
 
 if __name__ == "__main__":
