@@ -213,6 +213,18 @@ class CodeGenerator:
         loadVar("cl", inp2)
         code.append("shr %cl, %eax")
         storeVar("eax", out)
+    
+    def op_inc(self, instr):
+        inp = instr[0]
+        loadVar("eax", inp)
+        code.append("inc  %eax")
+        storeVar("eax", inp)
+
+    def op_dec(self, instr):
+        inp = instr[0]
+        loadVar("eax", inp)
+        code.append("dec  %eax")
+        storeVar("eax", inp)
 
     def op_assign(self,instr):
         out , inp = instr
@@ -238,6 +250,32 @@ class CodeGenerator:
             else:
                 code.append("mov $" + inp + ", eax")
                 storeVar("eax", out)
+
+    def op_logical_dual(self, instr, lt):
+        out , inp1, inp2 = instr
+        def log_op(x):
+            d = {
+                    "&" : "and ",
+                    "|" : "or ",
+                    "^" : "xor ",
+                    "&&": "and ",
+                    "||": "or ",
+            }
+            return d[x]
+
+        loadVar("eax", inp1)
+        loadVar("ebx", inp2)
+        code.append(log_op(lt) +  " %ebx, %eax")
+        storeVar("eax", out)
+        
+
+    def op_unary(self, instr):
+        out , inp = instr
+        loadVar("eax", inp)
+        code.append("not %eax")
+        storeVar("eax", out)
+
+
 
 
 
