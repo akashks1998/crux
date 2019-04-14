@@ -275,7 +275,9 @@ class CodeGenerator:
         code.append("not %eax")
         storeVar("eax", out)
 
-
+    def op_label(self, instr):
+        label = instr[0]
+        code.append(str(label) + ":")
 
 
 
