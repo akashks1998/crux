@@ -35,24 +35,17 @@ main:
 	subl	$16, %esp
 	call	__x86.get_pc_thunk.ax
 	addl	$_GLOBAL_OFFSET_TABLE_, %eax
-	movl	$1, -16(%ebp)
-	addl	$1, -16(%ebp)
-	movl	-16(%ebp), %eax
-	movl	%eax, -12(%ebp)
-	movl	-16(%ebp), %eax
-	leal	1(%eax), %edx
-	movl	%edx, -16(%ebp)
-	movl	%eax, -8(%ebp)
-	pushl	-16(%ebp)
+	movl	$10, -8(%ebp)
+	pushl	-8(%ebp)
 	call	_Z2hii
 	addl	$4, %esp
-	cmpl	$1, -16(%ebp)
+	cmpl	$5, -8(%ebp)
 	jne	.L4
-	movl	$5, -4(%ebp)
-	jmp	.L5
+	cmpl	$5, -8(%ebp)
+	sete	%al
+	movzbl	%al, %eax
+	movl	%eax, -4(%ebp)
 .L4:
-	movl	$7, -16(%ebp)
-.L5:
 	movl	$0, %eax
 	leave
 	.cfi_restore 5

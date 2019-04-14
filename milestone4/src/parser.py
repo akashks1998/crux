@@ -1066,9 +1066,7 @@ def p_unary_expression1(p):
             p[0].data["type"]=p[2].data["type"]+"|p"
 
         p[0].place = getnewvar(p[0].data["type"])
-        p[0].code = p[2].code + [ quad( "&" , [p[0].place, p[2].place , ""], p[0].place + " = "+  p[1].data + " " + p[2].place ) ] 
-
-        
+        p[0].code = p[2].code + [ quad( "lea" , [p[0].place, p[2].place , ""], p[0].place + " = "+  p[1].data + " " + p[2].place ) ]    
     elif p[1].data in ["-", "+"] and p[2].data["type"] in ["int", "float"]:
         p[0].data["type"] = p[2].data["type"]
         if(p[1].data == "+") :
@@ -1319,8 +1317,9 @@ def p_arg_list(p):
     except:
         pass
 
-    offset = -16
+    offset = - 8
     if add_this:
+        # for class function call
         class_name = p[-6]
         class_detail = checkVar(class_name)
         if class_detail == False:
@@ -1339,17 +1338,13 @@ def p_arg_list(p):
     if len(p)==2:
         input_detail=p[1].data
         for each_p in p[1].data[1]:
-            if "is_array" in each_p.keys():
-                new_offset = getnewvar("int")
-                each_p["offset"] = new_offset
-                each_p["base"] = 0
-                
+            if "is_array" in each_p.keys():    
                 updateVar(each_p["name"],each_p)
-                
                 array_addr_temp = getnewvar("int", offset, 4)
                 offset = offset - 4
-                p[0].code = p[0].code  + [ "    " + quad("load",[new_offset, array_addr_temp, "" ], new_offset + " = *(" + array_addr_temp + " ) " ) ] 
-
+                each_p["offset"] = array_addr_temp
+                each_p["base"] = 0
+                p[0].code = p[0].code 
             else:
                 each_p["offset"] = offset
                 offset = offset - each_p["size"]
@@ -1365,7 +1360,7 @@ def p_arg_list(p):
         "body_scope" : currentScopeTable,
         "declaration": True,
         "stack_space" : get_offset(),
-        "parameter_space": (- offset - 16 ),
+        "parameter_space": (- offset - 8 ),
         "saved_register_space" : 40 , # r12 -r15, rbx
         "return_offset" : 4,
         "rbp_offset" : 0
@@ -2284,8 +2279,6 @@ def p_pop_scope(p):
 
 def quad(op, a, statement):
     arg = [ a[i] if i<len(a) else "" for i in range(3) ]
-    if op=="&":
-        op = "load_address"
     if op=="eq":
         if arg[0][0]=="*":
             op = "store"

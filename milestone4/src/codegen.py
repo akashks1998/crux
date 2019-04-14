@@ -93,6 +93,22 @@ def give_asm_op(inst_type):
     }
     return op_dict[inst_type]
 
+def loadAddr(reg, var):
+    global code
+    if "@" in var:
+        info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
+        offset = info["offset"]
+        base = info["base"]
+        if "@" in str(offset):
+            loadVar(reg,offset)
+            code.append("lea " + "(%ebp , " + reg + ", 1), " + "%" + reg )
+        elif str(base) == "rbp":
+            # offset as integer
+            code.append("lea " + str(-offset) + "(%ebp), " + "%" + reg )
+    else:
+        print("Error in loading ")
+        exit()
+
 def loadVar(reg,var):
     global code
     if "@" in var:
@@ -121,7 +137,6 @@ def loadVar(reg,var):
     else:
         print("Error in loading ")
         exit()
-    return code
 
 def storeVar(reg,var):
     global code
@@ -148,12 +163,9 @@ def storeVar(reg,var):
             else:
                 print( " class error in store")
                 exit()                
-
-
     else:
         print("Error in storing")
         exit()
-    return code
 
 def gen_asm_for_one_line(quad):
     code = []
@@ -240,13 +252,54 @@ class CodeGenerator:
         code.append("dec  %eax")
         storeVar("eax", inp)
 
+    def op_logical_dual(self, instr, lt):
+        out , inp1, inp2 = instr
+        def log_op(x):
+            d = {
+                    "&" : "and ",
+                    "|" : "or ",
+                    "^" : "xor ",
+                    "&&": "and ",
+                    "||": "or ",
+            }
+            return d[x]
+
+        loadVar("eax", inp1)
+        loadVar("ebx", inp2)
+        code.append(log_op(lt) +  " %ebx, %eax")
+        storeVar("eax", out)
+        
+    def op_unary(self, instr):
+        out , inp = instr
+        loadVar("eax", inp)
+        code.append("not %eax")
+        storeVar("eax", out)
+
+    def op_comp(self, instr, comp ):
+        out , inp1, inp2 = instr
+        loadVar("eax", inp1)
+        loadVar("ebx", inp2)
+        code.append("cmp %eax, %ebx")
+        if comp == "<":
+            code.append("setl %ecx")
+        elif comp == ">":
+            code.append("setg %ecx")
+        elif comp == "<=":
+            code.append("setle %ecx")            
+        elif comp == ">=":
+            code.append("setge %ecx")            
+        elif comp == "==":
+            code.append("sete %ecx")            
+        elif comp == "!=":
+            code.append("setne %ecx")
+
+        storeVar("ecx", out)
+        
     def op_assign(self,instr):
         out , inp = instr
         if "@" in inp:
             info = checkVar(inp, "all")["var"] if inp.split('@')[0]=="tmp" else checkVar(inp.split('@')[0], int(inp.split('@')[1]))
             type_ = info["type"]
-            offset = info["offset"]
-            base = info["base"]
             if "|" in type_ or type_ in ["int", "char", "float"]:
                 loadVar("eax",inp)
                 storeVar("eax", out)
@@ -265,36 +318,41 @@ class CodeGenerator:
                 code.append("mov $" + inp + ", eax")
                 storeVar("eax", out)
 
-    def op_logical_dual(self, instr, lt):
-        out , inp1, inp2 = instr
-        def log_op(x):
-            d = {
-                    "&" : "and ",
-                    "|" : "or ",
-                    "^" : "xor ",
-                    "&&": "and ",
-                    "||": "or ",
-            }
-            return d[x]
-
-        loadVar("eax", inp1)
-        loadVar("ebx", inp2)
-        code.append(log_op(lt) +  " %ebx, %eax")
-        storeVar("eax", out)
-        
-
-    def op_unary(self, instr):
-        out , inp = instr
-        loadVar("eax", inp)
-        code.append("not %eax")
-        storeVar("eax", out)
-
     def op_label(self, instr):
         label = instr[0]
         code.append(str(label) + ":")
 
+    def op_if(self, instr):
+        var = instr[0]
+        label = instr[1]
+        loadVar("eax", var)
+        code.append("cmp $0 , %eax ")
+        code.append("jne " + label)
 
-
+    def op_goto(self, instr):
+        label = instr[0]
+        code.append("jmp " + label)
+    
+    def op_lea(self, instr):
+        out , inp = instr
+        loadAddr("eax", inp)
+        storeVar("eax", out)
+    
+    def op_pushParam(self, instr):
+        inp = instr[0]
+        info = checkVar(inp, "all")["var"] if inp.split('@')[0]=="tmp" else checkVar(inp.split('@')[0], int(inp.split('@')[1]))
+        if "|" in info["type"] and info["type"][-1] == "a":
+            # this is array
+            pass
+        elif "|" in info["type"]:
+            # this is pointe
+            pass
+        elif info["type"] in ["int", "char", "float"]:
+            # this is basic type
+            pass
+        else:
+            # this is class
+            pass
 
 
 
