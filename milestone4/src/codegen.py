@@ -5,12 +5,9 @@ f = open("sym_table.obj", "rb")
 scopeTableList = pickle.load(f)
 currentScopeTable = 0
 f = open("code.obj", "rb")
-code = pickle.load(f)
-
+_3accode = pickle.load(f)
 AddressFile = "adr"
 FileName = ""
-
-from .symbolTable import SymbolTable
 
 code = []
 
@@ -119,8 +116,10 @@ def loadVar(reg,var):
                 print( " class error in store")
                 exit()  
     else:
-        print("Error in loading ")
-        exit()
+        if var[0]=="'" and var[2]=="'" and len(var)==3:
+            code.append("mov $"+str(ord( var[1]))+" , %" + reg )
+        else:
+            code.append("mov $"+var+" , %" + reg )
     return code
 
 def storeVar(reg,var):
@@ -154,20 +153,6 @@ def storeVar(reg,var):
         print("Error in storing")
         exit()
     return code
-
-def gen_asm_for_one_line(quad):
-    code = []
-    if quad[0] in ["int+", "int-", "int/", "int*"]:
-        # load 2 and 3rd in reg, do compute and store in 1st
-        var = quad[2]
-        code=code+ LoadVar("eax",var)
-        var = quad[3]
-        code=code+ LoadVar("ebx",var)
-        code=code+[give_asm_op(quad[0]) +" eax , ebx"]
-        code=code+StoreVar("eax",quad[1])
-
-        print(code)
-
 
 class CodeGenerator:
     def gen_start_template(self):
@@ -290,6 +275,31 @@ class CodeGenerator:
         storeVar("eax", out)
 
 
+    def gen_code(self, instr):
+        if(instr["ins"]=="+"):
+            self.op_add(instr["arg"])
+        elif instr["ins"] == "-":
+                self.op_sub(instr["arg"])
+        elif instr["ins"] == "*":
+            self.op_mult(instr["arg"])
+        elif instr["ins"] == "/":
+            self.op_div(instr["arg"])
+        elif instr["ins"] == "%":
+            self.op_modulo(instr["arg"])
+        elif instr["ins"] == "<<":
+            self.op_lshift(instr["arg"])
+        elif instr["ins"] == ">>":
+            self.op_rshift(instr["arg"])
+        elif instr["ins"] == "++":
+            self.op_inc(instr["arg"])
+        elif instr["ins"] == "--":
+            self.op_dec(instr["arg"])
+        elif instr["ins"] == "=":
+            self.op_assign(instr["arg"])
+        elif instr["ins"] in ["&&","||","|","&&"]:
+            self.op_logical_dual(instr["arg"],instr["ins"])
+        elif instr["ins"] in ["~","!"]:
+            self.op_unary(instr["arg"])
 
 
 
@@ -299,10 +309,14 @@ class CodeGenerator:
 if __name__ == "__main__":
     afile = open(AddressFile,'w')
     afile.write("//Code For " + FileName + "\n")
-    x=1
-    for i in code:
-        line=len(i) - len(i.lstrip(' '))
-        # afile.write('{0:3}'.format(x) + ":: " + t*" " + acode(parsequad(i)) + "\n")
-        # print(parsequad(i))
-        gen_asm_for_one_line(parsequad(i))
-        x=x+1
+    x86_compiler=CodeGenerator()    
+    for i in _3accode:
+        i=i.replace(' ','')
+        z=[y for y in i.split("$") if y != '']
+        x={"ins":z[1].strip(),"arg":z[2:]}
+        x86_compiler.gen_code(x)
+    for c in code:
+        if c[-1]==':':
+            print(c)
+        else:
+            print("\t",c)
