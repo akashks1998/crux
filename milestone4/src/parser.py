@@ -386,7 +386,8 @@ def p_translation_unit(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     
-    p[0].code = [quad("eq",["heap_ptr@0",str(get_offset()),""],"heap_ptr@0 = "+str(get_offset()))]+ p[1].code.copy()
+    # p[0].code = [quad("eq",["heap_ptr@0",str(get_offset()),""],"heap_ptr@0 = "+str(get_offset()))]+ p[1].code.copy()
+    p[0].code = p[1].code.copy()
 
 def p_declaration_seq(p):
     ''' declaration_seq : declaration_seq declaration
@@ -821,7 +822,7 @@ def p_postfix_expression_2(p):
             array_offset_var = getnewvar("int")
             new_temp = getnewvar("int")
             new_offset = getnewvar("int")
-            final_var = getnewvar(p[1].data["type"], new_offset ,  p[1].data["size"] )
+            final_var = getnewvar(p[0].data["type"], new_offset , get_size(p[0].data["type"]) )
             p[0].code = p[0].code + [ quad("*",[new_temp,to_add_var,str(get_size(p[0].data["type"]))],new_temp + " = " + to_add_var + " * " + str(get_size(p[0].data["type"]))) ]  \
                  + [quad("eq", [array_offset_var, str(array_offset) ] , array_offset_var + " = " + str(array_offset) )] \
                  + [ quad("-",[new_offset, array_offset_var ,new_temp],new_offset + " = " + array_offset_var + " - " + new_temp)] 

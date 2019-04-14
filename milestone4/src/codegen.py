@@ -103,7 +103,7 @@ def loadAddr(reg, var):
             # offset as integer
             code.append("lea " + str(-offset) + "(%ebp), " + "%" + reg )
     else:
-        print("Error in loading ")
+        print("Error in loading addr ")
         exit()
 
 def loadVar(reg,var):
@@ -112,31 +112,59 @@ def loadVar(reg,var):
         info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
         offset = info["offset"]
         base = info["base"]
-        type_ = info["type"]
+        type_=info["type"]
         if "@" in str(offset):
-            loadVar(reg,offset)
-            if "|" in type_ or type_ in ["int", "float"]:
-                code.append("mov "  + "(%ebp , %" + reg + ", 1), " + "%" + reg )
-            elif type_ == "char":
-                code.append("movb " + "(%ebp , %" + reg + ", 1), " + "%" + reg )
+            # offset in variable
+            if str(base) == "0":
+                loadVar("esi",offset)
+                if "|" in type_ or type_ in ["int", "float"]:
+                    code.append("mov " + "(%esi)" + ", %" + reg )
+                elif type_ == "char":
+                    code.append("movb " + "(%esi)" + ", %" + reg )
+                else:
+                    print( " class error in load")
+                    exit()
+            elif str(base) == "rbp":
+                loadVar("esi",offset)
+                if "|" in type_ or type_ in ["int", "float"]:
+                    code.append("neg %esi")
+                    code.append("mov "  + "(%ebp , %esi" + ", 1), " + "%" + reg )
+                elif type_ == "char":
+                    code.append("neg %esi")
+                    code.append("movb " + "(%ebp , %esi" + ", 1), " + "%" + reg )
+                else:
+                    print( " class error in load")
+                    exit()  
             else:
-                print( " class error in store")
-                exit()  
-        elif str(base) == "rbp":
-            # offset as integer
-            if "|" in type_ or type_ in ["int", "float"]:
-                code.append("mov " + str(-offset) + "(%ebp), " + "%" + reg )
-            elif type_ == "char":
-                code.append("movb " + str(-offset) + "(%ebp), " + "%" + reg )
+                print("wrong base in load")
+                exit()      
+        else:
+            # offset is int
+            if str(base) == "0":
+                print("error : constant offset with base 0")
+                exit()
+            elif str(base) == "rbp":
+                if "|" in type_ or type_ in ["int", "float"]:
+                    code.append("mov " + str(-offset) + "(%ebp), " + "%" + reg )
+                elif type_ == "char":
+                    code.append("movb " + str(-offset) + "(%ebp), " + "%" + reg )
+                else:
+                    print( " class error in load")
+                    exit()  
             else:
-                print( " class error in store")
-                exit()  
+                print("wrong base in load")
+                exit()         
     else:
         if var[0]=="'" and var[2]=="'" and len(var)==3:
-            code.append("mov $"+str(ord( var[1]))+" , %" + reg )
-        else:
+            # this is char
+            code.append("movb $"+str(ord( var[1]))+" , %" + reg )
+        elif var.isdigit():
             code.append("mov $"+var+" , %" + reg )
+        else:
+            print("error in load")
+            exit()
 
+        
 def storeVar(reg,var):
     global code
     if "@" in var:
@@ -146,22 +174,45 @@ def storeVar(reg,var):
         type_=info["type"]
         if "@" in str(offset):
             # offset in variable
-            loadVar("edi",offset)
-            if "|" in type_ or type_ in ["int", "float"]:
-                code.append("mov "  + "(%ebp , %edi"  + ", 1), " + "%" + reg )
-            elif type_ == "char":
-                code.append("movb " + "(%ebp , %edi" + ", 1), " + "%" + reg )
+            if str(base) == "0":
+                loadVar("edi",offset)
+                if "|" in type_ or type_ in ["int", "float"]:
+                    code.append("mov " + "%" + reg + ", (%edi)" )
+                elif type_ == "char":
+                    code.append("movb " + "%" + reg + ", (%edi)" )
+                else:
+                    print( " class error in store")
+                    exit()
+            elif str(base) == "rbp":
+                loadVar("edi",offset)
+                if "|" in type_ or type_ in ["int", "float"]:
+                    code.append("neg %edi") # check base
+                    code.append("mov " + "%" + reg + ", (%ebp , %edi"  + ", 1)" )
+                elif type_ == "char":
+                    code.append("neg %edi")
+                    code.append("movb " + "%" + reg + ", (%ebp , %edi"  + ", 1)" )
+                else:
+                    print( " class error in store")
+                    exit()
             else:
-                print( " class error in store")
-                exit()  
-        elif str(base) == "rbp":
-            if "|" in type_ or type_ in ["int", "float"]:
-                code.append("mov " + "%" + reg + " , " + str(-offset) + "(%ebp)" )
-            elif type_ == "char":
-                code.append("movb " + "%" + reg + " , " + str(-offset) + "(%ebp)" )
+                print("wrong base in store")
+                exit()      
+        else:
+            # offset is int
+            if str(base) == "0":
+                print("error : constant offset with base 0")
+                exit()
+            elif str(base) == "rbp":
+                if "|" in type_ or type_ in ["int", "float"]:
+                    code.append("mov " + "%" + reg + " , " + str(-offset) + "(%ebp)" )
+                elif type_ == "char":
+                    code.append("movb " + "%" + reg + " , " + str(-offset) + "(%ebp)" )
+                else:
+                    print( " class error in store")
+                    exit()  
             else:
-                print( " class error in store")
-                exit()                
+                print("wrong base in store")
+                exit()         
     else:
         print("Error in storing")
         exit()
@@ -476,10 +527,13 @@ if __name__ == "__main__":
         i=i.replace(' ','')
         z=[y for y in i.split("$") if y != '']
         x={"ins":z[1].strip(),"arg":z[2:]}
+        code.append("// " + i.split('$')[0])
         x86_compiler.gen_code(x)
+
+    s_file = open('m.s', 'w')
     for c in code:
         c=c.replace('|','').replace('#', '')
         if c[-1]==':':
-            print(c)
+            s_file.write(c+ "\n")
         else:
-            print("\t",c)
+            s_file.write("\t" + c + "\n")

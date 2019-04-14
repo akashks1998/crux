@@ -7,6 +7,6 @@ then
 fi
 
 python3 parser.py  $1  code.crux sym.dump
-python3 codegen.py > m.s
+python3 codegen.py 
 gcc m.s -m32 -no-pie -o m.out
 ./m.out
