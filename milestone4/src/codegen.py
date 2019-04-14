@@ -168,9 +168,36 @@ def storeVar(reg,var):
 
 class CodeGenerator:
     def gen_start_template(self):
-        print()
-        print("section .text")
-        print("global main")
+        code.append(".data")
+        code.append(" fmt_int: .string '%d\n' ")
+        code.append(" fmt_char: .string '%c\n' ")
+        code.append(".text")
+        code.append("global main|")
+        code.append(".type main|, @function") 
+
+    def op_print_int(self, instr):
+        to_print_int = instr[0]
+        loadVar("eax",to_print_int)
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        code.append("push %eax")
+        code.append("push $fmt_int")
+        code.append("call printf")
+        code.append("add  $8, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
+    
+    def op_print_char(self, instr):
+        to_print_int = instr[0]
+        loadVar("eax",to_print_int)
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        code.append("push %eax")
+        code.append("push $fmt_char")
+        code.append("call printf")
+        code.append("add  $8, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
 
     def op_add(self, instr):
         out , inp1, inp2 = instr
@@ -427,15 +454,16 @@ class CodeGenerator:
             self.op_beginFunc(instr["arg"])
         elif instr["ins"]=="return":
             self.op_return(instr["arg"])
+        elif instr["ins"]=="print_int":
+            self.op_print_int(instr["arg"])
+        elif instr["ins"]=="print_char":
+            self.op_print_char(instr["arg"])
 
 
 if __name__ == "__main__":
     afile = open(AddressFile,'w')
     afile.write("//Code For " + FileName + "\n")
     x86_compiler=CodeGenerator()
-    code.append(".text")
-    code.append(".global main|") 
-    code.append(".type main|, @function") 
     for i in _3accode:
         i=i.replace(' ','')
         z=[y for y in i.split("$") if y != '']

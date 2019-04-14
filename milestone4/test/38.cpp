@@ -1,9 +1,4 @@
-int a(int e){
-  return 0;
-}
 int main(){
-  int *b;
-  int d=*b;
-  int e=a(d);
+  int a = 1256;
   return 0;
 }
