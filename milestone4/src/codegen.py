@@ -12,6 +12,7 @@ FileName = ""
 
 from symbolTable import SymbolTable
 
+code = []
 
 def checkVar(identifier,scopeId="**", search_in_class = False):
     global scopeTableList
@@ -92,27 +93,32 @@ def give_asm_op(inst_type):
     }
     return op_dict[inst_type]
 
-def LoadVar(reg,var):
-    code=[]
+def loadVar(reg,var):
+    global code
     if "@" in var:
         info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
         offset = info["offset"]
         base = info["base"]
+        type_ = info["type"]
         if "@" in str(offset):
             # offset in variable
             pass
-        else:
+        elif str(base) == "rbp":
             # offset as integer
-            if offset < 0:
-                code = [ "mov "+reg+", ["+base+" + " + str(-offset) + "]" ]
+            if "|" in type_ or type_ in ["int", "float"]:
+                code.append("mov " + str(-offset) + "(%ebp), " + "%" + reg )
+            elif type_ == "char":
+                code.append("movb " + str(-offset) + "(%ebp), " + "%" + reg )
             else:
-                code = [ "mov "+reg+", ["+base+" - " + str(offset) + "]" ]
+                print( " class error in store")
+                exit()  
     else:
-        code = [ "mov "+reg+", " + str(var) ]
+        print("Error in loading ")
+        exit()
     return code
 
-def StoreVar(reg,var):
-    code=[]
+def storeVar(reg,var):
+    global code
     if "@" in var:
         info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
         offset = info["offset"]
@@ -120,14 +126,18 @@ def StoreVar(reg,var):
         if "@" in str(offset):
             # offset in variable
             pass
-        else:
-            # offset as integer
-            if offset < 0:
-                code = [ "mov ["+base+" + " + str(-offset) + "] , "+reg  ]
+        elif str(base) == "rbp":
+            if "|" in type_ or type_ in ["int", "float"]:
+                code.append("mov " + "%" + reg + " , " + str(-offset) + "(%ebp)" )
+            elif type_ == "char":
+                code.append("movb " + "%" + reg + " , " + str(-offset) + "(%ebp)" )
             else:
-                code = [ "mov ["+base+"  " + str(-offset) + "] , "+reg  ]
+                print( " class error in store")
+                exit()                
+
+
     else:
-        print("Error in storing as it is int instaid of variable")
+        print("Error in storing")
         exit()
     return code
 
@@ -143,7 +153,96 @@ def gen_asm_for_one_line(quad):
         code=code+StoreVar("eax",quad[1])
 
         print(code)
+
+
+class CodeGenerator:
+    def gen_start_template(self):
+        print()
+        print("section .text")
+        print("global main")
+
+    def op_add(self, instr):
+        out , inp1, inp2 = instr
+        loadVar("eax", inp1)
+        loadVar("ebx", inp2)
+        code.append("add %ebx, %eax")
+        storeVar("eax", out)
+
+    def op_sub(self, instr):
+        out , inp1, inp2 = instr
+        loadVar("eax", inp1)
+        loadVar("ebx", inp2)
+        code.append("sub %ebx, %eax")
+        storeVar("eax", out)
+        
+    def op_mult(self, instr):
+        out , inp1, inp2 = instr
+        loadVar("eax", inp1)
+        loadVar("ebx", inp2)
+        code.append("imul %ebx, %eax")
+        storeVar("eax", out)
+
+    def op_div(self, instr):
+        # idiv %ebx — divide the contents of EDX:EAX by the contents of EBX. Place the quotient in EAX and the remainder in EDX.
+        out , inp1, inp2 = instr
+        loadVar("eax", inp1)
+        loadVar("ebx", inp2)
+        code.append("mov $0, %edx")
+        code.append("idiv %ebx")
+        storeVar("eax", out)
     
+    def op_modulo(self, instr):
+        # idiv %ebx — divide the contents of EDX:EAX by the contents of EBX. Place the quotient in EAX and the remainder in EDX.
+        out , inp1, inp2 = instr
+        loadVar("eax", inp1)
+        loadVar("ebx", inp2)
+        code.append("mov $0, %edx")
+        code.append("idiv %ebx")
+        storeVar("edx", out)
+    
+    def op_lshift(self, instr):
+        out , inp1, inp2 = instr
+        loadVar("eax", inp1)
+        loadVar("cl", inp2)
+        code.append("shl %cl, %eax")
+        storeVar("eax", out)
+
+    def op_rshift(self, instr):
+        out , inp1, inp2 = instr
+        loadVar("eax", inp1)
+        loadVar("cl", inp2)
+        code.append("shr %cl, %eax")
+        storeVar("eax", out)
+
+    def op_assign(self,instr):
+        out , inp = instr
+        if "@" in inp:
+            info = checkVar(inp, "all")["var"] if inp.split('@')[0]=="tmp" else checkVar(inp.split('@')[0], int(inp.split('@')[1]))
+            type_ = info["type"]
+            offset = info["offset"]
+            base = info["base"]
+            if "|" in type_ or type_ in ["int", "char", "float"]:
+                loadVar("eax",inp)
+                storeVar("eax", out)
+            else:
+                # it is a class assignment
+                # do it later
+                pass
+        else:
+            # it is constant assignment like a =1;
+            info = checkVar(out, "all")["var"] if out.split('@')[0]=="tmp" else checkVar(out.split('@')[0], int(out.split('@')[1]))
+            type_ = info["type"]
+            if type_ == "char":
+                code.append("movb $" + str(ord(inp)) + ", eax")
+                storeVar("eax", out)
+            else:
+                code.append("mov $" + inp + ", eax")
+                storeVar("eax", out)
+
+
+
+
+
 
 if __name__ == "__main__":
     afile = open(AddressFile,'w')

@@ -1043,7 +1043,7 @@ def p_primary_expression1(p):
     p[0].parse=f(p) 
     p[0].data = assigner(p,1)
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = [ quad("eqconst"+p[1].data["type"],[p[0].place,str(p[1].data["value"]),""],p[0].place + " = " + str(p[1].data["value"])) ] 
+    p[0].code = [ quad("eq" ,[p[0].place,str(p[1].data["value"]),""],p[0].place + " = " + str(p[1].data["value"])) ] 
     
     
 def p_primary_expression2(p): 
@@ -2363,7 +2363,8 @@ def generate_code(p):
     cfile.write("//Code For " + FileName + "\n")
     x=1
     for i in cod:
-        cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
+        # cfile.write('{0:3}'.format(x) + "::" + i.split('$')[0] + "\n")
+        cfile.write('{0:3}'.format(x) + "::" + i + "\n")
         x=x+1
 
     f = open("code.obj", "wb")
