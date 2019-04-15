@@ -61,7 +61,7 @@ def loadAddr(reg, var):
         if base == "0":
             loadVar(reg,offset)
         elif base == "rbp":
-            if "@" in offset:
+            if "@" in str(offset):
                 code.append("push %esi")
                 loadVar("esi", offset)
                 code.append("neg %esi")
