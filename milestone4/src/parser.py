@@ -800,6 +800,7 @@ def p_postfix_expression_2(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
 
+
     if( p[3].data["type"] != "int" ):
         report_error("Array index is not integer", p.lineno(3))
     type_last_char = p[1].data["type"][-1]
@@ -903,7 +904,7 @@ def p_postfix_expression_3(p):
         code.append( quad("PushParam",[p[1].data["class_obj"],"",""],"PushParam " + p[1].data["class_obj"]) )
 
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = p[1].code + expr_code + code + [ quad("Fcall",[p[0].place,(class_name  + "_" if class_name != "" else "") + func_detail["label"],""],p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig) ]
+    p[0].code = p[1].code + expr_code + code + [ quad("Fcall",[p[0].place,func_detail["label"],""],p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig) ]
     pop_params_code = [ quad("removeParams", [ str(func_detail["parameter_space"]),"", ""], "RemoveParams " + str(func_detail["parameter_space"]) ) ]
     p[0].code = p[0].code +  pop_params_code
 
@@ -955,12 +956,17 @@ def p_postfix_expression_6(p):
                     name_offset = getnewvar("int|p")
                     p[0].place = getnewvar( name_type , name_offset, name_size , "rbp" )
                     p[0].code = p[1].code + [quad("-" , [name_offset, class_instance_offset, name_offset_to_sub]) ]
+                    p[0].data["offset"] = name_offset
+                    p[0].data["base"] = "rbp"
+
                 else:
                     # base is 0
                     name_offset_to_add =  class_instance_size - name_offset_relative_to_class
                     name_offset = getnewvar("int|p")
                     p[0].place = getnewvar(name_type, name_offset , name_size, "0")
                     p[0].code = p[1].code + [quad("+" , [name_offset, class_instance_offset, name_offset_to_add]) ]
+                    p[0].data["offset"] = name_offset
+                    p[0].data["base"] = "0"
 
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
@@ -1004,11 +1010,14 @@ def p_postfix_expression_7(p):
                 name_offset = getnewvar("int|p")
                 p[0].place = getnewvar(name_type, name_offset , name_size, "0")
                 p[0].code = p[1].code + [quad("+" , [name_offset, p[1].place , name_offset_to_add]) ]
+                p[0].data["offset"] = name_offset
+                p[0].data["base"] = "0"
             
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
     else:
         report_error(p[1].data["type"][:-2] +" is not a class",p.lineno(0))
+
 
 def p_postfix_expression_8(p): 
     '''postfix_expression : postfix_expression  DPLUSOP 

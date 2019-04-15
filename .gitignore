@@ -9,3 +9,5 @@
 *.dump
 *x86
 *temp.cpp
+*.obj
+*.s

@@ -91,7 +91,7 @@ def loadVar(reg,var):
                 if "|" in type_ or type_ in ["int", "float"]:
                     code.append("mov  (%"+r+"), %" + reg )
                 elif type_ == "char":
-                    code.append("movb (%"+r+"), %" + reg )
+                    code.append("movb (%"+r+"), %" + reg[1] + "l" )
                 else:
                     print( " class error in load")
                     exit()
@@ -102,7 +102,7 @@ def loadVar(reg,var):
                     code.append("mov (%ebp , %"+ r + ", 1), %" + reg )
                 elif type_ == "char":
                     code.append("neg %"+r)
-                    code.append("movb (%ebp , %"+r + ", 1), %" + reg )
+                    code.append("movb (%ebp , %"+r + ", 1), %" +  reg[1] + "l" )
                 else:
                     print( " class error in load")
                     exit()
@@ -118,7 +118,7 @@ def loadVar(reg,var):
                 if "|" in type_ or type_ in ["int", "float"]:
                     code.append("mov " + str(-offset) + "(%ebp), %" + reg )
                 elif type_ == "char":
-                    code.append("movb " + str(-offset) + "(%ebp), %" + reg )
+                    code.append("movb " + str(-offset) + "(%ebp), %" +  reg[1] + "l" )
                 else:
                     print( " class error in load")
                     exit()  
@@ -128,7 +128,7 @@ def loadVar(reg,var):
     else:
         if var[0]=="'" and var[2]=="'" and len(var)==3:
             # this is char
-            code.append("movb $"+str(ord( var[1]))+" , %" + reg )
+            code.append("movb $"+str(ord( var[1]))+" , %" +  reg[1] + "l" )
         elif var.isdigit():
             code.append("mov $"+var+" , %" + reg )
         else:
@@ -152,7 +152,7 @@ def storeVar(reg,var):
                 if "|" in type_ or type_ in ["int", "float"]:
                     code.append("mov %" + reg + ", (%"+r+")" )
                 elif type_ == "char":
-                    code.append("movb %" + reg + ", (%"+r+")" )
+                    code.append("movb %" +  reg[1] + "l" + ", (%"+r+")" )
                 else:
                     print( " class error in store")
                     exit()
@@ -163,7 +163,7 @@ def storeVar(reg,var):
                     code.append("mov %" + reg + ", (%ebp , %"+r  + ", 1)" )
                 elif type_ == "char":
                     code.append("neg %"+r)
-                    code.append("movb %" + reg + ", (%ebp , %"+r  + ", 1)" )
+                    code.append("movb %" +  reg[1] + "l" + ", (%ebp , %"+r  + ", 1)" )
                 else:
                     print( " class error in store")
                     exit()
@@ -179,7 +179,7 @@ def storeVar(reg,var):
                 if "|" in type_ or type_ in ["int", "float"]:
                     code.append("mov %" + reg + " , " + str(-offset) + "(%ebp)" )
                 elif type_ == "char":
-                    code.append("movb %" + reg + " , " + str(-offset) + "(%ebp)" )
+                    code.append("movb %" +  reg[1] + "l" + " , " + str(-offset) + "(%ebp)" )
                 else:
                     print( " class error in store")
                     exit()  
@@ -428,7 +428,7 @@ class CodeGenerator:
             info = checkVar(out, "all")["var"] if out.split('@')[0]=="tmp" else checkVar(out.split('@')[0], int(out.split('@')[1]))
             type_ = info["type"]
             if type_ == "char":
-                code.append("movb $" + str(ord(inp[1])) + ",%eax")
+                code.append("mov $" + str(ord(inp[1])) + ",%eax")
                 storeVar("eax", out)
             else:
                 code.append("mov $" + inp + ", %eax")
