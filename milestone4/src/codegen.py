@@ -1,5 +1,6 @@
 import pickle
 import re
+import operator
 
 f = open("sym_table.obj", "rb")
 scopeTableList = pickle.load(f)
@@ -8,7 +9,7 @@ f = open("code.obj", "rb")
 _3accode = pickle.load(f)
 AddressFile = "adr"
 FileName = ""
-
+lineno=0
 code = []
 
 def checkVar(identifier,scopeId="**", search_in_class = False):
@@ -98,10 +99,10 @@ def loadAddr(reg, var):
         base = info["base"]
         if "@" in str(offset):
             loadVar(reg,offset)
-            code.append("lea " + "(%ebp , %" + reg + ", 1), " + "%" + reg )
+            code.append("lea (%ebp , %" + reg + ", 1), %" + reg )
         elif str(base) == "rbp":
             # offset as integer
-            code.append("lea " + str(-offset) + "(%ebp), " + "%" + reg )
+            code.append("lea " + str(-offset) + "(%ebp), %" + reg )
     else:
         print("Error in loading addr ")
         exit()
@@ -115,29 +116,31 @@ def loadVar(reg,var):
         type_=info["type"]
         if "@" in str(offset):
             # offset in variable
+            r=getReg()
             if str(base) == "0":
-                loadVar("esi",offset)
+                loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
-                    code.append("mov " + "(%esi)" + ", %" + reg )
+                    code.append("mov  (%"+r+"), %" + reg )
                 elif type_ == "char":
-                    code.append("movb " + "(%esi)" + ", %" + reg )
+                    code.append("movb (%"+r+"), %" + reg )
                 else:
                     print( " class error in load")
                     exit()
             elif str(base) == "rbp":
-                loadVar("esi",offset)
+                loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
-                    code.append("neg %esi")
-                    code.append("mov "  + "(%ebp , %esi" + ", 1), " + "%" + reg )
+                    code.append("neg %"+r)
+                    code.append("mov (%ebp , %"+ r + ", 1), %" + reg )
                 elif type_ == "char":
-                    code.append("neg %esi")
-                    code.append("movb " + "(%ebp , %esi" + ", 1), " + "%" + reg )
+                    code.append("neg %"+r)
+                    code.append("movb (%ebp , %"+r + ", 1), %" + reg )
                 else:
                     print( " class error in load")
-                    exit()  
+                    exit()
             else:
                 print("wrong base in load")
-                exit()      
+                exit()
+            getReg(r,free=True)   
         else:
             # offset is int
             if str(base) == "0":
@@ -145,9 +148,9 @@ def loadVar(reg,var):
                 exit()
             elif str(base) == "rbp":
                 if "|" in type_ or type_ in ["int", "float"]:
-                    code.append("mov " + str(-offset) + "(%ebp), " + "%" + reg )
+                    code.append("mov " + str(-offset) + "(%ebp), %" + reg )
                 elif type_ == "char":
-                    code.append("movb " + str(-offset) + "(%ebp), " + "%" + reg )
+                    code.append("movb " + str(-offset) + "(%ebp), %" + reg )
                 else:
                     print( " class error in load")
                     exit()  
@@ -164,7 +167,7 @@ def loadVar(reg,var):
             print("error in load")
             exit()
 
-        
+
 def storeVar(reg,var):
     global code
     if "@" in var:
@@ -174,29 +177,31 @@ def storeVar(reg,var):
         type_=info["type"]
         if "@" in str(offset):
             # offset in variable
+            r=getReg()
             if str(base) == "0":
-                loadVar("edi",offset)
+                loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
-                    code.append("mov " + "%" + reg + ", (%edi)" )
+                    code.append("mov %" + reg + ", (%"+r+")" )
                 elif type_ == "char":
-                    code.append("movb " + "%" + reg + ", (%edi)" )
+                    code.append("movb %" + reg + ", (%"+r+")" )
                 else:
                     print( " class error in store")
                     exit()
             elif str(base) == "rbp":
-                loadVar("edi",offset)
+                loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
-                    code.append("neg %edi") # check base
-                    code.append("mov " + "%" + reg + ", (%ebp , %edi"  + ", 1)" )
+                    code.append("neg %"+r) # check base
+                    code.append("mov %" + reg + ", (%ebp , %"+r  + ", 1)" )
                 elif type_ == "char":
-                    code.append("neg %edi")
-                    code.append("movb " + "%" + reg + ", (%ebp , %edi"  + ", 1)" )
+                    code.append("neg %"+r)
+                    code.append("movb %" + reg + ", (%ebp , %"+r  + ", 1)" )
                 else:
                     print( " class error in store")
                     exit()
             else:
                 print("wrong base in store")
                 exit()      
+            getReg(r,free=True)
         else:
             # offset is int
             if str(base) == "0":
@@ -204,9 +209,9 @@ def storeVar(reg,var):
                 exit()
             elif str(base) == "rbp":
                 if "|" in type_ or type_ in ["int", "float"]:
-                    code.append("mov " + "%" + reg + " , " + str(-offset) + "(%ebp)" )
+                    code.append("mov %" + reg + " , " + str(-offset) + "(%ebp)" )
                 elif type_ == "char":
-                    code.append("movb " + "%" + reg + " , " + str(-offset) + "(%ebp)" )
+                    code.append("movb %" + reg + " , " + str(-offset) + "(%ebp)" )
                 else:
                     print( " class error in store")
                     exit()  
@@ -216,6 +221,34 @@ def storeVar(reg,var):
     else:
         print("Error in storing")
         exit()
+reg_used={"eax":[-1,None],
+          "ebx":[-1,None],
+          "ecx":[-1,None],
+          "edx":[-1,None],
+          "esi":[-1,None],
+          "edi":[-1,None]
+}
+
+def getReg(reg=None,var=None,free=False):
+    if free==True:
+        if reg!=None:
+            if reg_used[reg][1]!=None:
+                storeVar(reg,reg_used[reg][1])
+            reg_used[reg]=[-1,None]
+        return reg
+    if reg==None:
+        r=min(reg_used.items(), key=operator.itemgetter(1))[0]
+    else:
+        r=reg
+    x=reg_used[r][1]
+    if var==None:
+        reg_used[r]=[len(_3accode)+1,var]
+    else:
+        reg_used[r]=[lineno,var]
+    if x!=None:
+        storeVar(r,x)
+    return r
+    
 
 class CodeGenerator:
     def __init__(self):
@@ -552,6 +585,7 @@ if __name__ == "__main__":
     afile.write("//Code For " + FileName + "\n")
     x86_compiler=CodeGenerator()
     for i in _3accode:
+        lineno=lineno+1
         i=i.replace(' ','')
         z=[y for y in i.split("$") if y != '']
         x={"ins":z[1].strip(),"arg":z[2:]}
