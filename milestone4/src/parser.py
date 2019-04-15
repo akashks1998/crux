@@ -1855,6 +1855,8 @@ def p_statement(p):
                  | declaration_statement 
                  | print_int 
                  | print_char
+                 | scan_int 
+                 | scan_char
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
@@ -1894,6 +1896,32 @@ def p_print_char(p):
         pass
     else:
         report_error("Only char allowed in print char", p.lineno(0))
+
+def p_scan_int(p):
+    '''scan_int : SCANINT LPAREN  expression RPAREN SEMICOLON '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].code = p[3].code + [quad("scan_int", [p[3].place], "scan_int " + p[3].place  )]
+
+    info = checkVar(p[3].place) 
+    type_  = info["var"]["type"]
+    if type_ in ["int"] :
+        pass
+    else:
+        report_error("Only int char and pointer allowed in scan int", p.lineno(0))
+
+def p_scan_char(p):
+    '''scan_char : SCANCHAR LPAREN expression RPAREN SEMICOLON '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].code = p[3].code + [quad("scan_char", [p[3].place], "scan_char " + p[3].place  )]
+
+    info = checkVar(p[3].place) 
+    type_  = info["var"]["type"]
+    if type_ in ["char"] :
+        pass
+    else:
+        report_error("Only char allowed in scan char", p.lineno(0))
 
 def p_jump_statement(p): 
     '''jump_statement : BREAK SEMICOLON 

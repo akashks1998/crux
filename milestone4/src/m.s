@@ -1,6 +1,6 @@
 	.data
-	fmt_int: .string "%d\n" 
-	fmt_char: .string "%c\n" 
+	fmt_int: .string "%d" 
+	fmt_char: .string "%c" 
 	.text
 	.global main
 	.type main, @function
