@@ -1399,6 +1399,8 @@ def p_arg_list(p):
         "rbp_offset" : 0,
     }
 
+    scopeTableList[currentScopeTable].type_ = "function"
+
     parent=getParentScope(currentScopeTable)
     func_sig = function_name +"|" + input_detail[0]
 
@@ -2369,7 +2371,7 @@ def quad(op, a, statement = None ):
     arg = [ str(a[i]) if i<len(a) else "" for i in range(3) ]    
     if statement == None:
         statement = str(op) + " " + arg[0] + " " + arg[1] + " " + arg[2]
-    return " $ ".join([statement]+[op]+arg)
+    return " $ ".join([statement]+[op] + arg + [str(currentScopeTable)])
 
 
 
@@ -2467,7 +2469,7 @@ if __name__ == "__main__":
     f = open(SymbolTableFileName, "w")
     ignore_key = ["is_array", "element_type", "index", "to_add"]
     for idx, table in  enumerate( scopeTableList):
-        f.write("SCOPE START :: " + str(idx) + "\n")
+        f.write("SCOPE START :: " + str(idx) + str(table.type_) + "\n")
         for key in table.table.keys():
             f.write("    " + str(key) + " , " )
             detail = table.table[key]

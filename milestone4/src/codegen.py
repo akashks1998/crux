@@ -76,10 +76,18 @@ def loadAddr(reg, var):
         print("Error in loading addr ")
         exit()
 
+
 def loadVar(reg,var):
     global code
     if "@" in var:
-        info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
+        if var.split('@')[0]=="tmp":
+            info = checkVar(var, "all")["var"]
+        elif var.split('@')[0]=="gbl":
+            code.append("mov $" + var + " %" + reg)
+            return
+        else:
+            info = checkVar(var.split('@')[0], int(var.split('@')[1]) )  
+        
         offset = info["offset"]
         base = info["base"]
         type_=info["type"]
@@ -190,6 +198,30 @@ def storeVar(reg,var):
         print("Error in storing")
         exit()
 
+def movVar(offsetSrc, baseSrc, offsetDest, baseDest , size = 8):
+    if size == 4:
+        reg = "edi"
+        mov = "mov"
+    if size == 2:
+        reg = "dh"
+        mov = "movw"
+    if size == 1:
+        reg = "dl"
+        mov = "movb"
+
+    if baseSrc == "rbp":
+        code.append("neg %" + offsetSrc)
+        code.append( mov + " (%ebp, " + offsetSrc + ",1) , %" + reg)
+    if baseSrc == "0":
+        code.append(mov + " (%" + offsetSrc + "), %" + reg )
+    
+    if baseDest == "rbp":
+        code.append("neg %" + offsetSrc)
+        code.append(mov + " %" + reg + ", (%ebp, " + offsetSrc + ",1)")
+    if baseDest == "0":
+        code.append(mov + " %" + reg + ", (%" + offsetSrc + ")")
+        
+ 
 
 reg_used={"eax":[-1,None],
           "ebx":[-1,None],
@@ -419,8 +451,10 @@ class CodeGenerator:
                 loadVar("eax",inp)
                 storeVar("eax", out)
             else:
-                # it is a class assignment
-                # do it later
+                offset = info["offset"]
+                base = info["info"]
+                size = info["size"]
+                loadVar("esi", offset)
                 pass  
 
         else:
@@ -586,7 +620,8 @@ if __name__ == "__main__":
         lineno=lineno+1
         i=i.replace(' ','')
         z=[y for y in i.split("$") if y != '']
-        x={"ins":z[1].strip(),"arg":z[2:]}
+        x={"ins":z[1].strip(),"arg":z[2:-1]}
+        currentScopeTable = int(z[-1])
         code.append("// " + i.split('$')[0])
         x86_compiler.gen_code(x)
 
