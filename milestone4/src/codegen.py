@@ -176,8 +176,8 @@ def storeVar(reg,var):
         base = info["base"]
         type_=info["type"]
         if "@" in str(offset):
-            # offset in variable
             r="edi"
+            # offset in variable
             if str(base) == "0":
                 loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
@@ -279,6 +279,27 @@ class CodeGenerator:
         code.append("push $fmt_char")
         code.append("call printf")
         code.append("add  $8, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
+    def op_malloc(self, instr):
+        to_malloc,size=instr
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        loadVar("edi", size)
+        code.append("push %edi")
+        code.append("call malloc")
+        code.append("add $4, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
+        storeVar("eax",to_malloc)
+    def op_free(self, instr):
+        to_free=instr[0]
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        loadVar("edi", to_free)
+        code.append("push %edi")
+        code.append("call malloc")
+        code.append("add $4, %esp")
         code.append("mov %ebp, %esp")
         code.append("pop %ebp")
 
@@ -577,6 +598,10 @@ class CodeGenerator:
             self.op_scan_int(instr["arg"])
         elif instr["ins"]=="scan_char":
             self.op_scan_char(instr["arg"])
+        elif instr["ins"]=="malloc":
+            self.op_malloc(instr["arg"])
+        elif instr["ins"]=="free":
+            self.op_free(instr["arg"])
 
 
 if __name__ == "__main__":
