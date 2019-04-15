@@ -58,12 +58,20 @@ def loadAddr(reg, var):
         info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
         offset = info["offset"]
         base = info["base"]
-        if "@" in str(offset):
+        if base == "0":
             loadVar(reg,offset)
-            code.append("lea (%ebp , %" + reg + ", 1), %" + reg )
-        elif str(base) == "rbp":
-            # offset as integer
-            code.append("lea " + str(-offset) + "(%ebp), %" + reg )
+        elif base == "rbp":
+            if "@" in offset:
+                code.append("push %esi")
+                loadVar("esi", offset)
+                code.append("neg %esi")
+                code.append("lea (%ebp, %esi, 1), %" + reg)
+                code.append("pop %esi")
+            else:
+                code.append("lea " + str(-offset) + "(%ebp), %" + reg )
+        else:
+            print("error in load Addr")
+            exit()
     else:
         print("Error in loading addr ")
         exit()
@@ -215,8 +223,10 @@ def getReg(reg=None,var=None,free=False):
 class CodeGenerator:
     def __init__(self):
         code.append(".data")
-        code.append('fmt_int: .string "%d\\n" ')
-        code.append('fmt_char: .string "%c\\n" ')
+        code.append('print_fmt_int: .string "%d\\n" ')
+        code.append('print_fmt_char: .string "%c\\n" ')
+        code.append('scan_fmt_int: .string "%d" ')
+        code.append('scan_fmt_char: .string "%c" ')
         code.append(".text")
         code.append(".global main|")
         code.append(".type main|, @function") 
@@ -227,7 +237,7 @@ class CodeGenerator:
         code.append("push %ebp")
         code.append("mov %esp,%ebp")
         code.append("push %eax")
-        code.append("push $fmt_int")
+        code.append("push $print_fmt_int")
         code.append("call printf")
         code.append("add  $8, %esp")
         code.append("mov %ebp, %esp")
@@ -239,7 +249,7 @@ class CodeGenerator:
         code.append("push %ebp")
         code.append("mov %esp,%ebp")
         code.append("push %eax")
-        code.append("push $fmt_char")
+        code.append("push $print_fmt_char")
         code.append("call printf")
         code.append("add  $8, %esp")
         code.append("mov %ebp, %esp")
@@ -273,7 +283,7 @@ class CodeGenerator:
         code.append("push %ebp")
         code.append("mov %esp,%ebp")
         code.append("push %eax")
-        code.append("push $fmt_int")
+        code.append("push $scan_fmt_int")
         code.append("call scanf")
         code.append("add  $8, %esp")
         code.append("mov %ebp, %esp")
@@ -285,7 +295,7 @@ class CodeGenerator:
         code.append("push %ebp")
         code.append("mov %esp,%ebp")
         code.append("push %eax")
-        code.append("push $fmt_char")
+        code.append("push $scan_fmt_char")
         code.append("call scanf")
         code.append("add  $8, %esp")
         code.append("mov %ebp, %esp")

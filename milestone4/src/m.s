@@ -1,47 +1,38 @@
 	.data
-	fmt_int: .string "%d\n" 
-	fmt_char: .string "%c\n" 
+	print_fmt_int: .string "%d\n" 
+	print_fmt_char: .string "%c\n" 
+	scan_fmt_int: .string "%d" 
+	scan_fmt_char: .string "%c" 
 	.text
 	.global main
 	.type main, @function
-// gunint:
-C_gunint:
-	// BeginFunc12
+// fint:
+func0:
+	// BeginFunc36
 	push %ebp
 	mov %esp, %ebp
-	sub $12, %esp
+	sub $36, %esp
 	push %ebx
 	push %ecx
 	push %edx
 	push %esi
 	push %edi
-	// print_intr@2
-	mov 12(%ebp), %eax
-	push %ebp
-	mov %esp,%ebp
-	push %eax
-	push $fmt_int
-	call printf
-	add  $8, %esp
-	mov %ebp, %esp
-	pop %ebp
-	// tmp@2=10
-	mov $10, %eax
-	mov %eax , -8(%ebp)
-	// +tmp@0this@20
-	mov 8(%ebp), %eax
-	mov $0 , %ebx
-	add %ebx, %eax
+	// tmp@0=2
+	mov $2, %eax
 	mov %eax , -4(%ebp)
-	// tmp@1=tmp@2
+	// tmp@1=n@1<tmp@0
+	mov 8(%ebp), %eax
+	mov -4(%ebp), %ebx
+	cmp %ebx, %eax
+	mov $0, %ecx
+	setl %cl
+	mov %ecx , -8(%ebp)
+	// ifztmp@1goto->single_if_after0
 	mov -8(%ebp), %eax
-	mov -4(%ebp), %edi
-	mov %eax, (%edi)
-	// tmp@3=0
-	mov $0, %eax
-	mov %eax , -12(%ebp)
-	// returntmp@3
-	mov -12(%ebp), %eax
+	cmp $0 , %eax 
+	je single_if_after0
+	// returnn@1
+	mov 8(%ebp), %eax
 	pop %ebx
 	pop %ecx
 	pop %edx
@@ -50,85 +41,92 @@ C_gunint:
 	mov %ebp, %esp
 	pop %ebp
 	ret 
-	// EndFunc
+// single_if_after0:
+single_if_after0:
+	// tmp@2=1
+	mov $1, %eax
+	mov %eax , -12(%ebp)
+	// tmp@3=n@1-tmp@2
+	mov 8(%ebp), %eax
+	mov -12(%ebp), %ebx
+	sub %ebx, %eax
+	mov %eax , -16(%ebp)
+	// PushParamtmp@3
+	mov -16(%ebp), %eax
+	push %eax
+	// tmp@4=Fcallfint
+	call func0
+	mov %eax , -20(%ebp)
+	// RemoveParams4
+	// tmp@5=2
+	mov $2, %eax
+	mov %eax , -24(%ebp)
+	// tmp@6=n@1-tmp@5
+	mov 8(%ebp), %eax
+	mov -24(%ebp), %ebx
+	sub %ebx, %eax
+	mov %eax , -28(%ebp)
+	// PushParamtmp@6
+	mov -28(%ebp), %eax
+	push %eax
+	// tmp@7=Fcallfint
+	call func0
+	mov %eax , -32(%ebp)
+	// RemoveParams4
+	// tmp@8=tmp@4+tmp@7
+	mov -20(%ebp), %eax
+	mov -32(%ebp), %ebx
+	add %ebx, %eax
+	mov %eax , -36(%ebp)
+	// returntmp@8
+	mov -36(%ebp), %eax
+	pop %ebx
+	pop %ecx
+	pop %edx
+	pop %esi
+	pop %edi
+	mov %ebp, %esp
+	pop %ebp
+	ret 
 // main:
 main:
-	// BeginFunc48
+	// BeginFunc16
 	push %ebp
 	mov %esp, %ebp
-	sub $48, %esp
+	sub $16, %esp
 	push %ebx
 	push %ecx
 	push %edx
 	push %esi
 	push %edi
-	// tmp@4=&p@3
-	lea -12(%ebp), %eax
-	mov %eax , -16(%ebp)
-	// b@3=tmp@4
-	mov -16(%ebp), %eax
+	// tmp@9=6
+	mov $6, %eax
 	mov %eax , -4(%ebp)
-	// tmp@7=5
-	mov $5, %eax
-	mov %eax , -24(%ebp)
-	// -tmp@5124
-	mov $12 , %eax
-	mov $4 , %ebx
-	sub %ebx, %eax
-	mov %eax , -20(%ebp)
-	// tmp@6	mov %eax, (%edi)
-	mov %eax, (%edi)
-	mov -24(	mov %eax, (%edi)	mov %eax, (%edi)
-	mov -20(	mov %eax, (%edi)
-	neg %edi	mov %eax, (%edi)
-	mov %eax, (%ebp , %edi, 1)
-	// tmp@10=9
-	mov $9, %eax
-	mov %eax , -32(%ebp)
-	// +tmp@8b@30
-	mov -4(%ebp), %eax
-	mov $0 , %ebx
-	add %ebx, %eax
-	mov %eax , -28(%ebp)
-	// tmp@9=tmp@1
-	mov -32(%ebp), %eax
-	mov -28(%ebp), %edi
-	mov %eax, (%edi)
-	// tmp@11=7
-	mov $7, %eax
-	mov %eax , -36(%ebp)
-	// PushParamtmp@11
-	mov -36(%ebp), %eax
-	push %eax
-	// PushParamb@3
+	// PushParamtmp@9
 	mov -4(%ebp), %eax
 	push %eax
-	// tmp@12=FcallC:gunint
-	call C_gunint
-	mov %eax , -40(%ebp)
-	// RemoveParams8
-	// -tmp@13120
-	mov $12 , %eax
-	mov $0 , %ebx
-	sub %ebx, %eax
-	mov %eax , -44(%ebp)
-	// print_inttmp@14
-	mov -44(%ebp), %esi
-	neg %esi
-	mov (%ebp , %esi, 1), %eax
+	// tmp@10=Fcallfint
+	call func0
+	mov %eax , -8(%ebp)
+	// RemoveParams4
+	// g@3=tmp@10
+	mov -8(%ebp), %eax
+	mov %eax , -12(%ebp)
+	// print_intg@3
+	mov -12(%ebp), %eax
 	push %ebp
 	mov %esp,%ebp
 	push %eax
-	push $fmt_int
+	push $print_fmt_int
 	call printf
 	add  $8, %esp
 	mov %ebp, %esp
 	pop %ebp
-	// tmp@15=0
+	// tmp@11=0
 	mov $0, %eax
-	mov %eax , -48(%ebp)
-	// returntmp@15
-	mov -48(%ebp), %eax
+	mov %eax , -16(%ebp)
+	// returntmp@11
+	mov -16(%ebp), %eax
 	pop %ebx
 	pop %ecx
 	pop %edx
@@ -137,4 +135,3 @@ main:
 	mov %ebp, %esp
 	pop %ebp
 	ret 
-	// EndFunc

@@ -49,7 +49,7 @@ currentScopeTable = 0
 offsetList = [0]
 offsetParent = [None]
 currentOffset = 0
-
+function_code=[]
 allowed_types={}
 allowed_types["float"]=["int","float","char" ]
 allowed_types["int"]=["float", "char","int"]
@@ -386,6 +386,9 @@ def p_translation_unit(p):
     p[0].parse=f(p)
     p[0].code = p[1].code.copy()
 
+    for each_func in function_code:
+        p[0].code = p[0].code + each_func
+
 def p_declaration_seq(p):
     ''' declaration_seq : declaration_seq declaration
                         | declaration
@@ -396,6 +399,8 @@ def p_declaration_seq(p):
         p[0].code=p[1].code.copy()
     else:
         p[0].code=p[1].code.copy()+p[2].code.copy()
+
+
 
 def p_error(p):
     global error_line_offset
@@ -898,7 +903,7 @@ def p_postfix_expression_3(p):
         code.append( quad("PushParam",[p[1].data["class_obj"],"",""],"PushParam " + p[1].data["class_obj"]) )
 
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = p[1].code + expr_code + code + [ quad("Fcall",[p[0].place,(class_name  + "_" if class_name != "" else "") + expected_sig,""],p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig) ]
+    p[0].code = p[1].code + expr_code + code + [ quad("Fcall",[p[0].place,(class_name  + "_" if class_name != "" else "") + func_detail["label"],""],p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig) ]
     pop_params_code = [ quad("removeParams", [ str(func_detail["parameter_space"]),"", ""], "RemoveParams " + str(func_detail["parameter_space"]) ) ]
     p[0].code = p[0].code +  pop_params_code
 
@@ -1366,17 +1371,23 @@ def p_arg_list(p):
     else:
         input_detail=("",[])
 
+    if function_name=="main":
+        label="main"
+    else:
+        label=getnewlabel('func')
+
     p[0].data = {
         "name" : function_name,
         "return_sig" : return_sig,
         "input_sig" : input_detail[0],
+        "label" : label,
         "body_scope" : currentScopeTable,
         "declaration": True,
         "stack_space" : get_offset(),
         "parameter_space": (- offset - 8 ),
         "saved_register_space" : 40 , # r12 -r15, rbx
         "return_offset" : 4,
-        "rbp_offset" : 0
+        "rbp_offset" : 0,
     }
 
     parent=getParentScope(currentScopeTable)
@@ -1588,9 +1599,9 @@ def p_class_function_specifier(p):
     p[0].parse=f(p)
 
     p[0].code = p[5].code.copy()
-    c = p[0].code[0].split("$")
-    c[2] = p[2].data + "_" + c[2].strip()
-    p[0].code[0] = " $ ".join(c)
+    # c = p[0].code[0].split("$")
+    # c[2] = p[2].data + "_" + c[2].strip()
+    # p[0].code[0] = " $ ".join(c)
 
     
 def p_change_scope(p):
@@ -1773,11 +1784,12 @@ def p_function_definition(p):
     func_detail = checkVar(func_sig, "*")
     func_detail['declaration'] = False
     func_detail["stack_space"] = get_offset()
+    
     updateVar(func_sig, func_detail)    
     popOffset()
-    p[0].code =[quad("label", [func_detail["name"] + "|" + func_detail["input_sig"], "", ""], func_detail["name"] + "|" + func_detail["input_sig"] + ":"), \
+    p[0].code =[quad("label", [func_detail["label"] , "", ""], func_detail["name"] + "|" + func_detail["input_sig"] + ":"), \
          quad("BeginFunc", [str(func_detail["stack_space"]), "", ""], "    BeginFunc " + str(func_detail["stack_space"]))] + p[4].code + \
-             [ "    " + i for i in p[6].code] + [quad("EndFunc", ["","",""], "    EndFunc")]
+             [ "    " + i for i in p[6].code] 
 
 
 def p_function_decl(p): 
@@ -1789,12 +1801,12 @@ def p_function_decl(p):
 
 def p_func_push_scope(p):
     ''' func_push_scope : LPAREN '''
-    global currentScopeTable 
-    global scopeTableList
-    if currentScopeTable == 0 or scopeTableList[currentScopeTable].type_ == "class" :
-        pass
-    else:
-        report_error("Function can only be defined in global or class scope", p.lineno(0))
+    # global currentScopeTable 
+    # global scopeTableList
+    # if currentScopeTable == 0 or scopeTableList[currentScopeTable].type_ == "class" :
+    #     pass
+    # else:
+    #     report_error("Function can only be defined in global or class scope", p.lineno(0))
 
     pushScope()
     pushOffset()
@@ -2234,7 +2246,8 @@ def p_declaration2(p):
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
-    p[0].code = p[1].code.copy()
+    function_code.append(p[1].code.copy())
+    p[0].code = []
 
 def p_declaration3(p):
     '''declaration : class_define_specifier SEMICOLON ''' 
@@ -2247,7 +2260,8 @@ def p_declaration4(p):
     '''declaration :  class_function_specifier ''' 
     p[0] = OBJ()
     p[0].parse=f(p)
-    p[0].code = p[1].code.copy()
+    function_code.append(p[1].code.copy())
+    p[0].code = []
 
 
 # def p_declaration5(p):

@@ -4,13 +4,14 @@ class a{
 };
 
 int main(){
-  
-  int* p=new(int)[10];
-  for(int i=0;i<10;i++){
-    p[i]=i*2;
-    print_int(p[i]);
+  int x(int* t){
+    int *z=t;
+    *z=5;
+    return 4;
   }
-  delete [] p;
-  
+  int t;
+  x(&t);
+  print_int(t);
+
   return 0;
 }
