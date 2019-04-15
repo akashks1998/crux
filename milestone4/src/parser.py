@@ -1151,8 +1151,6 @@ def p_allocation_expression1(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    if checkVar("alloc|int","global")==False:
-        report_error("STD lib not included", p.lineno(0))
     if "|" in p[3].data["type"].rstrip("p").rstrip("|"):
         report_error("wrong type name for allocation", p.lineno(0))
     if "type" not in p[6].data.keys() or p[6].data["type"]!="int":
@@ -1162,7 +1160,8 @@ def p_allocation_expression1(p):
     tpe = p[3].data["type"]
     tmp1 = getnewvar("int")
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = p[6].code + [quad("*",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place), quad("PushParam",[tmp1,"",""],"PushParam " + tmp1)  , quad("Fcall",["alloc|int",p[0].place],p[0].place + " = Fcall alloc|int")]
+    p[0].code = p[6].code + [quad("*",[tmp1,str(get_size(tpe)), p[6].place],tmp1 + " = " + str(get_size(tpe)) + "*" + p[6].place),\
+         quad("malloc",[p[0].place,tmp1,""], p[0].place + " = malloc ("+tmp1+")")]
 
 
 def p_allocation_expression0(p): 
@@ -1170,16 +1169,12 @@ def p_allocation_expression0(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    if checkVar("alloc|int","global")==False:
-        report_error("STD lib not included", p.lineno(0))
     if "|" in p[3].data["type"].rstrip("p").rstrip("|"):
         report_error("wrong type name for allocation", p.lineno(0))
     p[0].data = {"type" : p[3].data["type"] + "p"} if "|" in p[3].data["type"] else {"type" : p[3].data["type"] + "|p"}
     tpe = p[3].data["type"]
     p[0].place=getnewvar(p[0].data["type"])
-    p[0].code = [quad("PushParam",[str(get_size(tpe)),"",""],"PushParam " + str(get_size(tpe))), quad("Fcall",["alloc|int",p[0].place],p[0].place + " = Fcall alloc|int") ]
-    pop_params_code = [ quad("removeParams", [ str(4),"", ""], "RemoveParams " + str(4) ) ]
-    p[0].code = p[0].code +  pop_params_code
+    p[0].code = p[3].code + [ quad("malloc",[p[0].place,str(get_size(tpe)),""], p[0].place + " = malloc ("+str(get_size(tpe))+")")]
 
 
 

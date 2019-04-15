@@ -6,10 +6,10 @@
 	.type main, @function
 // main:
 main:
-	// BeginFunc32
+	// BeginFunc57
 	push %ebp
 	mov %esp, %ebp
-	sub $32, %esp
+	sub $57, %esp
 	push %ebx
 	push %ecx
 	push %edx
@@ -18,45 +18,71 @@ main:
 	// tmp@0=10
 	mov $10, %eax
 	mov %eax , -4(%ebp)
-	// a@1=tmp@0
-	mov -4(%ebp), %eax
+	// tmp@1=4*tmp@0
+	mov $4 , %eax
+	mov -4(%ebp), %ebx
+	imul %ebx, %eax
 	mov %eax , -8(%ebp)
-	// tmp@1=17
-	mov $17, %eax
+	// tmp@2=malloc(tmp@1)
+	push %ebp
+	mov %esp,%ebp
+	mov -8(%ebp), %edi
+	push %edi
+	call malloc
+	add $4, %esp
+	mov %ebp, %esp
+	pop %ebp
+	mov %eax , -12(%ebp)
+	// p@2=tmp@2
+	mov -12(%ebp), %eax
 	mov %eax , -16(%ebp)
-	// tmp@2=a@1<tmp@1
-	mov -8(%ebp), %eax
-	mov -16(%ebp), %ebx
+	// tmp@3=0
+	mov $0, %eax
+	mov %eax , -20(%ebp)
+	// i@3=tmp@3
+	mov -20(%ebp), %eax
+	mov %eax , -24(%ebp)
+// for_begin10:
+for_begin10:
+	// tmp@4=10
+	mov $10, %eax
+	mov %eax , -28(%ebp)
+	// tmp@5=i@3<tmp@4
+	mov -24(%ebp), %eax
+	mov -28(%ebp), %ebx
 	cmp %ebx, %eax
 	mov $0, %ecx
 	setl %cl
-	mov %ecx , -20(%ebp)
-// ifelse_before0:
-ifelse_before0:
-	// ifztmp@2goto->ifelse_else_0
-	mov -20(%ebp), %eax
+	mov %ecx , -32(%ebp)
+	// ifztmp@5goto->for_after10
+	mov -32(%ebp), %eax
 	cmp $0 , %eax 
-	je ifelse_else_0
-	// tmp@3=1
-	mov $1, %eax
-	mov %eax , -24(%ebp)
-	// b@1=tmp@3
-	mov -24(%ebp), %eax
-	mov %eax , -12(%ebp)
-	// goto->ifelse_after0
-	jmp ifelse_after0
-// ifelse_else_0:
-ifelse_else_0:
-	// tmp@4=2
+	je for_after10
+	// tmp@9=2
 	mov $2, %eax
-	mov %eax , -28(%ebp)
-	// b@1=tmp@4
-	mov -28(%ebp), %eax
-	mov %eax , -12(%ebp)
-// ifelse_after0:
-ifelse_after0:
-	// print_intb@1
-	mov -12(%ebp), %eax
+	mov %eax , -44(%ebp)
+	// tmp@10=i@3*tmp@9
+	mov -24(%ebp), %eax
+	mov -44(%ebp), %ebx
+	imul %ebx, %eax
+	mov %eax , -48(%ebp)
+	// tmp@7=p@2+i@3
+	mov -16(%ebp), %eax
+	mov -24(%ebp), %ebx
+	add %ebx, %eax
+	mov %eax , -40(%ebp)
+	// tmp@8=tmp@10
+	mov -48(%ebp), %eax
+	mov -40(%ebp), %edi
+	mov %eax, (%edi)
+	// tmp@11=p@2+i@3
+	mov -16(%ebp), %eax
+	mov -24(%ebp), %ebx
+	add %ebx, %eax
+	mov %eax , -52(%ebp)
+	// print_inttmp@12
+	mov -52(%ebp), %esi
+	mov  (%esi), %eax
 	push %ebp
 	mov %esp,%ebp
 	push %eax
@@ -65,11 +91,37 @@ ifelse_after0:
 	add  $8, %esp
 	mov %ebp, %esp
 	pop %ebp
-	// tmp@5=0
+	// tmp@13='_'
+	movb $95,%eax
+	movb %eax , -53(%ebp)
+	// print_chartmp@13
+	movb -53(%ebp), %eax
+	push %ebp
+	mov %esp,%ebp
+	push %eax
+	push $fmt_char
+	call printf
+	add  $8, %esp
+	mov %ebp, %esp
+	pop %ebp
+// for_continue10:
+for_continue10:
+	// tmp@6=i@3
+	mov -24(%ebp), %eax
+	mov %eax , -36(%ebp)
+	// i@3++
+	mov -24(%ebp), %eax
+	inc  %eax
+	mov %eax , -24(%ebp)
+	// goto->for_begin10
+	jmp for_begin10
+// for_after10:
+for_after10:
+	// tmp@14=0
 	mov $0, %eax
-	mov %eax , -32(%ebp)
-	// returntmp@5
-	mov -32(%ebp), %eax
+	mov %eax , -57(%ebp)
+	// returntmp@14
+	mov -57(%ebp), %eax
 	pop %ebx
 	pop %ecx
 	pop %edx

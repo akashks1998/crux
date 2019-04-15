@@ -116,7 +116,7 @@ def loadVar(reg,var):
         type_=info["type"]
         if "@" in str(offset):
             # offset in variable
-            r=getReg()
+            r="esi"
             if str(base) == "0":
                 loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
@@ -140,7 +140,6 @@ def loadVar(reg,var):
             else:
                 print("wrong base in load")
                 exit()
-            getReg(r,free=True)   
         else:
             # offset is int
             if str(base) == "0":
@@ -177,8 +176,8 @@ def storeVar(reg,var):
         base = info["base"]
         type_=info["type"]
         if "@" in str(offset):
+            r="edi"
             # offset in variable
-            r=getReg()
             if str(base) == "0":
                 loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
@@ -202,7 +201,6 @@ def storeVar(reg,var):
             else:
                 print("wrong base in store")
                 exit()      
-            getReg(r,free=True)
         else:
             # offset is int
             if str(base) == "0":
@@ -283,6 +281,17 @@ class CodeGenerator:
         code.append("add  $8, %esp")
         code.append("mov %ebp, %esp")
         code.append("pop %ebp")
+    def op_malloc(self, instr):
+        to_malloc,size=instr
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        loadVar("edi", size)
+        code.append("push %edi")
+        code.append("call malloc")
+        code.append("add $4, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
+        storeVar("eax",to_malloc)
 
     def op_scan_int(self, instr):
         to_scan_int = instr[0]
@@ -579,6 +588,8 @@ class CodeGenerator:
             self.op_scan_int(instr["arg"])
         elif instr["ins"]=="scan_char":
             self.op_scan_char(instr["arg"])
+        elif instr["ins"]=="malloc":
+            self.op_malloc(instr["arg"])
 
 
 if __name__ == "__main__":
