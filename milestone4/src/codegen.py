@@ -53,6 +53,7 @@ def checkVar(identifier,scopeId="**", search_in_class = False):
         return False
 
 def loadAddr(reg, var):
+    var = str(var)
     global code
     if "@" in var:
         info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
@@ -79,6 +80,7 @@ def loadAddr(reg, var):
 
 def loadVar(reg,var):
     global code
+    var = str(var)
     if "@" in var:
         if var.split('@')[0]=="tmp":
             info = checkVar(var, "all")["var"]
@@ -137,7 +139,7 @@ def loadVar(reg,var):
         if var[0]=="'" and var[2]=="'" and len(var)==3:
             # this is char
             code.append("movb $"+str(ord( var[1]))+" , %" +  reg[1] + "l" )
-        elif var.isdigit():
+        elif var.lstrip("-").isdigit():
             code.append("mov $"+var+" , %" + reg )
         else:
             print(var)
@@ -147,6 +149,7 @@ def loadVar(reg,var):
 
 def storeVar(reg,var):
     global code
+    var = str(var)
     if "@" in var:
         info = checkVar(var, "all")["var"] if var.split('@')[0]=="tmp" else checkVar(var.split('@')[0], int(var.split('@')[1]))
         offset = info["offset"]
@@ -200,10 +203,10 @@ def storeVar(reg,var):
 
 def movVar(offsetSrc, baseSrc, offsetDest, baseDest , size = 8):
     if size == 4:
-        reg = "edi"
+        reg = "edx"
         mov = "mov"
     if size == 2:
-        reg = "dh"
+        reg = "dx"
         mov = "movw"
     if size == 1:
         reg = "dl"
@@ -211,15 +214,17 @@ def movVar(offsetSrc, baseSrc, offsetDest, baseDest , size = 8):
 
     if baseSrc == "rbp":
         code.append("neg %" + offsetSrc)
-        code.append( mov + " (%ebp, " + offsetSrc + ",1) , %" + reg)
+        code.append( mov + " (%ebp, %" + offsetSrc + ",1) , %" + reg)
+        code.append("neg %" + offsetSrc)
     if baseSrc == "0":
         code.append(mov + " (%" + offsetSrc + "), %" + reg )
     
     if baseDest == "rbp":
-        code.append("neg %" + offsetSrc)
-        code.append(mov + " %" + reg + ", (%ebp, " + offsetSrc + ",1)")
+        code.append("neg %" + offsetDest)
+        code.append(mov + " %" + reg + ", (%ebp, %" + offsetDest + ",1)")
+        code.append("neg %" + offsetDest)
     if baseDest == "0":
-        code.append(mov + " %" + reg + ", (%" + offsetSrc + ")")
+        code.append(mov + " %" + reg + ", (%" + offsetDest + ")")
         
  
 
@@ -260,7 +265,7 @@ class CodeGenerator:
         code.append('scan_fmt_int:\n\t\t .string "%d" ')
         code.append('scan_fmt_char:\n\t\t .string "%c" ')
         for j in scopeTableList[0].table.items():
-            if "base" in j[1].keys() and "offset" in j[1].keys():
+            if isinstance(j[1], dict) and "base" in j[1].keys() and "offset" in j[1].keys():
                 code.append(str(j[1]["offset"])+':\n\t\t .zero '+str(j[1]["size"])+' ')
         code.append(".text")
         code.append(".global main|")
@@ -459,10 +464,41 @@ class CodeGenerator:
                 storeVar("eax", out)
             else:
                 offset = info["offset"]
-                base = info["info"]
+                base = info["base"]
                 size = info["size"]
-                loadVar("esi", offset)
-                pass  
+                inp = out
+                info = checkVar(inp, "all")["var"] if inp.split('@')[0]=="tmp" else checkVar(inp.split('@')[0], int(inp.split('@')[1]))
+                offset_d = info["offset"]
+                base_d = info["base"]
+                size_d = info["size"]
+
+                loadVar("eax", offset)
+                loadVar("ebx", offset_d)
+                def add_to_offset(base,base_d, size):
+                    if base == "0":
+                        code.append("add $" + str(size) + ", %eax")
+                    else:
+                        code.append("sub $" + str(size) + ", %eax")
+                    if base_d == "0":
+                        code.append("add $" + str(size) + ", %ebx")
+                    else:
+                        code.append("sub $" + str(size) + ", %ebx")
+                # if size % 4 == 0:
+                #     for i in range(0, size, 4):
+                #         movVar("eax", base, "ebx", base_d, 4)
+                #         add_to_offset(base,base_d, 4)         
+                # elif size % 2 == 0 :       
+                #     for i in range(0, size % 4, 2 ):
+                #         movVar("eax", base, "ebx", base_d, 2)
+                #         add_to_offset(base,base_d, 2)
+                # else:
+                #     for i in range(0, size, 1 ):
+                #         movVar("eax", base, "ebx", base_d, 1)
+                #         add_to_offset(base,base_d, 1)
+                for i in range(0, size, 1 ):
+                    movVar("eax", base, "ebx", base_d, 1)
+                    add_to_offset(base,base_d, 1)
+
 
         else:
             # it is constant assignment like a =1;
@@ -517,9 +553,27 @@ class CodeGenerator:
             loadVar("eax", inp)
             code.append("push %eax")
         else:
-            # this is class
-            # to do
-            pass
+            offset = info["offset"]
+            base = info["base"]
+            size = info["size"]
+            
+            base_d = "0"
+            loadVar("eax", offset)
+            code.append("sub $" + str(size) + ", %esp")
+            code.append("mov %esp, %ebx")
+            def add_to_offset(base,base_d, size):
+                if base == "0":
+                    code.append("add $" + str(size) + ", %eax")
+                else:
+                    code.append("sub $" + str(size) + ", %eax")
+                if base_d == "0":
+                    code.append("add $" + str(size) + ", %ebx")
+                else:
+                    code.append("sub $" + str(size) + ", %ebx")
+
+            for i in range(0, size, 1 ):
+                movVar("eax", base, "ebx", base_d, 1)
+                add_to_offset(base,base_d, 1)
 
     def op_fcall(self, instr):
         out, label = instr

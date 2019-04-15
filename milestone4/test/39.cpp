@@ -1,7 +1,7 @@
-int a(int b[10],int c, float d){
-  float e,f=0;
-  if(f==0.0 && (c==0|| b[0]>=1 ) ){
-    e=1.0;
+int a(int b[10],int c, int d){
+  int e,f=0;
+  if(f==000 && (c==0|| b[0]>=1 ) ){
+    e=100;
     int k=(b[c]++);
     return k;
   }else{
@@ -26,10 +26,10 @@ int a(int b[10],int c, float d){
 int main(){
   int b[10],c=9,k;
    k=sizeof(int);
-  float d=1.0;
+  int d=100;
   switch(k){
     case 1:
-    d=2.0;
+    d=200;
     break;
   }
   b[0]=100;

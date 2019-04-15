@@ -165,7 +165,7 @@ def pushVar(identifier, val,scope = None):
     global currentScopeTable
     global gblCnt
 
-    if currentScopeTable == 0 and "size" in val.keys() and "offset" in val.keys() and "base" in val.keys():
+    if isinstance(val, dict) and currentScopeTable == 0 and "size" in val.keys() and "offset" in val.keys() and "base" in val.keys():
         val["offset"] = "gbl@" + str(gblCnt)
         gblCnt = gblCnt + 1
 
