@@ -220,8 +220,8 @@ def storeVar(reg,var):
 class CodeGenerator:
     def __init__(self):
         code.append(".data")
-        code.append('fmt_int: .string "%d\\n" ')
-        code.append('fmt_char: .string "%c\\n" ')
+        code.append('fmt_int: .string "%d" ')
+        code.append('fmt_char: .string "%c" ')
         code.append(".text")
         code.append(".global main|")
         code.append(".type main|, @function") 
@@ -246,6 +246,30 @@ class CodeGenerator:
         code.append("push %eax")
         code.append("push $fmt_char")
         code.append("call printf")
+        code.append("add  $8, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
+
+    def op_scan_int(self, instr):
+        to_scan_int = instr[0]
+        loadAddr("eax",to_scan_int)
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        code.append("push %eax")
+        code.append("push $fmt_int")
+        code.append("call scanf")
+        code.append("add  $8, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
+
+    def op_scan_char(self, instr):
+        to_scan_int = instr[0]
+        loadAddr("eax",to_scan_int)
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        code.append("push %eax")
+        code.append("push $fmt_char")
+        code.append("call scanf")
         code.append("add  $8, %esp")
         code.append("mov %ebp, %esp")
         code.append("pop %ebp")
@@ -377,7 +401,7 @@ class CodeGenerator:
             info = checkVar(out, "all")["var"] if out.split('@')[0]=="tmp" else checkVar(out.split('@')[0], int(out.split('@')[1]))
             type_ = info["type"]
             if type_ == "char":
-                code.append("movb $" + str(ord(inp)) + ",%eax")
+                code.append("movb $" + str(ord(inp[1])) + ",%eax")
                 storeVar("eax", out)
             else:
                 code.append("mov $" + inp + ", %eax")
@@ -517,6 +541,10 @@ class CodeGenerator:
             self.op_print_int(instr["arg"])
         elif instr["ins"]=="print_char":
             self.op_print_char(instr["arg"])
+        elif instr["ins"]=="scan_int":
+            self.op_scan_int(instr["arg"])
+        elif instr["ins"]=="scan_char":
+            self.op_scan_char(instr["arg"])
 
 
 if __name__ == "__main__":

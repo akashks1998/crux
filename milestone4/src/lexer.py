@@ -24,6 +24,8 @@ keywords = {
     'print_int' : 'PRINTINT',
     'print_char' : 'PRINTCHAR',
     'return':'RETURN',
+    'scan_int' : 'SCANINT',
+    'scan_char' : 'SCANCHAR',
     'sizeof':'SIZEOF',
     'switch':'SWITCH',
     'struct' : 'STRUCT',
