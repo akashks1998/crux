@@ -2443,7 +2443,6 @@ if __name__ == "__main__":
         error_line_offset=file_len("std.cpp")+1
         fout = open("temp.cpp", "w")
         fin = open("std.cpp", "r")
-        fout.write("int heap_ptr;\n")
         fout.write(fin.read())
         fin.close()
         fout.write(data2[17:])
@@ -2451,7 +2450,6 @@ if __name__ == "__main__":
         FileName="temp.cpp"
     else:
         fout = open("temp.cpp", "w")
-        fout.write("int heap_ptr;\n")
         fout.write(data2)
         fout.close()
         FileName="temp.cpp"
@@ -2464,6 +2462,12 @@ if __name__ == "__main__":
     p = parser.parse(file_o,lexer = lexer,debug=debug,tracking=True)  
     open('dot.gz','a').write("\n}\n")
     scope_table_graph(scopeTableList)
+    k=0
+    for j in scopeTableList[0].table.items():
+        if "base" in j[1].keys() and "offset" in j[1].keys():
+            j[1]["offset"]="gbl@"+str(k)
+            k=k+1
+
     f = open(SymbolTableFileName, "w")
     ignore_key = ["is_array", "element_type", "index", "to_add"]
     for idx, table in  enumerate( scopeTableList):

@@ -223,10 +223,13 @@ def getReg(reg=None,var=None,free=False):
 class CodeGenerator:
     def __init__(self):
         code.append(".data")
-        code.append('print_fmt_int: .string "%d\\n" ')
-        code.append('print_fmt_char: .string "%c\\n" ')
-        code.append('scan_fmt_int: .string "%d" ')
-        code.append('scan_fmt_char: .string "%c" ')
+        code.append('print_fmt_int:\n\t\t .string "%d\\n" ')
+        code.append('print_fmt_char:\n\t\t .string "%c\\n" ')
+        code.append('scan_fmt_int:\n\t\t .string "%d" ')
+        code.append('scan_fmt_char:\n\t\t .string "%c" ')
+        for j in scopeTableList[0].table.items():
+            if "base" in j[1].keys() and "offset" in j[1].keys():
+                code.append(j[1]["offset"]+':\n\t\t .zero '+str(j[1]["size"])+' ')
         code.append(".text")
         code.append(".global main|")
         code.append(".type main|, @function") 
@@ -592,7 +595,7 @@ if __name__ == "__main__":
 
     s_file = open('m.s', 'w')
     for c in code:
-        c=c.replace('|','').replace('#', '')
+        c=c.replace('|','').replace('#', '').replace('@','')
         if c[-1]==':':
             s_file.write(c+ "\n")
         else:
