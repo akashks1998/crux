@@ -76,10 +76,11 @@ main:
 	mov $4 , %ebx
 	sub %ebx, %eax
 	mov %eax , -20(%ebp)
-	// tmp@6=tmp@7
-	mov -24(%ebp), %eax
-	mov -20(%ebp), %edi
-	neg %edi
+	// tmp@6	mov %eax, (%edi)
+	mov %eax, (%edi)
+	mov -24(	mov %eax, (%edi)	mov %eax, (%edi)
+	mov -20(	mov %eax, (%edi)
+	neg %edi	mov %eax, (%edi)
 	mov %eax, (%ebp , %edi, 1)
 	// tmp@10=9
 	mov $9, %eax
@@ -89,7 +90,7 @@ main:
 	mov $0 , %ebx
 	add %ebx, %eax
 	mov %eax , -28(%ebp)
-	// tmp@9=tmp@10
+	// tmp@9=tmp@1
 	mov -32(%ebp), %eax
 	mov -28(%ebp), %edi
 	mov %eax, (%edi)

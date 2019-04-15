@@ -15,6 +15,7 @@ code = []
 def checkVar(identifier,scopeId="**", search_in_class = False):
     global scopeTableList
     global currentScopeTable
+    identifier = identifier if identifier.split('@')[0]=="tmp" else identifier.split('@')[0]
     if scopeId == "global":
         if scopeTableList[0].lookUp(identifier):
             return scopeTableList[0].getDetail(identifier)
@@ -50,46 +51,6 @@ def checkVar(identifier,scopeId="**", search_in_class = False):
         if scopeTableList[scopeId].lookUp(identifier):
             return scopeTableList[scopeId].getDetail(identifier)
         return False
-
-def parsequad(q):
-    return [i.strip() for i in q.split("$")[1:]]
-
-def off(ar):
-    l=[]
-    for a in ar:
-        if "@" in a:
-            c = checkVar(a, "all")["var"] if a.split('@')[0]=="tmp" else checkVar(a.split('@')[0], int(a.split('@')[1]))
-            if str(c["offset"])[0]!="-":
-                if c["base"]=="rbp":
-                    offset = "-"+str(c["offset"])
-                else:
-                    offset = "+"+str(c["offset"])
-            else:
-                if c["base"]=="rbp":
-                    offset = "+"+str(c["offset"])[1:]
-                else:
-                    offset = "-"+str(c["offset"])[1:]
-            t = c["base"]+offset if c["base"]=="rbp" else c["base"]+offset
-            l.append("[" + t + "]")
-        else:
-            l.append(a)
-    return l
-
-
-def acode(ar):
-    o = off(ar)
-    return ' '.join(o) if o != [] else ''
-
-def give_asm_op(inst_type):
-    op_dict = {
-        "int+" : "add",
-        "int-" : "sub",
-        "int/" : "idiv",
-        "int*" : "imul",
-        "and" : "and",
-        "or" : "or",
-    }
-    return op_dict[inst_type]
 
 def loadAddr(reg, var):
     global code
@@ -220,6 +181,8 @@ def storeVar(reg,var):
     else:
         print("Error in storing")
         exit()
+
+
 reg_used={"eax":[-1,None],
           "ebx":[-1,None],
           "ecx":[-1,None],
@@ -292,6 +255,7 @@ class CodeGenerator:
         code.append("mov %ebp, %esp")
         code.append("pop %ebp")
         storeVar("eax",to_malloc)
+        
     def op_free(self, instr):
         to_free=instr[0]
         code.append("push %ebp")
