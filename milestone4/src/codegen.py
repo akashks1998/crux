@@ -161,10 +161,11 @@ def loadVar(reg,var):
         elif var.isdigit():
             code.append("mov $"+var+" , %" + reg )
         else:
-            print("error in load")
+            print(var)
+            print("Error in load")
             exit()
 
-        
+
 def storeVar(reg,var):
     global code
     if "@" in var:

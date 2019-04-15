@@ -818,15 +818,30 @@ def p_postfix_expression_2(p):
         if(p[1].data["type"][-2] == "p") or (p[1].data["type"][-2] == "|") :
             # end of array
             p[0].data = {"type": p[1].data["type"][:-1].rstrip("|")}
-            array_offset = p[1].data["offset"]
-            array_offset_var = getnewvar("int")
-            new_temp = getnewvar("int")
-            new_offset = getnewvar("int")
-            final_var = getnewvar(p[0].data["type"], new_offset , get_size(p[0].data["type"]) )
-            p[0].code = p[0].code + [ quad("*",[new_temp,to_add_var,str(get_size(p[0].data["type"]))],new_temp + " = " + to_add_var + " * " + str(get_size(p[0].data["type"]))) ]  \
-                 + [quad("eq", [array_offset_var, str(array_offset) ] , array_offset_var + " = " + str(array_offset) )] \
-                 + [ quad("-",[new_offset, array_offset_var ,new_temp],new_offset + " = " + array_offset_var + " - " + new_temp)] 
-            p[0].place = final_var
+            array_offset = p[1].data["offset"] 
+            array_base = p[1].data["base"]
+            if str(array_base) == "0":
+                array_offset_var = getnewvar("int")
+                new_temp = getnewvar("int")
+                new_offset = getnewvar("int")
+                final_var = getnewvar(p[0].data["type"], new_offset , get_size(p[0].data["type"]), base = "0" )
+                p[0].code = p[0].code + [ quad("*",[new_temp,to_add_var,str(get_size(p[0].data["type"]))],new_temp + " = " + to_add_var + " * " + str(get_size(p[0].data["type"]))) ]  \
+                    + [quad("eq", [array_offset_var, str(array_offset) ] , array_offset_var + " = " + str(array_offset) )] \
+                    + [ quad("+",[new_offset, array_offset_var ,new_temp],new_offset + " = " + array_offset_var + " + " + new_temp)] 
+                p[0].place = final_var
+
+            elif str(array_base) == "rbp":
+                array_offset_var = getnewvar("int")
+                new_temp = getnewvar("int")
+                new_offset = getnewvar("int")
+                final_var = getnewvar(p[0].data["type"], new_offset , get_size(p[0].data["type"]) )
+                p[0].code = p[0].code + [ quad("*",[new_temp,to_add_var,str(get_size(p[0].data["type"]))],new_temp + " = " + to_add_var + " * " + str(get_size(p[0].data["type"]))) ]  \
+                    + [quad("eq", [array_offset_var, str(array_offset) ] , array_offset_var + " = " + str(array_offset) )] \
+                    + [ quad("-",[new_offset, array_offset_var ,new_temp],new_offset + " = " + array_offset_var + " - " + new_temp)] 
+                p[0].place = final_var
+            else:
+                report_error("wrong array base", p.lineno(0))
+            
        
     elif "|" in p[1].data["type"] and type_last_char == "p":
         # address mod
@@ -886,7 +901,7 @@ def p_postfix_expression_3(p):
         code.append( quad("PushParam",[p[1].data["class_obj"],"",""],"PushParam " + p[1].data["class_obj"]) )
 
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = p[1].code + expr_code + code + [ quad("Fcall",[p[0].place,(class_name  + ":" if class_name != "" else "") + expected_sig,""],p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig) ]
+    p[0].code = p[1].code + expr_code + code + [ quad("Fcall",[p[0].place,(class_name  + "_" if class_name != "" else "") + expected_sig,""],p[0].place + " = " + "Fcall " + (class_name  + ":" if class_name != "" else "") + expected_sig) ]
     pop_params_code = [ quad("removeParams", [ str(func_detail["parameter_space"]),"", ""], "RemoveParams " + str(func_detail["parameter_space"]) ) ]
     p[0].code = p[0].code +  pop_params_code
 
@@ -1042,7 +1057,7 @@ def p_primary_expression2(p):
         report_error("wrong reference to THIS", p.lineno(0))
 
     p[0].data = detail["var"]
-    p[0].place = "this"
+    p[0].place = "this@" + str(detail["scope"])
 
 
 def p_primary_expression3(p): 
@@ -1091,10 +1106,9 @@ def p_unary_expression2(p):
     '''unary_expression : unary2_operator cast_expression 
     ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)
-   
+    p[0].parse=f(p)   
     if p[2].data["type"][-1] in ["a","p"]  and "|" in p[2].data["type"]:
-        p[0].data["type"]=p[2].data["type"][:-1].rstrip("a").rstrip("|")
+        p[0].data["type"]=p[2].data["type"][:-1].rstrip("|")
     else:
         report_error("Cannot dereference non-pointer element",p.lineno(0))
   
@@ -1582,7 +1596,7 @@ def p_class_function_specifier(p):
 
     p[0].code = p[5].code.copy()
     c = p[0].code[0].split("$")
-    c[1] = p[2].data + ":" + c[1].strip()
+    c[2] = p[2].data + "_" + c[2].strip()
     p[0].code[0] = " $ ".join(c)
 
     
