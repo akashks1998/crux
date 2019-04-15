@@ -1123,8 +1123,7 @@ def p_deallocation_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    if checkVar("dealloc|void|p","global")==False:
-        report_error("STD lib not included", p.lineno(0))
+    
     if(len(p) == 3):
         detail = checkVar(p[2].data)["var"]
         name = p[2].data
@@ -1142,7 +1141,7 @@ def p_deallocation_expression(p):
     else:
         report_error("wrong specification of deallocate ", p.lineno(0))
     
-    p[0].code = [ quad("PushParam", [name + "@" + str(currentScopeTable),"",""], "PushParam " + name + "@" + str(currentScopeTable)) ] + [quad("Fcall",["dealloc|void|p","",""],"Fcall dealloc|void|p")]
+    p[0].code = [ quad("free", [name + "@" + str(currentScopeTable),"",""],"free "+name + "@" + str(currentScopeTable))]
         
 # New Allocation
 # Extra * new_type_name me added hain

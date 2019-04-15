@@ -6,10 +6,10 @@
 	.type main, @function
 // main:
 main:
-	// BeginFunc57
+	// BeginFunc56
 	push %ebp
 	mov %esp, %ebp
-	sub $57, %esp
+	sub $56, %esp
 	push %ebx
 	push %ecx
 	push %edx
@@ -91,19 +91,6 @@ for_begin10:
 	add  $8, %esp
 	mov %ebp, %esp
 	pop %ebp
-	// tmp@13='_'
-	movb $95,%eax
-	movb %eax , -53(%ebp)
-	// print_chartmp@13
-	movb -53(%ebp), %eax
-	push %ebp
-	mov %esp,%ebp
-	push %eax
-	push $fmt_char
-	call printf
-	add  $8, %esp
-	mov %ebp, %esp
-	pop %ebp
 // for_continue10:
 for_continue10:
 	// tmp@6=i@3
@@ -117,11 +104,20 @@ for_continue10:
 	jmp for_begin10
 // for_after10:
 for_after10:
-	// tmp@14=0
+	// freep@2
+	push %ebp
+	mov %esp,%ebp
+	mov -16(%ebp), %edi
+	push %edi
+	call malloc
+	add $4, %esp
+	mov %ebp, %esp
+	pop %ebp
+	// tmp@13=0
 	mov $0, %eax
-	mov %eax , -57(%ebp)
-	// returntmp@14
-	mov -57(%ebp), %eax
+	mov %eax , -56(%ebp)
+	// returntmp@13
+	mov -56(%ebp), %eax
 	pop %ebx
 	pop %ecx
 	pop %edx

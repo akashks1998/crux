@@ -10,7 +10,7 @@ int main(){
     p[i]=i*2;
     print_int(p[i]);
   }
-  
+  delete [] p;
   
   return 0;
 }

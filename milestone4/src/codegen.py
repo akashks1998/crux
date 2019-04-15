@@ -292,6 +292,16 @@ class CodeGenerator:
         code.append("mov %ebp, %esp")
         code.append("pop %ebp")
         storeVar("eax",to_malloc)
+    def op_free(self, instr):
+        to_free=instr[0]
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        loadVar("edi", to_free)
+        code.append("push %edi")
+        code.append("call malloc")
+        code.append("add $4, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
 
     def op_scan_int(self, instr):
         to_scan_int = instr[0]
@@ -590,6 +600,8 @@ class CodeGenerator:
             self.op_scan_char(instr["arg"])
         elif instr["ins"]=="malloc":
             self.op_malloc(instr["arg"])
+        elif instr["ins"]=="free":
+            self.op_free(instr["arg"])
 
 
 if __name__ == "__main__":
