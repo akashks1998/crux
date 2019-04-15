@@ -116,7 +116,7 @@ def loadVar(reg,var):
         type_=info["type"]
         if "@" in str(offset):
             # offset in variable
-            r=getReg()
+            r="esi"
             if str(base) == "0":
                 loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
@@ -140,7 +140,6 @@ def loadVar(reg,var):
             else:
                 print("wrong base in load")
                 exit()
-            getReg(r,free=True)   
         else:
             # offset is int
             if str(base) == "0":
@@ -178,7 +177,7 @@ def storeVar(reg,var):
         type_=info["type"]
         if "@" in str(offset):
             # offset in variable
-            r=getReg()
+            r="edi"
             if str(base) == "0":
                 loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
@@ -202,7 +201,6 @@ def storeVar(reg,var):
             else:
                 print("wrong base in store")
                 exit()      
-            getReg(r,free=True)
         else:
             # offset is int
             if str(base) == "0":
@@ -254,8 +252,8 @@ def getReg(reg=None,var=None,free=False):
 class CodeGenerator:
     def __init__(self):
         code.append(".data")
-        code.append('fmt_int: .string "%d" ')
-        code.append('fmt_char: .string "%c" ')
+        code.append('fmt_int: .string "%d\\n" ')
+        code.append('fmt_char: .string "%c\\n" ')
         code.append(".text")
         code.append(".global main|")
         code.append(".type main|, @function") 

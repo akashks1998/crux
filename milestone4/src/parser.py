@@ -107,7 +107,7 @@ def code(*rest):
     s = ""
     for r in rest:
         s = s + " " + str(r)
-    print(s)
+    print(s) 
 
 class OBJ:    
     def __init__(self):
@@ -281,7 +281,7 @@ def get_size(data_type, basic = True):
     # it has to be class
     get_class = checkVar(data_type, "global")
     if get_class ==  False:
-        print(" Error :: Class " + data_type + " is not defined")
+        print(" Error :: class " + data_type + " is not defined")
         exit()
     return get_class["size"]
 
@@ -921,36 +921,44 @@ def p_postfix_expression_6(p):
     # post_fix must be a object and name should be a class member
 
     if "|" in p[1].data["type"]:
-        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
+        report_error(" Try to do dot on non class type " + p[1].data["type"] ,p.lineno(0))
 
     details=checkVar(p[1].data["type"],"**")
     if details==False:
-        report_error("request for member "+p[3].data+" in non-class type "+p[1].data["type"],p.lineno(0))
+        report_error(" class not defined :" +  p[1].data["type"] ,p.lineno(0))
     if "class" in details["var"].keys() and details["var"]["class"]=="class":
-        x=checkVar(p[3].data, details["var"]["scope"])
-        if x!=False:
-            p[0].data = x.copy()
-            tmp_type = "int|p" if p[0].data["type"] == "function_upper" else p[0].data["type"] 
+        name_detail_in_class=checkVar(p[3].data, details["var"]["scope"])
+        if name_detail_in_class!=False:
+            p[0].data = name_detail_in_class.copy()
             if(p[0].data["type"] == "function_upper"):
-                p[0].place = getnewvar(tmp_type)
-                p[0].data["func_sig"] = x["func_sig"]
+                p[0].place = getnewvar("int|p")
+                p[0].data["func_sig"] = name_detail_in_class["func_sig"]
                 p[0].data["detail_scope"] = details["var"]["scope"]
                 p[0].data["func_name"] = p[3].data
                 p[0].data["class_name"] = p[1].data["type"]
                 p[0].data["class_obj"] = p[0].place 
+                p[0].code = p[1].code + [ quad("lea",[p[0].place,p[1].place,""], p[0].place + " = &(" +  p[1].place + ")") ]
 
-                p[0].code = p[1].code + [ quad("load",[p[0].place,p[1].place,""],p[0].place + " = *(" +  p[1].place + ")") ]
             else:
-                class_relative_offset = x["offset"]
-                class_element_size = x["size"]
-                to_check_var = p[1].place if p[1].place.split('@')[0]=="tmp" else p[1].place.split('@')[0]
-                class_actual_offset = checkVar(to_check_var)["var"]["offset"]
-                class_actual_base = checkVar(to_check_var)["var"]["base"]
-
-                actual_offset = getnewvar("int|p")
-            
-                p[0].place = getnewvar(x["type"], actual_offset, class_element_size, class_actual_base)
-                p[0].code = p[1].code + [ quad("+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " + " + str(class_relative_offset)  ) ]
+                name_offset_relative_to_class = name_detail_in_class["offset"]
+                name_size = name_detail_in_class["size"]
+                name_type = name_detail_in_class["type"]
+                class_instance_info = checkVar(p[1].place)["var"]
+                class_instance_offset = class_instance_info["offset"]
+                class_instance_base = str(class_instance_info["base"])
+                class_instance_size = class_instance_info["size"] 
+                # two case to be handled, either relative offset and global addess
+                if class_instance_base == "rbp":
+                    name_offset_to_sub =  class_instance_size - name_offset_relative_to_class
+                    name_offset = getnewvar("int|p")
+                    p[0].place = getnewvar( name_type , name_offset, name_size , "rbp" )
+                    p[0].code = p[1].code + [quad("-" , [name_offset, class_instance_offset, name_offset_to_sub]) ]
+                else:
+                    # base is 0
+                    name_offset_to_add =  class_instance_size - name_offset_relative_to_class
+                    name_offset = getnewvar("int|p")
+                    p[0].place = getnewvar(name_type, name_offset , name_size, "0")
+                    p[0].code = p[1].code + [quad("+" , [name_offset, class_instance_offset, name_offset_to_add]) ]
 
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"], p.lineno(1))
@@ -968,38 +976,37 @@ def p_postfix_expression_7(p):
     if p[1].data["type"][-2:] != "|a" and p[1].data["type"][-2:] != "|p":
         report_error("request for member "+p[3].data+" in ptr to non-class type "+p[1].data["type"],p.lineno(0))
 
-    details=checkVar(p[1].data["type"][:-2],"**")
+    details=checkVar(p[1].data["type"][:-2],"**") 
+    
     if details==False:
-        report_error( p[3].data + " does not exist ",p.lineno(0))
-    if "class" in details["var"].keys() and details["var"]["class"]=="class":
-        x=checkVar(p[3].data, details["var"]["scope"])
-        if x!=False:
-            p[0].data=x.copy()
-            tmp_type = "int|p" if p[0].data["type"] == "function_upper" else p[0].data["type"] 
-            p[0].place = getnewvar(tmp_type)
-            class_obj = getnewvar(details["var"]["type"])
-            if(p[0].data["type"] == "function_upper"):
-                p[0].data["func_sig"] = x["func_sig"]
-                p[0].data["func_name"] = p[3].data
-                p[0].data["detail_scope"] = details["var"]["scope"]
-                p[0].data["class_name"] = p[1].data["type"][:-2]
-                p[0].data["class_obj"] = class_obj
-                p[0].code = p[1].code + [ quad("eq", [class_obj, p[1].place, ""], class_obj + " = " + p[1].place) ] 
-            else:
-                class_relative_offset = x["offset"]
-                class_element_size = x["size"]
-                
-                class_actual_offset = p[1].place
-                class_actual_base = 0
-                actual_offset = getnewvar("int")
-                p[0].place = getnewvar(x["type"], actual_offset, class_element_size, class_actual_base)
-                p[0].code = p[1].code + [ quad("+", [actual_offset, str(class_actual_offset), str(class_relative_offset) ] , actual_offset + " = " + str(class_actual_offset) + " + " + str(class_relative_offset)  ) ]
+        report_error( p[1].data + " does not exist ",p.lineno(0))
 
+    if "class" in details["var"].keys() and details["var"]["class"]=="class":
+        name_detail_in_class=checkVar(p[3].data, details["var"]["scope"])
+        if name_detail_in_class!=False:
+            p[0].data = name_detail_in_class.copy()
+            if(p[0].data["type"] == "function_upper"):
+                p[0].place = p[1].place
+                p[0].code = p[1].code 
+                p[0].data["func_sig"] = name_detail_in_class["func_sig"]
+                p[0].data["detail_scope"] = details["var"]["scope"]
+                p[0].data["func_name"] = p[3].data
+                p[0].data["class_name"] = p[1].data["type"][:-2]
+                p[0].data["class_obj"] = p[0].place    
+            else:
+                name_offset_relative_to_class = name_detail_in_class["offset"]
+                name_size = name_detail_in_class["size"]
+                name_type = name_detail_in_class["type"]
+
+                name_offset_to_add =  details["var"]["size"] - name_offset_relative_to_class
+                name_offset = getnewvar("int|p")
+                p[0].place = getnewvar(name_type, name_offset , name_size, "0")
+                p[0].code = p[1].code + [quad("+" , [name_offset, p[1].place , name_offset_to_add]) ]
+            
         else:
             report_error(p[3].data+" not in class "+p[1].data["type"][:-2], p.lineno(1))
     else:
         report_error(p[1].data["type"][:-2] +" is not a class",p.lineno(0))
-    # post_fix must be a object and name should be a class member
 
 def p_postfix_expression_8(p): 
     '''postfix_expression : postfix_expression  DPLUSOP 
@@ -1075,7 +1082,6 @@ def p_unary_expression1(p):
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = assigner(p,2)
-    operator = ""
     if p[1].data == "&":
         if "|" in p[2].data["type"]:
             p[0].data["type"]=p[2].data["type"]+"p"
@@ -1083,7 +1089,7 @@ def p_unary_expression1(p):
             p[0].data["type"]=p[2].data["type"]+"|p"
 
         p[0].place = getnewvar(p[0].data["type"])
-        p[0].code = p[2].code + [ quad( "lea" , [p[0].place, p[2].place , ""], p[0].place + " = "+  p[1].data + " " + p[2].place ) ]    
+        p[0].code = p[2].code + [ quad( "lea" , [p[0].place, p[2].place ], p[0].place + " = "+  p[1].data + " " + p[2].place ) ]    
     elif p[1].data in ["-", "+"] and p[2].data["type"] in ["int", "float"]:
         p[0].data["type"] = p[2].data["type"]
         if(p[1].data == "+") :
@@ -1555,10 +1561,6 @@ def p_complex_type_specifier(p):
     '''complex_type_specifier : class_key IDENTIFIER 
                                  
     ''' 
-                                # | class_key  IDENTIFIER template_class_name
-                                # | TYPE IDENTIFIER 
-                                # | TYPE IDENTIFIER template_class_name
-
     p[0] = OBJ() 
     p[0].parse=f(p)
     p[0].data = { "class":p[1].data,"type": p[2].data}
@@ -2349,8 +2351,8 @@ def p_pop_scope(p):
     '''pop_scope : '''
     popScope()
 
-def quad(op, a, statement):
-    arg = [ a[i] if i<len(a) else "" for i in range(3) ]
+def quad(op, a, statement = None ):
+    arg = [ str(a[i]) if i<len(a) else "" for i in range(3) ]
     if op=="eq":
         if arg[0][0]=="*":
             op = "store"
@@ -2371,6 +2373,8 @@ def quad(op, a, statement):
             c = checkVar(arg[0].split('@')[0], int(arg[0].split('@')[1]))
             op = "=" #+ ("p" if "|" in  c["type"] else c["type"]) 
     
+    if statement == None:
+        statement = str(op) + " " + arg[0] + " " + arg[1] + " " + arg[2]
     return " $ ".join([statement]+[op]+arg)
 
 def parsequad(q):
