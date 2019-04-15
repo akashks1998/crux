@@ -1,17 +1,7 @@
-class a{
-  char b;
-  int c[10];
-};
-
+int a[100];
+int x=1;
 int main(){
-  int x(int* t){
-    int *z=t;
-    *z=5;
-    return 4;
-  }
-  int t;
-  x(&t);
-  print_int(t);
+  a[1]=1;
 
   return 0;
 }

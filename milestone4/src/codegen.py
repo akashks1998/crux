@@ -83,7 +83,7 @@ def loadVar(reg,var):
         if var.split('@')[0]=="tmp":
             info = checkVar(var, "all")["var"]
         elif var.split('@')[0]=="gbl":
-            code.append("mov $" + var + " %" + reg)
+            code.append("mov $" + var + ", %" + reg)
             return
         else:
             info = checkVar(var.split('@')[0], int(var.split('@')[1]) )  
@@ -255,10 +255,13 @@ def getReg(reg=None,var=None,free=False):
 class CodeGenerator:
     def __init__(self):
         code.append(".data")
-        code.append('print_fmt_int: .string "%d\\n" ')
-        code.append('print_fmt_char: .string "%c\\n" ')
-        code.append('scan_fmt_int: .string "%d" ')
-        code.append('scan_fmt_char: .string "%c" ')
+        code.append('print_fmt_int:\n\t\t .string "%d\\n" ')
+        code.append('print_fmt_char:\n\t\t .string "%c\\n" ')
+        code.append('scan_fmt_int:\n\t\t .string "%d" ')
+        code.append('scan_fmt_char:\n\t\t .string "%c" ')
+        for j in scopeTableList[0].table.items():
+            if "base" in j[1].keys() and "offset" in j[1].keys():
+                code.append(str(j[1]["offset"])+':\n\t\t .zero '+str(j[1]["size"])+' ')
         code.append(".text")
         code.append(".global main|")
         code.append(".type main|, @function") 
@@ -445,6 +448,10 @@ class CodeGenerator:
     def op_assign(self,instr):
         out , inp = instr
         if "@" in inp:
+            if inp.split('@')[0] == "gbl":
+                loadVar("eax",inp)
+                storeVar("eax", out)
+                return
             info = checkVar(inp, "all")["var"] if inp.split('@')[0]=="tmp" else checkVar(inp.split('@')[0], int(inp.split('@')[1]))
             type_ = info["type"]
             if "|" in type_ or type_ in ["int", "char", "float"]:
@@ -627,7 +634,7 @@ if __name__ == "__main__":
 
     s_file = open('m.s', 'w')
     for c in code:
-        c=c.replace('|','').replace('#', '')
+        c=c.replace('|','').replace('#', '').replace('@','')
         if c[-1]==':':
             s_file.write(c+ "\n")
         else:

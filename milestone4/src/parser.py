@@ -45,6 +45,7 @@ scopeTableList.append(globalScopeTable)
 currentTmp=0
 new_pointer_size = 4
 currentScopeTable = 0
+gblCnt = 0
 
 offsetList = [0]
 offsetParent = [None]
@@ -162,6 +163,12 @@ def getParentScope(scopeId):
 def pushVar(identifier, val,scope = None):
     global scopeTableList
     global currentScopeTable
+    global gblCnt
+
+    if currentScopeTable == 0 and "size" in val.keys() and "offset" in val.keys() and "base" in val.keys():
+        val["offset"] = "gbl@" + str(gblCnt)
+        gblCnt = gblCnt + 1
+
 
     if scope == None:    
         if checkVar(identifier, currentScopeTable )==False:
@@ -2445,7 +2452,6 @@ if __name__ == "__main__":
         error_line_offset=file_len("std.cpp")+1
         fout = open("temp.cpp", "w")
         fin = open("std.cpp", "r")
-        fout.write("int heap_ptr;\n")
         fout.write(fin.read())
         fin.close()
         fout.write(data2[17:])
@@ -2453,7 +2459,6 @@ if __name__ == "__main__":
         FileName="temp.cpp"
     else:
         fout = open("temp.cpp", "w")
-        fout.write("int heap_ptr;\n")
         fout.write(data2)
         fout.close()
         FileName="temp.cpp"
@@ -2466,6 +2471,7 @@ if __name__ == "__main__":
     p = parser.parse(file_o,lexer = lexer,debug=debug,tracking=True)  
     open('dot.gz','a').write("\n}\n")
     scope_table_graph(scopeTableList)
+
     f = open(SymbolTableFileName, "w")
     ignore_key = ["is_array", "element_type", "index", "to_add"]
     for idx, table in  enumerate( scopeTableList):
