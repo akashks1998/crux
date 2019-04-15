@@ -1,32 +1,37 @@
 	.data
-	fmt_int: .string "%d" 
-	fmt_char: .string "%c" 
+	print_fmt_int: .string "%d\n" 
+	print_fmt_char: .string "%c\n" 
+	scan_fmt_int: .string "%d" 
+	scan_fmt_char: .string "%c" 
 	.text
 	.global main
 	.type main, @function
 // xintp:
 func0:
-	// BeginFunc8
+	// BeginFunc12
 	push %ebp
 	mov %esp, %ebp
-	sub $8, %esp
+	sub $12, %esp
 	push %ebx
 	push %ecx
 	push %edx
 	push %esi
 	push %edi
-	// tmp@1=8
-	mov $8, %eax
+	// z@3=t@3
+	mov 8(%ebp), %eax
 	mov %eax , -4(%ebp)
+	// tmp@1=5
+	mov $5, %eax
+	mov %eax , -8(%ebp)
 	// tmp@0=tmp@1
-	mov -4(%ebp), %eax
-	mov 8(%ebp), %edi
+	mov -8(%ebp), %eax
+	mov -4(%ebp), %edi
 	mov %eax, (%edi)
 	// tmp@2=4
 	mov $4, %eax
-	mov %eax , -8(%ebp)
+	mov %eax , -12(%ebp)
 	// returntmp@2
-	mov -8(%ebp), %eax
+	mov -12(%ebp), %eax
 	pop %ebx
 	pop %ecx
 	pop %edx
@@ -61,7 +66,7 @@ main:
 	push %ebp
 	mov %esp,%ebp
 	push %eax
-	push $fmt_int
+	push $print_fmt_int
 	call printf
 	add  $8, %esp
 	mov %ebp, %esp

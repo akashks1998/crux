@@ -5,7 +5,8 @@ class a{
 
 int main(){
   int x(int* t){
-    *t=8;
+    int *z=t;
+    *z=5;
     return 4;
   }
   int t;
