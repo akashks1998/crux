@@ -23,6 +23,7 @@ keywords = {
     'new':'NEW',
     'print_int' : 'PRINTINT',
     'print_char' : 'PRINTCHAR',
+    'print_float' : 'PRINTFLOAT',
     'return':'RETURN',
     'scan_int' : 'SCANINT',
     'scan_char' : 'SCANCHAR',

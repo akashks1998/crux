@@ -1,6 +1,8 @@
 import pickle
 import re
 import operator
+import struct
+
 
 f = open("sym_table.obj", "rb")
 scopeTableList = pickle.load(f)
@@ -12,9 +14,13 @@ FileName = ""
 lineno=0
 code = []
 
+def binary(float_):
+    return bin(struct.unpack('!i',struct.pack('!f',float_))[0])
+
 def checkVar(identifier,scopeId="**", search_in_class = False):
     global scopeTableList
     global currentScopeTable
+    identifier = str(identifier)
     identifier = identifier if identifier.split('@')[0]=="tmp" else identifier.split('@')[0]
     if scopeId == "global":
         if scopeTableList[0].lookUp(identifier):
@@ -201,6 +207,86 @@ def storeVar(reg,var):
         print("Error in storing")
         exit()
 
+def loadFloatVar(var):
+    global code
+    var = str(var)
+    if "@" in var:
+        if var.split('@')[0]=="tmp":
+            info = checkVar(var, "all")["var"]
+        else:
+            info = checkVar(var.split('@')[0], int(var.split('@')[1]) )  
+        
+        offset = info["offset"]
+        base = info["base"]
+        type_=info["type"]
+        if "@" in str(offset):
+             # offset in variable
+            if str(base) == "0":
+                loadVar("esi",offset)
+                if type_ == "int":
+                    code.append("fild " + "(%esi)")
+                elif type_ == "float":
+                    code.append("fld " + "(%esi)")
+                else:
+                    print("error in load float")
+                    exit(-1)
+            elif str(base) == "rbp":
+                loadVar("esi",offset)
+                if type_ == "int":
+                    code.append("neg %esi")
+                    code.append("fild (%ebp , %esi, 1)" )
+                elif type_ == "float":
+                    code.append("neg %esi")
+                    code.append("fld (%ebp , %esi, 1)" )
+                else:
+                    print("error in load float")
+                    exit(-1)
+            else:
+                print("wrong base in load")
+                exit()
+        else:
+            if type_ == "int":
+                code.append("fild " + str(-offset) + "(%ebp)")
+            elif type_ == "float":
+                code.append("fld " + str(-offset) + "(%ebp)")
+            else:
+                print("error in load float")
+                exit(-1)
+    else:
+        pass
+        print("var is not var")
+        exit()
+
+def storeFloatVar(var):
+    global code
+    var = str(var)
+    if "@" in var:
+        if var.split('@')[0]=="tmp":
+            info = checkVar(var, "all")["var"]
+        else:
+            info = checkVar(var.split('@')[0], int(var.split('@')[1]) )  
+        
+        offset = info["offset"]
+        base = info["base"]
+        if "@" in str(offset):
+            if str(base) == "0":
+                loadVar("esi",offset)
+                code.append("fst " + "(%esi)")
+            elif str(base) == "rbp":
+                loadVar("esi",offset)
+                code.append("neg %esi")
+                code.append("fst (%ebp , %esi, 1)" )
+            else:
+                print("wrong base in load")
+                exit()
+        else:
+            code.append("fst " + str(-offset) + "(%ebp)")  
+    else:
+        pass
+        print("verror in store float")
+        exit()
+
+
 def movVar(offsetSrc, baseSrc, offsetDest, baseDest , size = 8):
     if size == 4:
         reg = "edx"
@@ -228,40 +314,14 @@ def movVar(offsetSrc, baseSrc, offsetDest, baseDest , size = 8):
         
  
 
-reg_used={"eax":[-1,None],
-          "ebx":[-1,None],
-          "ecx":[-1,None],
-          "edx":[-1,None],
-          "esi":[-1,None],
-          "edi":[-1,None]
-}
-
-def getReg(reg=None,var=None,free=False):
-    if free==True:
-        if reg!=None:
-            if reg_used[reg][1]!=None:
-                storeVar(reg,reg_used[reg][1])
-            reg_used[reg]=[-1,None]
-        return reg
-    if reg==None:
-        r=min(reg_used.items(), key=operator.itemgetter(1))[0]
-    else:
-        r=reg
-    x=reg_used[r][1]
-    if var==None:
-        reg_used[r]=[len(_3accode)+1,var]
-    else:
-        reg_used[r]=[lineno,var]
-    if x!=None:
-        storeVar(r,x)
-    return r
-    
 
 class CodeGenerator:
     def __init__(self):
         code.append(".data")
         code.append('print_fmt_int:\n\t\t .string "%d\\n" ')
         code.append('print_fmt_char:\n\t\t .string "%c" ')
+        code.append('print_fmt_hex:\n\t\t .string "%x" ')
+        code.append('print_fmt_float:\n\t\t .string "%f" ')
         code.append('scan_fmt_int:\n\t\t .string "%d" ')
         code.append('scan_fmt_char:\n\t\t .string "%c" ')
         for j in scopeTableList[0].table.items():
@@ -294,6 +354,32 @@ class CodeGenerator:
         code.append("add  $8, %esp")
         code.append("mov %ebp, %esp")
         code.append("pop %ebp")
+
+    def op_print_float(self, instr):
+        to_print_int = instr[0]
+        loadVar("eax",to_print_int)
+        code.append("push %ebp")
+        code.append("mov %esp,%ebp")
+        code.append("push %eax")
+        code.append("push $print_fmt_hex")
+        code.append("call printf")
+        code.append("add  $8, %esp")
+        code.append("mov %ebp, %esp")
+        code.append("pop %ebp")
+
+    # def op_print_float(self, instr):
+    #     to_print_int = instr[0]
+    #     loadFloatVar(to_print_int)
+    #     code.append("push %ebp")
+    #     code.append("mov %esp,%ebp")
+    #     # code.append("sub $4, %esp")
+    #     code.append("fst -4(%esp)" )
+    #     code.append("push $print_fmt_float")
+    #     code.append("call printf")
+    #     code.append("add  $4, %esp")
+    #     code.append("mov %ebp, %esp")
+    #     code.append("pop %ebp")
+
     def op_malloc(self, instr):
         to_malloc,size=instr
         loadVar("edi", size)
@@ -451,7 +537,23 @@ class CodeGenerator:
             code.append("setne %cl")
 
         storeVar("ecx", out)
-        
+
+    def op_float_assign(self, instr):
+        out, inp = instr
+        if "@" in inp:
+            loadFloatVar(inp)
+            storeFloatVar(out)
+        else:
+            # it is constant assignment like a = 1.4 ;
+            if str(inp).lstrip("-").isdigit():
+                code.append("fld" + str(inp))
+                storeFloatVar(out)
+            else:
+                dec = float(str(inp))
+                bin_ = binary(dec)
+                code.append("mov $"  + str(bin_) + " ,%eax")
+                storeVar("eax", out)
+
     def op_assign(self,instr):
         out , inp = instr
         if "@" in inp:
@@ -459,6 +561,7 @@ class CodeGenerator:
                 loadVar("eax",inp)
                 storeVar("eax", out)
                 return
+
             info = checkVar(inp, "all")["var"] if inp.split('@')[0]=="tmp" else checkVar(inp.split('@')[0], int(inp.split('@')[1]))
             type_ = info["type"]
             if "|" in type_ or type_ in ["int", "char", "float"]:
@@ -665,6 +768,8 @@ class CodeGenerator:
             self.op_print_int(instr["arg"])
         elif instr["ins"]=="print_char":
             self.op_print_char(instr["arg"])
+        elif instr["ins"]=="print_float":
+            self.op_print_float(instr["arg"])
         elif instr["ins"]=="scan_int":
             self.op_scan_int(instr["arg"])
         elif instr["ins"]=="scan_char":
@@ -673,6 +778,8 @@ class CodeGenerator:
             self.op_malloc(instr["arg"])
         elif instr["ins"]=="free":
             self.op_free(instr["arg"])
+        elif instr["ins"]=="float=":
+            self.op_float_assign(instr["arg"])
 
 
 if __name__ == "__main__":

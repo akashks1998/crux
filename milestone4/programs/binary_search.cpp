@@ -38,12 +38,14 @@ int newline(){
     int a=10;
     char c=a;
     print_char(c);
+    return 0;
 }
 
 int space(){
     int a=20;
     char c=a;
     print_char(c);
+    return 0;
 }
 
 int here(int result){
@@ -71,10 +73,6 @@ int main()
         nothere();
     }else{
         here(result);
-    }
-    newline();
-    for(int i=0;i<n;i++){
-        print_int(arr[i]);
     }
     return 0; 
 }

@@ -14,6 +14,6 @@ int odd(int n){
     }
 }
 int main(){
-    print_int(even(5));
+    print_int(even(100));
     return 0;
 }

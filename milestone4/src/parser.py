@@ -507,17 +507,6 @@ def p_logical_AND_expression(p):
         p[0].code = p[1].code + p[3].code + code
         p[0].data = {"type": "int"}
 
-        # allowed_type = ["int", "char", "float"]
-        # if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-        #     p[0].data = {"type" : "int"}
-        # else:
-        #     report_error("Type not compatible with AND operation", p.lineno(0))
-        # p[0].place = getnewvar("int")
-        # t=cast_string(p[1].place,p[1].data["type"],"int")
-        # t1=cast_string(p[3].place,p[3].data["type"],"int")
-        # p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ quad(str(p[2].data),[p[0].place, t["place"], t1["place"]],p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"]) ]
-
-
 
 def p_inclusive_OR_expression(p): 
     '''inclusive_OR_expression : exclusive_OR_expression 
@@ -570,13 +559,6 @@ def p_exclusive_OR_expression(p):
         p[0].code = p[1].code + p[3].code + code
         p[0].data = {"type": "int"}
 
-        # if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-        #     p[0].data = {"type" : "int"}
-        # else:
-        #     report_error("Type not compatible with bitwise xor operation", p.lineno(1))
-        # p[0].place = getnewvar("int")
-        # p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
-
 
 def p_AND_expression(p): 
     '''AND_expression : equality_expression 
@@ -599,77 +581,6 @@ def p_AND_expression(p):
         p[0].code = p[1].code + p[3].code + code
         p[0].data = {"type": "int"}
 
-        # if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-        #     p[0].data = {"type" : "int"}
-        # else:
-        #     report_error("Type not compatible with bitwise and operation", p.lineno(1))
-        
-        # p[0].place = getnewvar("int")
-        # p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
-
-def p_equality_expression(p): 
-    '''equality_expression : relational_expression 
-                           | equality_expression EQCOMP relational_expression 
-                           | equality_expression NEQCOMP relational_expression 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    if len(p)==2:
-        p[0].data = assigner(p,1)
-        p[0].place = p[1].place
-        p[0].code = p[1].code  
-    if len(p)==4:
-        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
-            report_error("Type not compatible with relational operation", p.lineno(0))
-        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
-            report_error("Type not compatible with relational operation", p.lineno(0))
-        
-        p[0].place = getnewvar("int")
-        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
-        p[0].code = p[1].code + p[3].code + code
-        p[0].data = {"type": "int"}
-        
-        # x=operator( p[2].data, p[1], p[3],"int" )
-        # if x==False:
-        #     report_error("Type not compatible with relational operation", p.lineno(0))
-        # p[0].place = x["place"]
-        # p[0].code = p[1].code + p[3].code + x["code"]
-        # p[0].data["type"]="int"
-    
-
-def p_relational_expression(p): 
-    '''relational_expression : shift_expression 
-                             | relational_expression LTCOMP  shift_expression 
-                             | relational_expression GTCOMP  shift_expression 
-                             | relational_expression LTECOMP shift_expression 
-                             | relational_expression GTECOMP shift_expression 
-    ''' 
-    p[0] = OBJ() 
-    p[0].parse=f(p)
-    if len(p)==2:
-        p[0].data = assigner(p,1)
-        p[0].place = p[1].place
-        p[0].code = p[1].code
-    if len(p)==4:
-        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
-            report_error("Type not compatible with relational operation", p.lineno(0))
-        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
-            report_error("Type not compatible with relational operation", p.lineno(0))
-        
-        p[0].place = getnewvar("int")
-        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
-        p[0].code = p[1].code + p[3].code + code
-        p[0].data = {"type": "int"}
-
-        # allowed_type = ["int", "char", "float"]
-        # if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-        #     p[0].data = {"type" : "int"}
-        # else:
-        #     report_error("Type not compatible with relational operation", p.lineno(0))
-        # x=operator(p[2].data,p[1],p[3],"int")
-        # p[0].place = x["place"]
-        # p[0].code = p[1].code + p[3].code + x["code"]
-
 def p_shift_expression(p): 
     '''shift_expression : additive_expression 
                         | shift_expression LSHIFT additive_expression 
@@ -691,6 +602,76 @@ def p_shift_expression(p):
         p[0].place = getnewvar("int")
         p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
 
+
+
+def check_for_float(t1,t2):
+    if (t1 == "float")and (t2 == "int" or  t2 == "float" ):
+        return True
+    elif t2 == "float" and (t1 == "float" or  t1 == "int") :
+        return True
+    else:
+        return False
+
+def p_equality_expression(p): 
+    '''equality_expression : relational_expression 
+                           | equality_expression EQCOMP relational_expression 
+                           | equality_expression NEQCOMP relational_expression 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = assigner(p,1)
+        p[0].place = p[1].place
+        p[0].code = p[1].code  
+    if len(p)==4:
+        if check_for_float(p[1].data["type"] , p[3].data["type"]):
+            p[0].place = getnewvar("float")
+            code = [quad("float" + p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            p[0].code = p[1].code + p[3].code + code
+            p[0].data = {"type": "float"}
+        else:
+            if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
+                report_error("Type not compatible with relational operation", p.lineno(0))
+            if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+                report_error("Type not compatible with relational operation", p.lineno(0))
+            
+            p[0].place = getnewvar("int")
+            code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            p[0].code = p[1].code + p[3].code + code
+            p[0].data = {"type": "int"}
+            
+
+def p_relational_expression(p): 
+    '''relational_expression : shift_expression 
+                             | relational_expression LTCOMP  shift_expression 
+                             | relational_expression GTCOMP  shift_expression 
+                             | relational_expression LTECOMP shift_expression 
+                             | relational_expression GTECOMP shift_expression 
+    ''' 
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    if len(p)==2:
+        p[0].data = assigner(p,1)
+        p[0].place = p[1].place
+        p[0].code = p[1].code
+    if len(p)==4:
+        if check_for_float(p[1].data["type"] , p[3].data["type"]):
+            p[0].place = getnewvar("float")
+            code = [quad("float" + p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            p[0].code = p[1].code + p[3].code + code
+            p[0].data = {"type": "float"}
+        else:
+            if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
+                report_error("Type not compatible with relational operation", p.lineno(0))
+            if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+                report_error("Type not compatible with relational operation", p.lineno(0))
+            
+            p[0].place = getnewvar("int")
+            code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            p[0].code = p[1].code + p[3].code + code
+            p[0].data = {"type": "int"}
+            
+
 def p_additive_expression(p): 
     '''additive_expression : multiplicative_expression 
                            | additive_expression PLUSOP multiplicative_expression 
@@ -703,7 +684,6 @@ def p_additive_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
-        allowed_type = ["int", "char" ]
         if "|" in p[1].data["type"] and p[1].data["type"][-1] == "p" and p[3].data["type"] == "int":
             tmp = getnewvar("int")
             code = [ quad("*", [ tmp , p[3].place , str(get_size(p[1].data["type"][:-1].rstrip("|") ) )] )  ]  
@@ -713,14 +693,21 @@ def p_additive_expression(p):
             p[0].code = p[1].code + p[3].code + code
             p[0].data["type"] = p[1].data["type"]
             return
-
-        if p[1].data["type"] not in allowed_type or p[3].data["type"] not in allowed_type:
-            report_error("Type not compatible with plus , minus operation", p.lineno(0))
+        elif check_for_float(p[1].data["type"] , p[3].data["type"]):
+            p[0].place = getnewvar("float")
+            code = [quad("float" + p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            p[0].code = p[1].code + p[3].code + code
+            p[0].data = {"type": "float"}
+        else:
+            if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
+                report_error("Type not compatible with +/- operation", p.lineno(0))
+            if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+                report_error("Type not compatible with +/- operation", p.lineno(0))
             
-        p[0].place = getnewvar("int")
-        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
-        p[0].code = p[1].code + p[3].code + code
-        p[0].data = {"type": "int"}
+            p[0].place = getnewvar("int")
+            code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            p[0].code = p[1].code + p[3].code + code
+            p[0].data = {"type": "int"}
 
 def p_multiplicative_expression(p): 
     '''multiplicative_expression : cast_expression 
@@ -735,16 +722,22 @@ def p_multiplicative_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
-        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
-            report_error("Type not compatible with relational operation", p.lineno(0))
-        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
-            report_error("Type not compatible with relational operation", p.lineno(0))
-        
-        p[0].place = getnewvar("int")
-        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
-        p[0].code = p[1].code + p[3].code + code
-        p[0].data = {"type": "int"}
-        
+        if check_for_float(p[1].data["type"] , p[3].data["type"]):
+            p[0].place = getnewvar("float")
+            code = [quad("float" + p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            p[0].code = p[1].code + p[3].code + code
+            p[0].data = {"type": "float"}
+        else:
+            if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
+                report_error("Type not compatible with relational operation", p.lineno(0))
+            if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+                report_error("Type not compatible with relational operation", p.lineno(0))
+            
+            p[0].place = getnewvar("int")
+            code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            p[0].code = p[1].code + p[3].code + code
+            p[0].data = {"type": "int"}
+            
 def p_cast_expression(p): 
     '''cast_expression : unary_expression 
                        | LPAREN type_name  RPAREN  cast_expression 
@@ -796,7 +789,8 @@ def p_assignment_expression(p):
     ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    place = p[1].place
+    p[0].place = p[1].place
+    p[0].data = assigner(p,1)
 
     if len(p)==2:
         p[0].data = assigner(p,1)
@@ -807,13 +801,36 @@ def p_assignment_expression(p):
         if "class_u" in p[1].data.keys() and p[1].data["class_u"] == "unary1":
             report_error("can not assign some value to a unary expresion other than *", p.lineno(0))
 
-        t=cast_string(p[3].place,p[3].data["type"],p[1].data["type"])
-        if t==False:
-            report_error("Can't assign "+p[3].data["type"]+" to "+p[1].data["type"],p.lineno(1))
-        if p[2].data == "=":
-            p[0].code = p[3].code + p[1].code + t["code"] +[ quad("=",[place,t["place"]],place + "=" + t["place"]) ]
+        t_out = p[1].data["type"]
+        t_in = p[3].data["type"]
+
+
+        code = []
+        if t_out == "float" and t_in in ["float", "int"]:
+            if p[2].data == "=":
+                code =  [ quad("float=",[ p[1].place , p[3].place] ) ]
+            else:
+                to_assign = getnewvar("float")
+                code = [ quad( "float" + p[2].data[0] , [ to_assign , p[1].place , p[3].place] ) ]
+                code = code + [ quad("float=", [ p[1].place, to_assign] ) ]
+        elif t_out in ["int", "char"] and t_in in ["int", "char"]:
+            if p[2].data == "=":
+                code =  [ quad("=",[ p[1].place , p[3].place] ) ]
+            else:
+                to_assign = getnewvar("float")
+                code = [ quad( p[2].data[0] , [ to_assign , p[1].place , p[3].place] ) ]
+                code = code + [ quad("=", [ p[1].place, to_assign] ) ]
+        elif t_out == t_in and p[2].data == "=":
+            code =  [ quad("=",[ p[1].place , p[3].place] ) ]
+        elif ("|" in t_out and t_out[-1] == "p" and t_in == "int" ) or (t_out == "int" and "|" in t_in and t_in[-1] == "p"):
+            if p[2].data == "=":
+                code =  [ quad("=",[ p[1].place , p[3].place] ) ]
+            else:
+                report_error("op not allowed with int and ptr", p.lineno(0))
         else:
-            p[0].code = p[3].code + p[1].code + t["code"]+[ quad( p[2].data[0] , [place,place,t["place"]] , place + " = " + place + " " + p[2].data[0] + " " + t["place"]) ]
+            report_error("type mismatch in assignment", p.lineno(0))
+
+        p[0].code = p[3].code.copy() + p[1].code.copy() + code 
 
 def p_assignment_operator(p): 
     '''assignment_operator : EQUAL 
@@ -861,7 +878,7 @@ def p_unary_expression(p):
     elif len(p)==3:
         p[0].data=assigner(p,2)
         p[0].place=p[2].place
-        if op_allowed(p[1].data[0],p[2].data["type"]):
+        if p[2].data["type"] in ["int", "char"]:
             p[0].code=p[2].code + [ quad( p[1].data, [p[2].place] , p[2].place + p[1].data )]
         else:
             report_error("This unary operation is not allowed with given type", p.lineno(1))
@@ -1115,7 +1132,7 @@ def p_postfix_expression_8(p):
     p[0].parse=f(p)
     p[0].data=assigner(p,1)
     p[0].place=getnewvar("int")
-    if op_allowed(p[2].data[0],p[1].data["type"]):
+    if p[1].data["type"] in ["int", "char"]:
         p[0].code=p[1].code + [ quad("=", [ p[0].place, p[1].place ], p[0].place +  " =  " + p[1].place )] + [ quad( p[2].data, [p[1].place] , p[1].place + p[2].data )]
     else:
         report_error("This unary operation is not allowed with given type", p.lineno(1))
@@ -1148,7 +1165,10 @@ def p_primary_expression1(p):
     p[0].parse=f(p) 
     p[0].data = assigner(p,1)
     p[0].place = getnewvar(p[0].data["type"])
-    p[0].code = [ quad("=" ,[p[0].place,str(p[1].data["value"]),""],p[0].place + " = " + str(p[1].data["value"])) ] 
+    if p[0].data["type"] == "float":
+        p[0].code = [ quad("float=" ,[ p[0].place,str(p[1].data["value"])] )  ] 
+    else:    
+        p[0].code = [ quad("=" ,[p[0].place,str(p[1].data["value"]),""],p[0].place + " = " + str(p[1].data["value"])) ] 
     
     
 def p_primary_expression2(p): 
@@ -1960,6 +1980,7 @@ def p_statement(p):
                  | declaration_statement 
                  | print_int 
                  | print_char
+                 | print_float
                  | scan_int 
                  | scan_char
     ''' 
@@ -1997,7 +2018,20 @@ def p_print_char(p):
 
     info = checkVar(p[3].place) 
     type_  = info["var"]["type"]
-    if type_ in ["char"] :
+    if type_ in ["char", "int"] :
+        pass
+    else:
+        report_error("Only char allowed in print char", p.lineno(0))
+
+def p_print_float(p):
+    '''print_float : PRINTFLOAT LPAREN expression RPAREN SEMICOLON '''
+    p[0] = OBJ() 
+    p[0].parse=f(p)
+    p[0].code = p[3].code + [quad("print_float", [p[3].place], "print_float " + p[3].place  )]
+
+    info = checkVar(p[3].place) 
+    type_  = info["var"]["type"]
+    if type_ in ["float"] :
         pass
     else:
         report_error("Only char allowed in print char", p.lineno(0))
@@ -2325,10 +2359,24 @@ def p_declaration0(p):
                 report_error("Redeclaration of variable", p.lineno(1))
             
             if "init_type" in each.keys():
-                if  not allowed_type(each["init_type"],data["type"]):
-                    report_error("type_mismatch in initialization", p.lineno(0))
-                x=cast_string(each["place"],each["init_type"],data["type"])
-                p[0].code=p[0].code + x["code"]+[ quad("=",[each["name"]+ "@" + str(currentScopeTable), x["place"],""],each["name"]+ "@" + str(currentScopeTable) +" = "+ x["place"]) ]            
+                t_out = data["type"]
+                t_in = each["init_type"]
+                code = []
+                out_place = each["name"]+ "@" + str(currentScopeTable)
+                in_place = each["place"]
+
+                if t_out == "float" and t_in in ["float", "int"]:
+                    code =  [ quad("float=",[ out_place , in_place ] ) ]
+                elif t_out in ["int", "char"] and t_in in ["int", "char"]:
+                    code =  [ quad("=",[ out_place , in_place] ) ]
+                elif t_out == t_in:
+                    code =  [ quad("=",[ out_place , in_place ] ) ]
+                elif ("|" in t_out and t_out[-1] == "p" and t_in == "int" ) or (t_out == "int" and "|" in t_in and t_in[-1] == "p"):
+                    code =  [ quad("=",[ out_place , in_place ] ) ]
+                else:
+                    report_error("type mismatch in assignment", p.lineno(0))
+
+                p[0].code=p[0].code + code        
 
 
 
