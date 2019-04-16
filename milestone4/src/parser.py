@@ -1466,11 +1466,14 @@ def p_arg_list(p):
 
     else:
         input_detail=("",[])
-
-    if function_name=="main":
-        label="main"
+    parent=getParentScope(currentScopeTable)
+    if checkVar(function_name+"|"+input_detail[0],parent)==False:
+        if function_name=="main":
+            label="main"
+        else:
+            label=getnewlabel('func')
     else:
-        label=getnewlabel('func')
+        label=checkVar(function_name+"|"+input_detail[0],parent)["label"]
 
     p[0].data = {
         "name" : function_name,
@@ -1487,8 +1490,6 @@ def p_arg_list(p):
     }
 
     scopeTableList[currentScopeTable].type_ = "function"
-
-    parent=getParentScope(currentScopeTable)
     func_sig = function_name +"|" + input_detail[0]
 
     if checkVar(function_name,parent) is False:
