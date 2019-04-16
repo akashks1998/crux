@@ -603,13 +603,19 @@ def p_shift_expression(p):
 
 
 
-def check_for_float(t1,t2):
-    if (t1 == "float")and (t2 == "int" or  t2 == "float" ):
-        return True
-    elif t2 == "float" and (t1 == "float" or  t1 == "int") :
-        return True
+def check_for_float(t1,t2, p1, p2 ):
+    if t1 == "float" and t2 == "int":
+        new_float = getnewvar("float")
+        code = [quad("float=", [new_float, p2] )]
+        return ( True, p1, new_float, code )
+    elif t1 == "int" and t2 == "float":
+        new_float = getnewvar("float")
+        code = [quad("float=", [new_float, p1] )]
+        return ( True, new_float, p2, code )
+    elif t1 == "float" and t2 == "float":
+        return ( True, p1, p2, [] )
     else:
-        return False
+        return (False, "", "", [])
 
 def p_equality_expression(p): 
     '''equality_expression : relational_expression 
@@ -623,11 +629,12 @@ def p_equality_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code  
     if len(p)==4:
-        if check_for_float(p[1].data["type"] , p[3].data["type"]):
-            p[0].place = getnewvar("float")
-            code = [quad("float" + p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        float_info = check_for_float(p[1].data["type"] , p[3].data["type"], p[1].place, p[3].place)
+        if float_info[0] == True:
+            p[0].place = getnewvar("int")
+            code = float_info[3] + [quad("float" + p[2].data, [ p[0].place , float_info[1] , float_info[2] ]  )]
             p[0].code = p[1].code + p[3].code + code
-            p[0].data = {"type": "float"}
+            p[0].data = {"type": "int"}
         else:
             if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
                 report_error("Type not compatible with relational operation", p.lineno(0))
@@ -654,11 +661,12 @@ def p_relational_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
-        if check_for_float(p[1].data["type"] , p[3].data["type"]):
-            p[0].place = getnewvar("float")
-            code = [quad("float" + p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        float_info = check_for_float(p[1].data["type"] , p[3].data["type"], p[1].place, p[3].place)
+        if float_info[0] == True:
+            p[0].place = getnewvar("int")
+            code = float_info[3] + [quad("float" + p[2].data, [ p[0].place , float_info[1] , float_info[2] ]  )]
             p[0].code = p[1].code + p[3].code + code
-            p[0].data = {"type": "float"}
+            p[0].data = {"type": "int"}
         else:
             if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
                 report_error("Type not compatible with relational operation", p.lineno(0))
@@ -683,6 +691,7 @@ def p_additive_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
+        float_info = check_for_float(p[1].data["type"] , p[3].data["type"], p[1].place, p[3].place)
         if "|" in p[1].data["type"] and p[1].data["type"][-1] == "p" and p[3].data["type"] == "int":
             tmp = getnewvar("int")
             code = [ quad("*", [ tmp , p[3].place , str(get_size(p[1].data["type"][:-1].rstrip("|") ) )] )  ]  
@@ -691,10 +700,9 @@ def p_additive_expression(p):
             p[0].place = place
             p[0].code = p[1].code + p[3].code + code
             p[0].data["type"] = p[1].data["type"]
-            return
-        elif check_for_float(p[1].data["type"] , p[3].data["type"]):
+        elif float_info[0] == True:
             p[0].place = getnewvar("float")
-            code = [quad("float" + p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            code = float_info[3] + [quad("float" + p[2].data, [ p[0].place , float_info[1] , float_info[2] ]  )]
             p[0].code = p[1].code + p[3].code + code
             p[0].data = {"type": "float"}
         else:
@@ -721,9 +729,10 @@ def p_multiplicative_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
-        if check_for_float(p[1].data["type"] , p[3].data["type"]):
+        float_info = check_for_float(p[1].data["type"] , p[3].data["type"], p[1].place, p[3].place)
+        if float_info[0] == True and p[2].data != "%":
             p[0].place = getnewvar("float")
-            code = [quad("float" + p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+            code = float_info[3] + [quad("float" + p[2].data, [ p[0].place , float_info[1] , float_info[2] ]  )]
             p[0].code = p[1].code + p[3].code + code
             p[0].data = {"type": "float"}
         else:
@@ -1213,8 +1222,14 @@ def p_unary_expression1(p):
             p[0].code = p[2].code
             p[0].place = p[2].place
         else:
-            p[0].place = getnewvar(p[2].data["type"])
-            p[0].code = p[2].code + [ quad( "*", [ p[0].place, "-1" , p[2].place ] , p[0].place + " = " + " -1 * " + p[2].place  ) ] 
+            if p[2].data["type"] == "int":
+                p[0].place = getnewvar(p[2].data["type"])
+                p[0].code = p[2].code + [ quad( "*", [ p[0].place, "-1" , p[2].place ] , p[0].place + " = " + " -1 * " + p[2].place  ) ]
+            elif p[2].data["type"] == "float":
+                p[0].place = getnewvar(p[2].data["type"]) 
+                m_one_as_float = getnewvar("float")
+                p[0].code = p[2].code + [ quad("float=", [ m_one_as_float, "-1" ] ) ] + [ quad( "float*", [ p[0].place, m_one_as_float , p[2].place ] ) ]
+
 
     elif p[1].data in ["!", "~"] and p[2].data["type"] in ["int"]:
         p[0].place = getnewvar(p[0].data["type"])
@@ -1595,12 +1610,10 @@ def p_argument_declaration_1(p):
     p[0].data = data
 
 def p_name(p): 
-    '''name : IDENTIFIER 
-            | DOUBLEBNOP IDENTIFIER 
-    ''' 
+    '''name : IDENTIFIER ''' 
     p[0] = OBJ() 
     p[0].parse=f(p)
-    p[0].data = p[1].data if len(p) == 2 else "~~" + p[2].data
+    p[0].data = p[1].data 
 
 
 def p_template_class_name(p): 
@@ -1637,17 +1650,11 @@ def p_type_name(p):
         p[0].data["meta"] = []
 
 def p_type_specifier_(p): 
-    '''type_specifier_ : CONST type_specifier 
-                       | type_specifier
+    '''type_specifier_ : type_specifier
     ''' 
     p[0] = OBJ() 
-    p[0].parse=f(p)  
-    if len(p)==3:
-        p[0].data = assigner(p,2)
-        # p[0].data["const"]=1
-    else:
-        p[0].data = assigner(p,1)
-        # p[0].data["const"]=0
+    p[0].parse=f(p)    
+    p[0].data = assigner(p,1)
 
 # def p_typedef_declarator(p):
 #     '''typedef_declarator : TYPEDEF type_specifier_ abstract_declarator IDENTIFIER SEMICOLON
@@ -2375,15 +2382,6 @@ def p_declaration0(p):
                 p[0].code=p[0].code + code        
 
 
-
-
-# def p_declaration1(p):
-#     '''declaration :  asm_declaration  ''' 
-        
-#     p[0] = OBJ()
-#     p[0].parse=f(p)
-
-
 def p_declaration2(p):
     '''declaration :  function_definition 
                     | function_decl
@@ -2407,28 +2405,6 @@ def p_declaration4(p):
     function_code.append(p[1].code.copy())
     p[0].code = []
 
-
-# def p_declaration5(p):
-#     '''declaration : typedef_declarator ''' 
-#     p[0] = OBJ()
-#     p[0].parse=f(p)
-
-# def p_declaration6(p):
-#     '''declaration :  template_declaration ''' 
-#     p[0] = OBJ()
-#     p[0].parse=f(p)
-
-# def p_template_declaration(p): 
-#     '''template_declaration : TEMPLATE LTEMPLATE template_argument_list RTEMPLATE declaration''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
-
-# def p_template_argument_list(p): 
-#     '''template_argument_list : argument_declaration
-#                               | template_argument_list COMMA argument_declaration
-#     ''' 
-#     p[0] = OBJ() 
-#     p[0].parse=f(p)
 
 def p_declarator_list(p): 
     '''declarator_list : init_declarator 

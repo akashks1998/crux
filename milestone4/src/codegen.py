@@ -143,7 +143,6 @@ def loadVar(reg,var):
                 exit()         
     else:
         if var[0]=="'" and var[2]=="'" and len(var)==3:
-            # this is char
             code.append("movb $"+str(ord( var[1]))+" , %" +  reg[1] + "l" )
         elif var.lstrip("-").isdigit():
             code.append("mov $"+var+" , %" + reg )
@@ -312,8 +311,6 @@ def movVar(offsetSrc, baseSrc, offsetDest, baseDest , size = 8):
     if baseDest == "0":
         code.append(mov + " %" + reg + ", (%" + offsetDest + ")")
         
- 
-
 
 class CodeGenerator:
     def __init__(self):
@@ -436,12 +433,27 @@ class CodeGenerator:
         code.append("add %ebx, %eax")
         storeVar("eax", out)
 
+    def op_float_add(self, instr):
+        out , inp1, inp2 = instr
+        loadFloatVar(inp1)
+        loadAddr("eax", inp2)
+        code.append("fadd (%eax)")
+        storeFloatVar(out)
+
+
     def op_sub(self, instr):
         out , inp1, inp2 = instr
         loadVar("eax", inp1)
         loadVar("ebx", inp2)
         code.append("sub %ebx, %eax")
         storeVar("eax", out)
+
+    def op_float_sub(self, instr):
+        out , inp1, inp2 = instr
+        loadFloatVar(inp1)
+        loadAddr("eax", inp2)
+        code.append("fsub (%eax)")
+        storeFloatVar(out)
         
     def op_mult(self, instr):
         out , inp1, inp2 = instr
@@ -450,6 +462,14 @@ class CodeGenerator:
         code.append("imul %ebx, %eax")
         storeVar("eax", out)
 
+    def op_float_mult(self, instr):
+        out , inp1, inp2 = instr
+        loadFloatVar(inp1)
+        loadAddr("eax", inp2)
+        code.append("fmul (%eax)")
+        storeFloatVar(out)
+        
+    
     def op_div(self, instr):
         # idiv %ebx — divide the contents of EDX:EAX by the contents of EBX. Place the quotient in EAX and the remainder in EDX.
         out , inp1, inp2 = instr
@@ -458,6 +478,13 @@ class CodeGenerator:
         code.append("mov $0, %edx")
         code.append("idiv %ebx")
         storeVar("eax", out)
+
+    def op_float_div(self, instr):
+        out , inp1, inp2 = instr
+        loadFloatVar(inp1)
+        loadAddr("eax", inp2)
+        code.append("fdiv (%eax)")
+        storeFloatVar(out)
     
     def op_modulo(self, instr):
         # idiv %ebx — divide the contents of EDX:EAX by the contents of EBX. Place the quotient in EAX and the remainder in EDX.
@@ -509,12 +536,27 @@ class CodeGenerator:
         loadVar("eax", inp1)
         loadVar("ebx", inp2)
         code.append(log_op(lt) +  " %ebx, %eax")
+        if lt == "&&" or lt == "||":
+            code.append("cmp $0, %eax")
+            code.append("mov $0, %eax")
+            code.append("setne %al")
+            
         storeVar("eax", out)
         
-    def op_unary(self, instr):
+    def op_bitwise_not(self, instr):
         out , inp = instr
         loadVar("eax", inp)
         code.append("not %eax")
+        storeVar("eax", out)
+    
+    def op_logical_not(self, instr):
+        out , inp = instr
+        loadVar("eax", inp)
+       
+        code.append("cmp $0, %eax")
+        code.append("mov $0, %eax")
+        code.append("sete %al")
+
         storeVar("eax", out)
 
     def op_comp(self, instr, comp ):
@@ -537,6 +579,27 @@ class CodeGenerator:
             code.append("setne %cl")
 
         storeVar("ecx", out)
+    
+    def op_float_comp(self, instr, comp ):
+        out , inp1, inp2 = instr
+        loadFloatVar(inp1)
+        loadFloatVar(inp2)
+        code.append("fcompi")
+        code.append("mov $0, %ecx")
+        if comp == "float<":
+            code.append("setl %cl")
+        elif comp == "float>":
+            code.append("setg %cl")
+        elif comp == "float<=":
+            code.append("setle %cl")            
+        elif comp == "float>=":   
+            code.append("setge %cl")            
+        elif comp == "float==":
+            code.append("sete %cl")            
+        elif comp == "float!=":
+            code.append("setne %cl")
+
+        storeVar("ecx", out)
 
     def op_float_assign(self, instr):
         out, inp = instr
@@ -545,14 +608,10 @@ class CodeGenerator:
             storeFloatVar(out)
         else:
             # it is constant assignment like a = 1.4 ;
-            if str(inp).lstrip("-").isdigit():
-                code.append("fld" + str(inp))
-                storeFloatVar(out)
-            else:
-                dec = float(str(inp))
-                bin_ = binary(dec)
-                code.append("mov $"  + str(bin_) + " ,%eax")
-                storeVar("eax", out)
+            dec = float(str(inp))
+            bin_ = binary(dec)
+            code.append("mov $"  + str(bin_) + " ,%eax")
+            storeVar("eax", out)
 
     def op_assign(self,instr):
         out , inp = instr
@@ -740,10 +799,12 @@ class CodeGenerator:
             self.op_dec(instr["arg"])
         elif instr["ins"] == "=":
             self.op_assign(instr["arg"])
-        elif instr["ins"] in ["&&","||","|","&&"]:
+        elif instr["ins"] in ["&&","||","|","&"]:
             self.op_logical_dual(instr["arg"],instr["ins"])
-        elif instr["ins"] in ["~","!"]:
-            self.op_unary(instr["arg"])
+        elif instr["ins"] in ["!"]:
+            self.op_logical_not(instr["arg"])
+        elif instr["ins"] in ["~"]:
+            self.op_bitwise_not(instr["arg"])
         elif instr["ins"] =="label":
             self.op_label(instr["arg"])
         elif instr["ins"] =="ifnz":
@@ -780,6 +841,17 @@ class CodeGenerator:
             self.op_free(instr["arg"])
         elif instr["ins"]=="float=":
             self.op_float_assign(instr["arg"])
+        elif instr["ins"]=="float+":
+            self.op_float_add(instr["arg"])
+        elif instr["ins"]=="float-":
+            self.op_float_sub(instr["arg"])
+        elif instr["ins"]=="float*":
+            self.op_float_mult(instr["arg"])
+        elif instr["ins"]=="float/":
+            self.op_float_div(instr["arg"])
+        elif instr["ins"] in ["float<","float>","float==","float<=","float>=","float!="]:
+            self.op_float_comp(instr["arg"],instr["ins"])
+    
 
 
 if __name__ == "__main__":
