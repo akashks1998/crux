@@ -270,16 +270,16 @@ def storeFloatVar(var):
         if "@" in str(offset):
             if str(base) == "0":
                 loadVar("esi",offset)
-                code.append("fst " + "(%esi)")
+                code.append("fstp " + "(%esi)")
             elif str(base) == "rbp":
                 loadVar("esi",offset)
                 code.append("neg %esi")
-                code.append("fst (%ebp , %esi, 1)" )
+                code.append("fstp (%ebp , %esi, 1)" )
             else:
                 print("wrong base in load")
                 exit()
         else:
-            code.append("fst " + str(-offset) + "(%ebp)")  
+            code.append("fstp " + str(-offset) + "(%ebp)")  
     else:
         pass
         print("verror in store float")
@@ -370,7 +370,7 @@ class CodeGenerator:
     #     code.append("push %ebp")
     #     code.append("mov %esp,%ebp")
     #     # code.append("sub $4, %esp")
-    #     code.append("fst -4(%esp)" )
+    #     code.append("fstp -4(%esp)" )
     #     code.append("push $print_fmt_float")
     #     code.append("call printf")
     #     code.append("add  $4, %esp")
@@ -439,6 +439,7 @@ class CodeGenerator:
         loadAddr("eax", inp2)
         code.append("fadd (%eax)")
         storeFloatVar(out)
+        code.append("fninit")
 
 
     def op_sub(self, instr):
@@ -454,6 +455,7 @@ class CodeGenerator:
         loadAddr("eax", inp2)
         code.append("fsub (%eax)")
         storeFloatVar(out)
+        code.append("fninit")
         
     def op_mult(self, instr):
         out , inp1, inp2 = instr
@@ -468,6 +470,7 @@ class CodeGenerator:
         loadAddr("eax", inp2)
         code.append("fmul (%eax)")
         storeFloatVar(out)
+        code.append("fninit")
         
     
     def op_div(self, instr):
@@ -485,6 +488,7 @@ class CodeGenerator:
         loadAddr("eax", inp2)
         code.append("fdiv (%eax)")
         storeFloatVar(out)
+        code.append("fninit")
     
     def op_modulo(self, instr):
         # idiv %ebx — divide the contents of EDX:EAX by the contents of EBX. Place the quotient in EAX and the remainder in EDX.
@@ -600,18 +604,21 @@ class CodeGenerator:
             code.append("setne %cl")
 
         storeVar("ecx", out)
+        code.append("fninit")
 
     def op_float_assign(self, instr):
         out, inp = instr
         if "@" in inp:
             loadFloatVar(inp)
             storeFloatVar(out)
+            code.append("fninit")
         else:
             # it is constant assignment like a = 1.4 ;
             dec = float(str(inp))
             bin_ = binary(dec)
             code.append("mov $"  + str(bin_) + " ,%eax")
             storeVar("eax", out)
+            code.append("fninit")
 
     def op_assign(self,instr):
         out , inp = instr
