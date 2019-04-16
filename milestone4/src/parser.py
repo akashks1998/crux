@@ -2317,7 +2317,7 @@ def p_declaration0(p):
     p[0].code=p[2].code.copy()
     p[0].data = {}
     for each in decl_list:
-        if isinstance(p[1].data,list):
+        if isinstance(p[1].data,dict):
             data = p[1].data.copy()
         else:
             data=p[1].data
@@ -2341,7 +2341,7 @@ def p_declaration0(p):
         
         # handle array type
         if len(data["meta"]) != 0:
-            if(data=="auto"):
+            if (not  isinstance(p[1].data,dict) and data=="auto"):
                 report_error("Auto array is not defined",p.lineno(0))
             element_type = data["type"].rstrip("a").rstrip("|")
             if(element_type == "void"):
