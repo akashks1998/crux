@@ -14,7 +14,7 @@ pp = pprint.PrettyPrinter(indent=4)
 cnt=0
 tokens = lexTokens
 filename=""
-error_line_offset=1
+error_line_offset=0
 def f(p):
     global cnt
     p_name = sys._getframe(1).f_code.co_name
@@ -360,7 +360,7 @@ def report_error(msg, line):
     if line=="break" or line=="continue":
         print("Error : " + msg + ", Check your " + line + "s")
         exit(-1)
-    print("Error at line : " + str(line) + " :: " + msg)
+    print("Error at line : " + str(line- error_line_offset) + " :: " + msg)
     exit(-1)
 
 start = 'program'
@@ -1676,7 +1676,6 @@ def p_simple_type_name(p):
     '''simple_type_name : CHAR 
                         | INT  
                         | FLOAT  
-                        | VOID
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)   

@@ -36,7 +36,6 @@ keywords = {
     # 'typedef':'TYPEDEF',
     # 'type' : 'TYPE',
     # 'template' : 'TEMPLATE',
-    'void':'VOID',
     'while':'WHILE',
 }
 
