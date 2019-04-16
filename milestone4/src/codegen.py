@@ -78,10 +78,10 @@ def loadAddr(reg, var):
                 code.append("lea " + str(-offset) + "(%ebp), %" + reg )
         else:
             print("error in load Addr")
-            exit()
+            exit(-1)
     else:
         print("Error in loading addr ")
-        exit()
+        exit(-1)
 
 
 def loadVar(reg,var):
@@ -110,7 +110,7 @@ def loadVar(reg,var):
                     code.append("movb (%"+r+"), %" + reg[1] + "l" )
                 else:
                     print( " class error in load")
-                    exit()
+                    exit(-1)
             elif str(base) == "rbp":
                 loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
@@ -121,15 +121,15 @@ def loadVar(reg,var):
                     code.append("movb (%ebp , %"+r + ", 1), %" +  reg[1] + "l" )
                 else:
                     print( " class error in load")
-                    exit()
+                    exit(-1)
             else:
                 print("wrong base in load")
-                exit()
+                exit(-1)
         else:
             # offset is int
             if str(base) == "0":
                 print("error : constant offset with base 0")
-                exit()
+                exit(-1)
             elif str(base) == "rbp":
                 if "|" in type_ or type_ in ["int", "float"]:
                     code.append("mov " + str(-offset) + "(%ebp), %" + reg )
@@ -137,10 +137,10 @@ def loadVar(reg,var):
                     code.append("movb " + str(-offset) + "(%ebp), %" +  reg[1] + "l" )
                 else:
                     print( " class error in load")
-                    exit()  
+                    exit(-1)  
             else:
                 print("wrong base in load")
-                exit()         
+                exit(-1)         
     else:
         if var[0]=="'" and var[2]=="'" and len(var)==3:
             code.append("movb $"+str(ord( var[1]))+" , %" +  reg[1] + "l" )
@@ -149,7 +149,7 @@ def loadVar(reg,var):
         else:
             print(var)
             print("Error in load")
-            exit()
+            exit(-1)
 
 
 def storeVar(reg,var):
@@ -171,7 +171,7 @@ def storeVar(reg,var):
                     code.append("movb %" +  reg[1] + "l" + ", (%"+r+")" )
                 else:
                     print( var, " class error in store")
-                    exit()
+                    exit(-1)
             elif str(base) == "rbp":
                 loadVar(r,offset)
                 if "|" in type_ or type_ in ["int", "float"]:
@@ -182,15 +182,15 @@ def storeVar(reg,var):
                     code.append("movb %" +  reg[1] + "l" + ", (%ebp , %"+r  + ", 1)" )
                 else:
                     print( var, " class error in store")
-                    exit()
+                    exit(-1)
             else:
                 print("wrong base in store")
-                exit()      
+                exit(-1)      
         else:
             # offset is int
             if str(base) == "0":
                 print("error : constant offset with base 0")
-                exit()
+                exit(-1)
             elif str(base) == "rbp":
                 if "|" in type_ or type_ in ["int", "float"]:
                     code.append("mov %" + reg + " , " + str(-offset) + "(%ebp)" )
@@ -198,13 +198,13 @@ def storeVar(reg,var):
                     code.append("movb %" +  reg[1] + "l" + " , " + str(-offset) + "(%ebp)" )
                 else:
                     print(type_,var, " class error in store")
-                    exit()  
+                    exit(-1)  
             else:
                 print("wrong base in store")
-                exit()         
+                exit(-1)         
     else:
         print("Error in storing")
-        exit()
+        exit(-1)
 
 def loadFloatVar(var):
     global code
@@ -242,7 +242,7 @@ def loadFloatVar(var):
                     exit(-1)
             else:
                 print("wrong base in load")
-                exit()
+                exit(-1)
         else:
             if type_ == "int":
                 code.append("fild " + str(-offset) + "(%ebp)")
@@ -254,7 +254,7 @@ def loadFloatVar(var):
     else:
         pass
         print("var is not var")
-        exit()
+        exit(-1)
 
 def storeFloatVar(var):
     global code
@@ -277,13 +277,13 @@ def storeFloatVar(var):
                 code.append("fstp (%ebp , %esi, 1)" )
             else:
                 print("wrong base in load")
-                exit()
+                exit(-1)
         else:
             code.append("fstp " + str(-offset) + "(%ebp)")  
     else:
         pass
         print("verror in store float")
-        exit()
+        exit(-1)
 
 
 def movVar(offsetSrc, baseSrc, offsetDest, baseDest , size = 8):
@@ -755,7 +755,7 @@ class CodeGenerator:
         pop_size = instr[0]
         if not pop_size.isdigit():
             print(" pop size should be int")
-            exit()
+            exit(-1)
 
         code.append("add " + pop_size + " %esp")
 
@@ -763,7 +763,7 @@ class CodeGenerator:
         expand_size = instr[0]
         if not expand_size.isdigit():
             print(" expand size should be int")
-            exit()
+            exit(-1)
         code.append("push %ebp")
         code.append("mov %esp, %ebp")
         code.append("sub $" + expand_size + ", %esp")

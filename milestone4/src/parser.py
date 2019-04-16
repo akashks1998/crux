@@ -14,7 +14,7 @@ pp = pprint.PrettyPrinter(indent=4)
 cnt=0
 tokens = lexTokens
 filename=""
-error_line_offset=1
+error_line_offset=0
 def f(p):
     global cnt
     p_name = sys._getframe(1).f_code.co_name
@@ -280,7 +280,7 @@ def get_size(data_type, basic = True):
             get_class = checkVar(basic_type, "global")
             if get_class ==  False:
                 print(" Error :: Class " + basic_type + " is not defined")
-                exit()
+                exit(-1)
             return 4
         else:
             return 4
@@ -291,7 +291,7 @@ def get_size(data_type, basic = True):
         get_class = checkVar(data_type, "global")
         if get_class ==  False:
             print(" Error :: class1 " + data_type + " is not defined")
-            exit()
+            exit(-1)
         return get_class["size"]
 
 def updateVar(identifier, val,scope=None):
@@ -359,9 +359,9 @@ def report_error(msg, line):
     global error_line_offset
     if line=="break" or line=="continue":
         print("Error : " + msg + ", Check your " + line + "s")
-        exit()
-    print("Error at line : " + str(line-error_line_offset) + " :: " + msg)
-    exit()
+        exit(-1)
+    print("Error at line : " + str(line- error_line_offset) + " :: " + msg)
+    exit(-1)
 
 start = 'program'
 
@@ -416,7 +416,7 @@ def p_declaration_seq(p):
 def p_error(p):
     global error_line_offset
     print("Syntax Error: line " + str(p.lineno-error_line_offset) + ":" + filename.split('/')[-1], "near", p.value)
-    exit()
+    exit(-1)
 
 # def p_empty(p): 
 #     'empty :' 
@@ -1676,7 +1676,6 @@ def p_simple_type_name(p):
     '''simple_type_name : CHAR 
                         | INT  
                         | FLOAT  
-                        | VOID
     ''' 
     p[0] = OBJ()
     p[0].parse=f(p)   
@@ -2309,7 +2308,8 @@ def p_declaration_statement(p):
 
 
 def p_declaration0(p):
-    '''declaration : type_specifier_ declarator_list SEMICOLON ''' 
+    '''declaration : type_specifier_ declarator_list SEMICOLON
+                    | AUTO  declarator_list SEMICOLON''' 
     global currentScopeTable
     p[0] = OBJ()
     p[0].parse=f(p)
@@ -2317,14 +2317,32 @@ def p_declaration0(p):
     p[0].code=p[2].code.copy()
     p[0].data = {}
     for each in decl_list:
-        data = p[1].data.copy()
+        if isinstance(p[1].data,dict):
+            data = p[1].data.copy()
+        else:
+            data=p[1].data
+        if currentScopeTable==0 and "init_type" in each.keys():
+            report_error("Variable can't be initialised in global scope", p.lineno(0))
         if(each["type"] != ""):
+            if(data=="auto"):
+                report_error("Auto pointer,array is not defined",p.lineno(0))
             data["type"] = p[1].data["type"] + "|" +  each["type"]
+        if(data=="auto"):
+            if("init_type" in each.keys()):
+                data={"type":each["init_type"]}
+                if each["init_type"] in ["int","char","float"] or "|" in each["init_type"] :
+                    data["class"]="simple"
+                else:
+                    data["class"]="class"
+            else:
+                report_error("Auto needs initialisation", p.lineno(0))
         data["name"] = each["name"]
         data["meta"] = each["meta"]
         
         # handle array type
         if len(data["meta"]) != 0:
+            if (not  isinstance(p[1].data,dict) and data=="auto"):
+                report_error("Auto array is not defined",p.lineno(0))
             element_type = data["type"].rstrip("a").rstrip("|")
             if(element_type == "void"):
                 report_error("can not declare a array of type void", p.lineno(0))
@@ -2350,6 +2368,7 @@ def p_declaration0(p):
         else:
             if(data["type"] == "void"):
                 report_error("can not declare a variable of type void", p.lineno(0))
+            
             basic_type = data["type"].rstrip("p").rstrip("|")
             get_size(basic_type)
             data["size"] = get_size(data["type"])
@@ -2540,7 +2559,7 @@ if __name__ == "__main__":
 
     if(len(sys.argv) != 4): 
         print("Usage python3 parser.py Inputfile OutputFile SymbolTableFile given #args : ", len(sys.argv) , sys.argv) 
-        exit() 
+        exit(-1) 
 
     arglist = sys.argv 
     FileName = arglist[1]

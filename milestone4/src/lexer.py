@@ -5,12 +5,12 @@ lineno = 0
 #Personal Groups
 
 keywords = {
+    'auto':'AUTO',
     'break':'BREAK',
     'case':'CASE',
     # 'catch':'CATCH',
     'char':'CHAR',
     'class':'CLASS',
-    'const':'CONST',
     'continue':'CONTINUE',
     'default':'DEFAULT',
     'delete':'DELETE',
@@ -36,7 +36,6 @@ keywords = {
     # 'typedef':'TYPEDEF',
     # 'type' : 'TYPE',
     # 'template' : 'TEMPLATE',
-    'void':'VOID',
     'while':'WHILE',
 }
 
@@ -98,12 +97,7 @@ tokens = [
         'RSHIFT',
         'DMINUSOP',
         'LTEMPLATE',
-        'RTEMPLATE',
-
-        # SPECIAL
-        'DOUBLEBNOP'
-        
-
+        'RTEMPLATE',        
 ] + list(keywords.values())
 
 # Regular expression rules for simple tokens
@@ -184,7 +178,6 @@ t_STRING_L      = r'\".*\"'
 t_NOTSYM        = r'\!'
 t_QUESMARK      = r'\?'
 t_ARROW         = r'-\>'
-t_DOUBLEBNOP    = r'\~\~'
 
 
 # track line no.
@@ -209,6 +202,7 @@ t_ignore  = ' \t'
 def t_error(t):
     tk = re.split('[ \t]', t.value)[0]
     print("Illegal token '%s'" % tk)
+    exit(-1)
     t.lexer.skip(len(tk))
 
 # Build the lexer
