@@ -1,2 +1,2 @@
-break main
+break func0
 

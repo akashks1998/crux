@@ -169,6 +169,8 @@ def pushVar(identifier, val,scope = None):
         val["offset"] = "gbl@" + str(gblCnt)
         gblCnt = gblCnt + 1
 
+    if isinstance(val, dict) and "base" in val.keys():
+        val["base"] = str(val["base"])
 
     if scope == None:    
         if checkVar(identifier, currentScopeTable )==False:
@@ -627,12 +629,12 @@ def p_additive_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
-        allowed_type = ["int", "char", "float"]
+        allowed_type = ["int", "char" ]
         if "|" in p[1].data["type"] and p[1].data["type"][-1] == "p" and p[3].data["type"] == "int":
             tmp = getnewvar("int")
-            code = [ quad("*",[tmp,p[3].place,str(get_size(p[1].data["type"][:-1].rstrip("|")))],tmp + " = " + p[3].place + " * " +  str(get_size(p[1].data["type"][:-1].rstrip("|")))) ]  
+            code = [ quad("*", [ tmp , p[3].place , str(get_size(p[1].data["type"][:-1].rstrip("|") ) )] )  ]  
             place = getnewvar(p[1].data["type"])
-            code = code + [ quad("int" +p[2].data,[place,p[1].place,tmp],place + " = " + p[1].place + " int" + p[2].data + " " + tmp) ]
+            code = code + [ quad( p[2].data, [ place ,p[1].place ,tmp] ) ]
             p[0].place = place
             p[0].code = p[1].code + p[3].code + code
             p[0].data["type"] = p[1].data["type"]
@@ -640,6 +642,7 @@ def p_additive_expression(p):
 
         if p[1].data["type"] not in allowed_type or p[3].data["type"] not in allowed_type:
             report_error("Type not compatible with plus , minus operation", p.lineno(0))
+            
         x=operator(p[2].data,p[1],p[3])
         p[0].place = x["place"]
         p[0].code = p[1].code + p[3].code + x["code"]
@@ -862,7 +865,8 @@ def p_postfix_expression_2(p):
 
         actual_addr = getnewvar(p[1].data["type"])
         p[0].place = getnewvar(p[0].data["type"], actual_addr, get_size(p[0].data["type"]), 0) 
-        p[0].code = p[1].code +  p[3].code  + [ quad("+",[actual_addr,p[1].place,p[3].place], actual_addr + " = " + p[1].place + " + " +  p[3].place) ] 
+        to_add = getnewvar("int")
+        p[0].code = p[1].code +  p[3].code  + [quad('*', [ to_add, get_size(p[0].data["type"]) , p[3].place  ] ) ] + [ quad("+",[actual_addr,p[1].place,to_add], actual_addr + " = " + p[1].place + " + " +  to_add ) ] 
 
     else:
         report_error("Not a array or pointer", p.lineno(0))
