@@ -171,7 +171,7 @@ def storeVar(reg,var):
                 elif type_ == "char":
                     code.append("movb %" +  reg[1] + "l" + ", (%"+r+")" )
                 else:
-                    print( " class error in store")
+                    print( var, " class error in store")
                     exit()
             elif str(base) == "rbp":
                 loadVar(r,offset)
@@ -182,7 +182,7 @@ def storeVar(reg,var):
                     code.append("neg %"+r)
                     code.append("movb %" +  reg[1] + "l" + ", (%ebp , %"+r  + ", 1)" )
                 else:
-                    print( " class error in store")
+                    print( var, " class error in store")
                     exit()
             else:
                 print("wrong base in store")
@@ -198,7 +198,7 @@ def storeVar(reg,var):
                 elif type_ == "char":
                     code.append("movb %" +  reg[1] + "l" + " , " + str(-offset) + "(%ebp)" )
                 else:
-                    print( " class error in store")
+                    print(type_,var, " class error in store")
                     exit()  
             else:
                 print("wrong base in store")
@@ -318,7 +318,7 @@ def movVar(offsetSrc, baseSrc, offsetDest, baseDest , size = 8):
 class CodeGenerator:
     def __init__(self):
         code.append(".data")
-        code.append('print_fmt_int:\n\t\t .string "%d\\n" ')
+        code.append('print_fmt_int:\n\t\t .string "%d " ')
         code.append('print_fmt_char:\n\t\t .string "%c" ')
         code.append('print_fmt_hex:\n\t\t .string "%x" ')
         code.append('print_fmt_float:\n\t\t .string "%f" ')

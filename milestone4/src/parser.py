@@ -284,16 +284,15 @@ def get_size(data_type, basic = True):
             return 4
         else:
             return 4
-
-    if data_type in size.keys():
+    elif data_type in size.keys():
         return size[data_type]
-
-    # it has to be class
-    get_class = checkVar(data_type, "global")
-    if get_class ==  False:
-        print(" Error :: class " + data_type + " is not defined")
-        exit()
-    return get_class["size"]
+    else:
+        # it has to be class
+        get_class = checkVar(data_type, "global")
+        if get_class ==  False:
+            print(" Error :: class1 " + data_type + " is not defined")
+            exit()
+        return get_class["size"]
 
 def updateVar(identifier, val,scope=None):
     global scopeTableList
@@ -1709,7 +1708,6 @@ def p_class_head(p):
     }
 
     pushVar(p[2].data + "??", {})
-
     pushOffset()
 
 def p_class_function_specifier(p):
@@ -1795,7 +1793,7 @@ def p_member_declaration_0(p):
     p[0].parse=f(p)
     decl_list = p[2].data
     p[0].data = {}
-    for each in decl_list:
+    for each in decl_list:        
         data = p[1].data.copy()
         if(each["type"] != ""):
             data["type"] = p[1].data["type"] + "|" +  each["type"]
@@ -1804,6 +1802,7 @@ def p_member_declaration_0(p):
         
         # handle array type
         if len(data["meta"]) != 0:
+            
             element_type = data["type"].rstrip("a").rstrip("|")
             if(element_type == "void"):
                 report_error("can not declare a array of type void", p.lineno(0))
@@ -1836,22 +1835,19 @@ def p_member_declaration_0(p):
                 add_to_offset(-data["size"])
                 report_error("Redeclaration of variable", p.lineno(1))
         else:
+            
             if(data["type"] == "void"):
                 report_error("can not declare a variable of type void", p.lineno(0))            
             
             basic_type = data["type"].rstrip("p").rstrip("|")
-
 
             # check the basic data_type_exist or not
             if "|" in data["type"]:
                 meta_ = checkVar(basic_type + "??" )
                 if  meta_ == False:
                     get_size(basic_type)
-                else:
-                    popVar(basic_type+ "??" , meta_["scope"])
             else:
                 get_size(basic_type)
-
 
             data["size"] = get_size(data["type"], basic = False)
             add_to_offset(data["size"])
