@@ -296,9 +296,10 @@ class CodeGenerator:
         code.append("pop %ebp")
     def op_malloc(self, instr):
         to_malloc,size=instr
+        loadVar("edi", size)
+
         code.append("push %ebp")
         code.append("mov %esp,%ebp")
-        loadVar("edi", size)
         code.append("push %edi")
         code.append("call malloc")
         code.append("add $4, %esp")
@@ -308,9 +309,10 @@ class CodeGenerator:
         
     def op_free(self, instr):
         to_free=instr[0]
+        loadVar("edi", to_free)
+        
         code.append("push %ebp")
         code.append("mov %esp,%ebp")
-        loadVar("edi", to_free)
         code.append("push %edi")
         code.append("call malloc")
         code.append("add $4, %esp")
