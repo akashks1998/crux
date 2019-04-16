@@ -120,9 +120,3 @@ class pairii : int dot(class pairii p, class pairii *c){
     c->a = x*p.a;
     c->b = y*p.b;
 }
-
-int main(){
-    int a = -6;
-    print_int(abs(a));
-    return 0;
-}
