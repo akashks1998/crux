@@ -184,6 +184,8 @@ def pushVar(identifier, val,scope = None):
             return True
         else:
             return False
+    
+
 def popVar(identifier, scope):
     global scopeTableList
     scopeTableList[scope].delete(identifier)
@@ -327,9 +329,9 @@ def checkVar(identifier,scopeId="**", search_in_class = False):
         return False
     if scopeId=="**":
         scope=currentScopeTable
-
         while scope!=None:
             symbol_table = scopeTableList[scope]
+            
             if symbol_table.type_ == "class" and search_in_class == False:
                 scope=scopeTableList[scope].parent
                 continue
@@ -341,6 +343,7 @@ def checkVar(identifier,scopeId="**", search_in_class = False):
         if scopeTableList[scopeId].lookUp(identifier):
             return scopeTableList[scopeId].getDetail(identifier)
         return False
+
 def retType(p,i,j):
     if "ret_type" in p[i].data.keys() and "ret_type" in p[j].data.keys():
         if p[i].data["ret_type"]==p[j].data["ret_type"]:
@@ -461,15 +464,26 @@ def p_logical_OR_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
-        allowed_type = ["int", "char", "float"]
-        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = { "type" : "int" }
-        else:
+        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
             report_error("Type not compatible with OR operation", p.lineno(0))
+        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with OR operation", p.lineno(0))
+        
         p[0].place = getnewvar("int")
-        t=cast_string(p[1].place,p[1].data["type"],"int")
-        t1=cast_string(p[3].place,p[3].data["type"],"int")
-        p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ quad(str(p[2].data),[p[0].place, t["place"], t1["place"]],p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"]) ]
+        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        p[0].code = p[1].code + p[3].code + code
+        p[0].data = {"type": "int"}
+
+
+        # allowed_type = ["int", "char", "float"]
+        # if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+        #     p[0].data = { "type" : "int" }
+        # else:
+        #     report_error("Type not compatible with OR operation", p.lineno(0))
+        # p[0].place = getnewvar("int")
+        # t=cast_string(p[1].place,p[1].data["type"],"int")
+        # t1=cast_string(p[3].place,p[3].data["type"],"int")
+        # p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ quad(str(p[2].data),[p[0].place, t["place"], t1["place"]],p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"]) ]
 
    
 def p_logical_AND_expression(p): 
@@ -483,15 +497,25 @@ def p_logical_AND_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
-        allowed_type = ["int", "char", "float"]
-        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
-        else:
+        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
             report_error("Type not compatible with AND operation", p.lineno(0))
+        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with AND operation", p.lineno(0))
+        
         p[0].place = getnewvar("int")
-        t=cast_string(p[1].place,p[1].data["type"],"int")
-        t1=cast_string(p[3].place,p[3].data["type"],"int")
-        p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ quad(str(p[2].data),[p[0].place, t["place"], t1["place"]],p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"]) ]
+        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        p[0].code = p[1].code + p[3].code + code
+        p[0].data = {"type": "int"}
+
+        # allowed_type = ["int", "char", "float"]
+        # if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+        #     p[0].data = {"type" : "int"}
+        # else:
+        #     report_error("Type not compatible with AND operation", p.lineno(0))
+        # p[0].place = getnewvar("int")
+        # t=cast_string(p[1].place,p[1].data["type"],"int")
+        # t1=cast_string(p[3].place,p[3].data["type"],"int")
+        # p[0].code = p[1].code + p[3].code + t["code"] +t1["code"]+ [ quad(str(p[2].data),[p[0].place, t["place"], t1["place"]],p[0].place + " = " + t["place"] + str(p[2].data) + t1["place"]) ]
 
 
 
@@ -507,12 +531,22 @@ def p_inclusive_OR_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
-        if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-            p[0].data = {"type" : "int"}
-        else:
-            report_error("Type not compatible with bitwise or operation", p.lineno(1))
+        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
+        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
+        
         p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
+        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        p[0].code = p[1].code + p[3].code + code
+        p[0].data = {"type": "int"}
+
+        # if p[1].data["type"]=="int" and p[3].data["type"] =="int":
+        #     p[0].data = {"type" : "int"}
+        # else:
+        #     report_error("Type not compatible with bitwise or operation", p.lineno(1))
+        # p[0].place = getnewvar("int")
+        # p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
 
 
 def p_exclusive_OR_expression(p): 
@@ -526,12 +560,22 @@ def p_exclusive_OR_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
-        if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-            p[0].data = {"type" : "int"}
-        else:
-            report_error("Type not compatible with bitwise xor operation", p.lineno(1))
+        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
+        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
+        
         p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
+        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        p[0].code = p[1].code + p[3].code + code
+        p[0].data = {"type": "int"}
+
+        # if p[1].data["type"]=="int" and p[3].data["type"] =="int":
+        #     p[0].data = {"type" : "int"}
+        # else:
+        #     report_error("Type not compatible with bitwise xor operation", p.lineno(1))
+        # p[0].place = getnewvar("int")
+        # p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
 
 
 def p_AND_expression(p): 
@@ -545,13 +589,23 @@ def p_AND_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code 
     if len(p)==4:
-        if p[1].data["type"]=="int" and p[3].data["type"] =="int":
-            p[0].data = {"type" : "int"}
-        else:
-            report_error("Type not compatible with bitwise and operation", p.lineno(1))
+        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
+        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
         
         p[0].place = getnewvar("int")
-        p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
+        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        p[0].code = p[1].code + p[3].code + code
+        p[0].data = {"type": "int"}
+
+        # if p[1].data["type"]=="int" and p[3].data["type"] =="int":
+        #     p[0].data = {"type" : "int"}
+        # else:
+        #     report_error("Type not compatible with bitwise and operation", p.lineno(1))
+        
+        # p[0].place = getnewvar("int")
+        # p[0].code = p[1].code + p[3].code + [ quad(str(p[2].data),[p[0].place,p[1].place,p[3].place],p[0].place + " = " + p[1].place + str(p[2].data) + p[3].place) ]
 
 def p_equality_expression(p): 
     '''equality_expression : relational_expression 
@@ -565,12 +619,22 @@ def p_equality_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code  
     if len(p)==4:
-        x=operator( p[2].data, p[1], p[3],"int" )
-        if x==False:
+        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
             report_error("Type not compatible with relational operation", p.lineno(0))
-        p[0].place = x["place"]
-        p[0].code = p[1].code + p[3].code + x["code"]
-        p[0].data["type"]="int"
+        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
+        
+        p[0].place = getnewvar("int")
+        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        p[0].code = p[1].code + p[3].code + code
+        p[0].data = {"type": "int"}
+        
+        # x=operator( p[2].data, p[1], p[3],"int" )
+        # if x==False:
+        #     report_error("Type not compatible with relational operation", p.lineno(0))
+        # p[0].place = x["place"]
+        # p[0].code = p[1].code + p[3].code + x["code"]
+        # p[0].data["type"]="int"
     
 
 def p_relational_expression(p): 
@@ -587,14 +651,24 @@ def p_relational_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
-        allowed_type = ["int", "char", "float"]
-        if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
-            p[0].data = {"type" : "int"}
-        else:
+        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
             report_error("Type not compatible with relational operation", p.lineno(0))
-        x=operator(p[2].data,p[1],p[3],"int")
-        p[0].place = x["place"]
-        p[0].code = p[1].code + p[3].code + x["code"]
+        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
+        
+        p[0].place = getnewvar("int")
+        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        p[0].code = p[1].code + p[3].code + code
+        p[0].data = {"type": "int"}
+
+        # allowed_type = ["int", "char", "float"]
+        # if p[1].data["type"] in allowed_type and p[3].data["type"] in allowed_type:
+        #     p[0].data = {"type" : "int"}
+        # else:
+        #     report_error("Type not compatible with relational operation", p.lineno(0))
+        # x=operator(p[2].data,p[1],p[3],"int")
+        # p[0].place = x["place"]
+        # p[0].code = p[1].code + p[3].code + x["code"]
 
 def p_shift_expression(p): 
     '''shift_expression : additive_expression 
@@ -643,10 +717,10 @@ def p_additive_expression(p):
         if p[1].data["type"] not in allowed_type or p[3].data["type"] not in allowed_type:
             report_error("Type not compatible with plus , minus operation", p.lineno(0))
             
-        x=operator(p[2].data,p[1],p[3])
-        p[0].place = x["place"]
-        p[0].code = p[1].code + p[3].code + x["code"]
-        p[0].data["type"]=x["type"]
+        p[0].place = getnewvar("int")
+        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        p[0].code = p[1].code + p[3].code + code
+        p[0].data = {"type": "int"}
 
 def p_multiplicative_expression(p): 
     '''multiplicative_expression : cast_expression 
@@ -661,14 +735,16 @@ def p_multiplicative_expression(p):
         p[0].place = p[1].place
         p[0].code = p[1].code
     if len(p)==4:
-        allowed_type = ["int", "char", "float"]
-        if p[1].data["type"] not in allowed_type or p[3].data["type"] not in allowed_type:
-            report_error("Type not compatible with mult, div operation", p.lineno(0))
-        x=operator(p[2].data,p[1],p[3])
-        p[0].place = x["place"]
-        p[0].code = p[1].code + p[3].code + x["code"]
-        p[0].data["type"]=x["type"]
-
+        if not ("|" in p[1].data["type"] or p[1].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
+        if not ("|" in p[3].data["type"] or p[3].data["type"] in ["char", "int"]):
+            report_error("Type not compatible with relational operation", p.lineno(0))
+        
+        p[0].place = getnewvar("int")
+        code = [quad(p[2].data, [ p[0].place , p[1].place, p[3].place ]  )]
+        p[0].code = p[1].code + p[3].code + code
+        p[0].data = {"type": "int"}
+        
 def p_cast_expression(p): 
     '''cast_expression : unary_expression 
                        | LPAREN type_name  RPAREN  cast_expression 
@@ -1611,7 +1687,7 @@ def p_class_head(p):
         "type" : p[2].data,
     }
 
-    pushVar(p[2].data + "@|@", "")
+    pushVar(p[2].data + "??", {})
 
     pushOffset()
 
@@ -1721,11 +1797,11 @@ def p_member_declaration_0(p):
 
             # check the basic data_type_exist or not
             if "|" in element_type:
-                meta_ = checkVar(element_type.rstrip("p").rstrip("|") + "@|@")
+                meta_ = checkVar(element_type.rstrip("p").rstrip("|") + "??")
                 if  meta_ == False:
                     get_size(element_type.rstrip("p").rstrip("|"))
                 else:
-                    popVar(element_type.rstrip("p").rstrip("|") + "@|@" , meta_["scope"])
+                    popVar(element_type.rstrip("p").rstrip("|") + "??" , meta_["scope"])
             else:
                 get_size(element_type.rstrip("p").rstrip("|"))
 
@@ -1743,14 +1819,15 @@ def p_member_declaration_0(p):
                 report_error("can not declare a variable of type void", p.lineno(0))            
             
             basic_type = data["type"].rstrip("p").rstrip("|")
-        
+
+
             # check the basic data_type_exist or not
             if "|" in data["type"]:
-                meta_ = checkVar(basic_type + "@|@")
+                meta_ = checkVar(basic_type + "??" )
                 if  meta_ == False:
                     get_size(basic_type)
                 else:
-                    popVar(basic_type+ "@|@" , meta_["scope"])
+                    popVar(basic_type+ "??" , meta_["scope"])
             else:
                 get_size(basic_type)
 

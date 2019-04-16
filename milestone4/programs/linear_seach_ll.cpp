@@ -1,8 +1,7 @@
 // Iterative C program to search an element in linked list 
   
 /* Link list node */
-class Node 
-{ 
+class Node { 
     int key; 
     class Node* next; 
 }; 
@@ -13,7 +12,7 @@ class Node
 int push(class Node** head_ref, int new_key) 
 { 
     /* allocate node */
-    class Node* new_node =  (class Node*) new(class Node); 
+    class Node* new_node =  new(class Node); 
   
     /* put in the key  */
     new_node->key  = new_key; 
@@ -30,14 +29,24 @@ int push(class Node** head_ref, int new_key)
 int search(class Node* head, int x) 
 { 
     class Node* current = head;  // Initialize current 
-    while (current != 0) 
-    { 
-        if (current->key == x) 
+    while (current != 0) { 
+        if (current->key == x){
             return 1; 
+        } 
+            
         current = current->next; 
     } 
     return 0; 
 } 
+
+int print_ll(class Node* head){
+    class Node* current = head;  // Initialize current 
+    while (current != 0) { 
+        print_int(current->key);            
+        current = current->next; 
+    } 
+    return 0; 
+}
   
 /* Driver program to test count function*/
 int main() 
@@ -48,12 +57,23 @@ int main()
   
     /* Use push() to conclass below list 
      14->21->11->30->10  */
+    // class Node* new_node =  new(class Node); 
+    // new_node->key  = 10; 
+    // print_int(new_node->key);
+
     push(&head, 10); 
     push(&head, 30); 
     push(&head, 11); 
     push(&head, 21); 
     push(&head, 14); 
-  
-    search(head, 21) ? print_int(1) : print_int(0); 
+    
+    print_ll(head);
+    int res = search(head, 10);
+    print_char('s');
+    if(res == 1){
+        print_int(1);
+    }else{
+        print_int(0);
+    }  
     return 0; 
 } 

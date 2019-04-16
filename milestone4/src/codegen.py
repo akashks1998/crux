@@ -261,7 +261,7 @@ class CodeGenerator:
     def __init__(self):
         code.append(".data")
         code.append('print_fmt_int:\n\t\t .string "%d\\n" ')
-        code.append('print_fmt_char:\n\t\t .string "%c\\n" ')
+        code.append('print_fmt_char:\n\t\t .string "%c" ')
         code.append('scan_fmt_int:\n\t\t .string "%d" ')
         code.append('scan_fmt_char:\n\t\t .string "%c" ')
         for j in scopeTableList[0].table.items():
@@ -310,7 +310,7 @@ class CodeGenerator:
     def op_free(self, instr):
         to_free=instr[0]
         loadVar("edi", to_free)
-        
+
         code.append("push %ebp")
         code.append("mov %esp,%ebp")
         code.append("push %edi")
