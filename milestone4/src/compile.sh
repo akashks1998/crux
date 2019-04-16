@@ -7,6 +7,19 @@ then
 fi
 
 python3 parser.py  $1  code.crux sym.dump
-python3 codegen.py 
-gcc m.s -m32 -no-pie -o m.out
-./m.out
+if [[ "$?" == "0" ]];then
+    python3 codegen.py 
+else
+    exit -1
+fi
+if [[ "$?" == "0" ]];then
+    gcc m.s -m32 -no-pie -o m.out
+else
+    exit -1
+fi
+if [[ "$?" == "0" ]];then
+    ./m.out
+else
+    exit -1
+fi
+

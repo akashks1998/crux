@@ -1,28 +1,20 @@
-#include<std.cpp>
-int a[1000];
-int f(int j){
-     return f(j);
-}
+int j;
+class e{
+     int x;
+     int y;
+};
 int main()
 {
-     int marks[10], i, n, sum = 0, average;
-     for(i=0; i<n; i++ ){
-          break;
-          sum += marks[++i];
-     }
-     switch(n){
-          case 1:
-          i=0;break;
-          case 2:
-          i=1;break;
-          default:
-          i=0;
-     }
-     average = sum/n;
-     int * t=average;
-     delete t;
-     int x=f(i);
-     int *a,*b;
-     a = b + 2;
+     j=5;
+     auto k=j*5;
+     auto i=k;
+     class e x;
+     auto z=x;
+     auto f=(1.09+1);
+     print_float(f);
+     char m=10;
+     print_char(10);
+     auto t=new(int)[5];
+     print_int(i);
      return 0;
 }
