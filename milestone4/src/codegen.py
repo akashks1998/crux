@@ -439,7 +439,6 @@ class CodeGenerator:
         loadAddr("eax", inp2)
         code.append("fadd (%eax)")
         storeFloatVar(out)
-        code.append("fninit")
 
 
     def op_sub(self, instr):
@@ -455,7 +454,6 @@ class CodeGenerator:
         loadAddr("eax", inp2)
         code.append("fsub (%eax)")
         storeFloatVar(out)
-        code.append("fninit")
         
     def op_mult(self, instr):
         out , inp1, inp2 = instr
@@ -470,7 +468,6 @@ class CodeGenerator:
         loadAddr("eax", inp2)
         code.append("fmul (%eax)")
         storeFloatVar(out)
-        code.append("fninit")
         
     
     def op_div(self, instr):
@@ -488,7 +485,6 @@ class CodeGenerator:
         loadAddr("eax", inp2)
         code.append("fdiv (%eax)")
         storeFloatVar(out)
-        code.append("fninit")
     
     def op_modulo(self, instr):
         # idiv %ebx — divide the contents of EDX:EAX by the contents of EBX. Place the quotient in EAX and the remainder in EDX.
@@ -586,39 +582,37 @@ class CodeGenerator:
     
     def op_float_comp(self, instr, comp ):
         out , inp1, inp2 = instr
-        loadFloatVar(inp1)
         loadFloatVar(inp2)
-        code.append("fcompi")
+        loadFloatVar(inp1)
+        code.append("fcomip")
+        code.append("fstp %st(0)")
         code.append("mov $0, %ecx")
         if comp == "float<":
-            code.append("setl %cl")
+            code.append("setb %cl")
         elif comp == "float>":
-            code.append("setg %cl")
+            code.append("seta %cl")
         elif comp == "float<=":
-            code.append("setle %cl")            
+            code.append("setbe %cl")            
         elif comp == "float>=":   
-            code.append("setge %cl")            
+            code.append("setae %cl")            
         elif comp == "float==":
             code.append("sete %cl")            
         elif comp == "float!=":
             code.append("setne %cl")
 
         storeVar("ecx", out)
-        code.append("fninit")
 
     def op_float_assign(self, instr):
         out, inp = instr
         if "@" in inp:
             loadFloatVar(inp)
             storeFloatVar(out)
-            code.append("fninit")
         else:
             # it is constant assignment like a = 1.4 ;
             dec = float(str(inp))
             bin_ = binary(dec)
             code.append("mov $"  + str(bin_) + " ,%eax")
             storeVar("eax", out)
-            code.append("fninit")
 
     def op_assign(self,instr):
         out , inp = instr

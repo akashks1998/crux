@@ -1,5 +1,6 @@
 // An example function whose solution is determined using 
 // Bisection Method. The function is x^3 - x^2  + 2 
+// # include<stdio.h>
 float func(float x) 
 {   
     return (x*x*x - x*x )+ 2; 
@@ -24,7 +25,10 @@ float newtonRaphson(float x)
     float EPSILON = 0.001;
     float h = func(x) / derivFunc(x); 
     int i =0;
-    while (abs(h) >= EPSILON && i < 20) 
+    print_float(abs(h));
+    print_int(32);
+    print_int(abs(h) >= EPSILON);
+    while ( (abs(h) >= EPSILON) && i < 100) 
     { 
         float a = func(x);
         float b = derivFunc(x);
@@ -32,10 +36,15 @@ float newtonRaphson(float x)
    
         // x(i+1) = x(i) - f(x) / f'(x)   
         x = x - h; 
+
+        // printf("%x", h);
+
         print_int(i);
-        
         print_float(h);
         print_char(32);
+        print_float(abs(h));
+        print_char(32);
+        print_int(abs(h) >= EPSILON);
         print_float(x);
         print_char(32);
         print_float(a);
@@ -55,7 +64,10 @@ float newtonRaphson(float x)
 int main() 
 { 
     float x0 = -20; // Initial values assumed 
-    float a = newtonRaphson(x0); 
+    float a = newtonRaphson(x0);
+    int b = (6.7 >= 0.001);
+    // printf("%f", b);
+    print_int(b);
     print_float(a);
     return 0; 
 } 
