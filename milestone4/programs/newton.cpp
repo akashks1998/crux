@@ -2,7 +2,7 @@
 // Bisection Method. The function is x^3 - x^2  + 2 
 float func(float x) 
 {   
-    return x*x*x - x*x + 2; 
+    return (x*x*x - x*x )+ 2; 
 } 
   
 // Derivative of the above function which is 3*x^x - 2*x 
@@ -24,16 +24,26 @@ float newtonRaphson(float x)
     float EPSILON = 0.001;
     float h = func(x) / derivFunc(x); 
     int i =0;
-    while (abs(h) >= EPSILON and i < 10) 
+    while (abs(h) >= EPSILON && i < 20) 
     { 
-        h = func(x)/derivFunc(x); 
+        float a = func(x);
+        float b = derivFunc(x);
+        h = a/b; 
    
         // x(i+1) = x(i) - f(x) / f'(x)   
         x = x - h; 
-        // print_float(h);
+        print_int(i);
+        
+        print_float(h);
+        print_char(32);
+        print_float(x);
+        print_char(32);
+        print_float(a);
+        print_char(32);
+        print_float(b);
         print_char(10);
         i = i + 1;
-        print_int(i);
+        
     }
 
     
