@@ -1953,7 +1953,7 @@ def p_compound_statement(p):
         p[0].place = p[2].place
         p[0].data=assigner(p,2)
     else:
-        p[0].code = {}
+        p[0].code = []
         p[0].place = getnewvar("int")
 
 def p_statement_list(p): 
