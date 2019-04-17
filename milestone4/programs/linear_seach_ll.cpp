@@ -68,7 +68,7 @@ int main()
     push(&head, 14); 
     
     print_ll(head);
-    int res = search(head, 10);
+    int res = search(head, 30);
     print_char('s');
     if(res == 1){
         print_int(1);

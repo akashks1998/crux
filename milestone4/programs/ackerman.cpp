@@ -1,7 +1,7 @@
 int count;
 int ackermann(int x, int y){
-    print_int(x);
-    print_int(y);
+    // print_int(x);
+    // print_int(y);
 	count++;
 	if(x<0 || y<0){
         return -1;

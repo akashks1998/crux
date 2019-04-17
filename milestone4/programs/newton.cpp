@@ -65,9 +65,8 @@ int main()
 { 
     float x0 = -20; // Initial values assumed 
     float a = newtonRaphson(x0);
-    int b = (6.7 >= 0.001);
     // printf("%f", b);
-    print_int(b);
+    print_char('a'); print_char(32);
     print_float(a);
     return 0; 
 } 
