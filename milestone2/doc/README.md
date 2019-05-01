@@ -9,7 +9,8 @@
 - Classes
 - new , delete
 - Vanilla C features
-Following are the differences from vanilla implementation of the above
+
+Following are the differences from vanilla implementation of the above[^1]
 ## Miscelaneous
 - Variable sized arrays cannot be declared :
   ```
@@ -43,16 +44,17 @@ Following are the differences from vanilla implementation of the above
 
 ## Classes
 - Class variables are accessed only by ``this``. 
-- Before using class function, either the function should be prototyped or defined earlier.
+- Class function can be prototyped inside class declaration itself
+- Class function should be defined outside of class as in given example, it does not needs to prototyped for definition.
 - No Constructor and Destructor, we have to call them excplicitly.
-- Class functions can be prototyped inside class and then added later using "::" operator.
+- Class functions can be prototyped inside class and can be added later using "::" operator.
   ```
   class x{
     int a;
     int f(int b);
-  }
+  };
   class x:: int f(int y){
-    	if(this->t > y){
+    	if(this->a > y){
        	return 0;
       }else{
       	return 1;

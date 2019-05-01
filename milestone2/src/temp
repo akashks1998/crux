@@ -1,5 +1,0 @@
-class employee
-{
-    private:
-    void sal();
-};

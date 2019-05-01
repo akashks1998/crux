@@ -1062,9 +1062,9 @@ def p_unary_expression1(p):
     operator = ""
     if p[1].data == "&":
         if "|" in p[2].data["type"]:
-            p[0].data["type"]=p[2].data["type"]+"r"
+            p[0].data["type"]=p[2].data["type"]+"p"
         else:
-            p[0].data["type"]=p[2].data["type"]+"|r"
+            p[0].data["type"]=p[2].data["type"]+"|p"
     elif p[1].data in ["-", "+"] and p[2].data["type"] in ["int", "float"]:
         p[0].data["type"] = p[2].data["type"]
         operator = p[2].data["type"]
@@ -2225,7 +2225,7 @@ if __name__ == "__main__":
     parser.error = 0 
 
     if(len(sys.argv) != 4): 
-        print("Usage python3 parser.py Inputfile OutputFile SymbolTableFile ") # given #args : ", len(sys.argv) , sys.argv) 
+        print("Usage python3 parser.py Inputfile OutputFile SymbolTableFile given #args : ", len(sys.argv) , sys.argv) 
         exit() 
 
     arglist = sys.argv 

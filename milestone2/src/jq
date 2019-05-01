@@ -1,1 +1,0 @@
-Usage python3 parser.py arg1 arg2 #args :  ['parser.py', '0', '../tests/m.cpp', 'jq']
