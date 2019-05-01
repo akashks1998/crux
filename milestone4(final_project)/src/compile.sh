@@ -17,9 +17,5 @@ if [[ "$?" == "0" ]];then
 else
     exit -1
 fi
-if [[ "$?" == "0" ]];then
-    ./m.out
-else
-    exit -1
-fi
+
 
